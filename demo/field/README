@@ -2,3 +2,5 @@ This demo is a WIP and currently serves as a testing ground. This demo also
 requires a number of textures to execute without a runtime exception. No
 textures are provided to avoid licensing complications and thus textures to use
 for this demo must be acquired elsewhere. 
+
+See the demos wiki page on github for more information.

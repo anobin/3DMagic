@@ -64,15 +64,12 @@ HemisphereTexShader* hemTexShader;
 // image resources
 Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/stone.tga");
 Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
-Handle<TGA2DResource> bunkerImage = 
-	resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-Handle<TGA2DResource> soilImage = resourceManager.get<TGA2DResource>("images/SoilCracked.tga");
+Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
 
 // textures
 Texture* stoneTex;
 Texture* marbleTex;
 Texture* bunkerTex;
-Texture* soilTex;
 
 // models
 FlatSurface* ceilingModel;
@@ -148,7 +145,6 @@ void setup()
 	//stoneTex->setWrapMode(Texture::CLAMP_TO_EDGE); // for non-repeating texture
 	marbleTex= new Texture(marbleImage());
 	bunkerTex = new Texture(bunkerImage());
-	soilTex = new Texture(soilImage());
 	
 	// init shaders
 	shader = new PointLightDiffuseShader(resourceManager);
