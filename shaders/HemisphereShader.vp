@@ -1,0 +1,66 @@
+/* 
+Copyright (c) 2011 Andrew Keating
+
+This file is part of 3DMagic.
+
+3DMagic is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+3DMagic is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+/** Vertex shader for the HermisphereShader shader
+ *
+ * @file HemisphereShader.vp
+ * @author Andrew Keating
+ */
+#version 120
+
+// vertex to shade
+attribute vec4 vVertex;
+// normal to shade
+attribute vec3 vNormal;
+
+// light position in model components
+uniform vec3 lightPosition;
+// color emitted by the sky/light
+uniform vec3 skyColor;
+// color emitted by the ground/away from light
+uniform vec3 groundColor;
+
+// the model view matrix
+uniform mat4 mvMatrix;
+// the model view projection matrix
+uniform mat4 mvpMatrix;
+// the normal matrix (rotational component of model view)
+uniform mat3 normalMatrix;
+
+// the fragment color to give to the fragment shader
+varying vec3 fragColor;
+
+void main()
+{
+	// vertex in model coords
+	vec3 ecPosition = vec3(mvMatrix * vVertex);
+	// normal in model coords
+	vec3 tnorm = normalize(normalMatrix * vNormal);
+	// vector to the light source
+	vec3 lightVec = normalize(lightPosition - ecPosition);
+	// magnitude of lightening calculated by angle between normal and light
+	float costheta = dot(tnorm, lightVec);
+	// calculate sky and ground mixing factor
+	float a = costheta * 0.5 + 0.5;
+	// mix sky and ground colors
+	fragColor = mix(groundColor, skyColor, a);
+
+	// make sure to transform vertex to set position 
+	gl_Position = mvpMatrix * vVertex;
+}

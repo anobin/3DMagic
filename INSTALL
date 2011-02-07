@@ -1,0 +1,9 @@
+Work in Progress
+
+# Required Libraries
+openGL
+GLUT
+GLEW
+openAL
+Bullet Physics
+libpng 

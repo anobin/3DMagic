@@ -1,0 +1,5 @@
+*.o
+
+lib3DMagic.a
+images/
+demo/field/field

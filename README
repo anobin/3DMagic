@@ -1,0 +1,48 @@
+      _               _            _   _         _                   _               _           _      
+    /\ \             /\ \         /\_\/\_\ _    / /\                /\ \            /\ \       /\ \     
+   /  \ \           /  \ \____   / / / / //\_\ / /  \              /  \ \           \ \ \     /  \ \    
+  / /\ \ \         / /\ \_____\ /\ \/ \ \/ / // / /\ \            / /\ \_\          /\ \_\   / /\ \ \   
+ / / /\ \ \       / / /\/___  //  \____\__/ // / /\ \ \          / / /\/_/         / /\/_/  / / /\ \ \  
+ \/_//_\ \ \     / / /   / / // /\/________// / /  \ \ \        / / / ______      / / /    / / /  \ \_\ 
+   __\___ \ \   / / /   / / // / /\/_// / // / /___/ /\ \      / / / /\_____\    / / /    / / /    \/_/ 
+  / /\   \ \ \ / / /   / / // / /    / / // / /_____/ /\ \    / / /  \/____ /   / / /    / / /          
+ / /_/____\ \ \\ \ \__/ / // / /    / / // /_________/\ \ \  / / /_____/ / /___/ / /__  / / /________   
+/__________\ \ \\ \___\/ / \/_/    / / // / /_       __\ \_\/ / /______\/ //\__\/_/___\/ / /_________\  
+\_____________\/ \/_____/          \/_/ \_\___\     /____/_/\/___________/ \/_________/\/____________/  
+
+
+This is the 3DMagic library/toolkit, 3DMagic provides solutions for 
+three-dimensional(3D) graphics, physics, and audio. 3DMagic was made with an
+intention of providing a unified toolkit to be used in development of 3D games
+and simulations.
+
+## License
+All of the source code in 3DMagic is covered by the GNU Lesser General Public
+License as should be indicated by a copyright notice at the top of each source
+file. A copy of the GNU GPL is provided in the COPYING file and a copy of the 
+GNU LGPL is provided in the COPYING.LESSER file.
+
+Note that although some of the demos and examples require images/textures to
+work correctly, no images/textures are provided with 3DMagic to avoid licensing
+complications.
+
+No license is placed on documentation, build scripts, or configuration files.
+When in doubt, try to find a copyright statement at the top of the file (if it
+is a text file) or a LICENSE file in the same directory as the file (if it is
+a binary file). For answers to licensing questions, email a maintainer.
+
+## Maintainers
+Andrew Keating (anobin@gmail.com)
+
+## Contributors
+Andrew Keating (anobin@gmail.com)
+
+
+
+
+
+
+
+
+
+
