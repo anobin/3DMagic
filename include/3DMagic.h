@@ -60,6 +60,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // models
 #include "Models/FlatSurface.h"
 #include "Models/Sphere.h"
+#include "Models/Box.h"
 
 // physics
 #include "Physics/MotionState.h"

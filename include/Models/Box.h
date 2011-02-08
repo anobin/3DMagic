@@ -32,33 +32,27 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
-/** Represent a flat 2D surface composed of a configurable
- * number of triangle to allow for proper shading
+/** Represents a 3D rectangular box of a specified width, height, and depth
  */
-class FlatSurface : public Model
+class Box : public Model
 {
 protected:
-	/// plane shape
-	btStaticPlaneShape* planeShape;
+	/// box collison shape for physics
+	btBoxShape* boxShape;
 	
 	/// default constructor
-	inline FlatSurface(): planeShape(NULL) {/*intentionally left blank*/}
+	inline Box(): boxShape(NULL) {/*intentionally left blank*/}
 	
 public:
 	/** Standard constructor
-	 * @param width the width of the surface
-	 * @param height the height of the surface
-	 * @param slices the number of squares on width
-	 * @param stacks the number of squares on height
-	 * @param texRepeat whether or not to repeat textures over the surface
-	 * @param texPerX the ammount of X to make one segment of a repeated texture
-	 * @param texPerY the ammount of Y to make one segment of a repeated texture
+	 * @param width the width of the box
+	 * @param height the height of the box
+	 * @param depth the depth of the box
 	 */
-	FlatSurface(float width, float height, int slices, int stacks,
-				bool texRepeat = false, float texPerX = FOOT, float texPerY = FOOT);
+	Box(float width, float height, float depth);
 	
 	/// destructor
-	virtual ~FlatSurface();
+	virtual ~Box();
 
 	/** Get the object's type name
 	 */
@@ -75,6 +69,15 @@ public:
 
 
 #endif
+
+
+
+
+
+
+
+
+
 
 
 

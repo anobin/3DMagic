@@ -65,7 +65,8 @@ protected:
 	/// default constructor
 	inline Object(): model(NULL), baseTexture(NULL), motionState(position), body(NULL) {}
 	
-	inline void build(float mass)
+	inline void build(float mass, float friction = 0.5f, float restitution = 0.0f,
+						float linearDamping = 0.0f)
 	{
 		// calc inertia
 		btVector3 fallInertia(0,0,0);
@@ -74,6 +75,9 @@ protected:
 		// construct rigid body
 		btRigidBody::btRigidBodyConstructionInfo 
 			fallRigidBodyCI(mass, &motionState, &model->getCollisionShape(), fallInertia);
+		fallRigidBodyCI.m_friction = friction;
+		fallRigidBodyCI.m_restitution = restitution;
+		fallRigidBodyCI.m_linearDamping = linearDamping;
 		body = new btRigidBody(fallRigidBodyCI);
 	}
 	
@@ -83,19 +87,21 @@ public:
 			motionState(position), body(NULL) { build(mass); }
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, const Point3f& location): model(&model), 
+	inline Object(Model& model, float mass, const Point3f& location, float friction = 0.5,
+				  float restitution=0.0f, float linearDamping = 0.0f): model(&model), 
 		baseTexture(NULL), motionState(position), body(NULL) 
 	{ 
 		position.getLocation().set(location);
-		build(mass); 
+		build(mass, friction, restitution, linearDamping); 
 	}
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, const Position& position): model(&model), 
+	inline Object(Model& model, float mass, const Position& position, float friction = 0.5f, 
+				  float restitution = 0.0f, float linearDamping = 0.0f): model(&model), 
 		baseTexture(NULL), motionState(this->position), body(NULL) 
 	{ 
 		this->position.set(position);
-		build(mass); 
+		build(mass, friction, restitution, linearDamping); 
 	}
 	
 	/// destructor

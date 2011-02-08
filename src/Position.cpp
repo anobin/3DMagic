@@ -24,6 +24,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Position.h>
+#include <iostream>
+using std::cout;
+using std::endl;
+
 
 namespace Magic3D
 {
@@ -135,6 +139,7 @@ void Position::getRowMajorRotationMatrix(btMatrix3x3& matrix)
 	);
 }
 
+
 /** Set the orientation (forward and up vectors) to the
  * provided rotation matrix
  * @param matrix matrix to use to set new orientation
@@ -143,15 +148,16 @@ void Position::getRowMajorRotationMatrix(btMatrix3x3& matrix)
  */
 void Position::setRowMajorRotationMatrix(const btMatrix3x3& matrix)
 {
-	btVector3 upV = matrix.getRow(1);
-	btVector3 forwardV = matrix.getRow(2);
+	btVector3 upV = matrix.getColumn(1);
+	btVector3 forwardV = matrix.getColumn(2);
 		
 	// fill in y axis, second row
 	up.set(upV.getX(), upV.getY(), upV.getZ());
+	up.normalize();
 							
 	// fill in z axis, thrid row
 	forward.set(forwardV.getX(), forwardV.getY(), forwardV.getZ());
-	
+	forward.normalize();
 }
 
 /** Get the row major rotation matrix into a 3x3 matrix

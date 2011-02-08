@@ -76,7 +76,8 @@ FlatSurface* ceilingModel;
 FlatSurface* floorModel;
 FlatSurface* wallModel;
 Sphere* sphere;
-Sphere* bigSphere;
+Box* bigSphere;
+Box* boxModel;
 
 // objects
 Object* bigBall;
@@ -116,6 +117,7 @@ void changeWindowSize(int w, int h)
 btDiscreteDynamicsWorld* dynamicsWorld;
 
 Object* btBall; // graphical presence of ball used for bullet
+Object* btBox;
 
 /** Global setup-related steps are performed here
  */
@@ -155,17 +157,40 @@ void setup()
 	
 	
     // init models, represent data on graphics card
-	sphere = new Sphere(1*FOOT, 55, 32);
-	bigSphere = new Sphere(5*FOOT, 55, 32);
+	sphere = new Sphere(3*FOOT, 55, 32);
+	//bigSphere = new Sphere(50*FOOT, 55, 32);
+	bigSphere = new Box(2, 4, 3);
 	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
 	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
 	wallModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE, 20, 20);
+	boxModel = new Box(1.6, 0.6, 0.6);
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3f(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
 	btBall->setColor(Color::WHITE);
 	objects.push_back(btBall);
-	dynamicsWorld->addRigidBody(btBall->getRigidBody());
+	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
+	
+	float wallWidth = 20;
+	float wallHeight = 15;
+	float brickHeight = 0.6;
+	float brickWidth = 1.6;
+	float h = brickHeight/2;
+	for (int i=0; i < wallHeight; i++, h+=brickHeight)
+	{
+		float w = 0;
+		if (i%2 != 0)
+			w = brickWidth/2;
+		for (int j=0; j < wallWidth; j++, w+=brickWidth)
+		{
+			if (i == wallHeight-1 && j == wallWidth-1)
+				continue;
+			btBox = new Object(*boxModel, 2, Point3f(w, h, 0.0f), 2.0f); // 3 kg box
+			btBox->setColor(Color::GREEN);
+			objects.push_back(btBox);
+			dynamicsWorld->addRigidBody(btBox->getRigidBody());
+		}
+	}
 	
 
 	
@@ -326,7 +351,7 @@ void keyPressed(unsigned char key,int x, int y)
 	Position p;
 	Object* t;
 	
-	static float speed = 1000;
+	static float speed = 4700;
 	
 	switch(key)
 	{
