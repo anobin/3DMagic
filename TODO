@@ -1,3 +1,4 @@
+-add model-texture mapping interface to be used through object class
 -add MMX assembly solutions for matrix and vector ops 
 -add 2d varonoi diagram algorithm
 	-add API support for splitting a object using a varonoi diagram

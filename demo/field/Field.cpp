@@ -62,14 +62,17 @@ HemisphereShader* hemShader;
 HemisphereTexShader* hemTexShader;
 
 // image resources
-Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/stone.tga");
+Handle<TGA2DResource> stoneImage = 
+	resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
 Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
 Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-
+Handle<TGA2DResource> brickImage = 
+		resourceManager.get<TGA2DResource>("images/singleBrick.tga");
 // textures
 Texture* stoneTex;
 Texture* marbleTex;
 Texture* bunkerTex;
+Texture* brickTex;
 
 // models
 FlatSurface* ceilingModel;
@@ -147,6 +150,8 @@ void setup()
 	//stoneTex->setWrapMode(Texture::CLAMP_TO_EDGE); // for non-repeating texture
 	marbleTex= new Texture(marbleImage());
 	bunkerTex = new Texture(bunkerImage());
+	brickTex = new Texture(brickImage());
+	brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
 	// init shaders
 	shader = new PointLightDiffuseShader(resourceManager);
@@ -157,13 +162,14 @@ void setup()
 	
 	
     // init models, represent data on graphics card
-	sphere = new Sphere(3*FOOT, 55, 32);
+	sphere = new Sphere(2*FOOT, 55, 32);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
 	bigSphere = new Box(2, 4, 3);
 	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
 	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
 	wallModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE, 20, 20);
-	boxModel = new Box(1.6, 0.6, 0.6);
+	float scale = 5.0f;
+	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3f(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
@@ -171,22 +177,25 @@ void setup()
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
 	
-	float wallWidth = 20;
-	float wallHeight = 15;
-	float brickHeight = 0.6;
-	float brickWidth = 1.6;
+	float wallWidth =60;
+	float wallHeight = 10;
+	float brickHeight = 3*INCH*scale;
+	float brickWidth = 6*INCH*scale;
 	float h = brickHeight/2;
+	float xOffset = -(brickWidth*wallWidth)/2;
+	float zOffset = -100*FOOT;
 	for (int i=0; i < wallHeight; i++, h+=brickHeight)
 	{
-		float w = 0;
+		float w = xOffset;
 		if (i%2 != 0)
-			w = brickWidth/2;
+			w = brickWidth/2 + xOffset;
 		for (int j=0; j < wallWidth; j++, w+=brickWidth)
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 2, Point3f(w, h, 0.0f), 2.0f); // 3 kg box
+			btBox = new Object(*boxModel, 4, Point3f(w, h, zOffset), 3.0f); // 3 kg box
 			btBox->setColor(Color::GREEN);
+			btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());
 		}
@@ -248,13 +257,14 @@ void setup()
 }
 
 
-
+bool paused = false;
 /** Called to render each and every frame
  */
 void renderScene(void)
 {
 	// perform bullet physics
-	dynamicsWorld->stepSimulation(1/60.f,10);
+	if (!paused)
+	  dynamicsWorld->stepSimulation(1/60.f,10);
 	
     // Time Based animation
 	static float dir = -1.0;
@@ -351,7 +361,7 @@ void keyPressed(unsigned char key,int x, int y)
 	Position p;
 	Object* t;
 	
-	static float speed = 4700;
+	static float speed = 4700 * 300;
 	
 	switch(key)
 	{
@@ -421,7 +431,7 @@ void keyPressed(unsigned char key,int x, int y)
 			p.set(cameraFrame);
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
-			t = new Object(*sphere, 1, p); // 1 kg sphere
+			t = new Object(*sphere, 500, p); // 1 kg sphere
 			t->setColor(Color::WHITE);
 			objects.push_back(t);
 			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
@@ -431,10 +441,16 @@ void keyPressed(unsigned char key,int x, int y)
 			break;
 			
 		case 'g':
-			t = new Object(*bigSphere, 50, Point3f(0.0f, 0.0f, 0.0f)); // 1 kg sphere
+			t = new Object(*bigSphere, 300, Point3f(0.0f, 0.0f, 0.0f)); // 1 kg sphere
 			t->setColor(Color::WHITE);
 			objects.push_back(t);
 			dynamicsWorld->addRigidBody(t->getRigidBody());
+			break;
+		case 'p':
+			if (paused)
+				paused = false;
+			else
+				paused = true;
 			break;
 			
 		case 'z':
@@ -446,6 +462,8 @@ void keyPressed(unsigned char key,int x, int y)
 			}
 			objects.erase(objects.begin()+2, objects.end());
 			break;
+			
+		
 			
 	}
 	
