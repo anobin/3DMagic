@@ -61,18 +61,12 @@ SimpleADSShader* adsShader;
 HemisphereShader* hemShader;
 HemisphereTexShader* hemTexShader;
 
-// image resources
-Handle<TGA2DResource> stoneImage = 
-	resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
-Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
-Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-Handle<TGA2DResource> brickImage = 
-		resourceManager.get<TGA2DResource>("images/singleBrick.tga");
+
 // textures
-Texture* stoneTex;
-Texture* marbleTex;
-Texture* bunkerTex;
-Texture* brickTex;
+Texture* stoneTex = NULL;
+Texture* marbleTex = NULL;
+Texture* bunkerTex = NULL;
+Texture* brickTex = NULL;
 
 // models
 FlatSurface* ceilingModel;
@@ -146,12 +140,28 @@ void setup()
 	glClearColor(c[0], c[1], c[2], 1.0f);
 	
 	// init textures
-	stoneTex = new Texture(stoneImage());
-	//stoneTex->setWrapMode(Texture::CLAMP_TO_EDGE); // for non-repeating texture
-	marbleTex= new Texture(marbleImage());
-	bunkerTex = new Texture(bunkerImage());
-	brickTex = new Texture(brickImage());
-	brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+	if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
+	{
+		Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
+		stoneTex = new Texture(stoneImage());
+	}
+	if (resourceManager.doesResourceExist("images/marble.tga"))
+	{
+		Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
+		marbleTex= new Texture(marbleImage());
+	}
+	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
+	{
+		Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
+		bunkerTex = new Texture(bunkerImage());
+	}
+	if (resourceManager.doesResourceExist("images/singleBrick.tga"))
+	{
+		Handle<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
+		brickTex = new Texture(brickImage());
+		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+	}
+	
 	
 	// init shaders
 	shader = new PointLightDiffuseShader(resourceManager);
@@ -194,8 +204,9 @@ void setup()
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
 			btBox = new Object(*boxModel, 4, Point3f(w, h, zOffset), 3.0f); // 3 kg box
-			btBox->setColor(Color::GREEN);
-			btBox->setBaseTexture(*brickTex);
+			btBox->setColor(Color(255, 118, 27, Color::RGBb));
+			if (brickTex != NULL)
+				btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());
 		}
@@ -205,7 +216,8 @@ void setup()
 	
 	floorObject = new Object(*floorModel, 0); // static object
 	floorObject->setColor(Color::WHITE);
-	floorObject->setBaseTexture(*stoneTex);
+	if (stoneTex != NULL)
+		floorObject->setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
 	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
 	
