@@ -1,5 +1,7 @@
 -add model-texture mapping interface to be used through object class
--add MMX assembly solutions for matrix and vector ops 
+-add MMX assembly solutions for matrix and vector ops
+-add text drawing and UI system
+	-Rectangle Textures are the key
 -add 2d varonoi diagram algorithm
 	-add API support for splitting a object using a varonoi diagram
 	-this will be used to create simple shattering effects
@@ -11,7 +13,7 @@
 -add windows and Mac support
 	-add visual studio support
 	-add Xcode support
--create sanbox class/classes
+-create sandbox class/classes
 	-for testing, demo, and protyping purposes
 	-flat plane environment with selectable camera
 	-can place standard models
