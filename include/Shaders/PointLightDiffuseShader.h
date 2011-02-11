@@ -25,7 +25,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_POINT_LIGHT_DIFFUSE_SHADER_H
 #define MAGIC3D_POINT_LIGHT_DIFFUSE_SHADER_H
 
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <gl/gl.h>
+#else
 #include <glew.h>
+#include <gl.h>
+#endif
 
 #include "../Shader.h"
 #include "../Point.h"

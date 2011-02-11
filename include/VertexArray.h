@@ -25,8 +25,14 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_VERTEX_ARRAY_H
 #define MAGIC3D_VERTEX_ARRAY_H
 
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <gl/gl.h>
+#else
 #include <glew.h>
 #include <gl.h>
+#endif
+
 #include "Buffer.h"
 #include "MagicException.h"
 

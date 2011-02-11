@@ -26,7 +26,14 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_IMAGE_2D_RESOURCE_H
 
 #include "../Resource.h"
+
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <gl/gl.h>
+#else
 #include <glew.h>
+#include <gl.h>
+#endif
 
 namespace Magic3D
 {

@@ -30,7 +30,14 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+#include <gl/glew.h>
+#include <gl/gl.h>
+#else
 #include <glew.h>
+#include <gl.h>
+#endif
 
 namespace Magic3D
 {

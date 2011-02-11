@@ -7,3 +7,24 @@ GLEW
 openAL
 Bullet Physics
 libpng 
+
+########################
+#### Windows ###########
+########################
+
+# libs
+GLEW
+Bullet Physics
+
+#GLEW
+http://glew.sourceforge.net/
+C:\Program Files\Microsoft SDKs\Windows\v7.0A\Include\gl
+	glew.h, wglew.h
+C:\Program Files\Microsoft SDKs\Windows\v7.0A\Lib
+	glew32.lib
+C:\WINDOWS\system32
+	glew32.dll
+	
+# Bullet Physics
+http://bulletphysics.org/
+- compile the version you want, general, or [nvidia|amd] openCL, directcompute
