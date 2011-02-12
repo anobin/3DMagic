@@ -1,6 +1,7 @@
 *.o
 
-lib3DMagic.a
-images/
-demo/field/field
-VS/
+/lib3DMagic.a
+/images/
+/demo/field/field
+/VS/
+/bullet/

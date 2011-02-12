@@ -27,7 +27,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Exceptions/ResourceNotFoundException.h>
 #include <Exceptions/MagicException.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma pack(push, 1)
 #define PACKED
 #else

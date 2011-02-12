@@ -28,6 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <3DMagic.h>
 using namespace Magic3D;
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

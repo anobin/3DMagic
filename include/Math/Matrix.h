@@ -28,6 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Math/Vector.h"
 #include "../Exceptions/MagicException.h"
 #include <string.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 

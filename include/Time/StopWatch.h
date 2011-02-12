@@ -27,7 +27,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // include dependent on OS (Windows or everyone else)
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h> // a single include for a whole OS, why not?
 #else
 #include <sys/time.h> // include time functions to get timeofday

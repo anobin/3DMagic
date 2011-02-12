@@ -4,9 +4,9 @@ Work in Progress
 openGL
 GLUT
 GLEW
-openAL
 Bullet Physics
-libpng 
+
+
 
 ########################
 #### Windows ###########
@@ -15,16 +15,32 @@ libpng
 # libs
 GLEW
 Bullet Physics
+GLUT (demos)
 
-#GLEW
+# GLEW
 http://glew.sourceforge.net/
-C:\Program Files\Microsoft SDKs\Windows\v7.0A\Include\gl
+C:\Program Files [(x86)]\Microsoft SDKs\Windows\v7.0A\Include\gl
 	glew.h, wglew.h
-C:\Program Files\Microsoft SDKs\Windows\v7.0A\Lib
+C:\Program Files [(x86)]\Microsoft SDKs\Windows\v7.0A\Lib
 	glew32.lib
-C:\WINDOWS\system32
+-copy the following to where demos/apps are executed
 	glew32.dll
 	
 # Bullet Physics
 http://bulletphysics.org/
-- compile the version you want, general, or [nvidia|amd] openCL, directcompute
+- copy to 3DMagic and rename to just "bullet"
+- compile the version you want, general, or [nvidia|amd] openCL, directcompute under msvc
+- copy libs from lib folder in msvc to top level lib folder
+	-don't worry about .dll, static libs
+
+# GLUT (demos)
+http://freeglut.sourceforge.net/
+C:\Program Files [(x86)]\Microsoft SDKs\Windows\v7.0A\Include\gl
+	freeglut.h, freeglut_ext.h, freeglut_std.h, glut.h
+C:\Program Files [(x86)]\Microsoft SDKs\Windows\v7.0A\Lib
+	freeglut.lib
+-copy the following to where demos are executed
+	freeglut.dll
+
+
+

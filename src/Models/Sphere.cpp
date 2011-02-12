@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Models/Sphere.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 namespace Magic3D
