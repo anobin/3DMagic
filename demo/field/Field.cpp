@@ -162,6 +162,13 @@ void setup()
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
+	else
+	{
+		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
+					"images/singleBrick.tga", Color::BLUE, 1, 1);
+		brickTex = new Texture(brickImage());
+		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+	}
 	
 	
 	// init shaders

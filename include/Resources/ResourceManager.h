@@ -28,6 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Handle.h"
 #include "Resource.h"
 #include "TextResource.h"
+#include "Images/SingleColor2DResource.h"
 #include "../Exceptions/MagicException.h"
 #include "../Exceptions/ResourceNotFoundException.h"
 #include <string>
@@ -117,6 +118,28 @@ public:
 		resources.insert(std::pair<std::string, Resource*>(name, r));
 		Handle<T> h(*r);
 		return h;
+	}
+	
+	/** inject a SingleColor2D resource into the resource manager
+	 * @param name the name to be given to the resource, the type name and
+	 * a colon will be prepended to the name given (SingleColor2D:)
+	 * @param color the color to make the image
+	 * @param width the width of the image
+	 * @param height the height of the image
+	 * @return handle to new SingleColor2D resource
+	 */
+	inline Handle<SingleColor2DResource> injectSingleColor2D(const char* name,
+			const Color& color, int width, int height)
+	{
+		// prefix typename to avoid filesystem name collisions
+		std::string n;
+		n = std::string("SingleColor2D:") + std::string(name);
+		
+		// create resource and inject into manager
+		SingleColor2DResource* r = new SingleColor2DResource(color, width, height,
+											n, *this);
+		resources.insert(std::pair<std::string, Resource*>(n, r));
+		return Handle<SingleColor2DResource>(*r);
 	}
 	
 };
