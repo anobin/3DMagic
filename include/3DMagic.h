@@ -26,31 +26,35 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_H
 
 
-// basic classes
-#include "Matrix.h"
-#include "MagicException.h"
-#include "Color.h"
-#include "Units.h"
-#include "Vector.h"
-#include "Point.h"
-#include "Object.h"
-#include "Position.h"
-#include "Shader.h"
-#include "ResourceManager.h"
-#include "Resource.h"
-#include "Handle.h"
-#include "Texture.h"
-#include "Model.h"
+// util
+#include "Util/Color.h"
+#include "Util/Units.h"
+
+// math
+#include "Math/Matrix.h"
+#include "Math/Vector.h"
+#include "Math/Point.h"
+
+// objects
+#include "Objects/Object.h"
+#include "Objects/Position.h"
+
+// graphics
+#include "Graphics/Texture.h"
 
 // time
 #include "Time/StopWatch.h"
 
 // resources
+#include "Resources/Handle.h"
+#include "Resources/Resource.h"
+#include "Resources/ResourceManager.h"
 #include "Resources/TextResource.h"
 #include "Resources/Image2DResource.h"
 #include "Resources/Images/TGA2DResource.h"
 
 // shaders
+#include "Shaders/Shader.h"
 #include "Shaders/PointLightDiffuseShader.h"
 #include "Shaders/FlatShader.h"
 #include "Shaders/SimpleADSShader.h"
@@ -58,6 +62,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Shaders/HemisphereTexShader.h"
 
 // models
+#include "Models/Model.h"
 #include "Models/FlatSurface.h"
 #include "Models/Sphere.h"
 #include "Models/Box.h"
@@ -66,6 +71,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Physics/MotionState.h"
 
 // exceptions
+#include "Exceptions/MagicException.h"
 #include "Exceptions/ShaderCompileException.h"
 #include "Exceptions/ResourceNotFoundException.h"
 

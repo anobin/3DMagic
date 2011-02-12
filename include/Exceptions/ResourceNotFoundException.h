@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_RESOURCE_NOT_FOUND_EXCEPTION_H
 #define MAGIC3D_RESOURCE_NOT_FOUND_EXCEPTION_H
 
-#include "../MagicException.h"
+#include "MagicException.h"
 
 
 namespace Magic3D

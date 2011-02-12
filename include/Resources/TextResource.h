@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_TEXT_RESOURCE_H
 #define MAGIC3D_TEXT_RESOURCE_H
 
-#include "../Resource.h"
+#include "Resource.h"
 #include <string>
 
 namespace Magic3D

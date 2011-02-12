@@ -1,0 +1,16 @@
+This file is meant to describe the basic directory layout of the source files for 3DMagic
+
+Cameras 	- all camera classes and classes pertaining directly to cameras
+Exceptions 	- all exceptions that extend from MagicException
+Graphics	- all low-level graphics primitives (Buffer, VertexArray)
+GUI			- all classes related to HUD/GUI display (RectTexture, Frame)
+Lights 		- all light classes that represent graphical light sources
+Math 		- all low-level math primitive classes (Vector, Matrix)
+Models		- all model system classes and default models
+Objects		- all object system classes and support classes for objects (Position)
+Physics		- all classes related to the physics engine interface
+Resources	- all resource system classes and resource classes themselves
+Shaders		- all shader system classes and default shaders
+Sound 		- all sound system classes
+Time		- all time tracking support classes
+Util		- grabbox of utility classes, methods, and constants (Color, Units.h)

@@ -25,9 +25,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_BOX_H
 #define MAGIC3D_BOX_H
 
-#include "../Model.h"
-#include "../VertexHandler.h"
-#include "../Units.h"
+#include "Model.h"
+#include "../Graphics/VertexHandler.h"
+#include "../Util/Units.h"
 
 namespace Magic3D
 {

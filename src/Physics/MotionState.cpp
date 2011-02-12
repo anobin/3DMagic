@@ -24,7 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Physics/MotionState.h>
-#include <Position.h>
+#include <Objects/Position.h>
 
 namespace Magic3D
 {

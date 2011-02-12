@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Resources/Images/TGA2DResource.h>
 #include <Exceptions/ResourceNotFoundException.h>
-#include <MagicException.h>
+#include <Exceptions/MagicException.h>
 
 #ifdef WIN32
 #pragma pack(push, 1)

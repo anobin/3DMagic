@@ -25,8 +25,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_SPHERE_H
 #define MAGIC3D_SPHERE_H
 
-#include "../Model.h"
-#include "../VertexHandler.h"
+#include "Model.h"
+#include "../Graphics/VertexHandler.h"
 
 namespace Magic3D
 {

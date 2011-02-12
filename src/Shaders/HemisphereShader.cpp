@@ -24,7 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Shaders/HemisphereShader.h>
-#include <MagicException.h>
+#include <Exceptions/MagicException.h>
 
 namespace Magic3D
 {

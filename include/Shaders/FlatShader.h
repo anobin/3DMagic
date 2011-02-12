@@ -33,11 +33,11 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <gl.h>
 #endif
 
-#include "../Shader.h"
-#include "../Matrix.h"
-#include "../Color.h"
+#include "Shader.h"
+#include "../Math/Matrix.h"
+#include "../Util/Color.h"
 #include "../Resources/TextResource.h"
-#include "../ResourceManager.h"
+#include "../Resources/ResourceManager.h"
 
 namespace Magic3D
 {
