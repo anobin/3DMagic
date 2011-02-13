@@ -146,10 +146,24 @@ void setup()
 		Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
 		stoneTex = new Texture(stoneImage());
 	}
+	else
+	{
+		Handle<SingleColor2DResource> stoneImage = resourceManager.injectSingleColor2D(
+				"images/bareConcrete.tga", Color::WHITE);
+		stoneTex = new Texture(stoneImage());
+	}
 	if (resourceManager.doesResourceExist("images/marble.tga"))
 	{
 		Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
 		marbleTex= new Texture(marbleImage());
+		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+	}
+	else
+	{
+		Handle<SingleColor2DResource> marbleImage = resourceManager.injectSingleColor2D(
+				"images/marble.tga", Color::GREEN);
+		marbleTex= new Texture(marbleImage());
+		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
 	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
 	{
@@ -165,7 +179,7 @@ void setup()
 	else
 	{
 		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
-					"images/singleBrick.tga", Color::BLUE, 1, 1);
+					"images/singleBrick.tga", Color(255, 118, 27, Color::RGBb));
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -191,7 +205,7 @@ void setup()
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3f(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
-	btBall->setColor(Color::WHITE);
+	btBall->setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
 	
@@ -212,9 +226,7 @@ void setup()
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
 			btBox = new Object(*boxModel, 4, Point3f(w, h, zOffset), 3.0f); // 3 kg box
-			btBox->setColor(Color(255, 118, 27, Color::RGBb));
-			if (brickTex != NULL)
-				btBox->setBaseTexture(*brickTex);
+			btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());
 		}
@@ -223,9 +235,7 @@ void setup()
 
 	
 	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->setColor(Color::WHITE);
-	if (stoneTex != NULL)
-		floorObject->setBaseTexture(*stoneTex);
+	floorObject->setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
 	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
 	
@@ -333,27 +343,14 @@ void renderScene(void)
 		Matrix33f normal;
 		mvp.multiply(projectionMatrix, transformMatrix);
 		transformMatrix.extractRotation(normal);
-		if ((*it)->getBaseTexture() != NULL)
-		{
-			hemTexShader->setMVMatrix(transformMatrix);
-			hemTexShader->setMVPMatrix(mvp);
-			hemTexShader->setNormalMatrix(normal);
-			hemTexShader->setLightPosition(lightPos);
-			hemTexShader->setSkyColor(Color(255, 255, 255));
-			hemTexShader->setGroundColor(Color(0, 0, 0));
-			hemTexShader->setTexture(*(*it)->getBaseTexture());
-			hemTexShader->use();
-		}
-		else
-		{
-			hemShader->setMVMatrix(transformMatrix);
-			hemShader->setMVPMatrix(mvp);
-			hemShader->setNormalMatrix(normal);
-			hemShader->setLightPosition(lightPos);
-			hemShader->setSkyColor((*it)->getColor());
-			hemShader->setGroundColor(Color(0, 0, 101));
-			hemShader->use();
-		}
+		hemTexShader->setMVMatrix(transformMatrix);
+		hemTexShader->setMVPMatrix(mvp);
+		hemTexShader->setNormalMatrix(normal);
+		hemTexShader->setLightPosition(lightPos);
+		hemTexShader->setSkyColor(Color(255, 255, 255));
+		hemTexShader->setGroundColor(Color(0, 0, 0));
+		hemTexShader->setTexture(*(*it)->getBaseTexture());
+		hemTexShader->use();
 		
 		// draw object 
 		(*it)->draw();
@@ -452,7 +449,7 @@ void keyPressed(unsigned char key,int x, int y)
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
 			t = new Object(*sphere, 500, p); // 1 kg sphere
-			t->setColor(Color::WHITE);
+			t->setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
@@ -462,7 +459,7 @@ void keyPressed(unsigned char key,int x, int y)
 			
 		case 'g':
 			t = new Object(*bigSphere, 300, Point3f(0.0f, 0.0f, 0.0f)); // 1 kg sphere
-			t->setColor(Color::WHITE);
+			t->setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			dynamicsWorld->addRigidBody(t->getRigidBody());
 			break;

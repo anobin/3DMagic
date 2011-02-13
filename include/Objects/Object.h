@@ -50,9 +50,6 @@ protected:
 	/// 3D position of object
 	Position position;
 	
-	/// color of object
-	Color color;
-	
 	/// base texture of object
 	Texture* baseTexture;
 	
@@ -137,18 +134,6 @@ public:
 	inline Position& getPosition()
 	{
 		return this->position;
-	}
-	
-	/// set the color of this object
-	inline void setColor(const Color& color)
-	{
-		this->color.set(color);
-	}
-	
-	/// get the color of this object
-	inline const Color& getColor()
-	{
-		return this->color;
 	}
 	
 	/// set the texture

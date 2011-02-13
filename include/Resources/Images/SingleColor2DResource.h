@@ -43,7 +43,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
-/** Represents a 2D image conposed of a single color,
+/** Represents a 1x1 2D image composed of a single color,
  * used to create very simple textures for debugging
  * and other uses.
  */
@@ -74,13 +74,11 @@ protected:
 public:
 	/** Standard constructor
 	 * @param color color to make this image
-	 * @param width width of the image to create
-	 * @param height height of the image to create
 	 * @param name name of the resource
 	 * @param manager the resource manager
 	 */
-	SingleColor2DResource(const Color& color, int width, int height, 
-						  const std::string& name, ResourceManager& manager);
+	SingleColor2DResource(const Color& color, const std::string& name, 
+						  ResourceManager& manager);
 	
 	/// copy constructor
 	inline SingleColor2DResource(const SingleColor2DResource& copy)

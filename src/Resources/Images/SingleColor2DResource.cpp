@@ -33,17 +33,15 @@ namespace Magic3D
 
 /** Standard constructor
  * @param color color to make this image
- * @param width width of the image to create
- * @param height height of the image to create
  * @param name name of the resource
  * @param manager the resource manager
  */
-SingleColor2DResource::SingleColor2DResource(const Color& color, int width, int height, 
+SingleColor2DResource::SingleColor2DResource(const Color& color,
 	const std::string& name, ResourceManager& manager):	Image2DResource(name, manager)
 {
-    // set width and height
-    this->width = width;
-    this->height = height;
+    // set width and height to 1x1
+    this->width = 1;
+    this->height = 1;
 	
 	// format is always RGBA
 	format = GL_RGBA;
