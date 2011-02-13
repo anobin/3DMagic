@@ -61,9 +61,9 @@ public:
 
 	/** Draw the object
 	 */
-	inline void draw()
+	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
 	{
-		data.draw();
+		data.draw(primitive);
 	}
 
 	/** Get the model's type name

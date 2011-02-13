@@ -85,6 +85,14 @@ Object* ceiling;
 Object* wall[4];
 std::vector<Object*> objects;
 
+// GUI stuff
+Rectangle2D* frameModel;
+Circle2D* circleModel;
+Shader2D* frameShader;
+Texture* frameTex;
+Texture* circleTex;
+Matrix44f flatProjectionMatrix;
+
 // legacy
 Position             cameraFrame;
 
@@ -107,8 +115,11 @@ void changeWindowSize(int w, int h)
 	screenWidth = w;
 	screenHeight = h;
 	
-    // Create the projection matrix, and load it on the projection matrix stack
+    // Create the projection matrix
     projectionMatrix.createPerspectiveMatrix(60.0f, float(w)/float(h), INCH, 1000*FOOT);
+	
+	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
+	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
 }
 
 
@@ -179,7 +190,7 @@ void setup()
 	else
 	{
 		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
-					"images/singleBrick.tga", Color(255, 118, 27, Color::RGBb));
+					"images/singleBrick.tga", Color(255, 118, 27, 255, Color::RGBAb));
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -209,6 +220,11 @@ void setup()
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
 	
+	floorObject = new Object(*floorModel, 0); // static object
+	floorObject->setBaseTexture(*stoneTex);
+	objects.push_back(floorObject);
+	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
+	
 	float wallWidth =60;
 	float wallHeight = 10;
 	float brickHeight = 3*INCH*scale;
@@ -234,10 +250,7 @@ void setup()
 	
 
 	
-	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->setBaseTexture(*stoneTex);
-	objects.push_back(floorObject);
-	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
+	
 	
 	/*ceiling.setModel(*ceilingModel);
 	ceiling.setColor(Color::WHITE);
@@ -277,6 +290,27 @@ void setup()
 		}
 		//objects.push_back(&wall[i]);
 	}*/
+	
+	
+	// gui stuff
+	frameModel = new Rectangle2D(10, 10, 100, 100);
+	circleModel = new Circle2D(400, 60, 100, 1.0f);
+	frameShader = new Shader2D(resourceManager);
+	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
+					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
+	frameTex = new Texture(frameImage());
+	if (resourceManager.doesResourceExist("images/splatter.tga"))
+	{
+		Handle<TGA2DResource> splatterImage = resourceManager.get
+			<TGA2DResource>("images/splatter.tga");
+		circleTex = new Texture(splatterImage());
+	}
+	else
+	{
+		circleTex = new Texture(frameImage());
+	}
+	
+	
         
     // set eye level
     cameraFrame.setLocation(0.0f, 6 * FOOT, ROOM_SIZE);
@@ -328,6 +362,10 @@ void renderScene(void)
 	shader->setLightPosition(lightPos);
 	adsShader->setLightPosition(lightPos);
 	
+	// enable blending so transparency can happen
+	glEnable (GL_BLEND); 
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	// object render loop
 	std::vector<Object*>::iterator it = objects.begin();
 	for (; it != objects.end(); it++)
@@ -357,6 +395,15 @@ void renderScene(void)
 		
 		// unload position transform
 	}
+	
+	// draw GUI stuff
+	frameShader->setMVPMatrix(flatProjectionMatrix);
+	frameShader->setTexture(*frameTex);
+	frameShader->use();
+	frameModel->draw(VertexArray::TRIANGLE_FAN);
+	frameShader->setTexture(*circleTex);
+	frameShader->use();
+	circleModel->draw(VertexArray::TRIANGLE_FAN);
 
 	
     // Do the buffer Swap

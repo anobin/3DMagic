@@ -60,12 +60,15 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Shaders/SimpleADSShader.h"
 #include "Shaders/HemisphereShader.h"
 #include "Shaders/HemisphereTexShader.h"
+#include "Shaders/Shader2D.h"
 
 // models
 #include "Models/Model.h"
 #include "Models/FlatSurface.h"
 #include "Models/Sphere.h"
 #include "Models/Box.h"
+#include "Models/Rectangle2D.h"
+#include "Models/Circle2D.h"
 
 // physics
 #include "Physics/MotionState.h"

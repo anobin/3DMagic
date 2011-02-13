@@ -1,5 +1,10 @@
 -add model-texture mapping interface to be used through object class
+-add option to render everything in wireframe
 -add MMX assembly solutions for matrix and vector ops
+-add functionally for messing with blending
+	-also enable some default blending so at least transparency works
+-add rendering pipeline
+	-need to ensure fully opaque stuff is rendered first, then partially opaque back to front
 -add text drawing and UI system
 	-Rectangle Textures are the key
 -add 2d varonoi diagram algorithm
