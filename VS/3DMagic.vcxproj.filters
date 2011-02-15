@@ -243,6 +243,18 @@
     <ClInclude Include="..\include\3DMagic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Models\Circle2D.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Models\Rectangle2D.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Resources\Images\SingleColor2DResource.h">
+      <Filter>Header Files\Resources\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Shaders\Shader2D.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Exceptions\MagicException.cpp">
@@ -331,6 +343,18 @@
     </ClCompile>
     <ClCompile Include="..\src\Objects\Position.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Models\Circle2D.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Models\Rectangle2D.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\Images\SingleColor2DResource.cpp">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Shaders\Shader2D.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

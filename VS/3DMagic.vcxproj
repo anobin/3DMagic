@@ -32,8 +32,10 @@
     <ClInclude Include="..\include\Math\Point.h" />
     <ClInclude Include="..\include\Math\Vector.h" />
     <ClInclude Include="..\include\Models\Box.h" />
+    <ClInclude Include="..\include\Models\Circle2D.h" />
     <ClInclude Include="..\include\Models\FlatSurface.h" />
     <ClInclude Include="..\include\Models\Model.h" />
+    <ClInclude Include="..\include\Models\Rectangle2D.h" />
     <ClInclude Include="..\include\Models\SignPost.h" />
     <ClInclude Include="..\include\Models\Sphere.h" />
     <ClInclude Include="..\include\Models\Teapot.h" />
@@ -44,6 +46,7 @@
     <ClInclude Include="..\include\Resources\Handle.h" />
     <ClInclude Include="..\include\Resources\Image2DResource.h" />
     <ClInclude Include="..\include\Resources\Images\PNG2DResource.h" />
+    <ClInclude Include="..\include\Resources\Images\SingleColor2DResource.h" />
     <ClInclude Include="..\include\Resources\Images\TGA2DResource.h" />
     <ClInclude Include="..\include\Resources\ModelResource.h" />
     <ClInclude Include="..\include\Resources\RawResource.h" />
@@ -56,6 +59,7 @@
     <ClInclude Include="..\include\Shaders\HemisphereTexShader.h" />
     <ClInclude Include="..\include\Shaders\PointLightDiffuseShader.h" />
     <ClInclude Include="..\include\Shaders\Shader.h" />
+    <ClInclude Include="..\include\Shaders\Shader2D.h" />
     <ClInclude Include="..\include\Shaders\ShaderVertexInterfaceSpec.h" />
     <ClInclude Include="..\include\Shaders\SimpleADSShader.h" />
     <ClInclude Include="..\include\Time\StopWatch.h" />
@@ -75,13 +79,16 @@
     <ClCompile Include="..\src\Graphics\VertexHandler.cpp" />
     <ClCompile Include="..\src\GUI\RectTexture.cpp" />
     <ClCompile Include="..\src\Models\Box.cpp" />
+    <ClCompile Include="..\src\Models\Circle2D.cpp" />
     <ClCompile Include="..\src\Models\FlatSurface.cpp" />
     <ClCompile Include="..\src\Models\Model.cpp" />
+    <ClCompile Include="..\src\Models\Rectangle2D.cpp" />
     <ClCompile Include="..\src\Models\Sphere.cpp" />
     <ClCompile Include="..\src\Objects\Object.cpp" />
     <ClCompile Include="..\src\Objects\Position.cpp" />
     <ClCompile Include="..\src\Physics\MotionState.cpp" />
     <ClCompile Include="..\src\Resources\Image2DResource.cpp" />
+    <ClCompile Include="..\src\Resources\Images\SingleColor2DResource.cpp" />
     <ClCompile Include="..\src\Resources\Images\TGA2DResource.cpp" />
     <ClCompile Include="..\src\Resources\Resource.cpp" />
     <ClCompile Include="..\src\Resources\ResourceManager.cpp" />
@@ -91,6 +98,7 @@
     <ClCompile Include="..\src\Shaders\HemisphereTexShader.cpp" />
     <ClCompile Include="..\src\Shaders\PointLightDiffuseShader.cpp" />
     <ClCompile Include="..\src\Shaders\Shader.cpp" />
+    <ClCompile Include="..\src\Shaders\Shader2D.cpp" />
     <ClCompile Include="..\src\Shaders\ShaderVertexInterfaceSpec.cpp" />
     <ClCompile Include="..\src\Shaders\SimpleADSShader.cpp" />
     <ClCompile Include="..\src\Util\Color.cpp" />
