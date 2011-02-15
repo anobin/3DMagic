@@ -120,6 +120,8 @@ void changeWindowSize(int w, int h)
 	
 	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
 	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
+	
+	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
 }
 
 
@@ -293,12 +295,21 @@ void setup()
 	
 	
 	// gui stuff
-	frameModel = new Rectangle2D(10, 10, 100, 100);
+	frameModel = new Rectangle2D(10, 10, 173, 50);
 	circleModel = new Circle2D(400, 60, 100, 1.0f);
 	frameShader = new Shader2D(resourceManager);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
-	frameTex = new Texture(frameImage());
+	if (resourceManager.doesResourceExist("images/logo.tga"))
+	{
+		Handle<TGA2DResource> logoImage = resourceManager.get
+			<TGA2DResource>("images/logo.tga");
+		frameTex = new Texture(logoImage());
+	}
+	else
+	{
+		frameTex = new Texture(frameImage());
+	}
 	if (resourceManager.doesResourceExist("images/splatter.tga"))
 	{
 		Handle<TGA2DResource> splatterImage = resourceManager.get
@@ -425,7 +436,7 @@ void keyPressed(unsigned char key,int x, int y)
 	Position p;
 	Object* t;
 	
-	static float speed = 4700 * 300;
+	
 	
 	switch(key)
 	{
@@ -481,29 +492,6 @@ void keyPressed(unsigned char key,int x, int y)
 			cameraFrame.translate(0.0f, 1.0f, 0.0f);
 			break;
 			
-		case ',':
-			speed -= 100.0f;
-			cout << "speed: " << speed << endl;
-			break;
-			
-		case '.':
-			speed += 100.0f;
-			cout << "speed: " << speed << endl;
-			break;
-			
-		case 'f':
-			p.set(cameraFrame);
-			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
-			
-			t = new Object(*sphere, 500, p); // 1 kg sphere
-			t->setBaseTexture(*marbleTex);
-			objects.push_back(t);
-			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
-										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
-										  btVector3(0.0f, 0.0f, 0.0f));
-			dynamicsWorld->addRigidBody(t->getRigidBody());
-			break;
-			
 		case 'g':
 			t = new Object(*bigSphere, 300, Point3f(0.0f, 0.0f, 0.0f)); // 1 kg sphere
 			t->setBaseTexture(*marbleTex);
@@ -552,7 +540,29 @@ void specialKeyPressed(int key, int x, int y)
  */
 void mouseClicked(int button, int state, int x, int y)
 {
+	if (state == GLUT_UP)
+		return;
 	
+	
+	Position p;
+	Object* t;
+	static float speed = 4700 * 300;
+	
+	switch(button)
+	{
+		case GLUT_LEFT_BUTTON:
+			p.set(cameraFrame);
+			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
+			
+			t = new Object(*sphere, 500, p); // 1 kg sphere
+			t->setBaseTexture(*marbleTex);
+			objects.push_back(t);
+			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
+										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
+										  btVector3(0.0f, 0.0f, 0.0f));
+			dynamicsWorld->addRigidBody(t->getRigidBody());
+			break;
+	}
 }
 
 /** Called when the mouse is moved with a button pressed
