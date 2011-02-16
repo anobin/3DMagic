@@ -2,7 +2,7 @@
 #
 CXX=g++
 CXXFLAGS= -Wall -g -I./ -I../../include -I/usr/include/GL
-LDFLAGS=-L/usr/lib -L/usr/X11R6/lib -L/usr/X11R6/lib64 -L/usr/local/lib -L../../ -l3DMagic -lX11 -lglut -lGLEW -lGL -lGLU -lBulletDynamics -lBulletCollision -lm
+LDFLAGS=-L/usr/lib -L/usr/X11R6/lib -L/usr/X11R6/lib64 -L/usr/local/lib -L../../ -l3DMagic -lX11 -lglut -lGLEW -lGL -lGLU -lBulletDynamics -lBulletCollision -l3ds -lm
 
 SRC=$(wildcard ./*.cpp)
 HEADS=$(wildcard ./*.h)

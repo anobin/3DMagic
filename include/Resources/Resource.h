@@ -36,6 +36,10 @@ template <class T> class Handle;
  */
 class Resource
 {	
+private:
+	/// default constructor
+	inline Resource(): name(NULL), handleCount(0) {}
+
 protected:
 	/// the name of this resource
 	std::string name;
@@ -45,9 +49,6 @@ protected:
 	
 	/// handle count, managed by resource manager
 	int handleCount;
-	
-	/// default constructor
-	inline Resource(): name(NULL), handleCount(0) {}
 	
 	/// standard constructor
 	inline Resource(const std::string& name, ResourceManager& manager): name(name), manager(&manager), handleCount(0) {}

@@ -1,3 +1,17 @@
+## Primary
+- revamp shader/model/texture interface
+	- needs to be done before anything else is done for the old interface
+	- easiest to switch to a static interface
+	- interface will be simple for now and expand later
+	- make sure to remove color from the interface
+	- vertex attributes that must be supported:
+		- location (duh!)
+		- normal vector for vertex
+		- base texture coordinate
+- add more funtionally to vertex handler and revamp custom model implementation
+
+
+## Secondary
 -add model-texture mapping interface to be used through object class
 -add option to render everything in wireframe
 -add MMX assembly solutions for matrix and vector ops

@@ -43,8 +43,6 @@ namespace Magic3D
 class Image2DResource : public Resource
 {
 protected:
-	/// default constructor
-	inline Image2DResource(): Resource() {}
 	
 	/// standard constructor
 	inline Image2DResource(const std::string& name, ResourceManager& manager):

@@ -85,6 +85,10 @@ Object* ceiling;
 Object* wall[4];
 std::vector<Object*> objects;
 
+// 3ds test
+CustomModel* chainLinkModel;
+Texture* chainLinkTex;
+
 // GUI stuff
 Rectangle2D* frameModel;
 Circle2D* circleModel;
@@ -321,6 +325,14 @@ void setup()
 		circleTex = new Texture(frameImage());
 	}
 	
+	// 3ds test stuff
+	Handle<Model3DSResource> linkResource = 
+		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
+	chainLinkModel = new CustomModel(*linkResource());
+	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
+					"images/linkImage", Color(195, 195, 195, 255, Color::RGBAb));
+	chainLinkTex = new Texture(linkImage());
+	
 	
         
     // set eye level
@@ -406,6 +418,34 @@ void renderScene(void)
 		
 		// unload position transform
 	}
+	
+	// draw chain link
+	Matrix44f positionMatrix;
+	Matrix44f scale;
+	scale.createScaleMatrix(0.01, 0.01, 0.01);
+	Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformationMatrix(positionMatrix);
+	Matrix44f transformMatrix;
+	transformMatrix.multiply(cameraMatrix);
+	transformMatrix.multiply(positionMatrix);
+	transformMatrix.multiply(scale);
+	scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
+	transformMatrix.multiply(scale);
+	
+	// pick and prep shader
+	Matrix44f mvp;
+	Matrix33f normal;
+	mvp.multiply(projectionMatrix, transformMatrix);
+	transformMatrix.extractRotation(normal);
+	hemTexShader->setMVMatrix(transformMatrix);
+	hemTexShader->setMVPMatrix(mvp);
+	hemTexShader->setNormalMatrix(normal);
+	hemTexShader->setLightPosition(lightPos);
+	hemTexShader->setSkyColor(Color(255, 255, 255));
+	hemTexShader->setGroundColor(Color(0, 0, 0));
+	hemTexShader->setTexture(*chainLinkTex);
+	hemTexShader->use();
+	chainLinkModel->draw();
+	
 	
 	// draw GUI stuff
 	frameShader->setMVPMatrix(flatProjectionMatrix);

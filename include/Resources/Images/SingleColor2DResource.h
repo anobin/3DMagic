@@ -51,7 +51,7 @@ class SingleColor2DResource : public Image2DResource
 {
 protected:
 	/// default constructor
-	inline SingleColor2DResource(): Image2DResource() {}
+	//inline SingleColor2DResource(): Image2DResource() {}
 	
 	/// width of the image data
 	int width;
@@ -81,7 +81,7 @@ public:
 						  ResourceManager& manager);
 	
 	/// copy constructor
-	inline SingleColor2DResource(const SingleColor2DResource& copy)
+	inline SingleColor2DResource(const SingleColor2DResource& copy): Image2DResource(copy.name, *copy.manager)
 	{
 		width = copy.width;
 		height = copy.height;

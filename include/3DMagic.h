@@ -52,6 +52,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Resources/TextResource.h"
 #include "Resources/Image2DResource.h"
 #include "Resources/Images/TGA2DResource.h"
+#include "Resources/ModelResource.h"
+#include "Resources/models/Model3DSResource.h"
 
 // shaders
 #include "Shaders/Shader.h"
@@ -69,6 +71,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Models/Box.h"
 #include "Models/Rectangle2D.h"
 #include "Models/Circle2D.h"
+#include "Models/CustomModel.h"
 
 // physics
 #include "Physics/MotionState.h"

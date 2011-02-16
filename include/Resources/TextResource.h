@@ -40,7 +40,7 @@ protected:
 	char* text;
 	
 	/// default constructor
-	inline TextResource(): Resource() {}
+	//inline TextResource(): Resource() {}
 	
 public:
 	/** Standard constructor
@@ -49,7 +49,7 @@ public:
 	TextResource(const char* path, const std::string& name, ResourceManager& manager);
 	
 	/// copy constructor
-	inline TextResource(const TextResource& copy): text(copy.text) {}
+	inline TextResource(const TextResource& copy): Resource(copy.name, *copy.manager), text(copy.text) {}
 	
 	/// destructor
 	virtual ~TextResource();

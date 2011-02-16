@@ -48,7 +48,7 @@ class TGA2DResource : public Image2DResource
 {
 protected:
 	/// default constructor
-	inline TGA2DResource(): Image2DResource() {}
+	//inline TGA2DResource(): Image2DResource() {}
 	
 	/// width of the image data
 	int width;
@@ -77,7 +77,7 @@ public:
 	TGA2DResource(const char* path, const std::string& name, ResourceManager& manager);
 	
 	/// copy constructor
-	inline TGA2DResource(const TGA2DResource& copy)
+	inline TGA2DResource(const TGA2DResource& copy): Image2DResource(copy.name, *copy.manager)
 	{
 		width = copy.width;
 		height = copy.height;
