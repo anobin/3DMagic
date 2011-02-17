@@ -85,6 +85,12 @@
     <Filter Include="Source Files\Resources\Images">
       <UniqueIdentifier>{90ced40b-4330-4438-b36c-1a62242b1158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Resources\models">
+      <UniqueIdentifier>{982c4e23-732a-42f4-8bcb-3b9c7b8e17c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resources\models">
+      <UniqueIdentifier>{deb22a27-26c2-49db-a006-93e22378ee30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Cameras\Camera.h">
@@ -255,6 +261,12 @@
     <ClInclude Include="..\include\Shaders\Shader2D.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Models\CustomModel.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Resources\models\Model3DSResource.h">
+      <Filter>Header Files\Resources\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Exceptions\MagicException.cpp">
@@ -355,6 +367,15 @@
     </ClCompile>
     <ClCompile Include="..\src\Shaders\Shader2D.cpp">
       <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Models\CustomModel.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\ModelResource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\models\Model3DSResource.cpp">
+      <Filter>Source Files\Resources\models</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
