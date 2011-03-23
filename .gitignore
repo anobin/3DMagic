@@ -7,3 +7,7 @@
 /bullet/
 /models/
 /lib3ds/
+/Makefile
+*.cmake
+CMakeCache.txt
+CMakeFiles/
