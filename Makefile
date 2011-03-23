@@ -1,7 +1,7 @@
 
 
 CXX = g++
-CXXFLAGS=-g -Wall -I./include -I/usr/include/GL
+CXXFLAGS=-g -Wall -I./include -I/usr/include/GL -I/usr/include/bullet
 PACKER=ar rcs
 
 # collect all source in src folder

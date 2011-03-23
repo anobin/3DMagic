@@ -9,6 +9,11 @@
 		- normal vector for vertex
 		- base texture coordinate
 - add more funtionally to vertex handler and revamp custom model implementation
+- add support for 
+	- rectangular (2D) textures
+	- cube maps
+	- point sprites
+	- multiple textures
 
 
 ## Secondary
