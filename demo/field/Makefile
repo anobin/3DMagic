@@ -1,7 +1,7 @@
 # Makefile for field demo
 #
 CXX=g++
-CXXFLAGS= -Wall -g -I./ -I../../include -I/usr/include/GL
+CXXFLAGS= -Wall -g -I./ -I../../include -I/usr/include/GL -I/usr/include/bullet
 LDFLAGS=-L/usr/lib -L/usr/X11R6/lib -L/usr/X11R6/lib64 -L/usr/local/lib -L../../ -l3DMagic -lX11 -lglut -lGLEW -lGL -lGLU -lBulletDynamics -lBulletCollision -l3ds -lm
 
 SRC=$(wildcard ./*.cpp)
