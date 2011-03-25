@@ -11,3 +11,4 @@
 *.cmake
 CMakeCache.txt
 CMakeFiles/
+*~
