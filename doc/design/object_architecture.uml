@@ -79,7 +79,7 @@
 			C++
 		</plugin>
 </profile>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Mar 26 01:15:06 EDT 2011'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Mar 26 02:42:55 EDT 2011'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.32(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -1902,6 +1902,256 @@
               <UML:BehavioralFeature.parameter>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DE9'
                   name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EBB'
+              name = 'getLocation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EBC'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EBD'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC0'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:0000000000000847'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D9B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EBE'
+              name = 'getLocation' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EBF'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC1'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D9B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC2'
+              name = 'getForwardVector' visibility = 'public' isSpecification = 'false'
+              ownerScope = 'instance' isQuery = 'true' concurrency = 'sequential' isRoot = 'false'
+              isLeaf = 'true' isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC3'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC4'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:0000000000000847'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC5'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC6'
+              name = 'getFowardVector' visibility = 'public' isSpecification = 'false'
+              ownerScope = 'instance' isQuery = 'false' concurrency = 'sequential' isRoot = 'false'
+              isLeaf = 'true' isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC7'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC8'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EC9'
+              name = 'getUpVector' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECA'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECB'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECC'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:0000000000000847'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECD'
+              name = 'getUpVector' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECE'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ECF'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED0'
+              name = 'getLocalZAxis' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED1'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED2'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED3'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:0000000000000847'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED4'
+              name = 'getLocalYAxis' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED5'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED6'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:0000000000000847'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED7'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED8'
+              name = 'getLocalXAxis' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000ED9'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+                <UML:Parameter xmi.id = '-48-68--117-89-1d10b917:12ef0d9c749:-8000:0000000000000EDA'
+                  name = 'x' isSpecification = 'false' kind = 'out'>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
               </UML:BehavioralFeature.parameter>
             </UML:Operation>
           </UML:Classifier.feature>
@@ -6742,7 +6992,7 @@
     </group>
   </group>
   <group name="Fig10"
-       description="org.argouml.uml.diagram.static_structure.ui.FigClass[440, 72, 342, 280]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
+       description="org.argouml.uml.diagram.static_structure.ui.FigClass[440, 72, 342, 424]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
        href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000874"
        fill="1"
        fillcolor="white"
@@ -6756,7 +7006,7 @@
       x="440"
       y="72"
       width="342"
-      height="280"
+      height="424"
       fill="1"
       fillcolor="white"
       stroke="1"
@@ -6892,7 +7142,7 @@
       strokecolor="black"
     />
     <group name="Fig10.6"
-         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[441, 152, 340, 200]"
+         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[441, 152, 340, 344]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000874"
          fill="0"
          fillcolor="white"
@@ -6906,7 +7156,7 @@
         x="441"
         y="152"
         width="340"
-        height="200"
+        height="344"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -7092,7 +7342,7 @@
         x="441"
         y="328"
         width="340"
-        height="22"
+        height="16"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -7104,6 +7354,150 @@
         textsize="12"
         justification="Left"
       >void normalize()</text>
+      <text name="Fig10.6.13"
+        x="441"
+        y="344"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Point3 &amp;getLocation() const </text>
+      <text name="Fig10.6.14"
+        x="441"
+        y="360"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Point3 &amp;getLocation()</text>
+      <text name="Fig10.6.15"
+        x="441"
+        y="376"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getForwardVector() const </text>
+      <text name="Fig10.6.16"
+        x="441"
+        y="392"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getFowardVector()</text>
+      <text name="Fig10.6.17"
+        x="441"
+        y="408"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getUpVector() const </text>
+      <text name="Fig10.6.18"
+        x="441"
+        y="424"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getUpVector()</text>
+      <text name="Fig10.6.19"
+        x="441"
+        y="440"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getLocalZAxis() const </text>
+      <text name="Fig10.6.20"
+        x="441"
+        y="456"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getLocalYAxis() const </text>
+      <text name="Fig10.6.21"
+        x="441"
+        y="472"
+        width="340"
+        height="22"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void getLocalXAxis(Vector3 &amp;x) const </text>
     </group>
   </group>
   <group name="Fig11"
@@ -13122,7 +13516,7 @@
     </group>
   </group>
   <group name="Fig3"
-       description="org.argouml.uml.diagram.static_structure.ui.FigClass[1056, 16, 342, 280]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
+       description="org.argouml.uml.diagram.static_structure.ui.FigClass[1056, 16, 342, 424]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
        href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000874"
        fill="1"
        fillcolor="white"
@@ -13136,7 +13530,7 @@
       x="1056"
       y="16"
       width="342"
-      height="280"
+      height="424"
       fill="1"
       fillcolor="white"
       stroke="1"
@@ -13272,7 +13666,7 @@
       strokecolor="black"
     />
     <group name="Fig3.6"
-         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[1057, 96, 340, 200]"
+         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[1057, 96, 340, 344]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000874"
          fill="0"
          fillcolor="white"
@@ -13286,7 +13680,7 @@
         x="1057"
         y="96"
         width="340"
-        height="200"
+        height="344"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -13472,7 +13866,7 @@
         x="1057"
         y="272"
         width="340"
-        height="22"
+        height="16"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -13484,6 +13878,150 @@
         textsize="12"
         justification="Left"
       >void normalize()</text>
+      <text name="Fig3.6.13"
+        x="1057"
+        y="288"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Point3 &amp;getLocation() const </text>
+      <text name="Fig3.6.14"
+        x="1057"
+        y="304"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Point3 &amp;getLocation()</text>
+      <text name="Fig3.6.15"
+        x="1057"
+        y="320"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getForwardVector() const </text>
+      <text name="Fig3.6.16"
+        x="1057"
+        y="336"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getFowardVector()</text>
+      <text name="Fig3.6.17"
+        x="1057"
+        y="352"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getUpVector() const </text>
+      <text name="Fig3.6.18"
+        x="1057"
+        y="368"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getUpVector()</text>
+      <text name="Fig3.6.19"
+        x="1057"
+        y="384"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getLocalZAxis() const </text>
+      <text name="Fig3.6.20"
+        x="1057"
+        y="400"
+        width="340"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Vector3 &amp;getLocalYAxis() const </text>
+      <text name="Fig3.6.21"
+        x="1057"
+        y="416"
+        width="340"
+        height="22"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void getLocalXAxis(Vector3 &amp;x) const </text>
     </group>
   </group>
   <group name="Fig4"
