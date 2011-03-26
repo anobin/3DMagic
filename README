@@ -11,10 +11,32 @@
 \_____________\/ \/_____/          \/_/ \_\___\     /____/_/\/___________/ \/_________/\/____________/  
 
 
-This is the 3DMagic library/toolkit, 3DMagic provides solutions for 
+This is the 3DMagic library/toolkit, 3DMagic provides services for 
 three-dimensional(3D) graphics, physics, and audio. 3DMagic was made with an
 intention of providing a unified toolkit to be used in development of 3D games
 and simulations.
+
+For a number of services, 3DMagic dictates a interface that can be implemented
+using any number of technologies. The implementation used for each interface
+is determined by the compile-time configuration that can be set through the
+cmake system. The following services and implementations for each are to be
+supported:
+ * 3D Math      - generic, intel
+ * Graphics     - null, openGL, DirectX, OGRE
+ * Physics      - null, Bullet, PhysX
+ * Audio        - null, openAL, DirectX, FMOD
+ * GUI          - null, generic, CEGUI, GLUI
+
+The implementations avialable are dependent on platform and applications using
+3DMagic must be aware of the underlying libraries used and their licenses.
+
+Built on top of the service interfaces, 3DMagic incldues a great ammount of
+functionality built around a Object model (where each object in the virtual
+environment has graphical, physical, and audio characteristics). For 
+demonstrations and prototyping, 3DMagic also includes a number of default
+resources including some graphical and physical models and some simple graphics
+shaders. 3DMagic also includes a full resource model with built-in resource
+loaders for popular model, image, and audio file formats.
 
 ## License
 All of the source code in 3DMagic is covered by the GNU Lesser General Public
@@ -34,8 +56,10 @@ a binary file). For answers to licensing questions, email a maintainer.
 ## Maintainers
 Andrew Keating (anobin@gmail.com)
 
-## Contributors
+## Code Contributors
 Andrew Keating (anobin@gmail.com)
+
+## Media Contributors
 Matthew Engskow
 
 
