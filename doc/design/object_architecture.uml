@@ -79,7 +79,7 @@
 			C++
 		</plugin>
 </profile>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Fri Mar 25 21:34:30 EDT 2011'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sat Mar 26 01:15:06 EDT 2011'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.32(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -746,7 +746,7 @@
             </UML:Operation>
             <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBE'
               name = 'getColumn' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
-              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
               isAbstract = 'false'>
               <UML:BehavioralFeature.parameter>
                 <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBF'
@@ -5976,7 +5976,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >virtual void getColumn(unsigned int col, Vector4 *out)</text>
+      >void getColumn(unsigned int col, Vector4 *out) const </text>
     </group>
   </group>
   <group name="Fig8"
@@ -13118,7 +13118,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >virtual void getColumn(unsigned int col, Vector4 *out)</text>
+      >void getColumn(unsigned int col, Vector4 *out) const </text>
     </group>
   </group>
   <group name="Fig3"
@@ -15373,7 +15373,7 @@
       <text name="Fig9.6.8"
         x="9"
         y="175"
-        width="252"
+        width="251"
         height="16"
         fill="0"
         fillcolor="white"
