@@ -79,7 +79,7 @@
 			C++
 		</plugin>
 </profile>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Fri Mar 25 20:41:03 EDT 2011'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Fri Mar 25 21:34:30 EDT 2011'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.32(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -615,21 +615,168 @@
                 </UML:Parameter>
               </UML:BehavioralFeature.parameter>
             </UML:Operation>
-            <UML:Attribute xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D7D'
-              name = 'data' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
-              changeability = 'changeable' targetScope = 'instance'>
-              <UML:StructuralFeature.multiplicity>
-                <UML:Multiplicity xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D81'>
-                  <UML:Multiplicity.range>
-                    <UML:MultiplicityRange xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D80'
-                      lower = '16' upper = '16'/>
-                  </UML:Multiplicity.range>
-                </UML:Multiplicity>
-              </UML:StructuralFeature.multiplicity>
-              <UML:StructuralFeature.type>
-                <UML:DataType xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000877'/>
-              </UML:StructuralFeature.type>
-            </UML:Attribute>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EA8'
+              name = 'default' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:ModelElement.stereotype>
+                <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:000000000000084C'/>
+                <UML:Stereotype href = 'http://argouml.org/profiles/uml14/default-uml14.xmi#.:000000000000082B'/>
+              </UML:ModelElement.stereotype>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EA9'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EAA'
+              name = 'copy' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:ModelElement.stereotype>
+                <UML:Stereotype href = 'http://argouml.org/profiles/uml14/default-uml14.xmi#.:000000000000082B'/>
+                <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#85--35--127-126-57735a61:1167d2379d2:-8000:000000000000084C'/>
+              </UML:ModelElement.stereotype>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EAB'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EAC'
+                  name = 'copy' isSpecification = 'false' kind = 'in'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EAD'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB0'
+              name = 'set' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB1'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB2'
+                  name = 'col' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB3'
+                  name = 'row' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB4'
+                  name = 'value' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000877'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB5'
+              name = 'get' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB6'
+                  name = 'return' isSpecification = 'false' kind = 'return'>
+                  <UML:Parameter.type>
+                    <UML:DataType xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000877'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB7'
+                  name = 'col' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB8'
+                  name = 'row' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EB9'
+              name = 'setColumn' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBA'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBB'
+                  name = 'col' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBC'
+                  name = 'v' isSpecification = 'false' kind = 'in'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBD'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-64--88-1-5--404f4368:12e33f01c6d:-8000:0000000000000CB8'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBE'
+              name = 'getColumn' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
+              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
+              isAbstract = 'false'>
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EBF'
+                  name = 'return' isSpecification = 'false' kind = 'return'/>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EC0'
+                  name = 'col' isSpecification = 'false' kind = 'in'>
+                  <UML:Parameter.type>
+                    <UML:DataType href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#10-0-1-4-8c436b:10bce9cf2cc:-8000:000000000000086B'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EC1'
+                  name = 'out' isSpecification = 'false' kind = 'out'>
+                  <UML:ModelElement.stereotype>
+                    <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
+                  </UML:ModelElement.stereotype>
+                  <UML:ModelElement.taggedValue>
+                    <UML:TaggedValue xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EC2'
+                      isSpecification = 'false'>
+                      <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
+                      <UML:TaggedValue.type>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                      </UML:TaggedValue.type>
+                    </UML:TaggedValue>
+                  </UML:ModelElement.taggedValue>
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref = '-64--88-1-5--404f4368:12e33f01c6d:-8000:0000000000000CB8'/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
           </UML:Classifier.feature>
         </UML:Class>
         <UML:Class xmi.id = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000872'
@@ -3219,21 +3366,6 @@
           name = 'Matrix3' visibility = 'public' isSpecification = 'false' isRoot = 'false'
           isLeaf = 'false' isAbstract = 'false' isActive = 'false'>
           <UML:Classifier.feature>
-            <UML:Attribute xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D24'
-              name = 'data' visibility = 'private' isSpecification = 'false' ownerScope = 'instance'
-              changeability = 'changeable' targetScope = 'instance'>
-              <UML:StructuralFeature.multiplicity>
-                <UML:Multiplicity xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D28'>
-                  <UML:Multiplicity.range>
-                    <UML:MultiplicityRange xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D27'
-                      lower = '9' upper = '9'/>
-                  </UML:Multiplicity.range>
-                </UML:Multiplicity>
-              </UML:StructuralFeature.multiplicity>
-              <UML:StructuralFeature.type>
-                <UML:DataType xmi.idref = '-48-68--113-55-22206690:12e313444d8:-8000:0000000000000877'/>
-              </UML:StructuralFeature.type>
-            </UML:Attribute>
             <UML:Operation xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D29'
               name = 'Matrix3' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
               isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'false'
@@ -3306,7 +3438,7 @@
             </UML:Operation>
             <UML:Operation xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D33'
               name = 'get' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
-              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
               isAbstract = 'false'>
               <UML:BehavioralFeature.parameter>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D34'
@@ -3391,7 +3523,7 @@
             </UML:Operation>
             <UML:Operation xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D44'
               name = 'getColumn' visibility = 'public' isSpecification = 'false' ownerScope = 'instance'
-              isQuery = 'false' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
+              isQuery = 'true' concurrency = 'sequential' isRoot = 'false' isLeaf = 'true'
               isAbstract = 'false'>
               <UML:BehavioralFeature.parameter>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D45'
@@ -3403,12 +3535,12 @@
                   </UML:Parameter.type>
                 </UML:Parameter>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D47'
-                  name = 'out' isSpecification = 'false' kind = 'in'>
+                  name = 'out' isSpecification = 'false' kind = 'out'>
                   <UML:ModelElement.stereotype>
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D48'
+                    <UML:TaggedValue xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EAF'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
@@ -5547,7 +5679,7 @@
     </group>
   </group>
   <group name="Fig7"
-       description="org.argouml.uml.diagram.static_structure.ui.FigClass[536, 120, 657, 136]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
+       description="org.argouml.uml.diagram.static_structure.ui.FigClass[536, 120, 657, 229]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
        href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
        fill="1"
        fillcolor="white"
@@ -5561,7 +5693,7 @@
       x="536"
       y="120"
       width="657"
-      height="136"
+      height="229"
       fill="1"
       fillcolor="white"
       stroke="1"
@@ -5617,7 +5749,7 @@
       strokecolor="black"
     />
     <group name="Fig7.4"
-         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[537, 144, 655, 24]"
+         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[537, 144, 655, 21]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
          fill="0"
          fillcolor="white"
@@ -5631,32 +5763,16 @@
         x="537"
         y="144"
         width="655"
-        height="24"
+        height="21"
         fill="0"
         fillcolor="white"
         stroke="0"
         strokecolor="black"
       />
-      <text name="Fig7.4.1"
-        x="537"
-        y="144"
-        width="655"
-        height="22"
-        fill="0"
-        fillcolor="white"
-        stroke="0"
-        strokecolor="black"
-        textcolor="black"
-        font="Dialog"
-        italic="false"
-        bold="false"
-        textsize="12"
-        justification="Left"
-      >Scalar data[ 16];</text>
     </group>
     <rectangle name="Fig7.5"
       x="536"
-      y="167"
+      y="164"
       width="657"
       height="1"
       fill="1"
@@ -5665,7 +5781,7 @@
       strokecolor="black"
     />
     <group name="Fig7.6"
-         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[537, 168, 655, 88]"
+         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[537, 165, 655, 184]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
          fill="0"
          fillcolor="white"
@@ -5677,9 +5793,9 @@
       
       <rectangle name="Fig7.6.0"
         x="537"
-        y="168"
+        y="165"
         width="655"
-        height="88"
+        height="184"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -5687,7 +5803,7 @@
       />
       <text name="Fig7.6.1"
         x="537"
-        y="168"
+        y="165"
         width="655"
         height="16"
         fill="0"
@@ -5703,7 +5819,7 @@
       >void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax)</text>
       <text name="Fig7.6.2"
         x="537"
-        y="184"
+        y="181"
         width="655"
         height="16"
         fill="0"
@@ -5719,7 +5835,7 @@
       >void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
       <text name="Fig7.6.3"
         x="537"
-        y="200"
+        y="197"
         width="655"
         height="16"
         fill="0"
@@ -5735,7 +5851,7 @@
       >void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)</text>
       <text name="Fig7.6.4"
         x="537"
-        y="216"
+        y="213"
         width="655"
         height="16"
         fill="0"
@@ -5751,7 +5867,103 @@
       >void createTranslationMatrix(Scalar x, Scalar y, Scalar z)</text>
       <text name="Fig7.6.5"
         x="537"
-        y="232"
+        y="229"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void extractRotation(const Matrix3 *out)</text>
+      <text name="Fig7.6.6"
+        x="537"
+        y="245"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Matrix4()</text>
+      <text name="Fig7.6.7"
+        x="537"
+        y="261"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Matrix4(const Matrix4 &amp;copy)</text>
+      <text name="Fig7.6.8"
+        x="537"
+        y="277"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void set(unsigned int col, unsigned int row, Scalar value)</text>
+      <text name="Fig7.6.9"
+        x="537"
+        y="293"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Scalar get(unsigned int col, unsigned int row) const </text>
+      <text name="Fig7.6.10"
+        x="537"
+        y="309"
+        width="655"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void setColumn(unsigned int col, const Vector4 &amp;v)</text>
+      <text name="Fig7.6.11"
+        x="537"
+        y="325"
         width="655"
         height="22"
         fill="0"
@@ -5764,7 +5976,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void extractRotation(const Matrix3 *out)</text>
+      >virtual void getColumn(unsigned int col, Vector4 *out)</text>
     </group>
   </group>
   <group name="Fig8"
@@ -12609,7 +12821,7 @@
     </group>
   </group>
   <group name="Fig2"
-       description="org.argouml.uml.diagram.static_structure.ui.FigClass[440, 732, 626, 136]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
+       description="org.argouml.uml.diagram.static_structure.ui.FigClass[440, 732, 626, 229]pathVisible=false;stereotypeView=0;operationsVisible=true;attributesVisible=true;"
        href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
        fill="1"
        fillcolor="white"
@@ -12623,7 +12835,7 @@
       x="440"
       y="732"
       width="626"
-      height="136"
+      height="229"
       fill="1"
       fillcolor="white"
       stroke="1"
@@ -12679,7 +12891,7 @@
       strokecolor="black"
     />
     <group name="Fig2.4"
-         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[441, 756, 624, 24]"
+         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[441, 756, 624, 21]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
          fill="0"
          fillcolor="white"
@@ -12693,32 +12905,16 @@
         x="441"
         y="756"
         width="624"
-        height="24"
+        height="21"
         fill="0"
         fillcolor="white"
         stroke="0"
         strokecolor="black"
       />
-      <text name="Fig2.4.1"
-        x="441"
-        y="756"
-        width="624"
-        height="22"
-        fill="0"
-        fillcolor="white"
-        stroke="0"
-        strokecolor="black"
-        textcolor="black"
-        font="Dialog"
-        italic="false"
-        bold="false"
-        textsize="12"
-        justification="Left"
-      >Scalar data[ 16];</text>
     </group>
     <rectangle name="Fig2.5"
       x="440"
-      y="779"
+      y="776"
       width="626"
       height="1"
       fill="1"
@@ -12727,7 +12923,7 @@
       strokecolor="black"
     />
     <group name="Fig2.6"
-         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[441, 780, 624, 88]"
+         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[441, 777, 624, 184]"
          href="-48-68--113-55-22206690:12e313444d8:-8000:0000000000000871"
          fill="0"
          fillcolor="white"
@@ -12739,9 +12935,9 @@
       
       <rectangle name="Fig2.6.0"
         x="441"
-        y="780"
+        y="777"
         width="624"
-        height="88"
+        height="184"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -12749,7 +12945,7 @@
       />
       <text name="Fig2.6.1"
         x="441"
-        y="780"
+        y="777"
         width="624"
         height="16"
         fill="0"
@@ -12765,7 +12961,7 @@
       >void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax)</text>
       <text name="Fig2.6.2"
         x="441"
-        y="796"
+        y="793"
         width="624"
         height="16"
         fill="0"
@@ -12781,7 +12977,7 @@
       >void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
       <text name="Fig2.6.3"
         x="441"
-        y="812"
+        y="809"
         width="624"
         height="16"
         fill="0"
@@ -12797,7 +12993,7 @@
       >void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)</text>
       <text name="Fig2.6.4"
         x="441"
-        y="828"
+        y="825"
         width="624"
         height="16"
         fill="0"
@@ -12813,7 +13009,103 @@
       >void createTranslationMatrix(Scalar x, Scalar y, Scalar z)</text>
       <text name="Fig2.6.5"
         x="441"
-        y="844"
+        y="841"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void extractRotation(const Matrix3 *out)</text>
+      <text name="Fig2.6.6"
+        x="441"
+        y="857"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Matrix4()</text>
+      <text name="Fig2.6.7"
+        x="441"
+        y="873"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Matrix4(const Matrix4 &amp;copy)</text>
+      <text name="Fig2.6.8"
+        x="441"
+        y="889"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void set(unsigned int col, unsigned int row, Scalar value)</text>
+      <text name="Fig2.6.9"
+        x="441"
+        y="905"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >Scalar get(unsigned int col, unsigned int row) const </text>
+      <text name="Fig2.6.10"
+        x="441"
+        y="921"
+        width="624"
+        height="16"
+        fill="0"
+        fillcolor="white"
+        stroke="0"
+        strokecolor="black"
+        textcolor="black"
+        font="Dialog"
+        italic="false"
+        bold="false"
+        textsize="12"
+        justification="Left"
+      >void setColumn(unsigned int col, const Vector4 &amp;v)</text>
+      <text name="Fig2.6.11"
+        x="441"
+        y="937"
         width="624"
         height="22"
         fill="0"
@@ -12826,7 +13118,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void extractRotation(const Matrix3 *out)</text>
+      >virtual void getColumn(unsigned int col, Vector4 *out)</text>
     </group>
   </group>
   <group name="Fig3"
@@ -13232,7 +13524,7 @@
       justification="Center"
     >class Vector2</text>
     <group name="Fig4.2"
-         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[17, 244, 318, 0]"
+         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[17, 297, 318, 0]"
          href="-64--88-1-5--404f4368:12e33f01c6d:-8000:0000000000000CB7"
          fill="0"
          fillcolor="white"
@@ -13245,7 +13537,7 @@
       
       <rectangle name="Fig4.2.0"
         x="17"
-        y="244"
+        y="297"
         width="318"
         height="0"
         fill="0"
@@ -13581,7 +13873,7 @@
       justification="Center"
     >class Vector4</text>
     <group name="Fig5.2"
-         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[721, 297, 96, 0]"
+         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[721, 297, 278, 0]"
          href="-64--88-1-5--404f4368:12e33f01c6d:-8000:0000000000000CB8"
          fill="0"
          fillcolor="white"
@@ -13595,7 +13887,7 @@
       <rectangle name="Fig5.2.0"
         x="721"
         y="297"
-        width="96"
+        width="278"
         height="0"
         fill="0"
         fillcolor="white"
@@ -13947,7 +14239,7 @@
       strokecolor="black"
     />
     <group name="Fig6.4"
-         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[17, 756, 404, 31]"
+         description="org.argouml.uml.diagram.ui.FigAttributesCompartment[17, 756, 404, 29]"
          href="-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D19"
          fill="0"
          fillcolor="white"
@@ -13961,32 +14253,16 @@
         x="17"
         y="756"
         width="404"
-        height="31"
+        height="29"
         fill="0"
         fillcolor="white"
         stroke="0"
         strokecolor="black"
       />
-      <text name="Fig6.4.1"
-        x="17"
-        y="756"
-        width="404"
-        height="22"
-        fill="0"
-        fillcolor="white"
-        stroke="0"
-        strokecolor="black"
-        textcolor="black"
-        font="Dialog"
-        italic="false"
-        bold="false"
-        textsize="12"
-        justification="Left"
-      >Scalar data[ 9];</text>
     </group>
     <rectangle name="Fig6.5"
       x="16"
-      y="787"
+      y="785"
       width="406"
       height="1"
       fill="1"
@@ -13995,7 +14271,7 @@
       strokecolor="black"
     />
     <group name="Fig6.6"
-         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[17, 788, 404, 191]"
+         description="org.argouml.uml.diagram.ui.FigOperationsCompartment[17, 786, 404, 192]"
          href="-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D19"
          fill="0"
          fillcolor="white"
@@ -14007,9 +14283,9 @@
       
       <rectangle name="Fig6.6.0"
         x="17"
-        y="788"
+        y="786"
         width="404"
-        height="191"
+        height="192"
         fill="0"
         fillcolor="white"
         stroke="0"
@@ -14017,7 +14293,7 @@
       />
       <text name="Fig6.6.1"
         x="17"
-        y="788"
+        y="786"
         width="404"
         height="16"
         fill="0"
@@ -14033,7 +14309,7 @@
       >Matrix3()</text>
       <text name="Fig6.6.2"
         x="17"
-        y="804"
+        y="802"
         width="404"
         height="16"
         fill="0"
@@ -14049,7 +14325,7 @@
       >Matrix3(const Matrix3 &amp;copy)</text>
       <text name="Fig6.6.3"
         x="17"
-        y="820"
+        y="818"
         width="404"
         height="16"
         fill="0"
@@ -14065,7 +14341,7 @@
       >void set(const Matrix3 &amp;copy)</text>
       <text name="Fig6.6.4"
         x="17"
-        y="836"
+        y="834"
         width="404"
         height="16"
         fill="0"
@@ -14078,10 +14354,10 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >Scalar get(unsigned int col, unsigned int row)</text>
+      >Scalar get(unsigned int col, unsigned int row) const </text>
       <text name="Fig6.6.5"
         x="17"
-        y="852"
+        y="850"
         width="404"
         height="16"
         fill="0"
@@ -14097,7 +14373,7 @@
       >void set(unsigned int col, unsigned int row, Scalar value)</text>
       <text name="Fig6.6.6"
         x="17"
-        y="868"
+        y="866"
         width="404"
         height="16"
         fill="0"
@@ -14113,7 +14389,7 @@
       >void setColumn(unsigned int col, const Vector3 &amp;v)</text>
       <text name="Fig6.6.7"
         x="17"
-        y="884"
+        y="882"
         width="404"
         height="16"
         fill="0"
@@ -14126,10 +14402,10 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getColumn(unsigned int col, const Vector3 *out)</text>
+      >void getColumn(unsigned int col, Vector3 *out) const </text>
       <text name="Fig6.6.8"
         x="17"
-        y="900"
+        y="898"
         width="404"
         height="16"
         fill="0"
@@ -14145,7 +14421,7 @@
       >void multiply(const Matrix3 &amp;m)</text>
       <text name="Fig6.6.9"
         x="17"
-        y="916"
+        y="914"
         width="404"
         height="16"
         fill="0"
@@ -14161,7 +14437,7 @@
       >void multiply(const Matrix3 &amp;m1, const Matrix3 &amp;m2)</text>
       <text name="Fig6.6.10"
         x="17"
-        y="932"
+        y="930"
         width="404"
         height="16"
         fill="0"
@@ -14177,7 +14453,7 @@
       >void createScaleMatrix(Scalar x, Scalar y, Scalar z)</text>
       <text name="Fig6.6.11"
         x="17"
-        y="948"
+        y="946"
         width="404"
         height="22"
         fill="0"
@@ -14564,7 +14840,7 @@
       justification="Center"
     >class Point4</text>
     <group name="Fig8.2"
-         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[585, 17, 267, 0]"
+         description="org.argouml.uml.diagram.ui.FigStereotypesGroup[585, 17, 294, 0]"
          href="-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DB2"
          fill="0"
          fillcolor="white"
@@ -14578,7 +14854,7 @@
       <rectangle name="Fig8.2.0"
         x="585"
         y="17"
-        width="267"
+        width="294"
         height="0"
         fill="0"
         fillcolor="white"
