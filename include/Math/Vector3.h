@@ -58,9 +58,7 @@ public:
 
     void crossProduct(const Vector3 &v1, const Vector3 &v2);
 
-    void dotProduct(const Vector3 &v1);
-
-    void dotProduct(const Vector3 &v1, const Vector3 &v2);
+    Scalar dotProduct(const Vector3 &v1) const;
 
     Scalar angleBetween(const Vector3 &v) const ;
 
