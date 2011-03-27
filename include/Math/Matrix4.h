@@ -62,7 +62,7 @@ public:
 
     void createTranslationMatrix(Scalar x, Scalar y, Scalar z);
 
-    void extractRotation(const Matrix3 *out);
+    void extractRotation(Matrix3& out);
 
     Matrix4();
 
@@ -74,7 +74,7 @@ public:
 
     void setColumn(unsigned int col, const Vector4 &v);
 
-    void getColumn(unsigned int col, Vector4 *out) const ;
+    void getColumn(unsigned int col, Vector4& out) const ;
 };
 
 

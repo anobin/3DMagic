@@ -66,7 +66,7 @@ public:
 
     void setColumn(unsigned int col, const Vector3 &v);
 
-    void getColumn(unsigned int col, Vector3 *out) const ;
+    void getColumn(unsigned int col, Vector3& out) const ;
 
     void multiply(const Matrix3 &m);
 

@@ -66,11 +66,11 @@ public:
 
     void translateLocal(Scalar x, Scalar y, Scalar z);
 
-    void getTransformMatrix(const Matrix4 *out);
+    void getTransformMatrix(Matrix4& out);
 
-    void getRotationMatrix(const Matrix3 *out);
+    void getRotationMatrix(Matrix3& out);
 
-    void getCameraMatrix(const Matrix4 *out);
+    void getCameraMatrix(Matrix4& out);
 
     void rotate(Scalar angle, const Vector3 &axis);
 
