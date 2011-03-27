@@ -58,6 +58,12 @@ public:
     void setColumn(unsigned int col, const Vector4 &v);
 
     void getColumn(unsigned int col, Vector4 *out) const ;
+    
+    void createScaleMatrix(Scalar x, Scalar y, Scalar z);
+
+    void multiply(const Matrix4 &m);
+
+    void multiply(const Matrix4 &m1, const Matrix4 &m2);
 };
 
 

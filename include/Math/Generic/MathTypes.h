@@ -26,11 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MATH_TYPES_GENERIC_H
 
 
-// TODO
-#error "Generic Math Implementation is not yet implemented"
-
-
-/// scalar floating-point base type
+// scalar floating-point base type, allow for settable precision
 #ifdef M3D_MATH_DOUBLE_PERCISION
 typedef Scalar double;
 #else

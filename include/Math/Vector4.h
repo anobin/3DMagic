@@ -56,11 +56,11 @@ class Vector4
 public:
     Vector4();
 
-    Vector4(Scalar x, Scalar y, Scalar z, Scalar w);
+    Vector4(Scalar x, Scalar y, Scalar z, Scalar w = 1.0);
 
     Vector4(const Vector4 &copy);
 
-    void set(Scalar x, Scalar y, Scalar z, Scalar w);
+    void set(Scalar x, Scalar y, Scalar z, Scalar w = 1.0);
 
     void set(const Vector4 &copy);
 
