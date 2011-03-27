@@ -79,6 +79,16 @@ public:
     Scalar getZ() const ;
 
     Scalar getW() const ;
+
+    void add(const Vector4 &v1);
+
+    void add(const Vector4 &v1, const Vector4 &v2);
+
+    void subtract(const Vector4 &v1);
+
+    void subtract(const Vector4 &v1, const Vector4 &v2);
+
+    void scale(Scalar factor);
 };
 
 
