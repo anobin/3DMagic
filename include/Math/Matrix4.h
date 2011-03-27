@@ -56,13 +56,13 @@ class Matrix4
 public:
     void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
 
-    void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
+    void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
 
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
 
     void createTranslationMatrix(Scalar x, Scalar y, Scalar z);
 
-    void extractRotation(const Matrix3 *out);
+    void extractRotation(Matrix3& out);
 
     Matrix4();
 
@@ -74,7 +74,7 @@ public:
 
     void setColumn(unsigned int col, const Vector4 &v);
 
-    void getColumn(unsigned int col, Vector4 *out) const ;
+    void getColumn(unsigned int col, Vector4& out) const ;
 
     void createScaleMatrix(Scalar x, Scalar y, Scalar z);
 

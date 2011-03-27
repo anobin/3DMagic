@@ -79,7 +79,7 @@
 			C++
 		</plugin>
 </profile>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sun Mar 27 05:32:11 EDT 2011'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sun Mar 27 19:42:27 EDT 2011'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.32(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -484,7 +484,7 @@
               </UML:BehavioralFeature.parameter>
             </UML:Operation>
             <UML:Operation xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D66'
-              name = 'ceateOrthograhicMatrxi' visibility = 'public' isSpecification = 'false'
+              name = 'ceateOrthograhicMatrix' visibility = 'public' isSpecification = 'false'
               ownerScope = 'instance' isQuery = 'false' concurrency = 'sequential' isRoot = 'false'
               isLeaf = 'true' isAbstract = 'false'>
               <UML:BehavioralFeature.parameter>
@@ -6458,7 +6458,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
+      >void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
       <text name="Fig7.6.3"
         x="537"
         y="197"
@@ -13920,7 +13920,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
+      >void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax)</text>
       <text name="Fig2.6.3"
         x="441"
         y="901"
@@ -16591,7 +16591,7 @@
       <text name="Fig9.6.8"
         x="9"
         y="175"
-        width="252"
+        width="251"
         height="16"
         fill="0"
         fillcolor="white"

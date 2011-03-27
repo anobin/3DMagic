@@ -25,45 +25,97 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_MATRIX4_GENERIC_H
 #define MAGIC3D_MATRIX4_GENERIC_H
 
-// TODO
-#error "Generic Math Implementation is not yet implemented"
-
+// for Scalar
 #include "MathTypes.h"
 
-/** Represents a 4-component (x,y,z,w) matrix. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+// for Vector4 and Matrix3
+#include "Vector4.h"
+#include "Matrix3.h"
+
+// for a lot of stuff
+#include <math.h>
+
+// for memcpy
+#include <string.h>
+
+
+/** Represents a 4x4-component (x,y,z,w) matrix
  */
 class Matrix4
 {
-public:
-    void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
-
-    void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
-
-    void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
-
-    void createTranslationMatrix(Scalar x, Scalar y, Scalar z);
-
-    void extractRotation(const Matrix3 *out);
-
-    Matrix4();
-
-    Matrix4(const Matrix4 &copy);
-
-    void set(unsigned int col, unsigned int row, Scalar value);
-
-    Scalar get(unsigned int col, unsigned int row) const ;
-
-    void setColumn(unsigned int col, const Vector4 &v);
-
-    void getColumn(unsigned int col, Vector4 *out) const ;
+private:
+    /// matrix data, column major
+    Scalar data[4*4];
     
+    /// the identity matrix
+    static const Scalar identity[];
+    
+public:
+    /// default constructor, load identity
+    inline Matrix4()
+    {
+        memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
+    }
+
+    /// copy constructor
+    inline Matrix4(const Matrix4 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
+    }
+
+    /// set a element
+    inline void set(unsigned int col, unsigned int row, Scalar value)
+    {
+        data[col*row] = value;
+    }
+
+    /// get a element
+    inline Scalar get(unsigned int col, unsigned int row) const
+    {
+        return data[col*row];
+    }
+
+    /// set a column
+    inline void setColumn(unsigned int col, const Vector4 &v)
+    {
+        data[col*4  ] = v.getX();
+        data[col*4+1] = v.getY();
+        data[col*4+2] = v.getZ();
+        data[col*4+3] = v.getW();
+    }
+
+    /// get a column
+    inline void getColumn(unsigned int col, Vector4& out) const
+    {
+        out.setX(data[col*4  ]);
+        out.setY(data[col*4+1]);
+        out.setZ(data[col*4+2]);
+        out.setW(data[col*4+3]);
+    }
+    
+    /// create a scale matrix
     void createScaleMatrix(Scalar x, Scalar y, Scalar z);
 
+    /// multiply this matrix and another matrix
     void multiply(const Matrix4 &m);
 
+    /// multiply two other matrixes and store the result in this matrix
     void multiply(const Matrix4 &m1, const Matrix4 &m2);
+    
+    /// create a perepective matrix
+    void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
+
+    /// create a orthographic matrix
+    void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
+
+    /// create rotation matrix
+    void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
+
+    /// create a translation matrix
+    void createTranslationMatrix(Scalar x, Scalar y, Scalar z);
+
+    /// extract the rotational component out of this matrix
+    void extractRotation(Matrix3& out);
 };
 
 
