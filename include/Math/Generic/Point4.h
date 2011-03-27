@@ -25,43 +25,101 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_POINT4_GENERIC_H
 #define MAGIC3D_POINT4_GENERIC_H
 
-// TODO
-#error "Generic Math Implementation is not yet implemented"
-
+// for Scalar
 #include "MathTypes.h"
 
-/** Represents a 4-component (x,y,z,w) point. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+
+/** Represents a 4-component (x,y,z,w) point
  */
 class Point4
 {
+private:
+    /// x component
+    Scalar x;
+    /// y component
+    Scalar y;
+    /// z component
+    Scalar z;
+    /// w component
+    Scalar w;
+    
 public:
-    Point4();
+    /// default constructor, set to (0,0,0,1)
+    inline Point4(): x(0), y(0), z(0), w(1) {}
 
-    Point4(Scalar x, Scalar y, Scalar z, Scalar w);
+    /// stanadard constructor, w optional
+    inline Point4(Scalar x, Scalar y, Scalar z, Scalar w = 1.0)
+        : x(x), y(y), z(z), w(w) {}
 
-    Point4(const Point4 &copy);
+    /// copy constructor
+    inline Point4(const Point4 &copy)
+        : x(copy.x), y(copy.y), z(copy.z), w(copy.w) {}
 
-    Scalar getX() const ;
+    /// get the x component
+    inline Scalar getX() const
+    {
+        return x;
+    }
 
-    Scalar getY() const ;
+    /// get the y component
+    inline Scalar getY() const
+    {
+        return y;
+    }
 
-    Scalar getZ() const ;
+    /// get the z component
+    inline Scalar getZ() const
+    {
+        return z;
+    }
 
-    Scalar getW() const ;
+    /// get the w component
+    inline Scalar getW() const
+    {
+        return w;
+    }
 
-    void setX(Scalar value);
+    /// set the x component
+    inline void setX(Scalar value)
+    {
+        x = value;
+    }
 
-    void setY(Scalar value);
+    /// set the y component
+    inline void setY(Scalar value)
+    {
+        y = value;
+    }
 
-    void setZ(Scalar value);
+    /// set the z component
+    inline void setZ(Scalar value)
+    {
+        z = value;
+    }
 
-    void setW(Scalar value);
+    /// set the w component
+    inline void setW(Scalar value)
+    {
+        w = value;
+    }
 
-    void set(Scalar x, Scalar y, Scalar z, Scalar w);
+    /// set the contents, w optional
+    inline void set(Scalar x, Scalar y, Scalar z, Scalar w = 1.0)
+    {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+        this->w = w;
+    }
 
-    void set(const Point4 &copy);
+    /// set the contents to another point
+    inline void set(const Point4 &copy)
+    {
+        this->x = copy.x;
+        this->y = copy.y;
+        this->z = copy.z;
+        this->w = copy.w;
+    }
 };
 
 
