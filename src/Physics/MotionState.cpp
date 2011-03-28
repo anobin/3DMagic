@@ -48,10 +48,32 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
 	// set the basis/rotational matrix
 	// since openGL matrix is column major and Bullet is row
 	// major, we have to do some converting
-    // TODO
-	/*btMatrix3x3 matrix;
-	this->position->getRotationMatrix(matrix);
-	worldTrans.setBasis(matrix);*/
+    
+	btMatrix3x3 matrix;
+    Vector3 xAxis;
+    this->position->getLocalXAxis(xAxis);
+    Vector3& up = this->position->getUpVector();
+    Vector3& forward = this->position->getForwardVector();
+
+    matrix.setValue (
+    
+        // fill in x axis, first column
+        xAxis.getX(),
+        xAxis.getY(),
+        xAxis.getZ(),
+        
+        // fill in y axis, second column
+        up.getX(),
+        up.getY(),
+        up.getZ(),
+                                
+        // fill in z axis, thrid column
+        forward.getX(),
+        forward.getY(),
+        forward.getZ()
+    
+    );
+	worldTrans.setBasis(matrix);
 }
 	
 /** set the world transform of the linked position
@@ -65,9 +87,22 @@ void MotionState::setWorldTransform (const btTransform &worldTrans)
 	const btVector3& location = worldTrans.getOrigin();
 	this->position->getLocation().set(location.getX(), location.getY(), location.getZ());
 	
-    // TODO
+    
 	// set the basis/rotational matrix
-	//this->position->setRowMajorRotationMatrix(worldTrans.getBasis());
+	const btMatrix3x3& matrix = worldTrans.getBasis();
+    
+    btVector3 upV = matrix.getColumn(1);
+    btVector3 forwardV = matrix.getColumn(2);
+        
+    // adjust y axis/up vector
+    this->position->getUpVector().set(upV.getX(), upV.getY(), upV.getZ());
+                            
+    // adjust z axis/forward vector
+    this->position->getForwardVector().set(forwardV.getX(), forwardV.getY(), forwardV.getZ());
+    
+    // normalize for good measure
+    this->position->getUpVector().normalize();
+    this->position->getForwardVector().normalize();
 }
 	
 	
