@@ -79,7 +79,7 @@
 			C++
 		</plugin>
 </profile>
-<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sun Mar 27 22:48:02 EDT 2011'>
+<XMI xmi.version = '1.2' xmlns:UML = 'org.omg.xmi.namespace.UML' timestamp = 'Sun Mar 27 23:07:43 EDT 2011'>
   <XMI.header>    <XMI.documentation>
       <XMI.exporter>ArgoUML (using Netbeans XMI Writer version 1.0)</XMI.exporter>
       <XMI.exporterVersion>0.32(6) revised on $Date: 2010-01-11 22:20:14 +0100 (Mon, 11 Jan 2010) $ </XMI.exporterVersion>
@@ -596,16 +596,16 @@
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D7A'
                   name = 'return' isSpecification = 'false' kind = 'return'/>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D7B'
-                  name = 'out' isSpecification = 'false' kind = 'in'>
+                  name = 'out' isSpecification = 'false' kind = 'out'>
                   <UML:ModelElement.stereotype>
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000D7C'
+                    <UML:TaggedValue xmi.id = '-72-106-15--17-dd8bdcc:12efa46ff7c:-8000:0000000000000F21'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
-                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
                       </UML:TaggedValue.type>
                     </UML:TaggedValue>
                   </UML:ModelElement.taggedValue>
@@ -763,11 +763,11 @@
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--113-55-3f531853:12eef9c4089:-8000:0000000000000EC2'
+                    <UML:TaggedValue xmi.id = '-72-106-15--17-dd8bdcc:12efa46ff7c:-8000:0000000000000F22'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
-                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
                       </UML:TaggedValue.type>
                     </UML:TaggedValue>
                   </UML:ModelElement.taggedValue>
@@ -2027,16 +2027,16 @@
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD3'
                   name = 'return' isSpecification = 'false' kind = 'return'/>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD4'
-                  name = 'out' isSpecification = 'false' kind = 'in'>
+                  name = 'out' isSpecification = 'false' kind = 'out'>
                   <UML:ModelElement.stereotype>
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD5'
+                    <UML:TaggedValue xmi.id = '-72-106-15--17-dd8bdcc:12efa46ff7c:-8000:0000000000000F20'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
-                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
                       </UML:TaggedValue.type>
                     </UML:TaggedValue>
                   </UML:ModelElement.taggedValue>
@@ -2054,16 +2054,16 @@
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD7'
                   name = 'return' isSpecification = 'false' kind = 'return'/>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD8'
-                  name = 'out' isSpecification = 'false' kind = 'in'>
+                  name = 'out' isSpecification = 'false' kind = 'out'>
                   <UML:ModelElement.stereotype>
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DD9'
+                    <UML:TaggedValue xmi.id = '-72-106-15--17-dd8bdcc:12efa46ff7c:-8000:0000000000000F1F'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
-                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
                       </UML:TaggedValue.type>
                     </UML:TaggedValue>
                   </UML:ModelElement.taggedValue>
@@ -2081,16 +2081,16 @@
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DDB'
                   name = 'return' isSpecification = 'false' kind = 'return'/>
                 <UML:Parameter xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DDC'
-                  name = 'out' isSpecification = 'false' kind = 'in'>
+                  name = 'out' isSpecification = 'false' kind = 'out'>
                   <UML:ModelElement.stereotype>
                     <UML:Stereotype href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A2'/>
                   </UML:ModelElement.stereotype>
                   <UML:ModelElement.taggedValue>
-                    <UML:TaggedValue xmi.id = '-48-68--117-89-86a44:12e3ba7fe74:-8000:0000000000000DDD'
+                    <UML:TaggedValue xmi.id = '-72-106-15--17-dd8bdcc:12efa46ff7c:-8000:0000000000000F1E'
                       isSpecification = 'false'>
                       <UML:TaggedValue.dataValue></UML:TaggedValue.dataValue>
                       <UML:TaggedValue.type>
-                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:00000000000008A1'/>
+                        <UML:TagDefinition href = 'http://argouml-cpp.tigris.org/profile/CppUmlProfile.xmi#.:000000000000089D'/>
                       </UML:TaggedValue.type>
                     </UML:TaggedValue>
                   </UML:ModelElement.taggedValue>
@@ -6587,7 +6587,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void extractRotation(const Matrix3 *out)</text>
+      >void extractRotation(Matrix3 &amp;out)</text>
       <text name="Fig7.6.6"
         x="537"
         y="245"
@@ -6683,7 +6683,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getColumn(unsigned int col, Vector4 *out) const </text>
+      >void getColumn(unsigned int col, Vector4 &amp;out) const </text>
       <text name="Fig7.6.12"
         x="537"
         y="341"
@@ -7874,7 +7874,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getTransformMatrix(const Matrix4 *out)</text>
+      >void getTransformMatrix(Matrix4 &amp;out)</text>
       <text name="Fig10.6.8"
         x="441"
         y="264"
@@ -7890,7 +7890,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getRotationMatrix(const Matrix3 *out)</text>
+      >void getRotationMatrix(Matrix3 &amp;out)</text>
       <text name="Fig10.6.9"
         x="441"
         y="280"
@@ -7906,7 +7906,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getCameraMatrix(const Matrix4 *out)</text>
+      >void getCameraMatrix(Matrix4 &amp;out)</text>
       <text name="Fig10.6.10"
         x="441"
         y="296"
@@ -14081,7 +14081,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void extractRotation(const Matrix3 *out)</text>
+      >void extractRotation(Matrix3 &amp;out)</text>
       <text name="Fig2.6.6"
         x="441"
         y="949"
@@ -14177,7 +14177,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getColumn(unsigned int col, Vector4 *out) const </text>
+      >void getColumn(unsigned int col, Vector4 &amp;out) const </text>
       <text name="Fig2.6.12"
         x="441"
         y="1045"
@@ -14542,7 +14542,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getTransformMatrix(const Matrix4 *out)</text>
+      >void getTransformMatrix(Matrix4 &amp;out)</text>
       <text name="Fig3.6.8"
         x="1057"
         y="208"
@@ -14558,7 +14558,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getRotationMatrix(const Matrix3 *out)</text>
+      >void getRotationMatrix(Matrix3 &amp;out)</text>
       <text name="Fig3.6.9"
         x="1057"
         y="224"
@@ -14574,7 +14574,7 @@
         bold="false"
         textsize="12"
         justification="Left"
-      >void getCameraMatrix(const Matrix4 *out)</text>
+      >void getCameraMatrix(Matrix4 &amp;out)</text>
       <text name="Fig3.6.10"
         x="1057"
         y="240"
