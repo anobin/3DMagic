@@ -80,20 +80,30 @@ void HemisphereShader::use()
 	glUniform3fv(id, 1, groundColor.getInternal());
 	
 	// set light position
+    GLfloat tmp[4*4];
+    tmp[0] = lightPosition.getX();
+    tmp[1] = lightPosition.getY();
+    tmp[2] = lightPosition.getZ();
 	id = glGetUniformLocation(this->programId, "lightPosition");
-	glUniform3fv(id, 1, lightPosition.getInternal());
+	glUniform3fv(id, 1, tmp);
 	
 	// set mvp matrix
+    for (int i=0; i < 4*4; i++)
+        tmp[i] = mvpMatrix.get(i/4, i%4);
 	id = glGetUniformLocation(this->programId, "mvpMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvpMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 	
 	// set mv matrix
+    for (int i=0; i < 4*4; i++)
+        tmp[i] = mvMatrix.get(i/4, i%4);
 	id = glGetUniformLocation(this->programId, "mvMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 	
 	// set normal matrix
+    for (int i=0; i < 3*3; i++)
+        tmp[i] = normalMatrix.get(i/3, i%3);
 	id = glGetUniformLocation(this->programId, "normalMatrix");
-	glUniformMatrix3fv(id, 1, GL_FALSE, normalMatrix.getInternal());
+	glUniformMatrix3fv(id, 1, GL_FALSE, tmp);
 	
 	if (glGetError() != GL_NO_ERROR)
 		throw MagicExceptionMacro("Could not bind uniforms for shader");

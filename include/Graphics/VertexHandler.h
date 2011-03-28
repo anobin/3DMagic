@@ -31,8 +31,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Shaders/Shader.h"
 #include "../Graphics/VertexArray.h"
 #include "../Util/Color.h"
-#include "../Math/Point.h"
-#include "../Math/Vector.h"
+#include "../Math/Math.h"
 
 #include <map>
 
@@ -143,12 +142,12 @@ public:
 		this->setAttribute4f(ShaderVertexInterfaceSpec::POSITION, x, y, z, w);
 	}
 	/// specify a new position
-	inline void position(const Point3f& point)
+	inline void position(const Point3& point)
 	{
 		this->position4f(point.getX(), point.getY(), point.getZ(), 1.0f);
 	}
 	/// specify a new position
-	inline void position(const Point4f& point)
+	inline void position(const Point4& point)
 	{
 		this->setAttribute4f(ShaderVertexInterfaceSpec::POSITION, 
 							 point.getX(), point.getY(), point.getZ(), point.getW());
@@ -161,7 +160,7 @@ public:
 		this->setAttribute3f(ShaderVertexInterfaceSpec::NORMAL, x, y, z);
 	}
 	/// specify a new normal vector
-	inline void normal(const Vector3f& vector)
+	inline void normal(const Vector3& vector)
 	{
 		this->setAttribute3f(ShaderVertexInterfaceSpec::NORMAL, vector.getX(), 
 							 vector.getY(), vector.getZ());
@@ -185,7 +184,7 @@ public:
 	{
 		this->setAttribute2f(ShaderVertexInterfaceSpec::BASE_TEXTURE, x, y);
 	}
-	inline void texCoord(const Point2f& point)
+	inline void texCoord(const Point2& point)
 	{
 		this->setAttribute2f(ShaderVertexInterfaceSpec::BASE_TEXTURE, point.getX(), 
 							 point.getY());

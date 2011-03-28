@@ -28,11 +28,11 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+#include "../Math/Position.h"
+
 namespace Magic3D
 {
-	
-// forward declaration of position
-class Position;
+
 	
 /** Used in listener callback pattern with
  * physics library to automatically keep the

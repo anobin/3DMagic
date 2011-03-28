@@ -74,8 +74,11 @@ void FlatShader::use()
 	glUniform4fv(id, 1, color.getInternal());
 	
 	// set mvp matrix
+    GLfloat tmp[4*4];
+    for (int i=0; i < 4*4; i++)
+        tmp[i] = mvpMatrix.get(i/4, i%4);
 	id = glGetUniformLocation(this->programId, "mvpMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvpMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 	
 	if (glGetError() != GL_NO_ERROR)
 		throw MagicExceptionMacro("Could not bind uniforms for shader");

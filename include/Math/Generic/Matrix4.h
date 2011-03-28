@@ -62,6 +62,12 @@ public:
     {
         memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
     }
+    
+    /// copy setter
+    inline void set(const Matrix4 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
+    }
 
     /// set a element
     inline void set(unsigned int col, unsigned int row, Scalar value)
@@ -91,6 +97,13 @@ public:
         out.setY(data[col*4+1]);
         out.setZ(data[col*4+2]);
         out.setW(data[col*4+3]);
+    }
+    
+    template<class T>
+    void getArray(T* array) const
+    {
+        for (int i=0; i < 4*4; i++)
+            array[i] = (T)data[i];
     }
     
     /// create a scale matrix

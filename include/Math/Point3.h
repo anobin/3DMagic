@@ -34,7 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // intel processors only implementation
-#elseifdef M3D_MATH_USE_INTEL
+#elif defined(M3D_MATH_USE_INTEL)
 #include "Intel/Point3.h"
 
 

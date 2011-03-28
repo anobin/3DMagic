@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_OBJECT_H
 
 #include "../Models/Model.h"
-#include "Position.h"
+#include "../Math/Position.h"
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
@@ -84,7 +84,7 @@ public:
 			motionState(position), body(NULL) { build(mass); }
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, const Point3f& location, float friction = 0.5,
+	inline Object(Model& model, float mass, const Point3& location, float friction = 0.5,
 				  float restitution=0.0f, float linearDamping = 0.0f): model(&model), 
 		baseTexture(NULL), motionState(position), body(NULL) 
 	{ 

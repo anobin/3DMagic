@@ -31,6 +31,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // for cos, sin, and tan
 #include <math.h>
 
+// forware declarations for matrixes
+class Matrix4;
+class Matrix3;
+
 
 /** Represents a 3-component (x,y,z) vector
  */
@@ -83,7 +87,7 @@ public:
     }
 
     /// set the z component
-    inline void setZ(Vector3 value)
+    inline void setZ(Scalar value)
     {
         z = value;
     }
@@ -150,7 +154,7 @@ public:
     inline void crossProduct(const Vector3 &v)
     {
         Scalar tmp[3];
-        tmp[0] =  y*v.z - v,y*z;
+        tmp[0] =  y*v.z - v.y*z;
         tmp[1] = -x*v.z + v.x*z;
         tmp[2] =  x*v.y - v.x*y;
         

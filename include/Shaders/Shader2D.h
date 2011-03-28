@@ -34,9 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "Shader.h"
-#include "../Math/Point.h"
-#include "../Math/Vector.h"
-#include "../Math/Matrix.h"
+#include "../Math/Matrix4.h"
 #include "../Util/Color.h"
 #include "../Resources/TextResource.h"
 #include "../Resources/ResourceManager.h"
@@ -52,7 +50,7 @@ class Shader2D : public Shader
 {
 protected:
 	/// model view projection matrix
-	Matrix44f mvpMatrix;
+	Matrix4 mvpMatrix;
 	/// the texture to shade with
 	Texture* texture;
 	
@@ -79,7 +77,7 @@ public:
 	virtual ~Shader2D();
 	
 	
-	inline void setMVPMatrix(const Matrix44f& mvp)
+	inline void setMVPMatrix(const Matrix4& mvp)
 	{
 		mvpMatrix.set(mvp);
 	}

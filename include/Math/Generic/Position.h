@@ -25,10 +25,17 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_POSITION_GENERIC_H
 #define MAGIC3D_POSITION_GENERIC_H
 
-// TODO
-#error "Generic Math Implementation is not yet implemented"
-
+// for Scalar
 #include "MathTypes.h"
+
+// for lots of stuff
+#include <math.h>
+
+// for math classes
+#include "Matrix3.h"
+#include "Matrix4.h"
+#include "Point3.h"
+#include "Vector3.h"
 
 /** Represents a 3D position using a location and directional vectors. 
  * Note to Implementations: The inline keywords are used here as a

@@ -80,20 +80,27 @@ void HemisphereTexShader::use()
 	glUniform3fv(id, 1, groundColor.getInternal());
 	
 	// set light position
+    GLfloat tmp[4*4];
+    tmp[0] = lightPosition.getX();
+    tmp[1] = lightPosition.getY();
+    tmp[2] = lightPosition.getZ();
 	id = glGetUniformLocation(this->programId, "lightPosition");
-	glUniform3fv(id, 1, lightPosition.getInternal());
+	glUniform3fv(id, 1, tmp);
 	
 	// set mvp matrix
+    mvpMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "mvpMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvpMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 	
 	// set mv matrix
+    mvMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "mvMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 	
 	// set normal matrix
+    normalMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "normalMatrix");
-	glUniformMatrix3fv(id, 1, GL_FALSE, normalMatrix.getInternal());
+	glUniformMatrix3fv(id, 1, GL_FALSE, tmp);
 	
 	// set texture map
 	texture->bind();

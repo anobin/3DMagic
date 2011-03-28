@@ -34,9 +34,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "Shader.h"
-#include "../Math/Point.h"
-#include "../Math/Vector.h"
-#include "../Math/Matrix.h"
+#include "../Math/Point3.h"
+#include "../Math/Matrix4.h"
+#include "../Math/Matrix3.h"
 #include "../Util/Color.h"
 #include "../Resources/TextResource.h"
 #include "../Resources/ResourceManager.h"
@@ -56,13 +56,13 @@ protected:
 	/// the color emitted by the ground/away from light source
 	Color groundColor;
 	/// the position of the single light
-	Point3f lightPosition;
+	Point3 lightPosition;
 	/// the normal matrix to transform the normal to eye coords
-	Matrix33f normalMatrix;
+	Matrix3 normalMatrix;
 	/// model view projection matrix
-	Matrix44f mvpMatrix;
+	Matrix4 mvpMatrix;
 	/// model view matrix
-	Matrix44f mvMatrix;
+	Matrix4 mvMatrix;
 	/// the texture to shade with
 	Texture* texture;
 	
@@ -98,19 +98,19 @@ public:
 	{
 		groundColor.set(color);
 	}
-	inline void setLightPosition(const Point3f& position)
+	inline void setLightPosition(const Point3& position)
 	{
 		lightPosition.set(position);
 	}
-	inline void setNormalMatrix(const Matrix33f& normal)
+	inline void setNormalMatrix(const Matrix3& normal)
 	{
 		normalMatrix.set(normal);
 	}
-	inline void setMVPMatrix(const Matrix44f& mvp)
+	inline void setMVPMatrix(const Matrix4& mvp)
 	{
 		mvpMatrix.set(mvp);
 	}
-	inline void setMVMatrix(const Matrix44f& mv)
+	inline void setMVMatrix(const Matrix4& mv)
 	{
 		mvMatrix.set(mv);
 	}

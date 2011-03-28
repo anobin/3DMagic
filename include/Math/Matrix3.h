@@ -34,7 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // intel processors only implementation
-#elseifdef M3D_MATH_USE_INTEL
+#elif defined(M3D_MATH_USE_INTEL)
 #include "Intel/Matrix3.h"
 
 
@@ -75,6 +75,9 @@ public:
     void createScaleMatrix(Scalar x, Scalar y, Scalar z);
 
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
+    
+    template<class T>
+    void getArray(T* array) const;
 };
 
 

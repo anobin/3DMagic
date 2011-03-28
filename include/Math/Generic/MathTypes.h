@@ -28,9 +28,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // scalar floating-point base type, allow for settable precision
 #ifdef M3D_MATH_DOUBLE_PERCISION
-typedef Scalar double;
+typedef double Scalar;
 #else
-typedef Scalar float;
+typedef float Scalar;
 #endif
 
 

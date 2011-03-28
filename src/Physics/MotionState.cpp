@@ -24,7 +24,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Physics/MotionState.h>
-#include <Objects/Position.h>
 
 namespace Magic3D
 {
@@ -43,15 +42,16 @@ MotionState::~MotionState()
 void MotionState::getWorldTransform(btTransform &worldTrans) const
 {
 	// set the location/origin
-	Point3f& l = this->position->getLocation();
+	Point3& l = this->position->getLocation();
 	worldTrans.setOrigin (btVector3(l.getX(), l.getY(), l.getZ()));
 	
 	// set the basis/rotational matrix
 	// since openGL matrix is column major and Bullet is row
 	// major, we have to do some converting
-	btMatrix3x3 matrix;
-	this->position->getRowMajorRotationMatrix(matrix);
-	worldTrans.setBasis(matrix);
+    // TODO
+	/*btMatrix3x3 matrix;
+	this->position->getRotationMatrix(matrix);
+	worldTrans.setBasis(matrix);*/
 }
 	
 /** set the world transform of the linked position
@@ -65,8 +65,9 @@ void MotionState::setWorldTransform (const btTransform &worldTrans)
 	const btVector3& location = worldTrans.getOrigin();
 	this->position->getLocation().set(location.getX(), location.getY(), location.getZ());
 	
+    // TODO
 	// set the basis/rotational matrix
-	this->position->setRowMajorRotationMatrix(worldTrans.getBasis());
+	//this->position->setRowMajorRotationMatrix(worldTrans.getBasis());
 }
 	
 	

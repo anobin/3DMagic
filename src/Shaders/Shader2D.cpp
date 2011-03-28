@@ -72,8 +72,11 @@ void Shader2D::use()
 	
 	// set mv matrix
 	GLuint id;
+    GLfloat tmp[4*4];
+    for (int i=0; i < 4*4; i++)
+        tmp[i] = mvpMatrix.get(i/4, i%4);
 	id = glGetUniformLocation(this->programId, "mvpMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, mvpMatrix.getInternal());
+	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
 
 	// set texture map
 	texture->bind();

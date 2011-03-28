@@ -95,6 +95,13 @@ public:
         out.setY(data[col*3+1]);
         out.setZ(data[col*3+2]);
     }
+    
+    template<class T>
+    void getArray(T* array) const
+    {
+        for (int i=0; i < 3*3; i++)
+            array[i] = (T)data[i];
+    }
 
     /// multiply this matrix and another
     void multiply(const Matrix3 &m);

@@ -34,7 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "Shader.h"
-#include "../Math/Matrix.h"
+#include "../Math/Matrix4.h"
 #include "../Util/Color.h"
 #include "../Resources/TextResource.h"
 #include "../Resources/ResourceManager.h"
@@ -50,7 +50,7 @@ class FlatShader : public Shader
 {
 protected:
 	/// model view projection matrix
-	Matrix44f mvpMatrix;
+	Matrix4 mvpMatrix;
 	/// uniform color value
 	Color color;
 	
@@ -82,7 +82,7 @@ public:
 	{
 		this->color.set(color1);
 	}
-	inline void setMVPMatrix(const Matrix44f& mvp)
+	inline void setMVPMatrix(const Matrix4& mvp)
 	{
 		mvpMatrix.set(mvp);
 	}

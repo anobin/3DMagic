@@ -34,7 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // intel processors only implementation
-#elseifdef M3D_MATH_USE_INTEL
+#elif defined(M3D_MATH_USE_INTEL)
 #include "Intel/Matrix4.h"
 
 
@@ -67,6 +67,8 @@ public:
     Matrix4();
 
     Matrix4(const Matrix4 &copy);
+    
+    void set(const Matrix4 &copy);
 
     void set(unsigned int col, unsigned int row, Scalar value);
 
@@ -81,6 +83,9 @@ public:
     void multiply(const Matrix4 &m);
 
     void multiply(const Matrix4 &m1, const Matrix4 &m2);
+    
+    template<class T>
+    void getArray(T* array) const;
 };
 
 
