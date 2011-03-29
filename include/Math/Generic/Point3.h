@@ -31,6 +31,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // for sqrt
 #include <math.h>
 
+// for classes
+class Matrix3;
+class Matrix4;
+
 /** Represents a 3-component (x,y,z) point.
  */
 class Point3
@@ -126,12 +130,16 @@ public:
         return sqrt(tmp[0] + tmp[1] + tmp[2]);
     }
     
+    /// transform this point using a matrix
     void transform(const Matrix4 &m);
 
+    /// transform a point using a matrix and store the results in this point
     void transform(const Point3 &p, const Matrix4 &m);
 
+    /// rotate this point using a matrix
     void rotate(const Matrix3 &m);
 
+    /// rotate a point using a matrix and store the result in this point
     void rotate(const Point3 &p, const Matrix3 &m);
     
 };
