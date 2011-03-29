@@ -31,13 +31,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Util/Units.h"
 
 // math
-#include "Math/Matrix.h"
-#include "Math/Vector.h"
-#include "Math/Point.h"
+#include "Math/Math.h"
 
 // objects
 #include "Objects/Object.h"
-#include "Objects/Position.h"
 
 // graphics
 #include "Graphics/Texture.h"

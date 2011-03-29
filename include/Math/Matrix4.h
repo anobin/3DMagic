@@ -56,7 +56,7 @@ class Matrix4
 public:
     void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
 
-    void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
+    void createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
 
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
 

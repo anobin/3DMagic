@@ -50,7 +50,7 @@ using std::endl;
 #define ROOM_SIZE (20.0f * FOOT)
 
 
-Matrix44f projectionMatrix;
+Matrix4 projectionMatrix;
 
 // resource manager
 ResourceManager resourceManager("../../");
@@ -95,7 +95,7 @@ Circle2D* circleModel;
 Shader2D* frameShader;
 Texture* frameTex;
 Texture* circleTex;
-Matrix44f flatProjectionMatrix;
+Matrix4 flatProjectionMatrix;
 
 // legacy
 Position             cameraFrame;
@@ -221,7 +221,7 @@ void setup()
 	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
 	// init objects
-	btBall = new Object(*sphere, 1, Point3f(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
+	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
 	btBall->setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
@@ -247,7 +247,7 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 4, Point3f(w, h, zOffset), 3.0f); // 3 kg box
+			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset), 3.0f); // 3 kg box
 			btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());
@@ -336,8 +336,8 @@ void setup()
 	
         
     // set eye level
-    cameraFrame.setLocation(0.0f, 6 * FOOT, ROOM_SIZE);
-	cameraFrame.setForwardVector(0.0f, 0.0f, -1.0f);
+    cameraFrame.getLocation().set(0.0f, 6 * FOOT, ROOM_SIZE);
+	cameraFrame.getForwardVector().set(0.0f, 0.0f, -1.0f);
 	
 	
 	srand(time(NULL));
@@ -375,11 +375,11 @@ void renderScene(void)
 	
     
     // Save the current modelview matrix (the identity matrix)
-    Matrix44f cameraMatrix;
-    cameraFrame.getCameraTransformationMatrix(cameraMatrix);
+    Matrix4 cameraMatrix;
+    cameraFrame.getCameraMatrix(cameraMatrix);
 
     // Transform the light position into eye coordinates
-	Point3f lightPos(0.0f, 1000.0f, 0.0f);
+	Point3 lightPos(0.0f, 1000.0f, 0.0f);
 	
 	lightPos.transform(cameraMatrix);
 	shader->setLightPosition(lightPos);
@@ -394,14 +394,14 @@ void renderScene(void)
 	for (; it != objects.end(); it++)
 	{
 		// apply position transform
-		Matrix44f positionMatrix;
-		(*it)->getPosition().getTransformationMatrix(positionMatrix);
-		Matrix44f transformMatrix;
+		Matrix4 positionMatrix;
+		(*it)->getPosition().getTransformMatrix(positionMatrix);
+		Matrix4 transformMatrix;
 		transformMatrix.multiply(cameraMatrix, positionMatrix);
 		
 		// pick and prep shader
-		Matrix44f mvp;
-		Matrix33f normal;
+		Matrix4 mvp;
+		Matrix3 normal;
 		mvp.multiply(projectionMatrix, transformMatrix);
 		transformMatrix.extractRotation(normal);
 		hemTexShader->setMVMatrix(transformMatrix);
@@ -420,11 +420,11 @@ void renderScene(void)
 	}
 	
 	// draw chain link
-	Matrix44f positionMatrix;
-	Matrix44f scale;
+	Matrix4 positionMatrix;
+	Matrix4 scale;
 	scale.createScaleMatrix(0.01, 0.01, 0.01);
-	Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformationMatrix(positionMatrix);
-	Matrix44f transformMatrix;
+	Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformMatrix(positionMatrix);
+	Matrix4 transformMatrix;
 	transformMatrix.multiply(cameraMatrix);
 	transformMatrix.multiply(positionMatrix);
 	transformMatrix.multiply(scale);
@@ -432,8 +432,8 @@ void renderScene(void)
 	transformMatrix.multiply(scale);
 	
 	// pick and prep shader
-	Matrix44f mvp;
-	Matrix33f normal;
+	Matrix4 mvp;
+	Matrix3 normal;
 	mvp.multiply(projectionMatrix, transformMatrix);
 	transformMatrix.extractRotation(normal);
 	hemTexShader->setMVMatrix(transformMatrix);
@@ -468,10 +468,10 @@ void renderScene(void)
  */
 void keyPressed(unsigned char key,int x, int y)
 {
-	Point3f origin;
-	Vector3f forward;
-	Vector3f side;
-	Vector3f up;
+	Point3 origin;
+	Vector3 forward;
+	Vector3 side;
+	Vector3 up;
 	btTransform transform;
 	Position p;
 	Object* t;
@@ -486,9 +486,9 @@ void keyPressed(unsigned char key,int x, int y)
 				wireframe = false;
 			else
 				wireframe = true;*/
-			cameraFrame.setLocation(0.0f, 6.0f * FOOT, 20.0f * FOOT);
-			cameraFrame.setForwardVector(0.0f, 0.0f, -1.0f);
-			cameraFrame.setUpVector(0.0f, 1.0f, 0.0f);
+			cameraFrame.getLocation().set(0.0f, 6.0f * FOOT, 20.0f * FOOT);
+			cameraFrame.getForwardVector().set(0.0f, 0.0f, -1.0f);
+			cameraFrame.getUpVector().set(0.0f, 1.0f, 0.0f);
 			
 			// manually set new position for ball
 			btBall->getPosition().getLocation().setY(10*FOOT);
@@ -533,7 +533,7 @@ void keyPressed(unsigned char key,int x, int y)
 			break;
 			
 		case 'g':
-			t = new Object(*bigSphere, 300, Point3f(0.0f, 0.0f, 0.0f)); // 1 kg sphere
+			t = new Object(*bigSphere, 300, Point3(0.0f, 0.0f, 0.0f)); // 1 kg sphere
 			t->setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			dynamicsWorld->addRigidBody(t->getRigidBody());
@@ -636,19 +636,19 @@ void mouseMovedPassive(int x, int y)
 	else
 		m = -((screenHeight/2) - y);
 	float yDeg = m * Y_AXIS_SENSITIVITY;
-	cameraFrame.rotateLocal(yDeg / 180.0f * M_PI, Vector3f(1.0f, 0.0f, 0.0f));
+	cameraFrame.rotateLocal(yDeg / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
 
 	
 	// check Y-axis bounds
-	Vector3f& forward = cameraFrame.getForwardVector();
-	Vector3f& up = cameraFrame.getUpVector();
+	Vector3& forward = cameraFrame.getForwardVector();
+	Vector3& up = cameraFrame.getUpVector();
 	// enforce bounds by never allowing the up (Y-axis) vector to go negative
 	while (up.getY() < 0)
 	{
 		if (forward.getY() > 0)
-			cameraFrame.rotateLocal(1.0f / 180.0f * M_PI, Vector3f(1.0f, 0.0f, 0.0f));
+			cameraFrame.rotateLocal(1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
 		else
-			cameraFrame.rotateLocal(-1.0f / 180.0f * M_PI, Vector3f(1.0f, 0.0f, 0.0f));
+			cameraFrame.rotateLocal(-1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
 	}
 	
 	// rotate on X-axis (around Y-axis)
@@ -658,7 +658,7 @@ void mouseMovedPassive(int x, int y)
 	else
 		m = ((screenWidth/2) - x);
 	float xDeg = m * X_AXIS_SENSITIVITY;
-	cameraFrame.rotate(xDeg  * (M_PI / 180.0f), Vector3f(0.0f, 1.0f, 0.0f));
+	cameraFrame.rotate(xDeg  * (M_PI / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
 
 	
 	glutWarpPointer(screenWidth / 2, screenHeight / 2);

@@ -119,7 +119,7 @@ public:
     void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
 
     /// create a orthographic matrix
-    void ceateOrthograhicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
+    void createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
 
     /// create rotation matrix
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);

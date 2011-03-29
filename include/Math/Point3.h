@@ -79,6 +79,14 @@ public:
     void set(Scalar x, Scalar y, Scalar z);
 
     void set(const Point3 &copy);
+
+    void transform(const Matrix4 &m);
+
+    void transform(const Point3 &p, const Matrix4 &m);
+
+    void rotate(const Matrix3 &m);
+
+    void rotate(const Point3 &p, const Matrix3 &m);
 };
 
 

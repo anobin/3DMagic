@@ -126,6 +126,14 @@ public:
         return sqrt(tmp[0] + tmp[1] + tmp[2]);
     }
     
+    void transform(const Matrix4 &m);
+
+    void transform(const Point3 &p, const Matrix4 &m);
+
+    void rotate(const Matrix3 &m);
+
+    void rotate(const Point3 &p, const Matrix3 &m);
+    
 };
 
 
