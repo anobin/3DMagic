@@ -37,6 +37,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // for memcpy
 #include <string.h>
 
+class Matrix4;
 
 /** Represents a 3x3-component (x,y,z) matrix. 
  */
@@ -50,6 +51,8 @@ private:
     static const Scalar identity[];
     
 public:
+    friend class Matrix4;
+    
     /// default constructor, load identity
     inline Matrix3()
     {
