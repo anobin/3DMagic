@@ -78,21 +78,21 @@ public:
 
     void normalize();
 
-    Point3 &getLocation() const ;
+    const Point3 &getLocation() const ;
 
     Point3 &getLocation();
 
-    Vector3 &getForwardVector() const ;
+    const Vector3 &getForwardVector() const ;
 
-    Vector3 &getFowardVector();
+    Vector3 &getForwardVector();
 
-    Vector3 &getUpVector() const ;
+    const Vector3 &getUpVector() const ;
 
     Vector3 &getUpVector();
 
-    Vector3 &getLocalZAxis() const ;
+    const Vector3 &getLocalZAxis() const ;
 
-    Vector3 &getLocalYAxis() const ;
+    const Vector3 &getLocalYAxis() const ;
 
     void getLocalXAxis(Vector3 &x) const ;
 };
