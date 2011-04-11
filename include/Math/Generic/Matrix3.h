@@ -74,13 +74,13 @@ public:
     /// get a specific element
     inline Scalar get(unsigned int col, unsigned int row) const
     {
-        return data[col*row];
+        return data[(col*3)+row];
     }
 
     /// set a specific element
     inline void set(unsigned int col, unsigned int row, Scalar value)
     {
-        data[col*row] = value;
+        data[(col*3)+row] = value;
     }
 
     /// set a column

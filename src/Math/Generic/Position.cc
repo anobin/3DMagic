@@ -35,27 +35,27 @@ void Position::getTransformMatrix(Matrix4& out)
 
     // fill in x axis, first column
     out.set(0,0,xAxis.getX());
-    out.set(1,0,xAxis.getY());
-    out.set(2,0,xAxis.getZ());
-    out.set(3,0,0.0f);
+    out.set(0,1,xAxis.getY());
+    out.set(0,2,xAxis.getZ());
+    out.set(0,3,0.0f);
     
     // fill in y axis, second column
-    out.set(4,0,up.getX());
-    out.set(5,0,up.getY());
-    out.set(6,0,up.getZ());
-    out.set(7,0,0.0f);       
+    out.set(1,0,up.getX());
+    out.set(1,1,up.getY());
+    out.set(1,2,up.getZ());
+    out.set(1,3,0.0f);       
                             
     // fill in z axis, thrid column
-    out.set(8,0,forward.getX());
-    out.set(9,0,forward.getY());
-    out.set(10,0,forward.getZ());
-    out.set(11,0,0.0f);
+    out.set(2,0,forward.getX());
+    out.set(2,1,forward.getY());
+    out.set(2,2,forward.getZ());
+    out.set(2,3,0.0f);
 
     // fill in translation, fourth column
-    out.set(12,0,location.getX());
-    out.set(13,0,location.getY());
-    out.set(14,0,location.getZ());
-    out.set(15,0,1.0f); // W component is always 1, duh..
+    out.set(3,0,location.getX());
+    out.set(3,1,location.getY());
+    out.set(3,2,location.getZ());
+    out.set(3,3,1.0f); // W component is always 1, duh..
 }
 
 /// get a rotation matrix that represents the orientation of this position
@@ -67,18 +67,18 @@ void Position::getRotationMatrix(Matrix3& out)
 
     // fill in x axis, first column
     out.set(0,0,xAxis.getX());
-    out.set(1,0,xAxis.getY());
-    out.set(2,0,xAxis.getZ());
+    out.set(0,1,xAxis.getY());
+    out.set(0,2,xAxis.getZ());
     
     // fill in y axis, second column
-    out.set(3,0,up.getX());
-    out.set(4,0,up.getY());
-    out.set(5,0,up.getZ());
+    out.set(1,0,up.getX());
+    out.set(1,1,up.getY());
+    out.set(1,2,up.getZ());
                             
     // fill in z axis, thrid column
-    out.set(6,0,forward.getX());
-    out.set(7,0,forward.getY());
-    out.set(8,0,forward.getZ());
+    out.set(2,0,forward.getX());
+    out.set(2,1,forward.getY());
+    out.set(2,2,forward.getZ());
 }
 
 /// get a matrix that can be used to move objects around the camera
@@ -92,7 +92,7 @@ void Position::getCameraMatrix(Matrix4& out)
     x.crossProduct(up, z);
 
     // matrix is transposed (rows instead of columns)
-    #define MAGIC3D_A(row,col,value)  out.set(col*4+row,0,value)
+    #define MAGIC3D_A(row,col,value)  out.set(col,row,value)
         MAGIC3D_A(0, 0, x.getX());
         MAGIC3D_A(0, 1, x.getY());
         MAGIC3D_A(0, 2 ,x.getZ());

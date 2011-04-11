@@ -37,7 +37,7 @@ FILE(GLOB SOURCES *.cpp */*.cpp)
 ADD_EXECUTABLE(${EXE} ${SOURCES})
 
 #add libraries needed
-TARGET_LINK_LIBRARIES(${EXE} gtest_main gtest pthread)
+TARGET_LINK_LIBRARIES(${EXE} 3DMagic gtest_main gtest pthread)
 
 # add dependency to 3dmagic library
 ADD_DEPENDENCIES(${EXE} 3DMagic)
