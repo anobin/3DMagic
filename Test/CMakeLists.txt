@@ -1,14 +1,15 @@
-# Cmake file for 3DMagic
-# 3DMagic needs:
+# Cmake file for 3DMagic tests
+# 3DMagic tests needs:
 # - cmake (obviously)
 # - openGL >=3.1
 # - GLEW
 # - bullet
 # - openAL
+# - google test framework (gtest)
 
 # set the project and exe name
-SET(PROJECT 3DMagic)
-SET(EXE 3DMagic)
+SET(PROJECT 3DMagic_Tests)
+SET(EXE 3DMagic_Tests)
 
 # set the library include directories
 SET(OPENGL_INCLUDE /usr/include/GL)
@@ -26,33 +27,26 @@ PROJECT(${PROJECT} CXX)
 # set the include directories
 INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE} ${BULLET_INCLUDE})
 
-# allow the user to set the math implementation to use
-OPTION(MATH_USE_GENERIC "Use Generic Math implementation" OFF)
-OPTION(MATH_USE_INTEL   "USe Intel Math implementation"   OFF)
-
-# allow the user to disable building and/or enable running tests
-OPTION(BUILD_TESTS "Build the test suite" ON)
-OPTION(RUN_TESTS "Run the Test Suite during build" OFF)
-
 
 # add source and headers
 # just glob all files for now, as source files will soon change
-set(SRC src)
-SET(INC include)
-FILE(GLOB SOURCES ${SRC}/*.cpp ${SRC}/*/*.cpp ${SRC}/*/*/*.cpp)
-FILE(GLOB HEADERS ${INC}/*.h ${INC}/*/*.h ${INC}/*/*/*.h)
+FILE(GLOB SOURCES *.cpp */*.cpp)
 
 
 # add library using sources and headers identified
-ADD_LIBRARY(${EXE} STATIC ${SOURCES} ${HEADERS})
+ADD_EXECUTABLE(${EXE} ${SOURCES})
+
+#add libraries needed
+TARGET_LINK_LIBRARIES(${EXE} gtest_main gtest pthread)
+
+# add dependency to 3dmagic library
+ADD_DEPENDENCIES(${EXE} 3DMagic)
 
 # evaluate Math interface choices
 IF(MATH_USE_INTEL)
     SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_INTEL")
-    MESSAGE(STATUS "MATH: using Intel implementation")
 ELSEIF(MATH_USE_GENERIC)
     SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_GENERIC")
-    MESSAGE(STATUS "MATH: using Generic implementation")
 ELSE(MATH_USE_INTEL)
     MESSAGE(SEND_ERROR "MATH: implementation not selected")
 ENDIF(MATH_USE_INTEL)
@@ -60,10 +54,8 @@ ENDIF(MATH_USE_INTEL)
 # set compile flags on sources
 SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${CXX_FLAGS})
 
-# add the tests build configuration
-IF(BUILD_TESTS)
-    ADD_SUBDIRECTORY(Test)
-ENDIF(BUILD_TESTS)
+
+
 
 
 

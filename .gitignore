@@ -7,8 +7,9 @@
 /bullet/
 /models/
 /lib3ds/
-/Makefile
+Makefile
 *.cmake
 CMakeCache.txt
 CMakeFiles/
+/Test/3DMagic_Tests
 *~
