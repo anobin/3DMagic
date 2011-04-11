@@ -47,9 +47,9 @@ void Matrix4::createScaleMatrix(Scalar x, Scalar y, Scalar z)
 /// multiply this matrix and another matrix
 void Matrix4::multiply(const Matrix4 &m)
 {
-#define MAGIC3D_A(row,col)  data[(col<<2)+row]
-#define MAGIC3D_B(row,col)  m.data[(col<<2)+row]
-#define MAGIC3D_P(row,col)  tmp[(col<<2)+row]
+#define MAGIC3D_A(row,col)  data[(col*4)+row]
+#define MAGIC3D_B(row,col)  m.data[(col*4)+row]
+#define MAGIC3D_P(row,col)  tmp[(col*4)+row]
 
         Scalar tmp[4*4];
         
@@ -75,9 +75,9 @@ void Matrix4::multiply(const Matrix4 &m)
 /// multiply two other matrixes and store the result in this matrix
 void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 {
-#define MAGIC3D_A(row,col)  m1.data[(col<<2)+row]
-#define MAGIC3D_B(row,col)  m2.data[(col<<2)+row]
-#define MAGIC3D_P(row,col)  data[(col<<2)+row]
+#define MAGIC3D_A(row,col)  m1.data[(col*4)+row]
+#define MAGIC3D_B(row,col)  m2.data[(col*4)+row]
+#define MAGIC3D_P(row,col)  data[(col*4)+row]
         
         // The math is strong with this one
         // grab a math book if you want to understand this crap
@@ -134,7 +134,7 @@ void Matrix4::createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Sc
 /// create rotation matrix
 void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
 {
-#define MAGIC3D_A(row,col)  data[col*4+row]
+#define MAGIC3D_A(row,col)  data[(col*4)+row]
         Scalar mag, s, c;
         Scalar xx, yy, zz, xy, yz, zx, xs, ys, zs, one_c;
 

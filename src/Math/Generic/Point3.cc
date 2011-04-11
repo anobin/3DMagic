@@ -34,9 +34,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 void Point3::transform(const Matrix4 &m)
 {
     Scalar tmp[3];
-    tmp[0] = m.get(0,0) * x + m.get(0,4) * y + m.get(0,8) *  z + m.get(0,12); 
-    tmp[1] = m.get(0,1) * x + m.get(0,5) * y + m.get(0,9) *  z + m.get(0,13); 
-    tmp[2] = m.get(0,2) * x + m.get(0,6) * y + m.get(0,10) * z + m.get(0,14);
+    tmp[0] = m.get(0,0) * x + m.get(1,0) * y + m.get(2,0) * z + m.get(3,0); 
+    tmp[1] = m.get(0,1) * x + m.get(1,1) * y + m.get(2,1) * z + m.get(3,1); 
+    tmp[2] = m.get(0,2) * x + m.get(1,2) * y + m.get(2,2) * z + m.get(3,2);
     
     x = tmp[0];
     y = tmp[1];
@@ -46,18 +46,18 @@ void Point3::transform(const Matrix4 &m)
 /// transform a point using a matrix and store the results in this point
 void Point3::transform(const Point3 &p, const Matrix4 &m)
 {
-    x = m.get(0,0) * p.x + m.get(0,4) * p.y + m.get(0,8) *  p.z + m.get(0,12); 
-    y = m.get(0,1) * p.x + m.get(0,5) * p.y + m.get(0,9) *  p.z + m.get(0,13);  
-    z = m.get(0,2) * p.x + m.get(0,6) * p.y + m.get(0,10) * p.z + m.get(0,14);
+    x = m.get(0,0) * p.getX() + m.get(1,0) * p.getY() + m.get(2,0) *  p.getZ() + m.get(3,0); 
+    y = m.get(0,1) * p.getX() + m.get(1,1) * p.getY() + m.get(2,1) *  p.getZ() + m.get(3,1);  
+    z = m.get(0,2) * p.getX() + m.get(1,2) * p.getY() + m.get(2,2) * p.getZ() + m.get(3,2);
 }
 
 /// rotate this point using a matrix
 void Point3::rotate(const Matrix3 &m)
 {
     Scalar tmp[3];
-    tmp[0] = m.get(0,0) * x + m.get(0,3) * y + m.get(0,6) * z;   
-    tmp[1] = m.get(0,1) * x + m.get(0,4) * y + m.get(0,7) * z;   
-    tmp[2] = m.get(0,2) * x + m.get(0,5) * y + m.get(0,8) * z;
+    tmp[0] = m.get(0,0) * x + m.get(1,0) * y + m.get(2,0) * z;   
+    tmp[1] = m.get(0,1) * x + m.get(1,1) * y + m.get(2,1) * z;   
+    tmp[2] = m.get(0,2) * x + m.get(1,2) * y + m.get(2,2) * z;
     
     x = tmp[0];
     y = tmp[1];
@@ -67,9 +67,9 @@ void Point3::rotate(const Matrix3 &m)
 /// rotate a point using a matrix and store the result in this point
 void Point3::rotate(const Point3 &p, const Matrix3 &m)
 {
-    x = m.get(0,0) * p.x + m.get(0,3) * p.y + m.get(0,6) * p.z;    
-    y = m.get(0,1) * p.x + m.get(0,4) * p.y + m.get(0,7) * p.z;    
-    z = m.get(0,2) * p.x + m.get(0,5) * p.y + m.get(0,8) * p.z;
+    x = m.get(0,0) * p.getX() + m.get(1,0) * p.getY() + m.get(2,0) * p.getZ();    
+    y = m.get(0,1) * p.getX() + m.get(1,1) * p.getY() + m.get(2,1) * p.getZ();    
+    z = m.get(0,2) * p.getX() + m.get(1,2) * p.getY() + m.get(2,2) * p.getZ();
 }
 
 

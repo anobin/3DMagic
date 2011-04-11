@@ -67,6 +67,8 @@ public:
     inline void set(const Position &copy)
     {
         location.set(copy.location);
+        forward.set(copy.forward);
+        up.set(copy.up);
     }
 
     /// get location
