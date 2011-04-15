@@ -46,19 +46,19 @@ Rectangle2D::Rectangle2D(int x, int y, int width, int height):
 	
 	// bottom right
 	data.texCoord2f(1.0f, 0.0f);
-	data.position3f(x+width, y, 0.0f);
+	data.position3f((float)x+width, (float)y, 0.0f);
 	
 	// bottom left
 	data.texCoord2f(0.0f, 0.0f);
-	data.position3f(x, y, 0.0f);
+	data.position3f((float)x, (float)y, 0.0f);
 	
 	// top left
 	data.texCoord2f(0.0f, 1.0f);
-	data.position3f(x, y+height, 0.0f);
+	data.position3f((float)x, (float)y+height, 0.0f);
 	
 	// top right
 	data.texCoord2f(1.0f, 1.0f);
-	data.position3f(x+width, y+height, 0.0f);
+	data.position3f((float)x+width, (float)y+height, 0.0f);
 	
 	// end vertex data
 	data.end();

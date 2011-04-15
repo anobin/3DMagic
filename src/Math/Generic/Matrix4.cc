@@ -101,7 +101,7 @@ void Matrix4::createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Sc
     // load identity matrix
     memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
 
-    Scalar yMax = zMin * tan(fov * M_PI/360);
+    Scalar yMax = Scalar(zMin * tan(fov * M_PI/360));
     Scalar yMin = -yMax;
     Scalar xMin = yMin * aspect;
     Scalar xMax = -xMin; 

@@ -117,9 +117,9 @@ void Color::getColor(float* array, Color::Format format) const
 	switch (format)
 	{
 		case Color::RGBb:
-			array[0] = rRGB_SINGLE(this->color[0]);
-			array[1] = rRGB_SINGLE(this->color[1]);
-			array[2] = rRGB_SINGLE(this->color[2]);
+			array[0] = (float)rRGB_SINGLE(this->color[0]);
+			array[1] = (float)rRGB_SINGLE(this->color[1]);
+			array[2] = (float)rRGB_SINGLE(this->color[2]);
 			break;
 			
 		case Color::RGBf:
@@ -129,10 +129,10 @@ void Color::getColor(float* array, Color::Format format) const
 			break;
 			
 		case Color::RGBAb:
-			array[0] = rRGB_SINGLE(this->color[0]);
-			array[1] = rRGB_SINGLE(this->color[1]);
-			array[2] = rRGB_SINGLE(this->color[2]);
-			array[3] = rRGB_SINGLE(this->color[3]);
+			array[0] = (float)rRGB_SINGLE(this->color[0]);
+			array[1] = (float)rRGB_SINGLE(this->color[1]);
+			array[2] = (float)rRGB_SINGLE(this->color[2]);
+			array[3] = (float)rRGB_SINGLE(this->color[3]);
 			break;
 			
 		case Color::RGBAf:

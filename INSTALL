@@ -5,6 +5,7 @@ openGL
 GLUT
 GLEW
 Bullet Physics
+lib3ds
 
 
 
@@ -16,6 +17,7 @@ Bullet Physics
 GLEW
 Bullet Physics
 GLUT (demos)
+lib3ds
 
 # GLEW
 http://glew.sourceforge.net/
@@ -41,6 +43,22 @@ C:\Program Files [(x86)]\Microsoft SDKs\Windows\v7.0A\Lib
 	freeglut.lib
 -copy the following to where demos are executed
 	freeglut.dll
+
+# lib3ds
+http://code.google.com/p/lib3ds/
+- copy to 3DMagic and rename to just "lib3ds"
+- compile using project files under 'msvc8'
+- copy .lib and .dll from debug folder in msvc8 to top level folder
+
+
+
+
+
+
+
+
+
+
 
 
 

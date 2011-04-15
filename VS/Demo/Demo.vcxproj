@@ -42,6 +42,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>C:\Users\nobin\Desktop\3DMagic\bullet\src;C:\Users\nobin\Desktop\3DMagic\include;C:\Users\nobin\Desktop\3DMagic\lib3ds;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>M3D_MATH_USE_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,12 +64,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\demo\field\Field.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\3DMagic.vcxproj">
       <Project>{7724b020-e91e-4c1c-bee4-22a3419638cf}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\demo\field\Field.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

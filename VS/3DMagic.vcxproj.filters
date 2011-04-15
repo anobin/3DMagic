@@ -91,6 +91,18 @@
     <Filter Include="Source Files\Resources\models">
       <UniqueIdentifier>{deb22a27-26c2-49db-a006-93e22378ee30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Math\Generic">
+      <UniqueIdentifier>{4ecbd4f4-e525-4673-bfa1-498f57dcba7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math\Intel">
+      <UniqueIdentifier>{f426ecc7-2f2b-4567-b01e-28e5285f2b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{87db8e0c-3a3d-4127-bcf7-003f8cb85ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math\Generic">
+      <UniqueIdentifier>{63e83f0b-de0f-4996-a606-6c02a94408f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Cameras\Camera.h">
@@ -141,22 +153,55 @@
     <ClInclude Include="..\include\Lights\Light.h">
       <Filter>Header Files\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Math\Matrix.h">
+    <ClInclude Include="..\include\Math\Math.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Math\Point.h">
+    <ClInclude Include="..\include\Math\MathTypes.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Math\Vector.h">
+    <ClInclude Include="..\include\Math\Matrix3.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Matrix4.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Point2.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Point3.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Point4.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Position.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Vector2.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Vector3.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Vector4.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Models\Box.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Models\Circle2D.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Models\CustomModel.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Models\FlatSurface.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Models\Model.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Models\Rectangle2D.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Models\SignPost.h">
@@ -171,44 +216,71 @@
     <ClInclude Include="..\include\Models\Triangle.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Util\Color.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\include\Objects\Object.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Util\Helpers.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\include\Physics\MotionState.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Util\Types.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\include\Math\Generic\MathTypes.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Util\Units.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\include\Math\Generic\Matrix3.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Time\StopWatch.h">
-      <Filter>Header Files\Time</Filter>
+    <ClInclude Include="..\include\Math\Generic\Matrix4.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\Everything.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Point2.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\FlatShader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Point3.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\HemisphereShader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Point4.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\HemisphereTexShader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Position.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\PointLightDiffuseShader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Vector2.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\Shader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Vector3.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\ShaderVertexInterfaceSpec.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Generic\Vector4.h">
+      <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Shaders\SimpleADSShader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\include\Math\Intel\MathTypes.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Matrix3.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Matrix4.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point2.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point3.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point4.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Position.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector2.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector3.h">
+      <Filter>Header Files\Math\Intel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector4.h">
+      <Filter>Header Files\Math\Intel</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Resources\Handle.h">
       <Filter>Header Files\Resources</Filter>
@@ -234,38 +306,59 @@
     <ClInclude Include="..\include\Resources\Images\PNG2DResource.h">
       <Filter>Header Files\Resources\Images</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Resources\Images\SingleColor2DResource.h">
+      <Filter>Header Files\Resources\Images</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\Resources\Images\TGA2DResource.h">
       <Filter>Header Files\Resources\Images</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Physics\MotionState.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="..\include\Resources\models\Model3DSResource.h">
+      <Filter>Header Files\Resources\models</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Objects\Object.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="..\include\Shaders\Everything.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Objects\Position.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="..\include\Shaders\FlatShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\3DMagic.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\include\Shaders\HemisphereShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Models\Circle2D.h">
-      <Filter>Header Files\Models</Filter>
+    <ClInclude Include="..\include\Shaders\HemisphereTexShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Models\Rectangle2D.h">
-      <Filter>Header Files\Models</Filter>
+    <ClInclude Include="..\include\Shaders\PointLightDiffuseShader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Resources\Images\SingleColor2DResource.h">
-      <Filter>Header Files\Resources\Images</Filter>
+    <ClInclude Include="..\include\Shaders\Shader.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Shaders\Shader2D.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Models\CustomModel.h">
-      <Filter>Header Files\Models</Filter>
+    <ClInclude Include="..\include\Shaders\ShaderVertexInterfaceSpec.h">
+      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Resources\models\Model3DSResource.h">
-      <Filter>Header Files\Resources\models</Filter>
+    <ClInclude Include="..\include\Shaders\SimpleADSShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Time\StopWatch.h">
+      <Filter>Header Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Util\Color.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Util\Helpers.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Util\Types.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Util\Units.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\3DMagic.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,17 +392,83 @@
     <ClCompile Include="..\src\Models\Box.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Models\Circle2D.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Models\CustomModel.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Models\FlatSurface.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Models\Model.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Models\Rectangle2D.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Models\Sphere.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Util\Color.cpp">
-      <Filter>Source Files\Util</Filter>
+    <ClCompile Include="..\src\Math\Matrix3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Matrix4.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Point3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Position.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Vector3.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Matrix3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Matrix4.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Point3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Position.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Vector3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\Object.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Physics\MotionState.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\Images\SingleColor2DResource.cpp">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\Images\TGA2DResource.cpp">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\models\Model3DSResource.cpp">
+      <Filter>Source Files\Resources\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\Image2DResource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\ModelResource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\Resource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\ResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Resources\TextResource.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Shaders\FlatShader.cpp">
       <Filter>Source Files\Shaders</Filter>
@@ -326,56 +485,17 @@
     <ClCompile Include="..\src\Shaders\Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Shaders\Shader2D.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Shaders\ShaderVertexInterfaceSpec.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Shaders\SimpleADSShader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Resources\Image2DResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\Resource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\ResourceManager.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\TextResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\Images\TGA2DResource.cpp">
-      <Filter>Source Files\Resources\Images</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Physics\MotionState.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\Object.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\Position.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Models\Circle2D.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Models\Rectangle2D.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\Images\SingleColor2DResource.cpp">
-      <Filter>Source Files\Resources\Images</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Shaders\Shader2D.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Models\CustomModel.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\ModelResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Resources\models\Model3DSResource.cpp">
-      <Filter>Source Files\Resources\models</Filter>
+    <ClCompile Include="..\src\Util\Color.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

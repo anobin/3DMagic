@@ -93,11 +93,11 @@ public:
 	}
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, const Position& position, float friction = 0.5f, 
+	inline Object(Model& model, float mass, const Position& position2, float friction = 0.5f, 
 				  float restitution = 0.0f, float linearDamping = 0.0f): model(&model), 
-		baseTexture(NULL), motionState(this->position), body(NULL) 
+		baseTexture(NULL), motionState(position), body(NULL) 
 	{ 
-		this->position.set(position);
+		this->position.set(position2);
 		build(mass, friction, restitution, linearDamping); 
 	}
 	

@@ -46,18 +46,18 @@ Circle2D::Circle2D(int x, int y, int radius, float precisionAngle):
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// points using a TRIANGLE FAN
-	int edges = (360.0f/precisionAngle);
+	int edges = int(360.0f/precisionAngle);
 	data.begin(1 + edges);
 	
 	// center
 	data.texCoord2f(0.5f, 0.5f);
-	data.position3f(x, y, 0.0f);
+	data.position3f((float)x, (float)y, 0.0f);
 	
 	// draw verticies around the center
-	float theta = precisionAngle * M_PI / 180.0f;
+	float theta = (float)(precisionAngle * M_PI / 180.0f);
 	double r = radius;
-	float x1 = x;
-	float y1 = y;
+	float x1 = (float)x;
+	float y1 = (float)y;
 	for (int i=0; i < edges; i++)
 	{
 		// calc coords for this vertex
@@ -66,15 +66,15 @@ Circle2D::Circle2D(int x, int y, int radius, float precisionAngle):
 		if (i == (edges-1))
 		{
 			// make the last point and the first the same
-			vx = x1 + (r * cos(0.0));
-			vy = y1 + (r * sin(0.0));
+			vx = (float)(x1 + (r * cos(0.0)));
+			vy = (float)(y1 + (r * sin(0.0)));
 		}
 		else
 		{
-			vx = x1 + (r * cos(float(i)*theta));
-			vy = y1 + (r * sin(float(i)*theta));
+			vx = (float)(x1 + (r * cos(float(i)*theta)));
+			vy = (float)(y1 + (r * sin(float(i)*theta)));
 		}
-		data.texCoord2f(0.5f + 0.5f * ((vx-x1)/r), 0.5f + 0.5f * ((vy-y1)/r));
+		data.texCoord2f((float)(0.5f + 0.5f * ((vx-x1)/r)), (float)(0.5f + 0.5f * ((vy-y1)/r)));
 		data.position3f(vx, vy, 0.0f);
 	}
 

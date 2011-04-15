@@ -33,6 +33,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Matrix3.h"
 
 // for a lot of stuff
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 // for memcpy

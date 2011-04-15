@@ -28,9 +28,77 @@
     <ClInclude Include="..\include\Graphics\VertexHandler.h" />
     <ClInclude Include="..\include\GUI\RectTexture.h" />
     <ClInclude Include="..\include\Lights\Light.h" />
-    <ClInclude Include="..\include\Math\Matrix.h" />
-    <ClInclude Include="..\include\Math\Point.h" />
-    <ClInclude Include="..\include\Math\Vector.h" />
+    <ClInclude Include="..\include\Math\Generic\MathTypes.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Matrix3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Matrix4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Point2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Point3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Point4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Position.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Vector2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Vector3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Generic\Vector4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\MathTypes.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Matrix3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Matrix4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Point4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Position.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector3.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Intel\Vector4.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\include\Math\Math.h" />
+    <ClInclude Include="..\include\Math\MathTypes.h" />
+    <ClInclude Include="..\include\Math\Matrix3.h" />
+    <ClInclude Include="..\include\Math\Matrix4.h" />
+    <ClInclude Include="..\include\Math\Point2.h" />
+    <ClInclude Include="..\include\Math\Point3.h" />
+    <ClInclude Include="..\include\Math\Point4.h" />
+    <ClInclude Include="..\include\Math\Position.h" />
+    <ClInclude Include="..\include\Math\Vector2.h" />
+    <ClInclude Include="..\include\Math\Vector3.h" />
+    <ClInclude Include="..\include\Math\Vector4.h" />
     <ClInclude Include="..\include\Models\Box.h" />
     <ClInclude Include="..\include\Models\Circle2D.h" />
     <ClInclude Include="..\include\Models\CustomModel.h" />
@@ -42,7 +110,6 @@
     <ClInclude Include="..\include\Models\Teapot.h" />
     <ClInclude Include="..\include\Models\Triangle.h" />
     <ClInclude Include="..\include\Objects\Object.h" />
-    <ClInclude Include="..\include\Objects\Position.h" />
     <ClInclude Include="..\include\Physics\MotionState.h" />
     <ClInclude Include="..\include\Resources\Handle.h" />
     <ClInclude Include="..\include\Resources\Image2DResource.h" />
@@ -80,6 +147,26 @@
     <ClCompile Include="..\src\Graphics\VertexArray.cpp" />
     <ClCompile Include="..\src\Graphics\VertexHandler.cpp" />
     <ClCompile Include="..\src\GUI\RectTexture.cpp" />
+    <ClCompile Include="..\src\Math\Generic\Matrix3.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Matrix4.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Point3.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Position.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Vector3.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Matrix3.cpp" />
+    <ClCompile Include="..\src\Math\Matrix4.cpp" />
+    <ClCompile Include="..\src\Math\Point3.cpp" />
+    <ClCompile Include="..\src\Math\Position.cpp" />
+    <ClCompile Include="..\src\Math\Vector3.cpp" />
     <ClCompile Include="..\src\Models\Box.cpp" />
     <ClCompile Include="..\src\Models\Circle2D.cpp" />
     <ClCompile Include="..\src\Models\CustomModel.cpp" />
@@ -88,7 +175,6 @@
     <ClCompile Include="..\src\Models\Rectangle2D.cpp" />
     <ClCompile Include="..\src\Models\Sphere.cpp" />
     <ClCompile Include="..\src\Objects\Object.cpp" />
-    <ClCompile Include="..\src\Objects\Position.cpp" />
     <ClCompile Include="..\src\Physics\MotionState.cpp" />
     <ClCompile Include="..\src\Resources\Image2DResource.cpp" />
     <ClCompile Include="..\src\Resources\Images\SingleColor2DResource.cpp" />
@@ -139,7 +225,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\include;$(SolutionDir)\..\bullet\src\;C:\Users\nobin\Desktop\3DMagic\lib3ds;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\include;$(SolutionDir)\..\bullet\src\;$(SolutionDir)\..\lib3ds;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>M3D_MATH_USE_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

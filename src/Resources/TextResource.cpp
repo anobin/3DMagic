@@ -47,7 +47,7 @@ TextResource::TextResource(const char* path, const std::string& name, ResourceMa
 
 	// get length of file:
 	file.seekg (0, std::ios::end);
-	int length = file.tellg();
+	int length = (int)file.tellg();
 	file.seekg (0, std::ios::beg);
 
 	// read all data into memory
