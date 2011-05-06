@@ -28,11 +28,18 @@ INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE} ${BULLET_INCLUDE})
 
 # allow the user to set the math implementation to use
 OPTION(MATH_USE_GENERIC "Use Generic Math implementation" OFF)
-OPTION(MATH_USE_INTEL   "USe Intel Math implementation"   OFF)
+OPTION(MATH_USE_INTEL   "Use Intel Math implementation"   OFF)
 
 # allow the user to disable building and/or enable running tests
 OPTION(BUILD_TESTS "Build the test suite" ON)
 OPTION(RUN_TESTS "Run the Test Suite during build" OFF)
+
+# allow user to set the build without vertex arrays
+OPTION(USE_VERTEX_ARRAYS "Enable/Disable Vertex Array use" ON)
+IF(USE_VERTEX_ARRAYS)
+ELSE(USE_VERTEX_ARRAYS)
+    SET(CXX_FLAGS "${CXX_FLAGS} -DMAGIC3D_NO_VERTEX_ARRAYS")
+ENDIF(USE_VERTEX_ARRAYS)
 
 
 # add source and headers

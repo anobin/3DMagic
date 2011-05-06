@@ -198,7 +198,25 @@ public:
 	/// draw all verticies
 	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
 	{
+#ifdef MAGIC3D_NO_VERTEX_ARRAYS
+		std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*>::iterator it =
+		data.begin();
+		for(; it != data.end(); it++)
+		{
+			array.setAttributeArray(it->second->index, it->second->components,
+								VertexArray::FLOAT, *it->second->buffer);
+		}
+#endif
+
 		array.draw(primitive, vertexCount);
+
+#ifdef MAGIC3D_NO_VERTEX_ARRAYS
+		it = data.begin();
+		for(; it != data.end(); it++)
+		{
+			glDisableVertexAttribArray(it->second->index);
+		}
+#endif
 	}
 
 

@@ -90,30 +90,38 @@ public:
 	/// default constructor
 	inline VertexArray()
 	{
-		glGenVertexArrays(1, &arrayId);
+#ifndef MAGIC3D_NO_VERTEX_ARRAYS
+		glGenVertexArrays(1, &arrayId); //openGL 3
+#endif
 	}
 	
 	/// destructor
 	inline ~VertexArray()
 	{
 		unBind();
-		glDeleteVertexArrays(1, &arrayId);
+#ifndef MAGIC3D_NO_VERTEX_ARRAYS
+		glDeleteVertexArrays(1, &arrayId); //openGL 3
+#endif
 	}
 	
 	/// bind this vertex array 
 	inline void bind()
 	{
+#ifndef MAGIC3D_NO_VERTEX_ARRAYS
 		VertexArray::boundArrayId = arrayId;
-		glBindVertexArray(arrayId);
+		glBindVertexArray(arrayId); //openGL 3
+#endif
 	}
 	
 	/// unbind this vertex array
 	inline void unBind()
 	{
+#ifndef MAGIC3D_NO_VERTEX_ARRAYS
 		if (arrayId != VertexArray::boundArrayId)
 			return;
-		glBindVertexArray(0);
+		glBindVertexArray(0); // openGL 3
 		VertexArray::boundArrayId = 0;
+#endif
 	}
 	
 	/** set an attribute array of the vertex array

@@ -115,18 +115,20 @@ void VertexHandler::end()
 										it->second->temp,
 										Buffer::STATIC_DRAW
 										);
+
 		// delete temp data
 		delete[] it->second->temp;
 		it->second->temp = NULL;
 		it->second->tempLength = 0;
 		
 		// bind buffer to attribute index
+#ifndef MAGIC3D_NO_VERTEX_ARRAYS
 		array.setAttributeArray(it->second->index, it->second->components,
 								VertexArray::FLOAT, *it->second->buffer);
+#endif
 	}
 	
 }
-	
 	
 	
 	
