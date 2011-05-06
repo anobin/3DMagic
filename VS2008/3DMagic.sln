@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3DMagic", "3DMagic.vcproj", "{11957E37-26BD-4875-9C8D-85AE7B77CBAF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Demo\Demo.vcproj", "{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11957E37-26BD-4875-9C8D-85AE7B77CBAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11957E37-26BD-4875-9C8D-85AE7B77CBAF}.Debug|Win32.Build.0 = Debug|Win32
+		{11957E37-26BD-4875-9C8D-85AE7B77CBAF}.Release|Win32.ActiveCfg = Release|Win32
+		{11957E37-26BD-4875-9C8D-85AE7B77CBAF}.Release|Win32.Build.0 = Release|Win32
+		{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}.Debug|Win32.Build.0 = Debug|Win32
+		{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}.Release|Win32.ActiveCfg = Release|Win32
+		{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
