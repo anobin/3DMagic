@@ -25,9 +25,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_POSITION_INTEL_H
 #define MAGIC3D_POSITION_INTEL_H
 
-// TODO
-#error "Intel Math Implementation is not yet implemented"
-
 #include "MathTypes.h"
 
 /** Represents a 3D position using a location and directional vectors. 
