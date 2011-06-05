@@ -26,9 +26,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MATRIX4_INTEL_H
 
 // TODO
-#error "Intel Math Implementation is not yet implemented"
-
 #include "MathTypes.h"
+
+class Matrix3;
+class Vector4;
 
 /** Represents a 4-component (x,y,z,w) matrix. 
  * Note to Implementations: The inline keywords are used here as a
@@ -36,6 +37,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Matrix4
 {
+private:
+	ALIGN(16 /*sizeof(Scalar) * 4, or XMM alignment*/, Scalar data[4]);
 public:
     void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
 

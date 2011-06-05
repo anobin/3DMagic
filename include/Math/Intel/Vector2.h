@@ -26,9 +26,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_VECTOR2_INTEL_H
 
 // TODO
-#error "Intel Math Implementation is not yet implemented"
-
 #include "MathTypes.h"
+
 
 /** Represents a 2-component (x,y) vector. 
  * Note to Implementations: The inline keywords are used here as a

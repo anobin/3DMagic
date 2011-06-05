@@ -26,15 +26,24 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MATH_TYPES_INTEL_H
 
 
-// TODO
-#error "Intel Math Implementation is not yet implemented"
+#ifdef _MSC_VER              // MSVC compiler
+#define ALIGN(n, var) __declspec(align(n)) var
+#elif defined(__GNUC__)     // gcc
+#define ALIGN(n, var) var __attribute__ ((aligned (n)))
+#else
+#error Unrecognized compiler - cannot determine how to align memory blocks
+#endif
+
 
 
 /// scalar floating-point base type
-#ifdef M3D_MATH_DOUBLE_PERCISION
-typedef Scalar double;
+#ifdef M3D_MATH_DOUBLE_PRECISION
+#ifdef M3D_MATH_USE_INTEL
+#error Cannot (yet) use double precision with Intel SIMD instructions
+#endif
+typedef double Scalar; 
 #else
-typedef Scalar float;
+typedef float Scalar;
 #endif
 
 

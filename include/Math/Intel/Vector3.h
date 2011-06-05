@@ -25,11 +25,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_VECTOR3_INTEL_H
 #define MAGIC3D_VECTOR3_INTEL_H
 
-// TODO
-#error "Intel Math Implementation is not yet implemented"
-
-
 #include "MathTypes.h"
+#include "Matrix4.h"
 
 /** Represents a 3-component (x,y,z) vector. 
  * Note to Implementations: The inline keywords are used here as a
