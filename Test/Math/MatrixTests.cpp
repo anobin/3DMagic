@@ -127,9 +127,67 @@ TEST_F(Math_Matrix4Tests, Multiply)
     ASSERT_MATRIX_EQ(actual,expected);
 }
 
+/// tests Matrix4 setter and getter methods
+TEST_F(Math_Matrix4Tests, Setters)
+{
+    m1.set(2,3, 48.3f);
+    ASSERT_FLOAT_EQ(m1.get(2,3), 48.3f);
+}
+
+/// tests Matrix4 setter and getter methods
+TEST_F(Math_Matrix4Tests, ColumnSetters)
+{
+    Vector4 vs(1.1, 2.2, 3.3, 4.4);
+    Vector4 vg;
+    
+    m1.setColumn(1, vs);
+    m1.getColumn(1, vg);
+    
+    ASSERT_FLOAT_EQ(vs.getX(), vg.getX());
+    ASSERT_FLOAT_EQ(vs.getY(), vg.getY());
+    ASSERT_FLOAT_EQ(vs.getZ(), vg.getZ());
+    ASSERT_FLOAT_EQ(vs.getW(), vg.getW());
+}
+
+/// tests Matrix4 array getter
+TEST_F(Math_Matrix4Tests, ArrayGetter)
+{
+    float in_array[] = {5,-71,-13,86,-86,-8,-62,8,-69,-106,81,125,-1,-52,84,47};
+    float out_array[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    
+    for(int i=0; i < 4; i++)
+    {
+        for (int j=0; j < 4; j++)
+            m1.set(i, j, in_array[i*4 + j]);
+    }
+    
+    m1.getArray<float>(&out_array[0]);
+    
+    for(int i=0; i < 16; i++)
+        ASSERT_FLOAT_EQ(in_array[i], out_array[i]);
+}
+
 /// tests Matrix4 getCameraMatrix method
 
 /// tests Matrix4 extractRotation method
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
