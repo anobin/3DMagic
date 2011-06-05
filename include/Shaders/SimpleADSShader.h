@@ -103,19 +103,19 @@ public:
 		specularColor.set(color);
 	}
 	
-	inline void setLightPosition(const Point3 position)
+	inline void setLightPosition(const Point3& position)
 	{
 		lightPosition.set(position);
 	}
-	inline void setNormalMatrix(const Matrix3 normal)
+	inline void setNormalMatrix(const Matrix3& normal)
 	{
 		normalMatrix.set(normal);
 	}
-	inline void setMVPMatrix(const Matrix4 mvp)
+	inline void setMVPMatrix(const Matrix4& mvp)
 	{
 		mvpMatrix.set(mvp);
 	}
-	inline void setMVMatrix(const Matrix4 mv)
+	inline void setMVMatrix(const Matrix4& mv)
 	{
 		mvMatrix.set(mv);
 	}
