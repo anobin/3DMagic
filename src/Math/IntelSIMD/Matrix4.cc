@@ -52,7 +52,6 @@ void Matrix4::multiply(const Matrix4 &m)
 }
 
 /// multiply two other matrixes and store the result in this matrix
-__declspec(naked)
 void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 {
     // Transpose matrix 1 to assist with SSE
