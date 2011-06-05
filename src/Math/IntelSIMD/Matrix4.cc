@@ -54,6 +54,8 @@ void Matrix4::multiply(const Matrix4 &m)
 /// multiply two other matrixes and store the result in this matrix
 void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 {
+	
+#ifdef _MSC_VER
     // Transpose matrix 1 to assist with SSE
     __asm 
     {
@@ -140,6 +142,99 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 
 #undef COMPUTE_ROW
 	}
+
+#elif defined(__GNUC__) 
+	
+#define COMPUTE_ROW(n) \
+	__asm__ ( \
+	".intel_syntax noprefix\n\t" \
+	"MOVAPS        xmm1,       [eax]m2.data + (n * 4 * TYPE Scalar)\n\t"    \
+	"MOVAPS        xmm0,       xmm4\n\t"                                    \
+	"MULPS         xmm0,       xmm1\n\t"                                    \
+	"MOVAPS        xmm6,       xmm2\n\t"                                    \
+	"MULPS         xmm6,       xmm1\n\t"                                    \
+	"HADDPS        xmm0,       xmm6\n\t"                                    \
+																			\
+	"MOVAPS        xmm6,       xmm5\n\t"                                    \
+	"MULPS         xmm6,       xmm1\n\t"                                    \
+	"MOVAPS        xmm7,       xmm3\n\t"                               \
+	"MULPS         xmm7,       xmm1\n\t"                               \
+	"HADDPS        xmm6,       xmm7\n\t"                               \
+																	        \
+	"HADDPS        xmm0,       xmm6\n\t"                               \
+	"MOVAPS        [ecx]m2.data + (n * 4 * TYPE Scalar), xmm0\n\t");          
+	
+	asm
+    (
+        ".intel_syntax noprefix\n\t"
+		// Recommend caching of m2 while we deal with m1
+        "MOV         eax,        m2\n\t"
+		
+        "PREFETCHT0  [eax] \n\t"
+
+		//Resolve reference
+        "MOV         eax,        m1\n\t"
+
+        
+        "MOVAPS      xmm0,       [eax + loc]\n\t"                  // A1 A2 A3 A4
+        "MOVAPS      xmm1,       [eax + loc + (4  * 4)]\n\t"   // B1 B2 B3 B4
+        "MOVAPS      xmm2,       [eax + loc + (8  * 4)]\n\t"   // C1 C2 C3 C4
+        "MOVAPS      xmm3,       [eax + loc + (12 * 4)]\n\t"   // D1 D2 D3 D4
+
+        // Transpose for ease of SSE
+        /* Shift to the following:
+                A1  C1  A2  C2              A1  B1  C1  D1
+                A3  C3  A4  C4              A2  B2  C2  D2
+                B1  D1  B2  D2      Then    A3  B3  C3  D3
+                B3  D3  B4  D4              A4  B4  C4  D4
+        */
+
+        "MOVAPS      xmm5,       xmm0\n\t"    // A1 A2 A3 A4
+        "MOVAPS      xmm6,       xmm1\n\t"    // B1 B2 B3 B4
+        "UNPCKHPS    xmm0,       xmm2\n\t"    // A1 C1 A2 C2
+        "UNPCKLPS    xmm5,       xmm2\n\t"    // A3 C3 A4 C4
+        "UNPCKHPS    xmm1,       xmm3\n\t"    // B1 D1 B2 D2
+        "UNPCKLPS    xmm6,       xmm3\n\t"    // B3 D3 B4 D4
+
+        // Step one complete:
+        // xmm0, xmm5, xmm1, xmm6
+        "MOVAPS      xmm2,       xmm0\n\t"    // A1 C1 A2 C2
+        "MOVAPS      xmm3,       xmm6\n\t"    // B3 D3 B4 D4
+        "UNPCKHPS    xmm0,       xmm1\n\t"    // A1 B1 C1 D1
+        "UNPCKLPS    xmm2,       xmm1\n\t"    // A2 B2 C2 D2
+        "UNPCKHPS    xmm5,       xmm6\n\t"    // A3 B3 C3 D3
+        "UNPCKLPS    xmm3,       xmm6\n\t"    // A4 B4 C4 D4        
+
+        // Transpose complete (xmm0 xmm2 xmm5 xmm3). Do multiply
+        // Grab first row of first matrix, multiply with first column of second matrix
+        "MOV         eax,        m2\n\t"
+        "MOVAPS      xmm1,       [eax + loc]\n\t"
+        "MOVAPS      xmm4,       xmm0\n\t"    // xmm4 = m2 first col
+        "MULPS       xmm0,       xmm1\n\t"    // xmm0 = m1 first row * m2 first col
+        "MOVAPS      xmm6,       xmm2\n\t"
+        "MULPS       xmm6,       xmm1\n\t"    // xmm6 = m1 first row * m2 second col
+        "HADDPS      xmm0,       xmm6\n\t"    // xmm0 = a bunch of crap
+
+        "MOVAPS      xmm6,       xmm1\n\t"
+        "MULPS       xmm6,       xmm5\n\t"    // xmm6 = m1 first row * m2 third col
+        "MOVAPS      xmm7,       xmm1\n\t"
+        "MULPS       xmm7,       xmm3\n\t"    // xmm7 = m1 first row * m2 fourth col
+        "HADDPS      xmm6,       xmm7\n\t"    // xmm6 = another bunch of crap
+
+        "HADDPS      xmm0,       xmm6\n\t"    // bunch of crap + bunch of crap = first result row complete
+        "MOVAPS      [ecx + loc], xmm0\n\t"  // store back in m1
+		: /* no outputs*/
+		: [loc] "g" (&m1.data)
+	);
+        // Do the other rows
+        //COMPUTE_ROW(1);
+        //COMPUTE_ROW(2);
+        //COMPUTE_ROW(3);
+#undef COMPUTE_ROW
+		
+#else
+#error Unrecognized compiler - cannot determine how to inline assembly
+#endif
 }
 
 /// create a perspective matrix
