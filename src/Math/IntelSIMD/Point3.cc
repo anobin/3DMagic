@@ -23,9 +23,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Math/Generic/Matrix4.h>
-#include <Math/Generic/Matrix3.h>
-#include <Math/Generic/Point3.h>
+#include <Math/Intel/Matrix4.h>
+#include <Math/Intel/Matrix3.h>
+#include <Math/Intel/Point3.h>
 
 
 

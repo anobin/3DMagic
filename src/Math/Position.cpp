@@ -33,7 +33,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // intel processors only implementation
 #elif defined(M3D_MATH_USE_INTEL)
-#include "Intel/Position.cc"
+#include "IntelSIMD/Position.cc"
 
 
 // nothing is selected, not valid for math interface

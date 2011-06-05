@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Math/Generic/Position.h>
+#include <Math/Intel/Position.h>
 
 
 /// get a transformation matrix that represents this position

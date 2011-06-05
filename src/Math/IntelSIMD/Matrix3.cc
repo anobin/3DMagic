@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */ 
 
-#include <Math/Generic/Matrix3.h>
+#include <Math/Intel/Matrix3.h>
 
 /// the identity matrix
 const Scalar Matrix3::identity[] = {1.0f, 0.0f, 0.0f, 

@@ -17,45 +17,105 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Matrix3 Intel implementation
+/** Header file for Matrix3 Generic implementation
  *
  * @file Matrix3.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_MATRIX3_INTEL_H
-#define MAGIC3D_MATRIX3_INTEL_H
+#ifndef MAGIC3D_MATRIX3_GENERIC_H
+#define MAGIC3D_MATRIX3_GENERIC_H
 
-// TODO
+// for Scalar
 #include "MathTypes.h"
+
+// for Vector3
 #include "Vector3.h"
 
-/** Represents a 3-component (x,y,z) matrix. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+// for a lot of stuff
+#include <math.h>
+
+// for memcpy
+#include <string.h>
+
+class Matrix4;
+
+/** Represents a 3x3-component (x,y,z) matrix. 
  */
 class Matrix3
 {
+private:
+    /// the matrix data, column major
+    Scalar data[3*3];
+    
+    /// the identity matrix
+    static const Scalar identity[];
+    
 public:
-    Matrix3();
+    friend class Matrix4;
+    
+    /// default constructor, load identity
+    inline Matrix3()
+    {
+        memcpy(this->data, Matrix3::identity, sizeof(Scalar)*3*3);
+    }
 
-    Matrix3(const Matrix3 &copy);
+    /// copy constructor
+    inline Matrix3(const Matrix3 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*3*3);
+    }
 
-    void set(const Matrix3 &copy);
+    /// copy setter
+    inline void set(const Matrix3 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*3*3);
+    }
 
-    Scalar get(unsigned int col, unsigned int row) const ;
+    /// get a specific element
+    inline Scalar get(unsigned int col, unsigned int row) const
+    {
+        return data[(col*3)+row];
+    }
 
-    void set(unsigned int col, unsigned int row, Scalar value);
+    /// set a specific element
+    inline void set(unsigned int col, unsigned int row, Scalar value)
+    {
+        data[(col*3)+row] = value;
+    }
 
-    void setColumn(unsigned int col, const Vector3 &v);
+    /// set a column
+    inline void setColumn(unsigned int col, const Vector3 &v)
+    {
+        data[col*3]   = v.getX();
+        data[col*3+1] = v.getY();
+        data[col*3+2] = v.getZ();
+    }
 
-    void getColumn(unsigned int col, Vector3 *out) const ;
+    /// get a column
+    inline void getColumn(unsigned int col, Vector3& out) const
+    {
+        out.setX(data[col*3]  );
+        out.setY(data[col*3+1]);
+        out.setZ(data[col*3+2]);
+    }
+    
+    template<class T>
+    void getArray(T* array) const
+    {
+        for (int i=0; i < 3*3; i++)
+            array[i] = (T)data[i];
+    }
 
+    /// multiply this matrix and another
     void multiply(const Matrix3 &m);
 
+    /// multiply two matrixes and store the result in this matrix
     void multiply(const Matrix3 &m1, const Matrix3 &m2);
 
+    /// turn this matrix into a scale matrix
     void createScaleMatrix(Scalar x, Scalar y, Scalar z);
 
+    /// turn this matrix into a rotation matrix
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
 };
 

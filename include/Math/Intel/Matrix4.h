@@ -17,50 +17,119 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Matrix4 Intel Implementation
+/** Header file for Matrix4 Generic Implementation
  *
  * @file Matrix4.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_MATRIX4_INTEL_H
-#define MAGIC3D_MATRIX4_INTEL_H
+#ifndef MAGIC3D_MATRIX4_GENERIC_H
+#define MAGIC3D_MATRIX4_GENERIC_H
 
-// TODO
+// for Scalar
 #include "MathTypes.h"
 
-class Matrix3;
-class Vector4;
+// for Vector4 and Matrix3
+#include "Vector4.h"
+#include "Matrix3.h"
 
-/** Represents a 4-component (x,y,z,w) matrix. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+// for a lot of stuff
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+// for memcpy
+#include <string.h>
+
+
+/** Represents a 4x4-component (x,y,z,w) matrix
  */
 class Matrix4
 {
 private:
-	ALIGN(16 /*sizeof(Scalar) * 4, or XMM alignment*/, Scalar data[4]);
+    /// matrix data, column major
+    ALIGN(16, Scalar data[4*4]);
+    
+    /// the identity matrix
+    static const Scalar identity[];
+    
 public:
+    /// default constructor, load identity
+    inline Matrix4()
+    {
+        memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
+    }
+
+    /// copy constructor
+    inline Matrix4(const Matrix4 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
+    }
+    
+    /// copy setter
+    inline void set(const Matrix4 &copy)
+    {
+        memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
+    }
+
+    /// set a element
+    inline void set(unsigned int col, unsigned int row, Scalar value)
+    {
+        data[(col*4)+row] = value;
+    }
+
+    /// get a element
+    inline Scalar get(unsigned int col, unsigned int row) const
+    {
+        return data[(col*4)+row];
+    }
+
+    /// set a column
+    inline void setColumn(unsigned int col, const Vector4 &v)
+    {
+        data[col*4  ] = v.getX();
+        data[col*4+1] = v.getY();
+        data[col*4+2] = v.getZ();
+        data[col*4+3] = v.getW();
+    }
+
+    /// get a column
+    inline void getColumn(unsigned int col, Vector4& out) const
+    {
+        out.setX(data[col*4  ]);
+        out.setY(data[col*4+1]);
+        out.setZ(data[col*4+2]);
+        out.setW(data[col*4+3]);
+    }
+    
+    template<class T>
+    void getArray(T* array) const
+    {
+        for (int i=0; i < 4*4; i++)
+            array[i] = (T)data[i];
+    }
+    
+    /// create a scale matrix
+    void createScaleMatrix(Scalar x, Scalar y, Scalar z);
+
+    /// multiply this matrix and another matrix
+    void multiply(const Matrix4 &m);
+
+    /// multiply two other matrixes and store the result in this matrix
+    void multiply(const Matrix4 &m1, const Matrix4 &m2);
+    
+    /// create a perepective matrix
     void createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax);
 
-    void ceateOrthograhicMatrxi(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
+    /// create a orthographic matrix
+    void createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
 
+    /// create rotation matrix
     void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
 
+    /// create a translation matrix
     void createTranslationMatrix(Scalar x, Scalar y, Scalar z);
 
-    void extractRotation(const Matrix3 *out);
-
-    Matrix4();
-
-    Matrix4(const Matrix4 &copy);
-
-    void set(unsigned int col, unsigned int row, Scalar value);
-
-    Scalar get(unsigned int col, unsigned int row) const ;
-
-    void setColumn(unsigned int col, const Vector4 &v);
-
-    void getColumn(unsigned int col, Vector4 *out) const ;
+    /// extract the rotational component out of this matrix
+    void extractRotation(Matrix3& out);
 };
 
 

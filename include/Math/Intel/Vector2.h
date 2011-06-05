@@ -17,53 +17,113 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Vector2 Intel implementation
+/** Header file for Vector2 Generic implementation
  *
  * @file Vector2.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_VECTOR2_INTEL_H
-#define MAGIC3D_VECTOR2_INTEL_H
+#ifndef MAGIC3D_VECTOR2_GENERIC_H
+#define MAGIC3D_VECTOR2_GENERIC_H
 
-// TODO
+// for Scalar type
 #include "MathTypes.h"
 
-
-/** Represents a 2-component (x,y) vector. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+/** Represents a 2-component (x,y) vector
  */
 class Vector2
 {
+private:
+    /// x component of vector
+    Scalar x;
+    /// y component of vector
+    Scalar y;
+    
 public:
-    Vector2(Scalar x, Scalar y);
+    /// default constructor, set to (0,0)
+    inline Vector2(): x(0), y(0) {}
+    
+    /// standard constructor
+    inline Vector2(Scalar x, Scalar y): x(x), y(y) {}
 
-    Vector2(const Vector2 &copy);
+    /// copy constructor
+    inline Vector2(const Vector2 &copy): x(copy.x), y(copy.y) {}
 
-    void add(const Vector2 &v1);
+    /// add a vector to this vector
+    inline void add(const Vector2 &v)
+    {
+        x += v.x;
+        y += v.y;
+    }
 
-    void add(const Vector2 &v1, const Vector2 &v2);
+    /// add two vectors and store the result in this vector
+    inline void add(const Vector2 &v1, const Vector2 &v2)
+    {
+        x = v1.x + v2.x;
+        y = v1.y + v2.y;
+    }
 
-    void subtract(const Vector2 &v1);
+    /// subtract a vector from this vector
+    inline void subtract(const Vector2 &v)
+    {
+        x -= v.x;
+        y -= v.y;
+    }
 
-    void subtract(const Vector2 &v1, const Vector2 &v2);
+    /// subtract v2 from v1 and store the result in this vector
+    inline void subtract(const Vector2 &v1, const Vector2 &v2)
+    {
+        x = v1.x - v2.x;
+        y = v1.y - v2.y;
+    }
 
-    void scale(Scalar factor);
+    /// scale this vector by a given factor
+    inline void scale(Scalar factor)
+    {
+        x *= factor;
+        y *= factor;
+    }
 
-    Vector2();
+    /// set this vector to copy the contents of another vector
+    inline void set(const Vector2 &copy)
+    {
+        x = copy.x;
+        y = copy.y;
+    }
 
-    void set(const Vector2 &copy);
+    /// set the contents of this vector
+    inline void set(Scalar x, Scalar y)
+    {
+        this->x = x;
+        this->y = y;
+    }
 
-    void set(Scalar x, Scalar y);
+    /// set the x component
+    inline void setX(Scalar x)
+    {
+        this->x = x;
+    }
 
-    void setX(Scalar x);
+    /// set the y component
+    inline void setY(Scalar y)
+    {
+        this->y = y;
+    }
 
-    void setY(Scalar y);
+    /// get the x component
+    inline Scalar getX() const
+    {
+        return x;
+    }
 
-    Scalar getX() const ;
-
-    Scalar getY() const ;
+    /// get the y component
+    inline Scalar getY() const
+    {
+        return y;
+    }
+    
 };
+
+
 
 
 

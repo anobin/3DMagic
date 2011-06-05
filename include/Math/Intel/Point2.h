@@ -17,45 +17,90 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Point2 Intel implementation
+/** Header file for Point2 Generic implementation
  *
  * @file Point2.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_POINT2_INTEL_H
-#define MAGIC3D_POINT2_INTEL_H
+#ifndef MAGIC3D_POINT2_GENERIC_H
+#define MAGIC3D_POINT2_GENERIC_H
 
-// TODO
-#error "Intel Math Implementation is not yet implemented"
-
+// for Scalar
 #include "MathTypes.h"
 
-/** Represents a 2-component (x,y) point. 
- * Note to Implementations: The inline keywords are used here as a
- * recommendation, not a requirement.
+// for sqrt
+#include <math.h>
+
+
+/** Represents a 2-component (x,y) point
  */
 class Point2
 {
+private:
+    /// x component
+    Scalar x;
+    /// y component
+    Scalar y;
+    
 public:
-    Point2();
+    /// default constructor, set to (0,0)
+    inline Point2(): x(0), y(0) {}
 
-    Point2(Scalar x, Scalar y);
+    /// standard constructor
+    inline Point2(Scalar x, Scalar y): x(x), y(y) {}
 
-    Point2(const Point2 &copy);
+    /// copy constructor
+    inline Point2(const Point2 &copy): x(copy.x), y(copy.y) {}
 
-    Scalar getX() const ;
+    /// get the x component
+    inline Scalar getX() const
+    {
+        return x;
+    }
 
-    Scalar getY() const ;
+    /// get the y component
+    inline Scalar getY() const
+    {
+        return y;
+    }
 
-    void setX(Scalar value);
+    /// set the x component
+    inline void setX(Scalar value)
+    {
+        x = value;
+    }
 
-    void setY(Scalar value);
+    /// set the y component
+    inline void setY(Scalar value)
+    {
+        y = value;
+    }
 
-    Scalar getDistance(const Point2 &p) const ;
+    /// get the distance to another point
+    inline Scalar getDistance(const Point2 &p) const
+    {
+        Scalar tmp[2];
+        tmp[0] = x - p.x;
+        tmp[1] = y - p.y;
+        tmp[0] *= tmp[0];
+        tmp[1] *= tmp[1];
+        return sqrt(tmp[0] + tmp[1]);
+    }
 
-    void set(Scalar x, Scalar y);
+    /// set the contents
+    inline void set(Scalar x, Scalar y)
+    {
+        this->x = x;
+        this->y = y;
+    }
 
-    void set(const Point2 &copy);
+    /// set contents to another vector
+    inline void set(const Point2 &copy)
+    {
+        this->x = copy.x;
+        this->y = copy.y;
+    }
+    
 };
 
 

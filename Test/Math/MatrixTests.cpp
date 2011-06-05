@@ -137,7 +137,7 @@ TEST_F(Math_Matrix4Tests, Setters)
 /// tests Matrix4 setter and getter methods
 TEST_F(Math_Matrix4Tests, ColumnSetters)
 {
-    Vector4 vs(1.1, 2.2, 3.3, 4.4);
+    Vector4 vs(1.1f, 2.2f, 3.3f, 4.4f);
     Vector4 vg;
     
     m1.setColumn(1, vs);
@@ -167,9 +167,44 @@ TEST_F(Math_Matrix4Tests, ArrayGetter)
         ASSERT_FLOAT_EQ(in_array[i], out_array[i]);
 }
 
-/// tests Matrix4 getCameraMatrix method
+/// tests Matrix4 createTranslationMatrix
+TEST_F(Math_Matrix4Tests, TranslationMatrix)
+{
+    actual.createTranslationMatrix(1.1f, 2.2f, 3.3f);
+    matrixSet(expected, 1,0,0,0,
+                        0,1,0,0,
+                        0,0,1,0,
+                        1.1f,2.2f,3.3f,1);
+    ASSERT_MATRIX_EQ(actual, expected);
+}
 
-/// tests Matrix4 extractRotation method
+/// tests Matrix4 createRotationMatrix
+
+/// tests Matrix4 extractRotation
+
+/// tests Matrix4 createScaleMatrix
+TEST_F(Math_Matrix4Tests, ScaleMatrix)
+{
+    actual.createScaleMatrix(1.1f, 2.2f, 3.3f);
+    matrixSet(expected, 1.1f,0,0,0,
+                        0,2.2f,0,0,
+                        0,0,3.3f,0,
+                        0,0,0,1);
+    ASSERT_MATRIX_EQ(actual, expected);
+}
+
+/// tests Matrix4 createPerspectiveMatrix
+/*TEST_F(Math_Matrix4Tests, PerspectiveMatrix)
+{
+    actual.createPerspectiveMatrix(60.0f, 1280/1024, INCH, 1000*FOOT);
+    matrixSet(expected, 1,0,0,0,
+                        0,1,0,0,
+                        0,0,1,0,
+                        1.1f,2.2f,3.3f,1);
+    ASSERT_MATRIX_EQ(actual, expected);
+}*/
+
+/// tests Matrix4 createOrthographicMatrix
 
 
 

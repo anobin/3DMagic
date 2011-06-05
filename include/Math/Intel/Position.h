@@ -17,15 +17,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Position Intel implementation
+/** Header file for Position Generic implementation
  *
  * @file Position.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_POSITION_INTEL_H
-#define MAGIC3D_POSITION_INTEL_H
+#ifndef MAGIC3D_POSITION_GENERIC_H
+#define MAGIC3D_POSITION_GENERIC_H
 
+// for Scalar
 #include "MathTypes.h"
+
+// for lots of stuff
+#include <math.h>
+
+// for math classes
+#include "Matrix3.h"
+#include "Matrix4.h"
+#include "Point3.h"
+#include "Vector3.h"
 
 /** Represents a 3D position using a location and directional vectors. 
  * Note to Implementations: The inline keywords are used here as a
@@ -33,48 +43,99 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Position
 {
+private:
+    /// location
+    Point3 location;
+    /// forward vector
+    Vector3 forward;
+    /// up vector
+    Vector3 up;
+    
 public:
-    Position();
+    /// default constructor, start at (0,0,0) looking down negative z 
+    inline Position(): location(0,0,0), forward(0,0,-1), up(0,1,0) {}
 
-    Position(Scalar x, Scalar y, Scalar z);
+    /// standard constructor
+    inline Position(Scalar x, Scalar y, Scalar z): location(x,y,z), 
+        forward(0,0,-1), up(0,1,0) {}
 
-    Position(const Position &copy);
+    /// copy constructor
+    inline Position(const Position &copy): location(copy.location),
+        forward(copy.forward), up(copy.up) {}
 
-    void set(const Position &copy);
+    /// copy setter
+    inline void set(const Position &copy)
+    {
+        location.set(copy.location);
+        forward.set(copy.forward);
+        up.set(copy.up);
+    }
 
-    void translate(Scalar x, Scalar y, Scalar z);
+    /// get location
+    inline const Point3 &getLocation() const {return location;}
 
-    void translateLocal(Scalar x, Scalar y, Scalar z);
+    /// get location
+    inline Point3 &getLocation() {return location;}
 
-    void getTransformMatrix(const Matrix4 *out);
+    /// get forward vector
+    inline const Vector3 &getForwardVector() const {return forward;}
 
-    void getRotationMatrix(const Matrix3 *out);
+    /// get forward vector
+    inline Vector3 &getForwardVector() {return forward;}
 
-    void getCameraMatrix(const Matrix4 *out);
+    /// get up vector
+    inline const Vector3 &getUpVector() const {return up;}
 
+    /// get up vector
+    inline Vector3 &getUpVector() {return up;}
+
+    /// get the local z axis
+    inline const Vector3 &getLocalZAxis() const {return forward;}
+
+    /// get the local y axis
+    inline const Vector3 &getLocalYAxis() const {return up;}
+
+    /// get the local x axis
+    inline void getLocalXAxis(Vector3 &x) const {return x.crossProduct(up, forward);}
+    
+    /// translate the location along the orthonormal axis in real world coordinates
+    inline void translate(Scalar x, Scalar y, Scalar z)
+    {
+        location.translate(x, y, z);
+    }
+
+    /** Translate the location in local coordinates (forward vector is negative
+     * z, up vector is positive y, and cross is positive x)
+     */
+    inline void translateLocal(Scalar x, Scalar y, Scalar z)
+    {
+        Vector3 cross;
+        this->getLocalXAxis(cross);
+        // translate along each of the local axis for the ammount specified
+        location.translate( 
+            (cross.getX()*x) + (forward.getX()*z) + (up.getX()*y),
+            (cross.getY()*x) + (forward.getY()*z) + (up.getY()*y),
+            (cross.getZ()*x) + (forward.getZ()*z) + (up.getZ()*y)
+        );
+    }
+
+    /// get a transformation matrix that represents this position
+    void getTransformMatrix(Matrix4& out);
+
+    /// get a rotation matrix that represents the orientation of this position
+    void getRotationMatrix(Matrix3& out);
+
+    /// get a matrix that can be used to move objects around the camera
+    void getCameraMatrix(Matrix4& out);
+
+    /// rotate this position in world coordinates
     void rotate(Scalar angle, const Vector3 &axis);
 
+    /// rotate this position in local coordinates
     void rotateLocal(Scalar angle, const Vector3 &axis);
 
+    /// normalize this position
     void normalize();
-
-    Point3 &getLocation() const ;
-
-    Point3 &getLocation();
-
-    Vector3 &getForwardVector() const ;
-
-    Vector3 &getFowardVector();
-
-    Vector3 &getUpVector() const ;
-
-    Vector3 &getUpVector();
-
-    Vector3 &getLocalZAxis() const ;
-
-    Vector3 &getLocalYAxis() const ;
-
-    void getLocalXAxis(Vector3 &x) const ;
 };
 
 

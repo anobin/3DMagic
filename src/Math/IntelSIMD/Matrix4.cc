@@ -24,7 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Matthew Del Buono 
  */
 
-#include <Math/Generic/Matrix4.h>
+#include <Math/Intel/Matrix4.h>
 
 
 /// the identity matrix
@@ -139,7 +139,7 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         COMPUTE_ROW(3);
 
 #undef COMPUTE_ROW
-    }
+	}
 }
 
 /// create a perepective matrix
