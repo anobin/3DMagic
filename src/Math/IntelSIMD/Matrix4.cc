@@ -142,7 +142,7 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 	}
 }
 
-/// create a perepective matrix
+/// create a perspective matrix
 void Matrix4::createPerspectiveMatrix(Scalar fov, Scalar aspect, Scalar zMin, Scalar zMax)
 {
     // load identity matrix
@@ -181,59 +181,115 @@ void Matrix4::createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Sc
 /// create rotation matrix
 void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
 {
-#define MAGIC3D_A(row,col)  data[(col*4)+row]
-        Scalar mag, s, c;
-        Scalar xx, yy, zz, xy, yz, zx, xs, ys, zs, one_c;
+    ALIGN(16, static Scalar ones[4]) = {1.0f, 1.0f, 1.0f, 1.0f};
+    ALIGN(16, static Scalar finalColumn[4]) = {0.0f, 0.0f, 0.0f, 1.0f};
 
-        s = sin(angle);
-        c = cos(angle);
+    struct                              // makes sure compiler doesn't do strange tricks like
+    {                                   // buffer overflow bytes
+        ALIGN(16, Scalar buffer[4]);
+        Scalar angleAligned;            // guaranteed to be one byte after buffer
+    } segm;
 
-        mag = sqrt( x*x + y*y + z*z );
+    ALIGN(16, Scalar sineAngle);
+    ALIGN(16, Scalar cosineAngle);
 
-        // no rotation, return identity matrix
-        if (mag == 0.0f) 
-        {
-            memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
-            return;
-        }
+    // Will be backwards, because stack grows up
+    // w | z | y | x
+    segm.buffer[0] = 0; // setting this to 0 first for easier computation of magnitude. w should be 1
+    memcpy(segm.buffer + 1, &z, sizeof(Scalar) * 4); // goes straight through to angleAligned
+                                                // TODO: Make sure we need an aligned angle
+    __asm 
+    {
+        PREFETCHT0  segm.buffer
+        FLD         segm.angleAligned
+        FSINCOS                                 // sin @ ST(1), cos @ ST(0)
+         
+        FSTP        DWORD PTR cosineAngle
+        FSTP        DWORD PTR sineAngle
 
-        // Rotation matrix is normalized
-        x /= mag;
-        y /= mag;
-        z /= mag;
+        PREFETCHT0  ones
+        // Compute magnitude
+        MOVAPS      xmm0,       segm.buffer
+        MOVAPS      xmm4,       xmm0                    // xmm4 = 0 z y x
+        MULPS       xmm0,       xmm0                    // square
+        PSHUFD      xmm1,       xmm0, 10010011b
+        PSHUFD      xmm2,       xmm0, 01001110b
+        PSHUFD      xmm3,       xmm1, 01001110b         // (same third op is correct, see diagram)
+        ADDPS       xmm0,       xmm1 
+        ADDPS       xmm2,       xmm3
+        ADDPS       xmm0,       xmm2
+        SQRTPS      xmm0,       xmm0                    // xmm0 = magnitude, 4 times
 
-        xx = x * x;
-        yy = y * y;
-        zz = z * z;
-        xy = x * y;
-        yz = y * z;
-        zx = z * x;
-        xs = x * s;
-        ys = y * s;
-        zs = z * s;
-        one_c = Scalar(1.0f) - c;
+        // Scale
+        DIVPS       xmm0,       xmm4                    // xmm0 = normalized (0, z, y, x)
+        PSHUFD      xmm1,       xmm0, 11010010b         // Shuffled copy     (0, y, x, z)
 
-        MAGIC3D_A(0,0) = (one_c * xx) + c;
-        MAGIC3D_A(0,1) = (one_c * xy) - zs;
-        MAGIC3D_A(0,2) = (one_c * zx) + ys;
-        MAGIC3D_A(0,3) = 0.0f;
+        // xx, xy, zx, xy, yy, yz, zx, yz, zz
+        MOVAPS      xmm2,       xmm0                    // xmm2 = 0, z, y, x
+        MULPS       xmm1,       xmm0                    // xmm1 = 0, zy, xy, xz
+        MOVAPS      xmm3,       xmm2                    
+        MULPS       xmm0,       xmm0                    // xmm0 = 0, zz, yy, xx
 
-        MAGIC3D_A(1,0) = (one_c * xy) + zs;
-        MAGIC3D_A(1,1) = (one_c * yy) + c;
-        MAGIC3D_A(1,2) = (one_c * yz) - xs;
-        MAGIC3D_A(1,3) = 0.0f;
+        // xmm4 = 1 - cos(angle), 4 times
+        MOVSS       xmm5,       cosineAngle
+        MOVAPS      xmm4,       ones
+        PSHUFD      xmm5,       xmm5, 00000000h
+        SUBPS       xmm4,       xmm5
+        MOVAPS      xmm7,       xmm5                    // xmm7 = cos(angle), 4 times
 
-        MAGIC3D_A(2,0) = (one_c * zx) - ys;
-        MAGIC3D_A(2,1) = (one_c * yz) + xs;
-        MAGIC3D_A(2,2) = (one_c * zz) + c;
-        MAGIC3D_A(2,3) = 0.0f;
+        // xmm5 = sin(angle), 4 times
+        MOVSS       xmm5,       sineAngle
+        PSHUFD      xmm5,       xmm5, 00000000h
 
-        MAGIC3D_A(3,0) = 0.0f;
-        MAGIC3D_A(3,1) = 0.0f;
-        MAGIC3D_A(3,2) = 0.0f;
-        MAGIC3D_A(3,3) = 1.0f;
-        
-#undef MAGIC3D_A
+        // Final math parameters
+        MOVAPS      xmm3,       xmm4
+        MULPS       xmm5,       xmm2                    // xmm5 = 0, zs, ys, xs
+        MULPS       xmm4,       xmm1                    // xmm4 = 0, czy, cxy, cxz
+        MULPS       xmm3,       xmm0                    // xmm3 = 0, czz, cyy, cxx
+        PSHUFD      xmm5,       xmm5, 10010011b         // xmm5 = zs, ys, xs, 0
+        MOVSS       xmm5,       xmm7                    // xmm5 = zs, ys, xs, c
+
+        // Start computations. xmm0, xmm6, and xmm2 are available as temporaries
+        // xmm1 = 0, zy, xy, xz
+        // xmm3 = 0, czz, cyy, cxx
+        // xmm4 = 0, czy, cxy, cxz
+        // xmm5 = zs, ys, xs, c
+        // xmm7 = cosa, cosa, cosa, cosa
+        PREFETCHT0  finalColumn
+        MOV         edx,        data
+
+        // Column 1: cxx + c, cxy + zs, czx - ys, 0
+        MOVAPS      xmm6,       xmm4
+        UNPCKLPS    xmm6,       xmm3                    // xmm6 = cyy, cxy, cxx, cxz
+        PSHUFD      xmm2,       xmm7, 00101100b         // xmm2 = c, ys, zs, c
+        PSHUFD      xmm6,       xmm6, 01001000b         // xmm6 = cxx, czx, cxy, czx
+        MOVSS       xmm2,       xmm3                    // xmm2 = c, ys, zs, czx
+        ADDSUBPS    xmm6,       xmm2                    // xmm6 = cxx + c, czx - ys, cxy + zs, 0
+        PSHUFD      xmm6,       xmm6, 11011000b         // xmm6 = column 1
+        MOVAPS      [edx + Matrix4::data],                          xmm6
+
+        // Column 2: cxy - zs, cyy + c, cyz + xs, 0
+        PSHUFD      xmm0,       xmm4, 11000110b         // xmm0 = 0, cxz, cxy, cyz
+        UNPCKLPS    xmm0,       xmm3                    // xmm0 = cyy, cxy, cxx, cyz
+        PSHUFD      xmm2,       xmm5, 00110101b         // xmm2 = c, zs, xs, xs
+        PSHUFD      xmm0,       xmm0, 11100001b         // xmm0 = cyy, cxy, cyz, cxx
+        MOVSS       xmm0,       xmm2                    // xmm0 = cyy, cxy, cyz, xs
+        ADDSUBPS    xmm0,       xmm2                    // xmm0 = cyy + c, cxy - zs, cyz + xs, 0
+        PSHUFD      xmm0,       xmm0, 10110100b         // xmm0 = column 2
+        MOVAPS      [edx + Matrix4::data + 4 * TYPE Scalar],        xmm0
+
+        // Column 3: czx + ys, cyz - xs, czz + c, 0
+        PSHUFD      xmm6,       xmm4, 00100010b         // xmm6 = cxz, cyz, cxz, cyz
+        UNPCKHPS    xmm6,       xmm3                    // xmm6 = 0, cxz, czz, cyz
+        PSHUFD      xmm2,       xmm5, 10010000b         // xmm2 = ys, xs, c, c
+        PSHUFD      xmm6,       xmm6, 10000111b         // xmm6 = czx, cyz, czz, 0 
+        MOVSS       xmm2,       xmm6                    // xmm2 = ys, xs, c, 0
+        ADDSUBPS    xmm6,       xmm2                    // xmm6 = czx + ys, cyz - xs, czz + c, 0
+        MOVAPS      [edx + Matrix4::data + 8 * TYPE Scalar],        xmm6
+
+        MOVAPS      xmm0,       finalColumn
+        MOVAPS      [edx + Matrix4::data + 12 * TYPE Scalar],       xmm0
+    }
 }
 
 /// create a translation matrix
