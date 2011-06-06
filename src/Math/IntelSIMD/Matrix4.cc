@@ -1,5 +1,6 @@
 /* 
-Copyright (c) 2011 Andrew Keating
+Copyright (c) 2011 Matthew Del Buono
+Based on the generic implementation by Andrew Keating
 
 This file is part of 3DMagic.
 
@@ -17,10 +18,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Matrix4 Generic Implementation
+/** Implementation file for Matrix4 Intel SIMD Implementation
  *
  * @file Matrix4.cc
- * @author Andrew Keating
+ * @author Matthew Del Buono 
  */
 
 #include <Math/Intel/Matrix4.h>
@@ -150,7 +151,7 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 	/* inline assembly version for 64-bit GCC compiler */
 #elif defined(__GNUC__) 
 	// Transpose matrix 1 to assist with SSE
-    __asm__ 
+    /*__asm__ 
     (        
         "MOVAPS      xmm0,       [rax]\n\t"                        // A1 A2 A3 A4
         "MOVAPS      xmm1,       [rax] + (4  * 4)\n\t"   // B1 B2 B3 B4
@@ -163,7 +164,7 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
                 A3  C3  A4  C4              A2  B2  C2  D2
                 B1  D1  B2  D2      Then    A3  B3  C3  D3
                 B3  D3  B4  D4              A4  B4  C4  D4
-        */
+        *\/
 
         "MOVAPS      xmm5,       xmm0\n\t"    // A1 A2 A3 A4
         "MOVAPS      xmm6,       xmm1\n\t"    // B1 B2 B3 B4
@@ -251,10 +252,10 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         "HADDPS        xmm0,       xmm6\n\t"                                    
         "MOVAPS        [%[out]] + (3 * 4 * 4), xmm0"
 		
-	: /* no output registers */
+	: /* no output registers *\/
 	: [m1] "rax" (m1.data), [m2] "r" (m2.data), [out] "r" (this->data)
-	: /* no internally clobbered registers */
-	);
+	: /* no internally clobbered registers *\/
+	);*/
 	/* end of inline assembly version for 64-bit GCC compiler */
 		
 #else

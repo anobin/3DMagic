@@ -22,13 +22,26 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @file MathTypes.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_MATH_TYPES_GENERIC_H
-#define MAGIC3D_MATH_TYPES_GENERIC_H
+#ifndef MAGIC3D_MATH_TYPES_INTEL_H
+#define MAGIC3D_MATH_TYPES_INTEL_H
 
 
-// scalar floating-point base type, allow for settable precision
-#ifdef M3D_MATH_DOUBLE_PERCISION
-typedef double Scalar;
+#ifdef _MSC_VER              // MSVC compiler
+#define ALIGN(n, var) __declspec(align(n)) var
+#elif defined(__GNUC__)     // gcc
+#define ALIGN(n, var) var __attribute__ ((aligned (n)))
+#else
+#error Unrecognized compiler - cannot determine how to align memory blocks
+#endif
+
+
+
+/// scalar floating-point base type
+#ifdef M3D_MATH_DOUBLE_PRECISION
+#ifdef M3D_MATH_USE_INTEL
+#error Cannot (yet) use double precision with Intel SIMD instructions
+#endif
+typedef double Scalar; 
 #else
 typedef float Scalar;
 #endif
