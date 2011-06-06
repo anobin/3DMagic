@@ -162,6 +162,15 @@
     <ClCompile Include="..\src\Math\Generic\Vector3.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Matrix3.cc" />
+    <ClCompile Include="..\src\Math\IntelSIMD\Matrix4.cc">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AssemblyAndSourceCode</AssemblerOutput>
+      <SuppressStartupBanner Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</SuppressStartupBanner>
+      <ExpandAttributedSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExpandAttributedSource>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Point3.cc" />
+    <ClCompile Include="..\src\Math\IntelSIMD\Position.cc" />
+    <ClCompile Include="..\src\Math\IntelSIMD\Vector3.cc" />
     <ClCompile Include="..\src\Math\Matrix3.cpp" />
     <ClCompile Include="..\src\Math\Matrix4.cpp" />
     <ClCompile Include="..\src\Math\Point3.cpp" />
@@ -205,7 +214,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -226,7 +235,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\include;$(SolutionDir)\..\bullet\src\;$(SolutionDir)\..\lib3ds;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>M3D_MATH_USE_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>M3D_MATH_USE_INTEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -238,6 +247,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\include;$(SolutionDir)\..\bullet\src\;$(SolutionDir)\..\lib3ds;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>M3D_MATH_USE_INTEL;%(PreprocessorDefinitions);_MBCS</PreprocessorDefinitions>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

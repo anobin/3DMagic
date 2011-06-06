@@ -103,6 +103,9 @@
     <Filter Include="Source Files\Math\Generic">
       <UniqueIdentifier>{63e83f0b-de0f-4996-a606-6c02a94408f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Math\Intel">
+      <UniqueIdentifier>{f2220068-d6c2-4718-b217-4e836f15f825}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Cameras\Camera.h">
@@ -496,6 +499,21 @@
     </ClCompile>
     <ClCompile Include="..\src\Util\Color.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Vector3.cc">
+      <Filter>Source Files\Math\Intel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Matrix4.cc">
+      <Filter>Source Files\Math\Intel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Matrix3.cc">
+      <Filter>Source Files\Math\Intel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Point3.cc">
+      <Filter>Source Files\Math\Intel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\IntelSIMD\Position.cc">
+      <Filter>Source Files\Math\Intel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
