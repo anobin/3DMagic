@@ -46,10 +46,10 @@ class Matrix4
 {
 private:
     /// matrix data, column major
-    Scalar data[4*4];
+    ALIGN(16, Scalar data[4*4]);
     
     /// the identity matrix
-    static const Scalar identity[];
+    ALIGN(16, static const Scalar identity[]);
     
 public:
     /// default constructor, load identity

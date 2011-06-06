@@ -27,7 +27,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /// the identity matrix
-const Scalar Matrix4::identity[] = {1.0f, 0.0f, 0.0f, 0.0f,
+ALIGN(16, const Scalar Matrix4::identity[])
+                                  = {1.0f, 0.0f, 0.0f, 0.0f,
                                     0.0f, 1.0f, 0.0f, 0.0f,
                                     0.0f, 0.0f, 1.0f, 0.0f,
                                     0.0f, 0.0f, 0.0f, 1.0f};
