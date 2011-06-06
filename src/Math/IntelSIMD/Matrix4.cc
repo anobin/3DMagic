@@ -54,7 +54,8 @@ void Matrix4::multiply(const Matrix4 &m)
 /// multiply two other matrixes and store the result in this matrix
 void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 {
-	
+
+	/* inline assembly version for 32-bit MSVC compiler */
 #ifdef _MSC_VER
     // Transpose matrix 1 to assist with SSE
     __asm 
@@ -142,44 +143,19 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 
 #undef COMPUTE_ROW
 	}
+	/* end of inline assembly version for 32-bit MSVC compiler */
 
+
+
+	/* inline assembly version for 64-bit GCC compiler */
 #elif defined(__GNUC__) 
-	
-#define COMPUTE_ROW(n) \
-	__asm__ ( \
-	".intel_syntax noprefix\n\t" \
-	"MOVAPS        xmm1,       [eax]m2.data + (n * 4 * TYPE Scalar)\n\t"    \
-	"MOVAPS        xmm0,       xmm4\n\t"                                    \
-	"MULPS         xmm0,       xmm1\n\t"                                    \
-	"MOVAPS        xmm6,       xmm2\n\t"                                    \
-	"MULPS         xmm6,       xmm1\n\t"                                    \
-	"HADDPS        xmm0,       xmm6\n\t"                                    \
-																			\
-	"MOVAPS        xmm6,       xmm5\n\t"                                    \
-	"MULPS         xmm6,       xmm1\n\t"                                    \
-	"MOVAPS        xmm7,       xmm3\n\t"                               \
-	"MULPS         xmm7,       xmm1\n\t"                               \
-	"HADDPS        xmm6,       xmm7\n\t"                               \
-																	        \
-	"HADDPS        xmm0,       xmm6\n\t"                               \
-	"MOVAPS        [ecx]m2.data + (n * 4 * TYPE Scalar), xmm0\n\t");          
-	
-	asm
-    (
-        ".intel_syntax noprefix\n\t"
-		// Recommend caching of m2 while we deal with m1
-        "MOV         eax,        m2\n\t"
-		
-        "PREFETCHT0  [eax] \n\t"
-
-		//Resolve reference
-        "MOV         eax,        m1\n\t"
-
-        
-        "MOVAPS      xmm0,       [eax + loc]\n\t"                  // A1 A2 A3 A4
-        "MOVAPS      xmm1,       [eax + loc + (4  * 4)]\n\t"   // B1 B2 B3 B4
-        "MOVAPS      xmm2,       [eax + loc + (8  * 4)]\n\t"   // C1 C2 C3 C4
-        "MOVAPS      xmm3,       [eax + loc + (12 * 4)]\n\t"   // D1 D2 D3 D4
+	// Transpose matrix 1 to assist with SSE
+    /*__asm__ 
+    (        
+        "MOVAPS      xmm0,       [rax]\n\t"                        // A1 A2 A3 A4
+        "MOVAPS      xmm1,       [rax] + (4  * 4)\n\t"   // B1 B2 B3 B4
+        "MOVAPS      xmm2,       [rax] + (8  * 4)\n\t"   // C1 C2 C3 C4
+        "MOVAPS      xmm3,       [rax] + (12 * 4)\n\t"   // D1 D2 D3 D4
 
         // Transpose for ease of SSE
         /* Shift to the following:
@@ -187,7 +163,7 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
                 A3  C3  A4  C4              A2  B2  C2  D2
                 B1  D1  B2  D2      Then    A3  B3  C3  D3
                 B3  D3  B4  D4              A4  B4  C4  D4
-        */
+        *\/
 
         "MOVAPS      xmm5,       xmm0\n\t"    // A1 A2 A3 A4
         "MOVAPS      xmm6,       xmm1\n\t"    // B1 B2 B3 B4
@@ -207,8 +183,8 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 
         // Transpose complete (xmm0 xmm2 xmm5 xmm3). Do multiply
         // Grab first row of first matrix, multiply with first column of second matrix
-        "MOV         eax,        m2\n\t"
-        "MOVAPS      xmm1,       [eax + loc]\n\t"
+		"MOV         rax,        %[m2]\n\t"
+        "MOVAPS      xmm1,       [rax]\n\t"
         "MOVAPS      xmm4,       xmm0\n\t"    // xmm4 = m2 first col
         "MULPS       xmm0,       xmm1\n\t"    // xmm0 = m1 first row * m2 first col
         "MOVAPS      xmm6,       xmm2\n\t"
@@ -222,15 +198,64 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         "HADDPS      xmm6,       xmm7\n\t"    // xmm6 = another bunch of crap
 
         "HADDPS      xmm0,       xmm6\n\t"    // bunch of crap + bunch of crap = first result row complete
-        "MOVAPS      [ecx + loc], xmm0\n\t"  // store back in m1
-		: /* no outputs*/
-		: [loc] "g" (&m1.data)
-	);
-        // Do the other rows
-        //COMPUTE_ROW(1);
-        //COMPUTE_ROW(2);
-        //COMPUTE_ROW(3);
-#undef COMPUTE_ROW
+        "MOVAPS      [%[out]],   xmm0\n\t"  // store back in m1
+		
+		// do row 1
+		"MOVAPS        xmm1,       [rax] + (1 * 4 * 4)\n\t"                     
+        "MOVAPS        xmm0,       xmm4\n\t"                                    
+        "MULPS         xmm0,       xmm1\n\t"                                    
+        "MOVAPS        xmm6,       xmm2\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+                                                                                
+        "MOVAPS        xmm6,       xmm5\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "MOVAPS        xmm7,       xmm3\n\t"                                    
+        "MULPS         xmm7,       xmm1\n\t"                                    
+        "HADDPS        xmm6,       xmm7\n\t"                                    
+                                                                                
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+        "MOVAPS        [%[out]] + (1 * 4 * 4), xmm0\n\t"
+		
+		// do row 2
+		"MOVAPS        xmm1,       [rax] + (2 * 4 * 4)\n\t"                     
+        "MOVAPS        xmm0,       xmm4\n\t"                                    
+        "MULPS         xmm0,       xmm1\n\t"                                    
+        "MOVAPS        xmm6,       xmm2\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+                                                                                
+        "MOVAPS        xmm6,       xmm5\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "MOVAPS        xmm7,       xmm3\n\t"                                    
+        "MULPS         xmm7,       xmm1\n\t"                                    
+        "HADDPS        xmm6,       xmm7\n\t"                                    
+                                                                                
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+        "MOVAPS        [%[out]] + (2 * 4 * 4), xmm0\n\t"
+		
+		// do row 3
+		"MOVAPS        xmm1,       [rax] + (3 * 4 * 4)\n\t"                     
+        "MOVAPS        xmm0,       xmm4\n\t"                                    
+        "MULPS         xmm0,       xmm1\n\t"                                    
+        "MOVAPS        xmm6,       xmm2\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+                                                                                
+        "MOVAPS        xmm6,       xmm5\n\t"                                    
+        "MULPS         xmm6,       xmm1\n\t"                                    
+        "MOVAPS        xmm7,       xmm3\n\t"                                    
+        "MULPS         xmm7,       xmm1\n\t"                                    
+        "HADDPS        xmm6,       xmm7\n\t"                                    
+                                                                                
+        "HADDPS        xmm0,       xmm6\n\t"                                    
+        "MOVAPS        [%[out]] + (3 * 4 * 4), xmm0"
+		
+	: /* no output registers *\/
+	: [m1] "rax" (m1.data), [m2] "r" (m2.data), [out] "r" (this->data)
+	: /* no internally clobbered registers *\/
+	);*/
+	/* end of inline assembly version for 64-bit GCC compiler */
 		
 #else
 #error Unrecognized compiler - cannot determine how to inline assembly
