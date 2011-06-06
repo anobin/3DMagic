@@ -428,21 +428,6 @@
     <ClCompile Include="..\src\Math\Vector3.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Math\Generic\Matrix3.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Math\Generic\Matrix4.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Math\Generic\Point3.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Math\Generic\Position.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Math\Generic\Vector3.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Objects\Object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
@@ -514,6 +499,21 @@
     </ClCompile>
     <ClCompile Include="..\src\Math\IntelSIMD\Position.cc">
       <Filter>Source Files\Math\Intel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Matrix3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Matrix4.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Point3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Position.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Generic\Vector3.cc">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

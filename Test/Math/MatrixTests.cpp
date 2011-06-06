@@ -35,8 +35,8 @@ class Math_Matrix4Tests: public ::testing::Test
 {
 protected:
     // up to four matrixes are used in tests
-    Matrix4 m1;
-    Matrix4 m2;
+    Matrix4 m1, i;
+    Matrix4 m2, m;
     Matrix4 actual;
     Matrix4 expected;
     
@@ -116,6 +116,18 @@ TEST_F(Math_Matrix4Tests, MultiplyAndAssign)
 /// tests Matrix4 multiply method
 TEST_F(Math_Matrix4Tests, Multiply)
 {
+    // Identity test
+    matrixSet(i, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    matrixSet(m, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    Matrix4 i_check(i);
+    Matrix4 m_check(m);
+    actual.multiply(i, m);
+    ASSERT_MATRIX_EQ(m, actual);
+
+    // Identity test 2
+    actual.multiply(m, i);
+    ASSERT_MATRIX_EQ(m, actual);
+
     // setup matrices
     matrixSet(m1, 5,-71,-13,86,-86,-8,-62,8,-69,-106,81,125,-1,-52,84,47);
     Matrix4 m1_check(m1);
@@ -126,11 +138,11 @@ TEST_F(Math_Matrix4Tests, Multiply)
               
     // perform test
     actual.multiply(m1,m2);
-    ASSERT_MATRIX_EQ(actual,expected);
+    ASSERT_MATRIX_EQ(expected, actual);
     
     // perform tests to ensure read-only memory didn't fail
-    ASSERT_MATRIX_EQ(m1, m1_check);
-    ASSERT_MATRIX_EQ(m2, m2_check);
+    ASSERT_MATRIX_EQ(m1_check, m1);
+    ASSERT_MATRIX_EQ(m2_check, m2);
 }
 
 /// tests Matrix4 setter and getter methods
