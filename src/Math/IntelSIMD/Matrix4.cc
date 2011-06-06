@@ -70,10 +70,10 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         MOV         eax,        m1
 
         
-        MOVAPS      xmm0,       [eax]m1.data                        // A1 A2 A3 A4
-        MOVAPS      xmm1,       [eax]m1.data + (4  * TYPE Scalar)   // B1 B2 B3 B4
-        MOVAPS      xmm2,       [eax]m1.data + (8  * TYPE Scalar)   // C1 C2 C3 C4
-        MOVAPS      xmm3,       [eax]m1.data + (12 * TYPE Scalar)   // D1 D2 D3 D4
+        MOVAPS      xmm3,       [eax]m1.data                        // A1 A2 A3 A4
+        MOVAPS      xmm2,       [eax]m1.data + (4  * TYPE Scalar)   // B1 B2 B3 B4
+        MOVAPS      xmm1,       [eax]m1.data + (8  * TYPE Scalar)   // C1 C2 C3 C4
+        MOVAPS      xmm0,       [eax]m1.data + (12 * TYPE Scalar)   // D1 D2 D3 D4
 
         // Transpose for ease of SSE
         /* Shift to the following:
@@ -83,61 +83,46 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
                 B3  D3  B4  D4              A4  B4  C4  D4
         */
 
-        MOVAPS      xmm5,       xmm0    // A1 A2 A3 A4
-        MOVAPS      xmm6,       xmm1    // B1 B2 B3 B4
-        UNPCKHPS    xmm0,       xmm2    // A1 C1 A2 C2
-        UNPCKLPS    xmm5,       xmm2    // A3 C3 A4 C4
-        UNPCKHPS    xmm1,       xmm3    // B1 D1 B2 D2
-        UNPCKLPS    xmm6,       xmm3    // B3 D3 B4 D4
+        MOVAPS      xmm5,       xmm2    // B1 B2 B3 B4
+        MOVAPS      xmm6,       xmm3    // A1 A2 A3 A4
+        UNPCKLPS    xmm2,       xmm0    // B1 D1 B2 D2
+        UNPCKHPS    xmm5,       xmm0    // B3 D3 B4 D4
+        UNPCKLPS    xmm3,       xmm1    // A1 C1 A2 C2
+        UNPCKHPS    xmm6,       xmm1    // A3 C3 A4 C4
 
         // Step one complete:
-        // xmm0, xmm5, xmm1, xmm6
-        MOVAPS      xmm2,       xmm0    // A1 C1 A2 C2
-        MOVAPS      xmm3,       xmm6    // B3 D3 B4 D4
-        UNPCKHPS    xmm0,       xmm1    // A1 B1 C1 D1
-        UNPCKLPS    xmm2,       xmm1    // A2 B2 C2 D2
-        UNPCKHPS    xmm5,       xmm6    // A3 B3 C3 D3
-        UNPCKLPS    xmm3,       xmm6    // A4 B4 C4 D4        
+        // xmm2, xmm5, xmm3, xmm6
+        MOVAPS      xmm0,       xmm3    // A1 C1 A2 C2
+        MOVAPS      xmm1,       xmm6    // A3 C3 A4 C4
+        UNPCKLPS    xmm3,       xmm2    // A1 B1 C1 D1
+        UNPCKHPS    xmm0,       xmm2    // A2 B2 C2 D2
+        UNPCKLPS    xmm6,       xmm5    // A3 B3 C3 D3
+        UNPCKHPS    xmm1,       xmm5    // A4 B4 C4 D4        
 
-        // Transpose complete (xmm0 xmm2 xmm5 xmm3). Do multiply
+        // Transpose complete (xmm3 xmm0 xmm6 xmm1). Do multiply
         // Grab first row of first matrix, multiply with first column of second matrix
         MOV         eax,        m2
-        MOVAPS      xmm1,       [eax]m2.data
-        MOVAPS      xmm4,       xmm0    // xmm4 = m2 first col
-        MULPS       xmm0,       xmm1    // xmm0 = m1 first row * m2 first col
-        MOVAPS      xmm6,       xmm2
-        MULPS       xmm6,       xmm1    // xmm6 = m1 first row * m2 second col
-        HADDPS      xmm0,       xmm6    // xmm0 = a bunch of crap
 
-        MOVAPS      xmm6,       xmm1
-        MULPS       xmm6,       xmm5    // xmm6 = m1 first row * m2 third col
-        MOVAPS      xmm7,       xmm1
-        MULPS       xmm7,       xmm3    // xmm7 = m1 first row * m2 fourth col
-        HADDPS      xmm6,       xmm7    // xmm6 = another bunch of crap
+#define COMPUTE_ROW(n)                                                                                \
+        __asm MOVAPS      xmm2,       [eax]m2.data + (n * 4 * TYPE Scalar)                            \
+        __asm MOVAPS      xmm4,       xmm2    /* xmm4 = m2 first col                                */\
+        __asm MULPS       xmm4,       xmm3    /* xmm4 = m1 first row * m2 first col                 */\
+        __asm MOVAPS      xmm7,       xmm2                                                            \
+        __asm MULPS       xmm7,       xmm0    /* xmm7 = m1 second row * m2 first col                */\
+        __asm HADDPS      xmm4,       xmm7    /* xmm4 = a bunch of crap                             */\
+                                                                                                      \
+        __asm MOVAPS      xmm7,       xmm2                                                            \
+        __asm MULPS       xmm7,       xmm6    /* xmm7 = m1 third row * m2 first col                 */\
+        __asm MULPS       xmm2,       xmm1    /* xmm2 = m1 fourth row * m2 first col                */\
+        __asm HADDPS      xmm7,       xmm2    /* xmm2 = another bunch of crap                       */\
+                                                                                                      \
+        __asm HADDPS      xmm4,       xmm7    /* bunch of crap + bunch of crap = first result row complete  */\
+        __asm MOVAPS      [ecx]m2.data + (n * 4 * TYPE Scalar), xmm4  /* store back in this         */\
 
-        HADDPS      xmm0,       xmm6    // bunch of crap + bunch of crap = first result row complete
-        MOVAPS      [ecx]m2.data, xmm0  // store back in m1
-
-        // Do other rows
-#define COMPUTE_ROW(n) \
-        __asm MOVAPS        xmm1,       [eax]m2.data + (n * 4 * TYPE Scalar)    \
-        __asm MOVAPS        xmm0,       xmm4                                    \
-        __asm MULPS         xmm0,       xmm1                                    \
-        __asm MOVAPS        xmm6,       xmm2                                    \
-        __asm MULPS         xmm6,       xmm1                                    \
-        __asm HADDPS        xmm0,       xmm6                                    \
-                                                                                \
-        __asm MOVAPS        xmm6,       xmm5                                    \
-        __asm MULPS         xmm6,       xmm1                                    \
-        __asm MOVAPS        xmm7,       xmm3                                    \
-        __asm MULPS         xmm7,       xmm1                                    \
-        __asm HADDPS        xmm6,       xmm7                                    \
-                                                                                \
-        __asm HADDPS        xmm0,       xmm6                                    \
-        __asm MOVAPS        [ecx]m2.data + (n * 4 * TYPE Scalar), xmm0          \
 
 
         // Do the other rows
+        COMPUTE_ROW(0);
         COMPUTE_ROW(1);
         COMPUTE_ROW(2);
         COMPUTE_ROW(3);
