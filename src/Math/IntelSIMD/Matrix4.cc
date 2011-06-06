@@ -301,6 +301,7 @@ void Matrix4::createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Sc
 /// create rotation matrix
 void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
 {
+    __asm PUSH      ecx                 // save "this" pointer for later
     ALIGN(16, static Scalar ones[4]) = {1.0f, 1.0f, 1.0f, 1.0f};
     ALIGN(16, static Scalar finalColumn[4]) = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -322,6 +323,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
     {
         PREFETCHT0  segm.buffer
         FLD         segm.angleAligned
+        POP         ecx                         // restore "this" pointer
         FSINCOS                                 // sin @ ST(1), cos @ ST(0)
          
         FSTP        DWORD PTR cosineAngle
@@ -376,7 +378,6 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         // xmm5 = zs, ys, xs, c
         // xmm7 = cosa, cosa, cosa, cosa
         PREFETCHT0  finalColumn
-        MOV         edx,        data
 
         // Column 1: cxx + c, cxy + zs, czx - ys, 0
         MOVAPS      xmm6,       xmm4
@@ -386,7 +387,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVSS       xmm2,       xmm3                    // xmm2 = c, ys, zs, czx
         ADDSUBPS    xmm6,       xmm2                    // xmm6 = cxx + c, czx - ys, cxy + zs, 0
         PSHUFD      xmm6,       xmm6, 11011000b         // xmm6 = column 1
-        MOVAPS      [edx + Matrix4::data],                          xmm6
+        MOVAPS      [ecx + Matrix4::data],                          xmm6
 
         // Column 2: cxy - zs, cyy + c, cyz + xs, 0
         PSHUFD      xmm0,       xmm4, 11000110b         // xmm0 = 0, cxz, cxy, cyz
@@ -396,7 +397,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVSS       xmm0,       xmm2                    // xmm0 = cyy, cxy, cyz, xs
         ADDSUBPS    xmm0,       xmm2                    // xmm0 = cyy + c, cxy - zs, cyz + xs, 0
         PSHUFD      xmm0,       xmm0, 10110100b         // xmm0 = column 2
-        MOVAPS      [edx + Matrix4::data + 4 * TYPE Scalar],        xmm0
+        MOVAPS      [ecx + Matrix4::data + 4 * TYPE Scalar],        xmm0
 
         // Column 3: czx + ys, cyz - xs, czz + c, 0
         PSHUFD      xmm6,       xmm4, 00100010b         // xmm6 = cxz, cyz, cxz, cyz
@@ -405,10 +406,10 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         PSHUFD      xmm6,       xmm6, 10000111b         // xmm6 = czx, cyz, czz, 0 
         MOVSS       xmm2,       xmm6                    // xmm2 = ys, xs, c, 0
         ADDSUBPS    xmm6,       xmm2                    // xmm6 = czx + ys, cyz - xs, czz + c, 0
-        MOVAPS      [edx + Matrix4::data + 8 * TYPE Scalar],        xmm6
+        MOVAPS      [ecx + Matrix4::data + 8 * TYPE Scalar],        xmm6
 
         MOVAPS      xmm0,       finalColumn
-        MOVAPS      [edx + Matrix4::data + 12 * TYPE Scalar],       xmm0
+        MOVAPS      [ecx + Matrix4::data + 12 * TYPE Scalar],       xmm0
     }
 }
 
