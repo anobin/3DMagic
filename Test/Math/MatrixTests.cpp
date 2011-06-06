@@ -118,13 +118,19 @@ TEST_F(Math_Matrix4Tests, Multiply)
 {
     // setup matrices
     matrixSet(m1, 5,-71,-13,86,-86,-8,-62,8,-69,-106,81,125,-1,-52,84,47);
+    Matrix4 m1_check(m1);
     matrixSet(m2, -92,-59,-55,-91,47,-86,-93,-32,19,126,44,92,32,112,119,-94);
+    Matrix4 m2_check(m2);
     matrixSet(expected, 8500,17566,-7245,-19536,14080,8873,-5500,-9775,-13869,
               -11805,3233,12466,-17589,-10894,-5617,14105);
               
     // perform test
     actual.multiply(m1,m2);
     ASSERT_MATRIX_EQ(actual,expected);
+    
+    // perform tests to ensure read-only memory didn't fail
+    ASSERT_MATRIX_EQ(m1, m1_check);
+    ASSERT_MATRIX_EQ(m2, m2_check);
 }
 
 /// tests Matrix4 setter and getter methods
