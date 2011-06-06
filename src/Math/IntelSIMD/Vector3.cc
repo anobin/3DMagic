@@ -1,6 +1,5 @@
 /* 
-Copyright (c) 2011 Matthew Del Buono
-Based on the Generic Vector3 implementation by Andrew Keating
+Copyright (c) 2011 Andrew Keating
 
 This file is part of 3DMagic.
 
@@ -18,13 +17,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for the Intel SIMD Vector3 Implementation
+/** Implementation file for the Generic Vector3 Implementation
  *
  * @file Vector3.cc
- * @author Matthew Del Buono
+ * @author Andrew Keating
  */ 
 
 #include <Math/Intel/Vector3.h>
+
 #include <Math/Intel/Matrix4.h>
 #include <Math/Intel/Matrix3.h>
 

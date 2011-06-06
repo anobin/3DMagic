@@ -46,7 +46,7 @@ class Matrix4
 {
 private:
     /// matrix data, column major
-    ALIGN(16, Scalar data[4*4]);
+    Scalar data[4*4];
     
     /// the identity matrix
     static const Scalar identity[];
