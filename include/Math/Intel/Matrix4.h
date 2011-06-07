@@ -123,8 +123,7 @@ public:
     void createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Scalar yMax, Scalar zMin, Scalar zMax);
 
     /// create rotation matrix
-    void __thiscall
-    createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
+    void createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z);
 
     /// create a translation matrix
     void createTranslationMatrix(Scalar x, Scalar y, Scalar z);

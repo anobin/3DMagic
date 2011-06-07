@@ -136,12 +136,12 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 	/* inline assembly version for 64-bit GCC compiler */
 #elif defined(__GNUC__) 
 	// Transpose matrix 1 to assist with SSE
-    /*__asm__ 
+    __asm__ 
     (        
-        "MOVAPS      xmm0,       [rax]\n\t"                        // A1 A2 A3 A4
-        "MOVAPS      xmm1,       [rax] + (4  * 4)\n\t"   // B1 B2 B3 B4
-        "MOVAPS      xmm2,       [rax] + (8  * 4)\n\t"   // C1 C2 C3 C4
-        "MOVAPS      xmm3,       [rax] + (12 * 4)\n\t"   // D1 D2 D3 D4
+        "MOVAPS      xmm3,       [rax]\n\t"                        // A1 A2 A3 A4
+        "MOVAPS      xmm2,       [rax] + (4  * 4)\n\t"   // B1 B2 B3 B4
+        "MOVAPS      xmm1,       [rax] + (8  * 4)\n\t"   // C1 C2 C3 C4
+        "MOVAPS      xmm0,       [rax] + (12 * 4)\n\t"   // D1 D2 D3 D4
 
         // Transpose for ease of SSE
         /* Shift to the following:
@@ -149,98 +149,97 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
                 A3  C3  A4  C4              A2  B2  C2  D2
                 B1  D1  B2  D2      Then    A3  B3  C3  D3
                 B3  D3  B4  D4              A4  B4  C4  D4
-        *\/
+        */
 
-        "MOVAPS      xmm5,       xmm0\n\t"    // A1 A2 A3 A4
-        "MOVAPS      xmm6,       xmm1\n\t"    // B1 B2 B3 B4
-        "UNPCKHPS    xmm0,       xmm2\n\t"    // A1 C1 A2 C2
-        "UNPCKLPS    xmm5,       xmm2\n\t"    // A3 C3 A4 C4
-        "UNPCKHPS    xmm1,       xmm3\n\t"    // B1 D1 B2 D2
-        "UNPCKLPS    xmm6,       xmm3\n\t"    // B3 D3 B4 D4
+        "MOVAPS      xmm5,       xmm2\n\t"    // B1 B2 B3 B4
+        "MOVAPS      xmm6,       xmm3\n\t"    // A1 A2 A3 A4
+        "UNPCKLPS    xmm2,       xmm0\n\t"    // B1 D1 B2 D2
+        "UNPCKHPS    xmm5,       xmm0\n\t"    // B3 D3 B4 D4
+        "UNPCKLPS    xmm3,       xmm1\n\t"    // A1 C1 A2 C2
+        "UNPCKHPS    xmm6,       xmm1\n\t"    // A3 C3 A4 C4
 
         // Step one complete:
         // xmm0, xmm5, xmm1, xmm6
-        "MOVAPS      xmm2,       xmm0\n\t"    // A1 C1 A2 C2
-        "MOVAPS      xmm3,       xmm6\n\t"    // B3 D3 B4 D4
-        "UNPCKHPS    xmm0,       xmm1\n\t"    // A1 B1 C1 D1
-        "UNPCKLPS    xmm2,       xmm1\n\t"    // A2 B2 C2 D2
-        "UNPCKHPS    xmm5,       xmm6\n\t"    // A3 B3 C3 D3
-        "UNPCKLPS    xmm3,       xmm6\n\t"    // A4 B4 C4 D4        
+        "MOVAPS      xmm0,       xmm3\n\t"    // A1 C1 A2 C2
+        "MOVAPS      xmm1,       xmm6\n\t"    // A3 C3 A4 C4
+        "UNPCKLPS    xmm3,       xmm2\n\t"    // A1 B1 C1 D1
+        "UNPCKHPS    xmm0,       xmm2\n\t"    // A2 B2 C2 D2
+        "UNPCKLPS    xmm6,       xmm5\n\t"    // A3 B3 C3 D3
+        "UNPCKHPS    xmm1,       xmm5\n\t"    // A4 B4 C4 D4          
 
         // Transpose complete (xmm0 xmm2 xmm5 xmm3). Do multiply
         // Grab first row of first matrix, multiply with first column of second matrix
 		"MOV         rax,        %[m2]\n\t"
-        "MOVAPS      xmm1,       [rax]\n\t"
-        "MOVAPS      xmm4,       xmm0\n\t"    // xmm4 = m2 first col
-        "MULPS       xmm0,       xmm1\n\t"    // xmm0 = m1 first row * m2 first col
-        "MOVAPS      xmm6,       xmm2\n\t"
-        "MULPS       xmm6,       xmm1\n\t"    // xmm6 = m1 first row * m2 second col
-        "HADDPS      xmm0,       xmm6\n\t"    // xmm0 = a bunch of crap
-
-        "MOVAPS      xmm6,       xmm1\n\t"
-        "MULPS       xmm6,       xmm5\n\t"    // xmm6 = m1 first row * m2 third col
-        "MOVAPS      xmm7,       xmm1\n\t"
-        "MULPS       xmm7,       xmm3\n\t"    // xmm7 = m1 first row * m2 fourth col
-        "HADDPS      xmm6,       xmm7\n\t"    // xmm6 = another bunch of crap
-
-        "HADDPS      xmm0,       xmm6\n\t"    // bunch of crap + bunch of crap = first result row complete
-        "MOVAPS      [%[out]],   xmm0\n\t"  // store back in m1
+		
+		// do row 0
+        "MOVAPS      xmm2,       [rax] + (0 * 4 * 4)\n\t"
+        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
+        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
+        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
+                                                                                                      
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
+        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
+        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
+                                                                                                      
+        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
+        "MOVAPS      [%[out]] + (0 * 4 * 4), xmm4\n\t"  // store back in this
 		
 		// do row 1
-		"MOVAPS        xmm1,       [rax] + (1 * 4 * 4)\n\t"                     
-        "MOVAPS        xmm0,       xmm4\n\t"                                    
-        "MULPS         xmm0,       xmm1\n\t"                                    
-        "MOVAPS        xmm6,       xmm2\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-                                                                                
-        "MOVAPS        xmm6,       xmm5\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "MOVAPS        xmm7,       xmm3\n\t"                                    
-        "MULPS         xmm7,       xmm1\n\t"                                    
-        "HADDPS        xmm6,       xmm7\n\t"                                    
-                                                                                
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-        "MOVAPS        [%[out]] + (1 * 4 * 4), xmm0\n\t"
+        "MOVAPS      xmm2,       [rax] + (1 * 4 * 4)\n\t"
+        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
+        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
+        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
+                                                                                                      
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
+        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
+        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
+                                                                                                      
+        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
+        "MOVAPS      [%[out]] + (1 * 4 * 4), xmm4\n\t"  // store back in this
 		
 		// do row 2
-		"MOVAPS        xmm1,       [rax] + (2 * 4 * 4)\n\t"                     
-        "MOVAPS        xmm0,       xmm4\n\t"                                    
-        "MULPS         xmm0,       xmm1\n\t"                                    
-        "MOVAPS        xmm6,       xmm2\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-                                                                                
-        "MOVAPS        xmm6,       xmm5\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "MOVAPS        xmm7,       xmm3\n\t"                                    
-        "MULPS         xmm7,       xmm1\n\t"                                    
-        "HADDPS        xmm6,       xmm7\n\t"                                    
-                                                                                
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-        "MOVAPS        [%[out]] + (2 * 4 * 4), xmm0\n\t"
+        "MOVAPS      xmm2,       [rax] + (2 * 4 * 4)\n\t"
+        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
+        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
+        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
+                                                                                                      
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
+        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
+        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
+                                                                                                      
+        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
+        "MOVAPS      [%[out]] + (2 * 4 * 4), xmm4\n\t"  // store back in this
 		
 		// do row 3
-		"MOVAPS        xmm1,       [rax] + (3 * 4 * 4)\n\t"                     
-        "MOVAPS        xmm0,       xmm4\n\t"                                    
-        "MULPS         xmm0,       xmm1\n\t"                                    
-        "MOVAPS        xmm6,       xmm2\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-                                                                                
-        "MOVAPS        xmm6,       xmm5\n\t"                                    
-        "MULPS         xmm6,       xmm1\n\t"                                    
-        "MOVAPS        xmm7,       xmm3\n\t"                                    
-        "MULPS         xmm7,       xmm1\n\t"                                    
-        "HADDPS        xmm6,       xmm7\n\t"                                    
-                                                                                
-        "HADDPS        xmm0,       xmm6\n\t"                                    
-        "MOVAPS        [%[out]] + (3 * 4 * 4), xmm0"
+        "MOVAPS      xmm2,       [rax] + (3 * 4 * 4)\n\t"
+        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
+        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
+        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
+                                                                                                      
+        "MOVAPS      xmm7,       xmm2\n\t"                                                            
+        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
+        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
+        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
+                                                                                                      
+        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
+        "MOVAPS      [%[out]] + (3 * 4 * 4), xmm4\n\t"  // store back in this
 		
-	: /* no output registers *\/
+		
+	: // no output registers
 	: [m1] "rax" (m1.data), [m2] "r" (m2.data), [out] "r" (this->data)
-	: /* no internally clobbered registers *\/
-	);*/
+	: // no internally clobbered registers 
+	);
 	/* end of inline assembly version for 64-bit GCC compiler */
 		
 #else
