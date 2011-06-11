@@ -459,6 +459,21 @@ void renderScene(void)
 	
     // Do the buffer Swap
     glutSwapBuffers();
+    
+    // calculate fps
+    static float lastsec = 0.0f;
+    static int frames = 0;
+    if ( (timer.getElapsedTime() - lastsec) >= 1.0f)
+    {
+        cout << "fps: " << frames << endl;
+        frames = 0;
+        lastsec = timer.getElapsedTime();
+    }
+    frames++;
+    
+#ifdef UNLIMITED_FPS
+    glutPostRedisplay();
+#endif
 }
 
 /** Called when a normal key is pressed on the keyboard
@@ -673,7 +688,9 @@ void frameRateRegulator(int value)
 	glutPostRedisplay();
 	
 	// reregister callback
+#ifndef UNLIMITED_FPS
 	glutTimerFunc(FPS2MS(60), frameRateRegulator, 0);
+#endif
 }
 
 
@@ -701,7 +718,7 @@ int main(int argc, char* argv[])
 	glutMouseFunc(mouseClicked); // mouse button clicked
 	glutMotionFunc(mouseMoved); // mouse clicked and moved
 	glutPassiveMotionFunc(mouseMovedPassive); // mouse moved unclicked
-	glutTimerFunc(FPS2MS(60), frameRateRegulator, 0); // called to regulate frame rate
+	frameRateRegulator(0); // called to regulate frame rate
 
 
 	// init GLEW
