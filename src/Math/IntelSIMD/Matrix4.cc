@@ -28,7 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /// the identity matrix
-ALIGN(16, const Scalar Matrix4::identity[])
+ALIGN(64, const Scalar Matrix4::identity[])
                                   = {1.0f, 0.0f, 0.0f, 0.0f,
                                     0.0f, 1.0f, 0.0f, 0.0f,
                                     0.0f, 0.0f, 1.0f, 0.0f,
@@ -354,6 +354,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         // xmm5 = zs, ys, xs, c
         // xmm7 = cosa, cosa, cosa, cosa
         PREFETCHT0  finalColumn
+        MOV         ecx,        [ecx + Matrix4::data]
 
         // Column 1: cxx + c, cxy + zs, czx - ys, 0
         MOVAPS      xmm6,       xmm4
@@ -363,7 +364,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVSS       xmm2,       xmm3                    // xmm2 = c, ys, zs, czx
         ADDSUBPS    xmm6,       xmm2                    // xmm6 = cxx + c, czx - ys, cxy + zs, 0
         PSHUFD      xmm6,       xmm6, 11011000b         // xmm6 = column 1
-        MOVAPS      [ecx + Matrix4::data],                          xmm6
+        MOVAPS      [ecx],      xmm6
 
         // Column 2: cxy - zs, cyy + c, cyz + xs, 0
         PSHUFD      xmm0,       xmm4, 11000110b         // xmm0 = 0, cxz, cxy, cyz
@@ -373,7 +374,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVSS       xmm0,       xmm2                    // xmm0 = cyy, cxy, cyz, xs
         ADDSUBPS    xmm0,       xmm2                    // xmm0 = cyy + c, cxy - zs, cyz + xs, 0
         PSHUFD      xmm0,       xmm0, 10110100b         // xmm0 = column 2
-        MOVAPS      [ecx + Matrix4::data + 4 * TYPE Scalar],        xmm0
+        MOVAPS      [ecx + 4 * TYPE Scalar],        xmm0
 
         // Column 3: czx + ys, cyz - xs, czz + c, 0
         PSHUFD      xmm6,       xmm4, 00100010b         // xmm6 = cxz, cyz, cxz, cyz
@@ -385,7 +386,7 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVAPS      [ecx + Matrix4::data + 8 * TYPE Scalar],        xmm6
 
         MOVAPS      xmm0,       finalColumn
-        MOVAPS      [ecx + Matrix4::data + 12 * TYPE Scalar],       xmm0
+        MOVAPS      [ecx + 12 * TYPE Scalar],       xmm0
     }
 }
 

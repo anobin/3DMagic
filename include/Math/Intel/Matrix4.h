@@ -40,6 +40,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <malloc.h>
 
+#define MATRIX4_ALIGNMENT 64 /* 16 would suffice, but 64 should avoid cache-line splits */
 
 /** Represents a 4x4-component (x,y,z,w) matrix
  */
@@ -51,17 +52,17 @@ private:
     Scalar *data; // Pointer must be aligned on a 16-byte boundary    
     
     /// the identity matrix
-    ALIGN(16, static const Scalar identity[]);
+    ALIGN(MATRIX4_ALIGNMENT, static const Scalar identity[]);
     
 public:
     /// default constructor, load identity
-    inline Matrix4():data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, 16)))
+    inline Matrix4():data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, MATRIX4_ALIGNMENT)))
     {
         memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
     }
 
     /// copy constructor
-    inline Matrix4(const Matrix4 &copy):data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, 16)))
+    inline Matrix4(const Matrix4 &copy):data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, MATRIX4_ALIGNMENT)))
     {
         memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
     }
@@ -138,7 +139,7 @@ public:
 };
 
 
-
+#undef MATRIX4_ALIGNMENT
 
 #endif
 
