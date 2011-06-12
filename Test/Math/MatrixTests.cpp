@@ -171,7 +171,7 @@ TEST_F(Math_Matrix4Tests, ColumnSetters)
 TEST_F(Math_Matrix4Tests, ArrayGetter)
 {
     float in_array[] = {5,-71,-13,86,-86,-8,-62,8,-69,-106,81,125,-1,-52,84,47};
-    float out_array[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    const float* out_array;
     
     for(int i=0; i < 4; i++)
     {
@@ -179,7 +179,7 @@ TEST_F(Math_Matrix4Tests, ArrayGetter)
             m1.set(i, j, in_array[i*4 + j]);
     }
     
-    m1.getArray<float>(&out_array[0]);
+    out_array = m1.getArray();
     
     for(int i=0; i < 16; i++)
         ASSERT_FLOAT_EQ(in_array[i], out_array[i]);

@@ -171,68 +171,60 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
 		"MOV         rax,        %[m2]\n\t"
 		
 		// do row 0
-        "MOVAPS      xmm2,       [rax] + (0 * 4 * 4)\n\t"
-        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
-        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
-        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
-                                                                                                      
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
-        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
-        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
-                                                                                                      
-        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
-        "MOVAPS      [%[out]] + (0 * 4 * 4), xmm4\n\t"  // store back in this
-		
-		// do row 1
-        "MOVAPS      xmm2,       [rax] + (1 * 4 * 4)\n\t"
-        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
-        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
-        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
-                                                                                                      
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
-        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
-        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
-                                                                                                      
-        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
-        "MOVAPS      [%[out]] + (1 * 4 * 4), xmm4\n\t"  // store back in this
-		
-		// do row 2
-        "MOVAPS      xmm2,       [rax] + (2 * 4 * 4)\n\t"
-        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
-        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
-        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
-                                                                                                      
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
-        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
-        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
-                                                                                                      
-        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
-        "MOVAPS      [%[out]] + (2 * 4 * 4), xmm4\n\t"  // store back in this
-		
-		// do row 3
-        "MOVAPS      xmm2,       [rax] + (3 * 4 * 4)\n\t"
-        "MOVAPS      xmm4,       xmm2\n\t"    // xmm4 = m2 first col                                
-        "MULPS       xmm4,       xmm3\n\t"    // xmm4 = m1 first row * m2 first col                 
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm0\n\t"    // xmm7 = m1 second row * m2 first col                
-        "HADDPS      xmm4,       xmm7\n\t"    // xmm4 = a bunch of crap                             
-                                                                                                      
-        "MOVAPS      xmm7,       xmm2\n\t"                                                            
-        "MULPS       xmm7,       xmm6\n\t"    // xmm7 = m1 third row * m2 first col                 
-        "MULPS       xmm2,       xmm1\n\t"    // xmm2 = m1 fourth row * m2 first col               
-        "HADDPS      xmm7,       xmm2\n\t"    // xmm2 = another bunch of crap                      
-                                                                                                      
-        "HADDPS      xmm4,       xmm7\n\t"    // bunch of crap + bunch of crap = first result row complete 
-        "MOVAPS      [%[out]] + (3 * 4 * 4), xmm4\n\t"  // store back in this
+        "MOVAPS      xmm2,       XMMWORD PTR [rax + 0 * 4 * 4]\n\t"                           
+        "MOVAPS      xmm4,       xmm2\n\t"                                                              
+        "MOVAPS      xmm5,       xmm2\n\t"                                                              
+        "DPPS        xmm2,       xmm3,   0xF1\n\t" /*10001000b*/                                   
+        "DPPS        xmm4,       xmm0,   0xF2\n\t"                                                 
+        "BLENDPS     xmm2,       xmm4,   0x2\n\t"                                                     
+        "MOVAPS      xmm4,       xmm5\n\t"                                                              
+        "DPPS        xmm5,       xmm6,   0xF4\n\t"                                                 
+        "DPPS        xmm4,       xmm1,   0xF8\n\t"                                                 
+        "BLENDPS     xmm5,       xmm4,   0x8\n\t"                                                     
+        "BLENDPS     xmm5,       xmm2,   0x3\n\t"                                                     
+        "MOVAPS      XMMWORD PTR [%[out] + 0 * 4 * 4], xmm5\n\t"
+        
+        // do row 1
+        "MOVAPS      xmm2,       XMMWORD PTR [rax + 1 * 4 * 4]\n\t"                           
+        "MOVAPS      xmm4,       xmm2\n\t"                                                              
+        "MOVAPS      xmm5,       xmm2\n\t"                                                              
+        "DPPS        xmm2,       xmm3,   0xF1\n\t" /*10001000b*/                                   
+        "DPPS        xmm4,       xmm0,   0xF2\n\t"                                                 
+        "BLENDPS     xmm2,       xmm4,   0x2\n\t"                                                     
+        "MOVAPS      xmm4,       xmm5\n\t"                                                              
+        "DPPS        xmm5,       xmm6,   0xF4\n\t"                                                 
+        "DPPS        xmm4,       xmm1,   0xF8\n\t"                                                 
+        "BLENDPS     xmm5,       xmm4,   0x8\n\t"                                                     
+        "BLENDPS     xmm5,       xmm2,   0x3\n\t"                                                     
+        "MOVAPS      XMMWORD PTR [%[out] + 1 * 4 * 4], xmm5\n\t"
+        
+        // do row 2
+        "MOVAPS      xmm2,       XMMWORD PTR [rax + 2 * 4 * 4]\n\t"                           
+        "MOVAPS      xmm4,       xmm2\n\t"                                                              
+        "MOVAPS      xmm5,       xmm2\n\t"                                                              
+        "DPPS        xmm2,       xmm3,   0xF1\n\t" /*10001000b*/                                   
+        "DPPS        xmm4,       xmm0,   0xF2\n\t"                                                 
+        "BLENDPS     xmm2,       xmm4,   0x2\n\t"                                                     
+        "MOVAPS      xmm4,       xmm5\n\t"                                                              
+        "DPPS        xmm5,       xmm6,   0xF4\n\t"                                                 
+        "DPPS        xmm4,       xmm1,   0xF8\n\t"                                                 
+        "BLENDPS     xmm5,       xmm4,   0x8\n\t"                                                     
+        "BLENDPS     xmm5,       xmm2,   0x3\n\t"                                                     
+        "MOVAPS      XMMWORD PTR [%[out] + 2 * 4 * 4], xmm5\n\t"
+        
+        // do row 3
+        "MOVAPS      xmm2,       XMMWORD PTR [rax + 3 * 4 * 4]\n\t"                           
+        "MOVAPS      xmm4,       xmm2\n\t"                                                              
+        "MOVAPS      xmm5,       xmm2\n\t"                                                              
+        "DPPS        xmm2,       xmm3,   0xF1\n\t" /*10001000b*/                                   
+        "DPPS        xmm4,       xmm0,   0xF2\n\t"                                                 
+        "BLENDPS     xmm2,       xmm4,   0x2\n\t"                                                     
+        "MOVAPS      xmm4,       xmm5\n\t"                                                              
+        "DPPS        xmm5,       xmm6,   0xF4\n\t"                                                 
+        "DPPS        xmm4,       xmm1,   0xF8\n\t"                                                 
+        "BLENDPS     xmm5,       xmm4,   0x8\n\t"                                                     
+        "BLENDPS     xmm5,       xmm2,   0x3\n\t"                                                     
+        "MOVAPS      XMMWORD PTR [%[out] + 3 * 4 * 4], xmm5\n\t"
 		
 		
 	: // no output registers

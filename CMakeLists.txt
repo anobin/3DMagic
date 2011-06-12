@@ -26,6 +26,9 @@ PROJECT(${PROJECT} CXX)
 # set the include directories
 INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE} ${BULLET_INCLUDE})
 
+# allow for user to select if source should be compiled for profiling with gprof
+OPTION(GPROF_COMPILE "Whether to compile for profiling using gprof" OFF)
+
 # allow the user to set the math implementation to use
 OPTION(MATH_USE_GENERIC "Use Generic Math implementation" OFF)
 OPTION(MATH_USE_INTEL   "Use Intel Math implementation"   OFF)
@@ -63,6 +66,11 @@ ELSEIF(MATH_USE_GENERIC)
 ELSE(MATH_USE_INTEL)
     MESSAGE(SEND_ERROR "MATH: implementation not selected")
 ENDIF(MATH_USE_INTEL)
+
+# if compiling for profiling, add options
+IF(GPROF_COMPILE)
+    SET(CXX_FLAGS "${CXX_FLAGS} -pg")
+ENDIF(GPROF_COMPILE)
 
 # set compile flags on sources
 SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${CXX_FLAGS})

@@ -734,7 +734,7 @@ int main(int argc, char* argv[])
 
 	// enter (and never exit) main execution loop
 	glutMainLoop();
-	
+    
 	return 0;
 }
 

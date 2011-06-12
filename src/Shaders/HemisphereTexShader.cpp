@@ -73,34 +73,27 @@ void HemisphereTexShader::use()
 	
 	// set sky color
 	GLint id = glGetUniformLocation(this->programId, "skyColor");
-	glUniform3fv(id, 1, skyColor.getInternal());
+	glUniform3fv(id, 1, skyColor);
 	
 	// set ground color
 	id = glGetUniformLocation(this->programId, "groundColor");
-	glUniform3fv(id, 1, groundColor.getInternal());
+	glUniform3fv(id, 1, groundColor);
 	
 	// set light position
-    GLfloat tmp[4*4];
-    tmp[0] = lightPosition.getX();
-    tmp[1] = lightPosition.getY();
-    tmp[2] = lightPosition.getZ();
 	id = glGetUniformLocation(this->programId, "lightPosition");
-	glUniform3fv(id, 1, tmp);
+	glUniform3fv(id, 1, lightPosition);
 	
 	// set mvp matrix
-    mvpMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "mvpMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
+	glUniformMatrix4fv(id, 1, GL_FALSE, mvpMatrix);
 	
 	// set mv matrix
-    mvMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "mvMatrix");
-	glUniformMatrix4fv(id, 1, GL_FALSE, tmp);
+	glUniformMatrix4fv(id, 1, GL_FALSE, mvMatrix);
 	
 	// set normal matrix
-    normalMatrix.getArray<GLfloat>(tmp);
 	id = glGetUniformLocation(this->programId, "normalMatrix");
-	glUniformMatrix3fv(id, 1, GL_FALSE, tmp);
+	glUniformMatrix3fv(id, 1, GL_FALSE, normalMatrix);
 	
 	// set texture map
 	texture->bind();

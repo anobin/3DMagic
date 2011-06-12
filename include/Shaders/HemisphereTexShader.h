@@ -52,17 +52,17 @@ class HemisphereTexShader : public Shader
 {
 protected:
 	/// the color emitted by the sky/light source
-	Color skyColor;
+	const GLfloat* skyColor;
 	/// the color emitted by the ground/away from light source
-	Color groundColor;
+	const GLfloat* groundColor;
 	/// the position of the single light
-	Point3 lightPosition;
+	GLfloat lightPosition[3];
 	/// the normal matrix to transform the normal to eye coords
-	Matrix3 normalMatrix;
+	const GLfloat* normalMatrix;
 	/// model view projection matrix
-	Matrix4 mvpMatrix;
+	const GLfloat* mvpMatrix;
 	/// model view matrix
-	Matrix4 mvMatrix;
+	const GLfloat* mvMatrix;
 	/// the texture to shade with
 	Texture* texture;
 	
@@ -92,27 +92,29 @@ public:
 	
 	inline void setSkyColor(const Color& color)
 	{
-		skyColor.set(color);
+		skyColor = color.getInternal();
 	}
 	inline void setGroundColor(const Color& color)
 	{
-		groundColor.set(color);
+		groundColor = color.getInternal();
 	}
 	inline void setLightPosition(const Point3& position)
 	{
-		lightPosition.set(position);
+		lightPosition[0] = position.getX();
+		lightPosition[1] = position.getY();
+		lightPosition[2] = position.getZ();
 	}
 	inline void setNormalMatrix(const Matrix3& normal)
 	{
-		normalMatrix.set(normal);
+		normalMatrix = normal.getArray();
 	}
 	inline void setMVPMatrix(const Matrix4& mvp)
 	{
-		mvpMatrix.set(mvp);
+		mvpMatrix = mvp.getArray();
 	}
 	inline void setMVMatrix(const Matrix4& mv)
 	{
-		mvMatrix.set(mv);
+		mvMatrix = mv.getArray();
 	}
 	inline void setTexture(Texture& tex)
 	{

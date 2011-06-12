@@ -64,7 +64,7 @@ PointLightDiffuseShader::~PointLightDiffuseShader()
  */
 void PointLightDiffuseShader::use()
 {
-	// set opengl to use this shader
+	/*// set opengl to use this shader
 	glUseProgram(this->programId);
 	if (glGetError() != GL_NO_ERROR)
 		throw MagicExceptionMacro("Could not use shader program");
@@ -101,7 +101,7 @@ void PointLightDiffuseShader::use()
 	if (glGetError() != GL_NO_ERROR)
 		throw MagicExceptionMacro("Could not bind uniforms for shader");
 	
-	// should be ready to render now
+	// should be ready to render now*/
 }
 	
 	

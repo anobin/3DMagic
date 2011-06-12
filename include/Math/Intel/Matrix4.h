@@ -107,11 +107,9 @@ public:
         out.setW(data[col*4+3]);
     }
     
-    template<class T>
-    void getArray(T* array) const
+    inline const Scalar* getArray() const
     {
-        for (int i=0; i < 4*4; i++)
-            array[i] = (T)data[i];
+        return data;
     }
     
     /// create a scale matrix
