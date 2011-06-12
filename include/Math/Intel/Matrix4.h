@@ -38,6 +38,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // for memcpy
 #include <string.h>
+#include <malloc.h>
 
 
 /** Represents a 4x4-component (x,y,z,w) matrix
@@ -46,22 +47,28 @@ class Matrix4
 {
 private:
     /// matrix data, column major
-    ALIGN(16, Scalar data[4*4]);
+    //ALIGN(16, Scalar data[4*4]);
+    Scalar *data; // Pointer must be aligned on a 16-byte boundary    
     
     /// the identity matrix
     ALIGN(16, static const Scalar identity[]);
     
 public:
     /// default constructor, load identity
-    inline Matrix4()
+    inline Matrix4():data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, 16)))
     {
         memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
     }
 
     /// copy constructor
-    inline Matrix4(const Matrix4 &copy)
+    inline Matrix4(const Matrix4 &copy):data(static_cast<Scalar*>(ALIGNED_MALLOC(sizeof(Scalar) * 4 * 4, 16)))
     {
         memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
+    }
+
+    inline ~Matrix4()
+    {
+        ALIGNED_FREE(data);
     }
     
     /// copy setter

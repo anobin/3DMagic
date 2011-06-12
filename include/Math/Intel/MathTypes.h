@@ -28,8 +28,12 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef _MSC_VER              // MSVC compiler
 #define ALIGN(n, var) __declspec(align(n)) var
+#define ALIGNED_MALLOC(s, n) _aligned_malloc(s, n)
+#define ALIGNED_FREE(p) _aligned_free(p)
 #elif defined(__GNUC__)     // gcc
 #define ALIGN(n, var) var __attribute__ ((aligned (n)))
+#define ALIGNED_MALLOC(s, n) memalign(n, s)
+#define ALIGNED_FREE(p) free(p)
 #else
 #error Unrecognized compiler - cannot determine how to align memory blocks
 #endif

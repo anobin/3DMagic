@@ -64,16 +64,17 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         // Recommend caching of m2 while we deal with m1
         MOV         eax,        m2
         // MOV      ecx,        this        Guaranteed by function call
-        PREFETCHT0  [eax]
+        PREFETCHT0  [eax]m2.data
 
         // Resolve reference
         MOV         eax,        m1
+        MOV         eax,        [eax]m1.data
 
         
-        MOVAPS      xmm3,       [eax]m1.data                        // A1 A2 A3 A4
-        MOVAPS      xmm2,       [eax]m1.data + (4  * TYPE Scalar)   // B1 B2 B3 B4
-        MOVAPS      xmm1,       [eax]m1.data + (8  * TYPE Scalar)   // C1 C2 C3 C4
-        MOVAPS      xmm0,       [eax]m1.data + (12 * TYPE Scalar)   // D1 D2 D3 D4
+        MOVAPS      xmm3,       [eax]                               // A1 A2 A3 A4
+        MOVAPS      xmm2,       [eax + (4  * TYPE Scalar)]          // B1 B2 B3 B4
+        MOVAPS      xmm1,       [eax + (8  * TYPE Scalar)]          // C1 C2 C3 C4
+        MOVAPS      xmm0,       [eax + (12 * TYPE Scalar)]          // D1 D2 D3 D4
 
         // Transpose for ease of SSE
         /* Shift to the following:
@@ -102,24 +103,22 @@ void Matrix4::multiply(const Matrix4 &m1, const Matrix4 &m2)
         // Transpose complete (xmm3 xmm0 xmm6 xmm1). Do multiply
         // Grab first row of first matrix, multiply with first column of second matrix
         MOV         eax,        m2
+        MOV         eax,        [eax]m2.data
+        MOV         ecx,        [ecx]m2.data
 
-#define COMPUTE_ROW(n)                                                                                \
-        __asm MOVAPS      xmm2,       [eax]m2.data + (n * 4 * TYPE Scalar)                            \
-        __asm MOVAPS      xmm4,       xmm2    /* xmm4 = m2 first col                                */\
-        __asm MULPS       xmm4,       xmm3    /* xmm4 = m1 first row * m2 first col                 */\
-        __asm MOVAPS      xmm7,       xmm2                                                            \
-        __asm MULPS       xmm7,       xmm0    /* xmm7 = m1 second row * m2 first col                */\
-        __asm HADDPS      xmm4,       xmm7    /* xmm4 = a bunch of crap                             */\
-                                                                                                      \
-        __asm MOVAPS      xmm7,       xmm2                                                            \
-        __asm MULPS       xmm7,       xmm6    /* xmm7 = m1 third row * m2 first col                 */\
-        __asm MULPS       xmm2,       xmm1    /* xmm2 = m1 fourth row * m2 first col                */\
-        __asm HADDPS      xmm7,       xmm2    /* xmm2 = another bunch of crap                       */\
-                                                                                                      \
-        __asm HADDPS      xmm4,       xmm7    /* bunch of crap + bunch of crap = first result row complete  */\
-        __asm MOVAPS      [ecx]m2.data + (n * 4 * TYPE Scalar), xmm4  /* store back in this         */\
-
-
+#define COMPUTE_ROW(n)                                                                                  \
+        __asm MOVAPS      xmm2,       XMMWORD PTR [eax + n * 4 * TYPE Scalar]                           \
+        __asm MOVAPS      xmm4,       xmm2                                                              \
+        __asm MOVAPS      xmm5,       xmm2                                                              \
+        __asm DPPS        xmm2,       xmm3,   11110001b /*10001000b*/                                   \
+        __asm DPPS        xmm4,       xmm0,   11110010b                                                 \
+        __asm BLENDPS     xmm2,       xmm4,   0010b                                                     \
+        __asm MOVAPS      xmm4,       xmm5                                                              \
+        __asm DPPS        xmm5,       xmm6,   11110100b                                                 \
+        __asm DPPS        xmm4,       xmm1,   11111000b                                                 \
+        __asm BLENDPS     xmm5,       xmm4,   1000b                                                     \
+        __asm BLENDPS     xmm5,       xmm2,   0011b                                                     \
+        __asm MOVAPS      XMMWORD PTR [ecx + n * 4 * TYPE Scalar], xmm5                              
 
         // Do the other rows
         COMPUTE_ROW(0);
