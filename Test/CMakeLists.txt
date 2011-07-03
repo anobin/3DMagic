@@ -11,10 +11,6 @@
 SET(PROJECT 3DMagic_Tests)
 SET(EXE 3DMagic_Tests)
 
-# set the library include directories
-SET(OPENGL_INCLUDE /usr/include/GL)
-SET(BULLET_INCLUDE /usr/include/bullet)
-
 # set the global compile flags
 SET(CXX_FLAGS "-g -Wall") # debugging and all warnings
 

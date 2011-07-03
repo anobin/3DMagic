@@ -15,7 +15,8 @@ SET(OPENGL_INCLUDE /usr/include/GL)
 SET(BULLET_INCLUDE /usr/include/bullet)
 
 # set the global compile flags
-SET(CXX_FLAGS "-g -Wall") # debugging and all warnings
+SET(COMPILE_FLAGS "-g -Wall") # debugging and all warnings
+SET(LINK_FLAGS  "" )
 
 # make cmake stop complaining by giving it a min version number
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -37,11 +38,14 @@ OPTION(MATH_USE_INTEL   "Use Intel Math implementation"   OFF)
 OPTION(BUILD_TESTS "Build the test suite" ON)
 OPTION(RUN_TESTS "Run the Test Suite during build" OFF)
 
+# allow the user to disable building demos
+OPTION(BUILD_DEMOS "Build the demos" ON)
+
 # allow user to set the build without vertex arrays
 OPTION(USE_VERTEX_ARRAYS "Enable/Disable Vertex Array use" ON)
 IF(USE_VERTEX_ARRAYS)
 ELSE(USE_VERTEX_ARRAYS)
-    SET(CXX_FLAGS "${CXX_FLAGS} -DMAGIC3D_NO_VERTEX_ARRAYS")
+    SET(CXX_FLAGS "${COMPILE_FLAGS} -DMAGIC3D_NO_VERTEX_ARRAYS")
 ENDIF(USE_VERTEX_ARRAYS)
 
 
@@ -58,10 +62,10 @@ ADD_LIBRARY(${EXE} STATIC ${SOURCES} ${HEADERS})
 
 # evaluate Math interface choices
 IF(MATH_USE_INTEL)
-    SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_INTEL -masm=intel")
+    SET(COMPILE_FLAGS "${COMPILE_FLAGS} -DM3D_MATH_USE_INTEL -masm=intel")
     MESSAGE(STATUS "MATH: using Intel implementation")
 ELSEIF(MATH_USE_GENERIC)
-    SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_GENERIC")
+    SET(COMPILE_FLAGS "${COMPILE_FLAGS} -DM3D_MATH_USE_GENERIC")
     MESSAGE(STATUS "MATH: using Generic implementation")
 ELSE(MATH_USE_INTEL)
     MESSAGE(SEND_ERROR "MATH: implementation not selected")
@@ -69,18 +73,22 @@ ENDIF(MATH_USE_INTEL)
 
 # if compiling for profiling, add options
 IF(GPROF_COMPILE)
-    SET(CXX_FLAGS "${CXX_FLAGS} -pg")
+    SET(COMPILE_FLAGS "${COMPILE_FLAGS} -pg")
+    SET(LINK_FLAGS    "${LINK_FLAGS} -pg" )
 ENDIF(GPROF_COMPILE)
 
 # set compile flags on sources
-SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${CXX_FLAGS})
+SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
 
 # add the tests build configuration
 IF(BUILD_TESTS)
     ADD_SUBDIRECTORY(Test)
 ENDIF(BUILD_TESTS)
 
-
+# add the demos build configuration
+IF(BUILD_DEMOS)
+    ADD_SUBDIRECTORY(demo/field)
+ENDIF(BUILD_DEMOS)
 
 
 
