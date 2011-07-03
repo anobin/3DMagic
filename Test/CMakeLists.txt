@@ -20,8 +20,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 # Project name and language
 PROJECT(${PROJECT} CXX)
 
+# find libraries needed specially for this project
+FIND_PACKAGE(GTest REQUIRED)
+
 # set the include directories
-INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE} ${BULLET_INCLUDE})
+INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE_DIR} ${BULLET_INCLUDE_DIRS}
+    ${GTEST_INCLUDE_DIRS})
 
 
 # add source and headers
@@ -33,7 +37,8 @@ FILE(GLOB SOURCES *.cpp */*.cpp)
 ADD_EXECUTABLE(${EXE} ${SOURCES})
 
 #add libraries needed
-TARGET_LINK_LIBRARIES(${EXE} 3DMagic gtest_main gtest pthread)
+TARGET_LINK_LIBRARIES(${EXE} 3DMagic ${GTEST_MAIN_LIBRARIES} ${GTEST_LIBRARIES} 
+    pthread)
 
 # add dependency to 3dmagic library
 ADD_DEPENDENCIES(${EXE} 3DMagic)

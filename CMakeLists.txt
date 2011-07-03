@@ -6,26 +6,29 @@
 # - bullet
 # - openAL
 
-# set the project and exe name
-SET(PROJECT 3DMagic)
-SET(EXE 3DMagic)
-
-# set the library include directories
-SET(OPENGL_INCLUDE /usr/include/GL)
-SET(BULLET_INCLUDE /usr/include/bullet)
-
-# set the global compile flags
-SET(COMPILE_FLAGS "-g -Wall") # debugging and all warnings
-SET(LINK_FLAGS  "" )
-
 # make cmake stop complaining by giving it a min version number
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # Project name and language
 PROJECT(${PROJECT} CXX)
+SET(EXE 3DMagic)
+
+# set path for local cmake modules
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Find the libraries needed
+FIND_PACKAGE(OpenGL REQUIRED)
+FIND_PACKAGE(Bullet REQUIRED)
+FIND_PACKAGE(GLEW REQUIRED)
+FIND_PACKAGE(Lib3ds REQUIRED)
+
+# set the global compile flags
+SET(COMPILE_FLAGS "-g -Wall") # debugging and all warnings
+SET(LINK_FLAGS  "" )
 
 # set the include directories
-INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE} ${BULLET_INCLUDE})
+INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE_DIR} ${BULLET_INCLUDE_DIRS}
+    ${GLEW_INCLUDE_DIR} ${LIB3DS_INCLUDE_DIR})
 
 # allow for user to select if source should be compiled for profiling with gprof
 OPTION(GPROF_COMPILE "Whether to compile for profiling using gprof" OFF)
