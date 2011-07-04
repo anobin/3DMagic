@@ -91,8 +91,8 @@ ENDIF(BUILD_TESTS)
 # add the demos build configuration
 IF(BUILD_DEMOS)
     ADD_SUBDIRECTORY(demo/field)
+    ADD_SUBDIRECTORY(demo/sandbox)
 ENDIF(BUILD_DEMOS)
-
 
 
 
