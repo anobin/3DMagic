@@ -35,6 +35,7 @@ using namespace Magic3D;
 #include <time.h>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <list>
 using std::cout;
 using std::endl;
@@ -84,6 +85,12 @@ Object* floorObject;
 Object* ceiling;
 Object* wall[4];
 std::vector<Object*> objects;
+
+// decal stuff
+Object* decal;
+FlatSurface* decalSurface;
+std::vector<Object*> decals;
+std::map<Object*, Object*> relations;
 
 // 3ds test
 CustomModel* chainLinkModel;
@@ -178,7 +185,7 @@ void setup()
 	else
 	{
 		Handle<SingleColor2DResource> marbleImage = resourceManager.injectSingleColor2D(
-				"images/marble.tga", Color::GREEN);
+				"images/marble.tga", Color::RED);
 		marbleTex= new Texture(marbleImage());
 		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -332,7 +339,13 @@ void setup()
 	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
 					"images/linkImage", Color(195, 195, 195, 255, Color::RGBAb));
 	chainLinkTex = new Texture(linkImage());
-	
+    
+    // decal stuff
+    decalSurface = new FlatSurface( 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
+    decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
+    decal->setBaseTexture( *circleTex );
+    decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
+	decals.push_back(decal);
 	
         
     // set eye level
@@ -388,6 +401,33 @@ void renderScene(void)
 	// enable blending so transparency can happen
 	glEnable (GL_BLEND); 
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // draw chain link
+    Matrix4 positionMatrix;
+    Matrix4 scale;
+    scale.createScaleMatrix(0.01, 0.01, 0.01);
+    Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformMatrix(positionMatrix);
+    Matrix4 transformMatrix;
+    transformMatrix.multiply(cameraMatrix);
+    transformMatrix.multiply(positionMatrix);
+    transformMatrix.multiply(scale);
+    scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
+    transformMatrix.multiply(scale);
+    
+    // pick and prep shader
+    Matrix4 mvp;
+    Matrix3 normal;
+    mvp.multiply(projectionMatrix, transformMatrix);
+    transformMatrix.extractRotation(normal);
+    hemTexShader->setMVMatrix(transformMatrix);
+    hemTexShader->setMVPMatrix(mvp);
+    hemTexShader->setNormalMatrix(normal);
+    hemTexShader->setLightPosition(lightPos);
+    hemTexShader->setSkyColor(Color(255, 255, 255));
+    hemTexShader->setGroundColor(Color(0, 0, 0));
+    hemTexShader->setTexture(*chainLinkTex);
+    hemTexShader->use();
+    chainLinkModel->draw();
 	
 	// object render loop
 	std::vector<Object*>::iterator it = objects.begin();
@@ -419,33 +459,49 @@ void renderScene(void)
 		// unload position transform
 	}
 	
-	// draw chain link
-	Matrix4 positionMatrix;
-	Matrix4 scale;
-	scale.createScaleMatrix(0.01, 0.01, 0.01);
-	Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformMatrix(positionMatrix);
-	Matrix4 transformMatrix;
-	transformMatrix.multiply(cameraMatrix);
-	transformMatrix.multiply(positionMatrix);
-	transformMatrix.multiply(scale);
-	scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
-	transformMatrix.multiply(scale);
-	
-	// pick and prep shader
-	Matrix4 mvp;
-	Matrix3 normal;
-	mvp.multiply(projectionMatrix, transformMatrix);
-	transformMatrix.extractRotation(normal);
-	hemTexShader->setMVMatrix(transformMatrix);
-	hemTexShader->setMVPMatrix(mvp);
-	hemTexShader->setNormalMatrix(normal);
-	hemTexShader->setLightPosition(lightPos);
-	hemTexShader->setSkyColor(Color(255, 255, 255));
-	hemTexShader->setGroundColor(Color(0, 0, 0));
-	hemTexShader->setTexture(*chainLinkTex);
-	hemTexShader->use();
-	chainLinkModel->draw();
-	
+	// draw decals
+	it = decals.begin();
+    std::map<Object*,Object*>::iterator rit;
+    for (; it != decals.end(); it++)
+	{
+        Matrix4 positionMatrix;
+        Matrix4 transformMatrix;
+        
+        // get related object if one
+        rit = relations.find( (*it) );
+        if ( rit == relations.end())
+        {
+            (*it)->getPosition().getTransformMatrix(positionMatrix);
+        }
+        else
+        {
+            Position p(rit->second->getPosition());
+            p.translateLocal( 0.0f, 2.0f, 0.0f );
+            p.getTransformMatrix(positionMatrix);
+        }
+        transformMatrix.multiply(cameraMatrix, positionMatrix);
+        
+        // pick and prep shader
+        Matrix4 mvp;
+        Matrix3 normal;
+        mvp.multiply(projectionMatrix, transformMatrix);
+        transformMatrix.extractRotation(normal);
+        hemTexShader->setMVMatrix(transformMatrix);
+        hemTexShader->setMVPMatrix(mvp);
+        hemTexShader->setNormalMatrix(normal);
+        hemTexShader->setLightPosition(lightPos);
+        hemTexShader->setSkyColor(Color(255, 255, 255));
+        hemTexShader->setGroundColor(Color(0, 0, 0));
+        hemTexShader->setTexture(*(*it)->getBaseTexture());
+        hemTexShader->use();
+        
+       
+        // draw object, make sure to lie to the depth buffer :) 
+        glPolygonOffset(-1.0f, -1.0f);   
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        (*it)->draw();
+        glDisable(GL_POLYGON_OFFSET_FILL);
+    }
 	
 	// draw GUI stuff
 	frameShader->setMVPMatrix(flatProjectionMatrix);
@@ -490,6 +546,7 @@ void keyPressed(unsigned char key,int x, int y)
 	btTransform transform;
 	Position p;
 	Object* t;
+    Object* decal;
 	
 	
 	
@@ -552,6 +609,12 @@ void keyPressed(unsigned char key,int x, int y)
 			t->setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			dynamicsWorld->addRigidBody(t->getRigidBody());
+            
+            // add decal
+            decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
+            decal->setBaseTexture( *circleTex );
+            decals.push_back(decal);
+            relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
 		case 'p':
 			if (paused)
@@ -568,6 +631,8 @@ void keyPressed(unsigned char key,int x, int y)
 				delete (*it);
 			}
 			objects.erase(objects.begin()+2, objects.end());
+            decals.clear();
+            relations.clear();
 			break;
 			
 		
