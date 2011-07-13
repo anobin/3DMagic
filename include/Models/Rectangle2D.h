@@ -37,7 +37,7 @@ class Rectangle2D : public Model
 {
 protected:
 	/// default constructor
-	inline Rectangle2D() {/* intentionally left blank */}
+	inline Rectangle2D(): Model( NULL ) {/* intentionally left blank */}
 	
 public:
 	/** Standard constructor 
@@ -46,7 +46,7 @@ public:
 	 * @param width the width of the rectangle
 	 * @param height the height of the rectangle
 	 */
-	Rectangle2D(int x, int y, int width, int height);
+	Rectangle2D(const VertexAttribSpec* spec, int x, int y, int width, int height);
 	
 	/// destructor
 	virtual ~Rectangle2D();

@@ -132,7 +132,7 @@ private: // all static stuff to maintain buffer bindings go here
 			case TEXTURE_BUFFER:			bufferBindings[7] = buffer; break;
 			case UNIFORM_BUFFER:			bufferBindings[8] = buffer; break;
 			default:
-				throw MagicExceptionMacro("Tried to bind buffer to unknown point");
+				throw MagicException("Tried to bind buffer to unknown point");
 		}
 		glBindBuffer(point, buffer);
 	}
@@ -237,7 +237,7 @@ public:
 		glBindBuffer(ARRAY_BUFFER, Buffer::getBufferFromPoint(ARRAY_BUFFER));
 		
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicExceptionMacro("Failed to allocate buffer");
+			throw MagicException("Failed to allocate buffer");
 	}
 	
 	/** fill an already allocated buffer
@@ -255,7 +255,7 @@ public:
 		glBindBuffer(ARRAY_BUFFER, Buffer::getBufferFromPoint(ARRAY_BUFFER));
 		
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicExceptionMacro("Failed to copy data");
+			throw MagicException("Failed to copy data");
 	}
 
 

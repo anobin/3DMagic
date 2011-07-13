@@ -33,11 +33,11 @@ namespace Magic3D
 	
 /** Thrown when a requested resource is not found
  */
-class ResourceNotFoundException : public MagicException
+class _ResourceNotFoundException : public _MagicException
 {
 protected:
 	/// default constructor
-	inline ResourceNotFoundException(): MagicException() {}
+	inline _ResourceNotFoundException(): _MagicException() {}
 	
 	/// the name of the resource that was not found
 	std::string missingResource;
@@ -48,10 +48,10 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	ResourceNotFoundException(const char* resource, const char* file, int line);
+	_ResourceNotFoundException(const char* resource, const char* file, int line);
 
 	/// destructor
-	virtual ~ResourceNotFoundException() throw();
+	virtual ~_ResourceNotFoundException() throw();
 	
 	/** Retrieve error message
 	 * @return the error message
@@ -66,7 +66,7 @@ public:
 	
 };
 
-#define ResourceNotFoundExceptionMacro(x) (ResourceNotFoundException((x), __FILE__, __LINE__))
+#define ResourceNotFoundException(x) (_ResourceNotFoundException((x), __FILE__, __LINE__))
 	
 	
 	

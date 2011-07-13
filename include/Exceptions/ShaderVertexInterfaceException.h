@@ -34,11 +34,11 @@ namespace Magic3D
 /** Thrown when something goes wrong with defing or using
  * the shader-vertex interface system
  */
-class ShaderVertexInterfaceException : public MagicException
+class _ShaderVertexInterfaceException : public _MagicException
 {
 protected:
 	/// default constructor
-	inline ShaderVertexInterfaceException(): MagicException() {}
+	inline _ShaderVertexInterfaceException(): _MagicException() {}
 	
 public:
 	/** Standard constructor
@@ -46,11 +46,11 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	inline ShaderVertexInterfaceException(const char* error, const char* file, int line):
-		MagicException(error, file, line) {}
+	inline _ShaderVertexInterfaceException(const char* error, const char* file, int line):
+		_MagicException(error, file, line) {}
 
 	/// destructor
-	virtual ~ShaderVertexInterfaceException() throw();
+	virtual ~_ShaderVertexInterfaceException() throw();
 	
 	/** Retrieve error message
 	 * @return the error message
@@ -60,7 +60,7 @@ public:
 	
 };
 
-#define ShaderVertexInterfaceExceptionMacro(x) (ShaderVertexInterfaceException((x), __FILE__, __LINE__))
+#define ShaderVertexInterfaceException(x) (_ShaderVertexInterfaceException((x), __FILE__, __LINE__))
 	
 	
 	

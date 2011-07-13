@@ -23,7 +23,7 @@ public:
 	/** Standard constructor
 	 * @param resource the resource to make a model out of
 	 */
-	CustomModel(const ModelResource& resource);
+	CustomModel(const VertexAttribSpec* spec, const ModelResource& resource);
 	
 	/// destructor
 	virtual ~CustomModel();

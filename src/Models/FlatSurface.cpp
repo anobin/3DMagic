@@ -35,9 +35,8 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-FlatSurface::FlatSurface(float width, float height, int slices, int stacks,
-			bool texRepeat, float texPerX, float texPerY):
-		Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Normal_Texture)
+FlatSurface::FlatSurface(const VertexAttribSpec* spec, float width, float height, 
+    int slices, int stacks, bool texRepeat, float texPerX, float texPerY): Model(spec)
 {
 	planeShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	this->Model::collisionShape = planeShape;

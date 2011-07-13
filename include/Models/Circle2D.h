@@ -37,7 +37,7 @@ class Circle2D : public Model
 {
 protected:
 	/// default constructor
-	inline Circle2D() {/* intentionally left blank */}
+	inline Circle2D(): Model(NULL) {/* intentionally left blank */}
 	
 public:
 	/** Standard constructor 
@@ -47,7 +47,7 @@ public:
 	 * @param precisionAngle the angle between any two points on the edge of the
 	 *                       circle, the lower angle, the better looking
 	 */
-	Circle2D(int x, int y, int radius, float precisionAngle);
+	Circle2D(const VertexAttribSpec* spec, int x, int y, int radius, float precisionAngle);
 	
 	/// destructor
 	virtual ~Circle2D();

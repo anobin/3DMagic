@@ -70,9 +70,9 @@ Color::Color(float c1, float c2, float c3, float c4, Color::Format format)
 			
 		case Color::RGBb:
 		case Color::RGBf:
-			throw MagicExceptionMacro("Tried to create a three-component color using four-component constructor");
+			throw MagicException("Tried to create a three-component color using four-component constructor");
 		default:
-			throw MagicExceptionMacro("Unknown color format");
+			throw MagicException("Unknown color format");
 	}
 }
 	
@@ -102,9 +102,9 @@ Color::Color(float c1, float c2, float c3, Color::Format format)
 			
 		case Color::RGBAb:
 		case Color::RGBAf:
-			throw MagicExceptionMacro("Tried to create a four-component color using three-component constructor");
+			throw MagicException("Tried to create a four-component color using three-component constructor");
 		default:
-			throw MagicExceptionMacro("Unknown color format");
+			throw MagicException("Unknown color format");
 	}
 }
 
@@ -143,7 +143,7 @@ void Color::getColor(float* array, Color::Format format) const
 			break;
 			
 		default:
-			throw MagicExceptionMacro("Unknown color format");
+			throw MagicException("Unknown color format");
 	}
 }
 	

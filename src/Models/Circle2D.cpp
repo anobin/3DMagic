@@ -37,8 +37,8 @@ namespace Magic3D
  * @param precisionAngle the angle between any two points on the edge of the
 						circle, the lower angle, the better looking
  */
-Circle2D::Circle2D(int x, int y, int radius, float precisionAngle):
-	Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Texture)
+Circle2D::Circle2D(const VertexAttribSpec* spec, int x, int y, int radius, 
+    float precisionAngle): Model(spec)
 {
 	// no physics for 2D models
 	this->Model::collisionShape = NULL;

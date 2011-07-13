@@ -30,11 +30,45 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+/** Create shader
+ * @param vertexProgram source of the vertex program
+ * @param fragmentProgram source of the fragment program
+ * @param ... number of attributes followed by attribute pairs
+ */
+Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
+{
+    // load the shader
+    this->programId = Shader::loadShader(vertexProgram, fragmentProgram, // vertex and fragment source code
+                    3,              // two attributes
+                    0, "vVertex",   // first has shader var name vVertex
+                    1, "vNormal",   // second has shader var name vNormal
+                    3, "vTexCoord0" // thrid has shader var name vTexCoord0
+    );
+    
+    spec.setBuiltIn( VertexAttribSpec::POSITION, 0 );
+    spec.setBuiltIn( VertexAttribSpec::NORMAL, 1 );
+    spec.setBuiltIn( VertexAttribSpec::BASE_TEXTURE, 3 );
+    
+}
+
 /// destructor
 Shader::~Shader()
 {
-	/* intentionally left blank */
+    // delete the shader from opengl memory
+    glDeleteProgram(this->programId);
 }
+
+/** Enable this shader to be used on the next drawing operation
+ * and for setting uniforms
+ */
+void Shader::use()
+{
+    // set opengl to use this shader
+    glUseProgram(this->programId);
+    if (glGetError() != GL_NO_ERROR)
+        throw MagicException("Could not use shader program");
+}
+
 
 /** load, compile, link, and attach shader
  * @param vertexProgram source of the vertex program
@@ -69,14 +103,14 @@ GLuint Shader::loadShader(const char* vertexProgram, const char* fragmentProgram
 		// delete shaders and throw exception
         glDeleteShader(vsId);
         glDeleteShader(fsId);
-        throw ShaderCompileExceptionMacro("Vertex shader failed to compile");
+        throw ShaderCompileException("Vertex shader failed to compile");
 	}
     glGetShaderiv(fsId, GL_COMPILE_STATUS, &ret);
     if(ret == GL_FALSE)
 	{
         glDeleteShader(vsId);
         glDeleteShader(fsId);
-        throw ShaderCompileExceptionMacro("Fragment shader failed to compile");
+        throw ShaderCompileException("Fragment shader failed to compile");
 	}
     
     // create new program and attach compiled shaders
@@ -109,7 +143,7 @@ GLuint Shader::loadShader(const char* vertexProgram, const char* fragmentProgram
     if(ret == GL_FALSE)
 	{
 		glDeleteProgram(programId);
-		throw ShaderCompileExceptionMacro("Shader Program failed to link");
+		throw ShaderCompileException("Shader Program failed to link");
 	}
      
 	// return compiled and linked shader id

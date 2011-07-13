@@ -46,15 +46,10 @@ protected:
 	/// shape of model used for collisions on physics engine
 	btCollisionShape* collisionShape;
 	
-	/// default constructor
-	inline Model(): data(0), collisionShape(NULL) {}
-	
-	
-	/// standard constructor
-	inline Model(const ShaderVertexInterfaceSpec& spec): 
-		data(spec), collisionShape(NULL) {}
-	
 public:
+    /// default constructor
+    inline Model(const VertexAttribSpec* spec): data(spec), collisionShape(NULL) {}
+    
 	/// destructor
 	virtual ~Model();
 

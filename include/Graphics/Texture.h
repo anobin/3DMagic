@@ -89,7 +89,7 @@ public:
 	/// copy constructor
 	inline Texture(const Texture& copy)
 	{
-		throw MagicExceptionMacro("Texture objects represent segments of graphics "
+		throw MagicException("Texture objects represent segments of graphics "
 			"memory and thus should not be copied");
 	}
 	

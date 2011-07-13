@@ -22,7 +22,7 @@ Model3DSResource::Model3DSResource(const char* path, const std::string& name, Re
 {
 	Lib3dsFile* file = lib3ds_file_load(path);
 	if (!file)
-		throw MagicExceptionMacro("Could not load model file");
+		throw MagicException("Could not load model file");
 	
 	// count all the vertices
 	vertexCount = 0;

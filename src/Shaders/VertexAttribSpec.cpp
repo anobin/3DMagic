@@ -17,33 +17,29 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for ShaderVertexInterfaceException class
- * 
- * @file ShaderVertexInterfaceException.cpp
+/** Implementation file for VertexAttribSpec class
+ *
+ * @param VertexAttribSpec.cpp
  * @author Andrew Keating
  */
 
-#include <Exceptions/ShaderVertexInterfaceException.h>
-
+#include <Shaders/VertexAttribSpec.h>
 
 namespace Magic3D
 {
 
-/// destructor
-_ShaderVertexInterfaceException::~_ShaderVertexInterfaceException() throw()
-{
-	/* intentionally left blank */
-}
-	
-/** Retrieve error message
- * @return the error message
- */
-const char* _ShaderVertexInterfaceException::what() const throw()
-{
-	return this->_MagicException::error.c_str();
-}
-
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
 

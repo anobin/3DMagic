@@ -33,8 +33,8 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-Box::Box(float width, float height, float depth): 
-	Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Normal_Texture)
+ Box::Box(const VertexAttribSpec* spec, float width, float height, float depth):
+    Model(spec)
 {
 	// we always work with half lengths
 	width = width/2;

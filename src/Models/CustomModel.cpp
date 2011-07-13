@@ -13,8 +13,8 @@ namespace Magic3D
 /** Standard constructor
  * @param resource the resource to make a model out of
  */
-CustomModel::CustomModel(const ModelResource& resource):
-	Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Normal_Texture)
+CustomModel::CustomModel(const VertexAttribSpec* spec, const ModelResource& resource):
+    Model(spec)
 {
 	// TODO: need to redo this once interface is revamped
 	
@@ -28,7 +28,7 @@ CustomModel::CustomModel(const ModelResource& resource):
 		vertices.dataType != VertexArray::FLOAT || normals.dataType != VertexArray::FLOAT ||
 		tex.dataType != VertexArray::FLOAT)
 	{
-		throw MagicExceptionMacro("model resource not compatiable");
+		throw MagicException("model resource not compatiable");
 	}
 	
 	int vertexCount = resource.getVertexCount();

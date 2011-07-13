@@ -34,6 +34,12 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <gl.h>
 #endif
 
+// local includes
+#include "../Math/MathTypes.h"
+#include "../Exceptions/MagicException.h"
+#include "../Graphics/Texture.h"
+#include "VertexAttribSpec.h"
+
 
 namespace Magic3D
 {
@@ -43,26 +49,136 @@ namespace Magic3D
 class Shader
 {
 protected:
+    /// id of compiled and linked shader program
+    GLuint programId;
+    
+    /// Vertex attribute specification
+    VertexAttribSpec spec;
+    
 	/// default constructor
 	inline Shader() { /* intentionally left blank */ }
+	
+	/** load, compile, link, and attach shader
+     * @param vertexProgram source of the vertex program
+     * @param fragmentProgram source of the fragment program
+     * @param ... number of attributes followed by attribute pairs
+     * @return id of compiled shader
+     */
+    static GLuint loadShader(const char* vertexProgram, const char* fragmentProgram, ...);
 
 public:
+    /** Create shader
+     * @param vertexProgram source of the vertex program
+     * @param fragmentProgram source of the fragment program
+     * @param ... number of attributes followed by attribute pairs
+     */
+    Shader( const char* vertexProgram, const char* fragmentProgram);
+    
 	/// destructor
 	virtual ~Shader();
 
 
 	/** Enable this shader to be used on the next drawing operation
+     * and for setting uniforms
 	 */
-	virtual void use() = 0;
+	void use();
+	
+	inline const VertexAttribSpec* getVertexAttribSpec()
+	{
+	    return &spec;
+	}
 
-
-	/** load, compile, link, and attach shader
-	 * @param vertexProgram source of the vertex program
-	 * @param fragmentProgram source of the fragment program
-	 * @param ... number of attributes followed by attribute pairs
-	 * @return id of compiled shader
-	 */
-	static GLuint loadShader(const char* vertexProgram, const char* fragmentProgram, ...);
+    
+    inline void setUniformfv( const char* name, int components, const Scalar* values, int count = 1 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        switch( components )
+        {
+            case 1: glUniform1fv(id, count, values); break;
+            case 2: glUniform2fv(id, count, values); break;
+            case 3: glUniform3fv(id, count, values); break;
+            case 4: glUniform4fv(id, count, values); break;
+            default:
+                throw MagicException("Attempt to set uniform with invalid component size");
+        }
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind float uniform for shader");    
+    }
+    
+    inline void setUniformf( const char* name, const Scalar v1 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        glUniform1f( id, v1);
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind float uniform for shader");    
+    }
+    
+    inline void setUniformf( const char* name, const Scalar v1, const Scalar v2 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        glUniform2f( id, v1, v2);
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind float uniform for shader");    
+    }
+    
+    inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        glUniform3f( id, v1, v2, v3);
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind float uniform for shader");    
+    }
+    
+    inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3, Scalar v4 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        glUniform4f( id, v1, v2, v3, v4);
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind float uniform for shader");    
+    }
+    
+    inline void setUniformiv( const char* name, int components, const int* values, int count = 1 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        switch( components )
+        {
+            case 1: glUniform1iv(id, count, values); break;
+            case 2: glUniform2iv(id, count, values); break;
+            case 3: glUniform3iv(id, count, values); break;
+            case 4: glUniform4iv(id, count, values); break;
+            default:
+                throw MagicException("Attempt to set uniform with invalid component size");
+        }
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind integer uniform for shader");    
+    }
+    
+    inline void setUniformMatrix( const char* name, int components, const Scalar* values, int count = 1 )
+    {
+        GLint id = glGetUniformLocation(this->programId, name);
+        switch( components )
+        {
+            case 2: glUniformMatrix2fv(id, count, GL_FALSE, values); break;
+            case 3: glUniformMatrix3fv(id, count, GL_FALSE, values); break;
+            case 4: glUniformMatrix4fv(id, count, GL_FALSE, values); break;
+            default:
+                throw MagicException("Attempt to set matrix uniform with invalid component size");
+        }
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind matrix uniform for shader");    
+    }
+    
+    inline void setTexture( const char* name, Texture* tex)
+    {
+        tex->bind();
+        GLint id = glGetUniformLocation(this->programId, name);
+        glUniform1i( id, 0 );
+        
+        if (glGetError() != GL_NO_ERROR)
+            throw MagicException("Could not bind texture uniform for shader");
+    }
+    
+	
 
 };
 

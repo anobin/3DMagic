@@ -34,14 +34,14 @@ namespace Magic3D
 	
 /** Base class for all 3DMagic exceptions
  */
-class MagicException : public std::exception
+class _MagicException : public std::exception
 {
 protected:
 	/// the error message
 	std::string error;
 	
 	/// default constructor
-	inline MagicException(): error("None") {}
+	inline _MagicException(): error("None") {}
 	
 public:
 	/** Standard constructor
@@ -49,10 +49,10 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	MagicException(const char* error, const char* file, int line);
+	_MagicException(const char* error, const char* file, int line);
 
 	/// destructor
-	virtual ~MagicException() throw();
+	virtual ~_MagicException() throw();
 	
 	/** Retrieve error message
 	 * @return the error message
@@ -62,7 +62,7 @@ public:
 	
 };
 
-#define MagicExceptionMacro(x) (MagicException((x), __FILE__, __LINE__))
+#define MagicException(x) (_MagicException((x), __FILE__, __LINE__))
 	
 	
 	

@@ -42,7 +42,7 @@ protected:
 	btStaticPlaneShape* planeShape;
 	
 	/// default constructor
-	inline FlatSurface(): planeShape(NULL) {/*intentionally left blank*/}
+	inline FlatSurface(): Model(NULL), planeShape(NULL) {/*intentionally left blank*/}
 	
 public:
 	/** Standard constructor
@@ -54,7 +54,7 @@ public:
 	 * @param texPerX the ammount of X to make one segment of a repeated texture
 	 * @param texPerY the ammount of Y to make one segment of a repeated texture
 	 */
-	FlatSurface(float width, float height, int slices, int stacks,
+	FlatSurface(const VertexAttribSpec* spec, float width, float height, int slices, int stacks,
 				bool texRepeat = false, float texPerX = FOOT, float texPerY = FOOT);
 	
 	/// destructor

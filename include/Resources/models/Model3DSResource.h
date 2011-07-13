@@ -37,7 +37,7 @@ public:
 	/// copy constructor
 	Model3DSResource(const Model3DSResource& copy): ModelResource(copy.name, *copy.manager)
 	{
-		throw MagicExceptionMacro("i'm too tired to make this right now");
+		throw MagicException("i'm too tired to make this right now");
 	}
 	
 	/** Get data array for verticies of model

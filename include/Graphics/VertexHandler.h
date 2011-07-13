@@ -26,8 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_VERTEX_HANDLER_H
 
 #include "../Exceptions/MagicException.h"
-#include "../Shaders/ShaderVertexInterfaceSpec.h"
-#include "../Exceptions/ShaderVertexInterfaceException.h"
+#include "../Shaders/VertexAttribSpec.h"
 #include "../Shaders/Shader.h"
 #include "../Graphics/VertexArray.h"
 #include "../Util/Color.h"
@@ -49,14 +48,36 @@ private:
 	{
 		int index;
 		Buffer* buffer;
-		GLfloat* temp;
+		char* temp;
 		int tempLength;
 		int currentVertex;
 		int components;
+		VertexArray::DataTypes type;
+		
+		inline AttributeData( int index, int components, VertexArray::DataTypes type,
+		    int vertexCount )
+		{
+		    this->index = index;
+		    this->buffer = NULL;
+		    this->components = components;
+		    this->tempLength = vertexCount * components * VertexArray::getDataTypeSize( type );
+		    this->temp = new char[ this->tempLength ];
+		    this->type = type;
+		    this->currentVertex = 0;
+		}
+		
+		inline ~AttributeData()
+		{
+		    delete buffer;
+		    delete[] temp;
+		}
+		    
 	};
 	
-	/// mapping of data pieces to data we use
-	std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*> data;
+	/** mapping of attribute data, filled by getBuiltInAttribId() and
+	 * getNamedAttribId(). Maps GL index to attribute data.
+	 */
+	std::map< int, AttributeData* > data;
 	
 	/// vertex array that is handled
 	VertexArray array;
@@ -64,63 +85,40 @@ private:
 	/// number of verticies being managed
 	int vertexCount;
 	
-	/// default constructor
-	inline VertexHandler(): vertexCount(0) {}
+	/// vertex attribute specification used
+	const VertexAttribSpec* spec;
 	
-	inline void setAttribute4f(ShaderVertexInterfaceSpec::AttributeTypes type,
-							   float c1, float c2, float c3, float c4)
+	/// local cache of indices for built-in attributes, used in convenience methods
+    int builtin_index[ (int) VertexAttribSpec::BUILTIN_ATTRIB_COUNT ];
+	
+	template< typename T>
+	inline AttributeData* getData( int index, int components )
 	{
-		std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*>::iterator it
-			= data.find(type);
-		if (it == data.end())
-			return;
-		
-		it->second->temp[it->second->currentVertex*it->second->components] = c1;
-		it->second->temp[it->second->currentVertex*it->second->components+1] = c2;
-		it->second->temp[it->second->currentVertex*it->second->components+2] = c3;
-		it->second->temp[it->second->currentVertex*it->second->components+3] = c4;
-		it->second->currentVertex += 1;
+	    // try to find entry
+	    std::map< int, AttributeData* >::iterator it = data.find( index );
+	    
+	    // if no find, exception
+	    if ( it == data.end() )
+	        throw MagicException( "Attempt to set data using invalid attribute id" );
+	    AttributeData* d = it->second;
+	    
+	    // if type size mismatch, exception
+	    if ( VertexArray::getDataTypeSize( d->type ) != sizeof( T ) )
+	        throw MagicException( "Attempt to set data for attribute using invalid type" );
+	    
+	    // if components mismatch, exception
+	    if ( d->components != components)
+	        throw MagicException( "Attempt to set data for attribute using invalid component number" );
+	    
+	    return d;
 	}
 	
-	inline void setAttribute3f(ShaderVertexInterfaceSpec::AttributeTypes type,
-							   float c1, float c2, float c3)
-	{
-		std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*>::iterator it
-			= data.find(type);
-		if (it == data.end())
-			return;
-		
-		it->second->temp[it->second->currentVertex*it->second->components] = c1;
-		it->second->temp[it->second->currentVertex*it->second->components+1] = c2;
-		it->second->temp[it->second->currentVertex*it->second->components+2] = c3;
-		it->second->currentVertex += 1;
-	}
-	
-	inline void setAttribute2f(ShaderVertexInterfaceSpec::AttributeTypes type,
-							   float c1, float c2)
-	{
-		std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*>::iterator it
-			= data.find(type);
-		if (it == data.end())
-			return;
-		
-		it->second->temp[it->second->currentVertex*it->second->components] = c1;
-		it->second->temp[it->second->currentVertex*it->second->components+1] = c2;
-		it->second->currentVertex += 1;
-	}
 
 public:
 	/** Standard Constructor
 	 * @param spec the shader-vertex interface spec to use
 	 */
-	VertexHandler(const ShaderVertexInterfaceSpec& spec);
-			
-	/** Standard Constructor for specifying multiple shaders
-	 * that need to have their requirements meet
-	 * @param specCount the number of specs provided
-	 * @param ... const references to the shader-vertex interface specs to use
-	 */
-	VertexHandler(int specCount, ...);
+	VertexHandler(const VertexAttribSpec* spec);
 	
 	/// destructor
 	~VertexHandler();
@@ -130,64 +128,184 @@ public:
 	 */
 	void begin(int vertexCount);
 	
-	
-	/// specify new 3 component position coord
-	inline void position3f(float x, float y, float z)
-	{
-		this->position4f(x, y, z, 1.0f);
-	}
-	/// specify a new 4 component position coord
-	inline void position4f(float x, float y, float z, float w)
-	{
-		this->setAttribute4f(ShaderVertexInterfaceSpec::POSITION, x, y, z, w);
-	}
-	/// specify a new position
-	inline void position(const Point3& point)
-	{
-		this->position4f(point.getX(), point.getY(), point.getZ(), 1.0f);
-	}
-	/// specify a new position
-	inline void position(const Point4& point)
-	{
-		this->setAttribute4f(ShaderVertexInterfaceSpec::POSITION, 
-							 point.getX(), point.getY(), point.getZ(), point.getW());
+	template< typename T >
+	inline void setAttribute4(int id,
+							   T c1, T c2, T c3, T c4)
+	{		
+	    AttributeData* data = this->getData<T>( id, 4 );
+	    T* d = (T*) data->temp;
+		d[ data->currentVertex   ] = c1;
+		d[ data->currentVertex+1 ] = c2;
+		d[ data->currentVertex+2 ] = c3;
+		d[ data->currentVertex+3 ] = c4;
+		data->currentVertex += 4;
 	}
 	
-		
-	/// specify a new normal vector
-	inline void normal3f(float x, float y, float z)
-	{
-		this->setAttribute3f(ShaderVertexInterfaceSpec::NORMAL, x, y, z);
+	template< typename T >
+	inline void setAttribute3(int id,
+							   T c1, T c2, T c3 )
+	{		
+	    AttributeData* data = this->getData<T>( id, 3 );
+	    T* d = (T*) data->temp;
+		d[ data->currentVertex   ] = c1;
+		d[ data->currentVertex+1 ] = c2;
+		d[ data->currentVertex+2 ] = c3;
+		data->currentVertex += 3;
 	}
-	/// specify a new normal vector
-	inline void normal(const Vector3& vector)
-	{
-		this->setAttribute3f(ShaderVertexInterfaceSpec::NORMAL, vector.getX(), 
-							 vector.getY(), vector.getZ());
+	
+	template< typename T >
+	inline void setAttribute2(int id,
+							   T c1, T c2 )
+	{		
+	    AttributeData* data = this->getData<T>( id, 2 );
+	    T* d = (T*) data->temp;
+		d[ data->currentVertex   ] = c1;
+		d[ data->currentVertex+1 ] = c2;
+		data->currentVertex += 2;
+	}
+	
+	template< typename T >
+	inline void setAttributeN(int id, int comps,
+							   T* c )
+	{		
+	    AttributeData* data = this->getData<T>( id, comps );
+	    T* d = (T*) data->temp;
+	    for( int i=0; i < comps; i++ )
+	        (*d)[ data->currentVertex+i ] = c[ i ];
+		data->currentVertex += comps;
 	}
 	
 	
-	/// specify a new color component
-	inline void color4f(float r, float g, float b, float a)
+	
+	/** Get the id for a built-in attribute
+	 * @param attribute the attribute to get the id for
+	 * @return id of attribute, -1 for not supported
+	 */
+	inline int getBuiltInAttribId( VertexAttribSpec::BuiltInAttributeType attribute )
 	{
-		this->setAttribute4f(ShaderVertexInterfaceSpec::COLOR, r, g, b, a);
+	    int index = spec->getBuiltInAttrib( attribute );
+	    if ( index < 0 )
+	        return index; // attribute not supported by shader :(
+	    
+	    // try to find current entry
+	    std::map< int, AttributeData* >::iterator it = data.find( index );
+	    
+	    // if no entry, create new
+	    if ( it == data.end() )
+	    {
+            AttributeData* d;
+            switch( attribute )
+            {
+                case VertexAttribSpec::POSITION:
+                    d = new AttributeData( index, 4, VertexArray::FLOAT, vertexCount );
+                    break;
+                case VertexAttribSpec::NORMAL:
+                    d = new AttributeData( index, 3, VertexArray::FLOAT, vertexCount );
+                    break;
+                case VertexAttribSpec::COLOR:
+                    d = new AttributeData( index, 4, VertexArray::FLOAT, vertexCount );
+                    break;
+                case VertexAttribSpec::BASE_TEXTURE:
+                    d = new AttributeData( index, 2, VertexArray::FLOAT, vertexCount );
+                    break;
+                    
+                default:
+                    throw MagicException( "Internal error" );   
+            }
+            data.insert( std::pair< int, AttributeData* >( index, d ) );
+        }
+	    
+	    return index;
 	}
-	inline void color(const Color& color)
+	
+	/** Get the id for a named attribute
+	 * @param name the name of the attribute to get the id for
+	 * @return id of attribute, -1 for not supported
+	 */
+	inline int getNamedAttribId( const char* name )
 	{
-		const GLfloat* d = color.getInternal();
-		this->setAttribute4f(ShaderVertexInterfaceSpec::COLOR, d[0], d[1], d[2], d[3]);
+	    const VertexAttribSpec::NamedAttribType* a = spec->getNamedAttrib( name );
+	    if ( a->index < 0 )
+	        return a->index; // attribute not supported by shader :(
+	    
+	    // try to find current entry
+	    std::map< int, AttributeData* >::iterator it = data.find( a->index );
+	    
+	    // if no entry, create new
+	    if ( it == data.end() )
+	    {
+            AttributeData* d = new AttributeData( a->index, a->components, a->type, vertexCount );
+            data.insert( std::pair< int, AttributeData* >( a->index, d ) );
+        }
+	    
+	    return a->index;
 	}
 	
 	
-	/// specify a new texture coord
-	inline void texCoord2f(float x, float y)
+	inline void position3f( float x, float y, float z )
 	{
-		this->setAttribute2f(ShaderVertexInterfaceSpec::BASE_TEXTURE, x, y);
+	    this->position4f( x, y, z, 1.0f );
 	}
-	inline void texCoord(const Point2& point)
+	
+	
+	inline void position4f( float x, float y, float z, float w )
 	{
-		this->setAttribute2f(ShaderVertexInterfaceSpec::BASE_TEXTURE, point.getX(), 
-							 point.getY());
+	    int id = builtin_index[ (int) VertexAttribSpec::POSITION  ];
+	    
+	    // lazy instantionation
+	    if (id == -1)
+	    {
+	        id = this->getBuiltInAttribId( VertexAttribSpec::POSITION );
+	        if ( id == -1 )
+	            throw MagicException( "VertexHandler::position[3|4]f called without position support in shader" );
+	    }
+	    
+	    this->setAttribute4<float>( id, x, y, z, w );
+	}
+	
+	inline void normal3f( float x, float y, float z )
+	{
+	    int id = builtin_index[ (int) VertexAttribSpec::NORMAL  ];
+	    
+	    // lazy instantionation
+	    if (id == -1)
+	    {
+	        id = this->getBuiltInAttribId( VertexAttribSpec::NORMAL );
+	        if ( id == -1 )
+	            throw MagicException( "VertexHandler::normal3f called without normal support in shader" );
+	    }
+	    
+	    this->setAttribute3<float>( id, x, y, z );
+	}
+	
+	inline void texCoord2f( float x, float y )
+	{
+	    int id = builtin_index[ (int) VertexAttribSpec::BASE_TEXTURE  ];
+	    
+	    // lazy instantionation
+	    if (id == -1)
+	    {
+	        id = this->getBuiltInAttribId( VertexAttribSpec::BASE_TEXTURE );
+	        if ( id == -1 )
+	            throw MagicException( "VertexHandler::texCoord2f called without base texture support in shader" );
+	    }
+	    
+	    this->setAttribute2<float>( id, x, y );
+	}
+	
+	inline void color4f( float r, float g, float b, float a )
+	{
+	    int id = builtin_index[ (int) VertexAttribSpec::COLOR  ];
+	    
+	    // lazy instantionation
+	    if (id == -1)
+	    {
+	        id = this->getBuiltInAttribId( VertexAttribSpec::COLOR );
+	        if ( id == -1 )
+	            throw MagicException( "VertexHandler::color4f called without position support in shader" );
+	    }
+	    
+	    this->setAttribute4<float>( id, r, g, b, a );
 	}
 	
 	
@@ -199,12 +317,12 @@ public:
 	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
 	{
 #ifdef MAGIC3D_NO_VERTEX_ARRAYS
-		std::map<ShaderVertexInterfaceSpec::AttributeTypes, AttributeData*>::iterator it =
+		std::map<int, AttributeData*>::iterator it =
 		data.begin();
 		for(; it != data.end(); it++)
 		{
 			array.setAttributeArray(it->second->index, it->second->components,
-								VertexArray::FLOAT, *it->second->buffer);
+								it->second->type, *it->second->buffer);
 		}
 #endif
 

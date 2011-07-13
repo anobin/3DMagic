@@ -35,8 +35,8 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-Sphere::Sphere(float radius, int slices, int stacks):
-	Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Normal_Texture)
+Sphere::Sphere(const VertexAttribSpec* spec, float radius, int slices, int stacks):
+    Model(spec)
 {   
 	sphereShape = new btSphereShape(radius);
 	this->Model::collisionShape = sphereShape;

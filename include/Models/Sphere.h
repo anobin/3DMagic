@@ -40,7 +40,7 @@ protected:
 	btSphereShape* sphereShape;
 	
 	/// default constructor
-	inline Sphere(): sphereShape(NULL) {/*intentionally left blank*/}
+	inline Sphere(): Model(NULL), sphereShape(NULL) {/*intentionally left blank*/}
 	
 public:
 	/** Standard constructor
@@ -48,7 +48,7 @@ public:
 	 * @param slices the number of squares on width
 	 * @param stacks the number of squares on height
 	 */
-	Sphere(float radius, int slices, int stacks);
+	Sphere(const VertexAttribSpec* spec, float radius, int slices, int stacks);
 	
 	/// destructor
 	virtual ~Sphere();

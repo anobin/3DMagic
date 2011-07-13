@@ -57,11 +57,8 @@ Matrix4 projectionMatrix;
 ResourceManager resourceManager("../../");
 
 // shaders
-PointLightDiffuseShader* shader;
-FlatShader* flatShader;
-SimpleADSShader* adsShader;
-HemisphereShader* hemShader;
-HemisphereTexShader* hemTexShader;
+Shader* hemTexShader;
+const VertexAttribSpec* hemTexSpec;
 
 
 // textures
@@ -99,7 +96,7 @@ Texture* chainLinkTex;
 // GUI stuff
 Rectangle2D* frameModel;
 Circle2D* circleModel;
-Shader2D* frameShader;
+Shader* frameShader;
 Texture* frameTex;
 Texture* circleTex;
 Matrix4 flatProjectionMatrix;
@@ -132,7 +129,7 @@ void changeWindowSize(int w, int h)
 	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
 	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
 	
-	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
+	frameModel = new Rectangle2D(hemTexSpec, w-173-10, 10, 173, 50);
 }
 
 
@@ -210,22 +207,21 @@ void setup()
 	
 	
 	// init shaders
-	shader = new PointLightDiffuseShader(resourceManager);
-	flatShader = new FlatShader(resourceManager);
-	adsShader = new SimpleADSShader(resourceManager);
-	hemShader = new HemisphereShader(resourceManager);
-	hemTexShader = new HemisphereTexShader(resourceManager);
+	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
+    Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
+	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
+	hemTexSpec = hemTexShader->getVertexAttribSpec();
 	
 	
     // init models, represent data on graphics card
-	sphere = new Sphere(2*FOOT, 55, 32);
+	sphere = new Sphere(hemTexSpec, 2*FOOT, 55, 32);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
-	bigSphere = new Box(2, 4, 3);
-	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
-	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
-	wallModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE, 20, 20);
+	bigSphere = new Box(hemTexSpec, 2, 4, 3);
+	ceilingModel = new FlatSurface(hemTexSpec, ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
+	floorModel = new FlatSurface(hemTexSpec, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
+	wallModel = new FlatSurface(hemTexSpec, ROOM_SIZE*2, ROOM_SIZE, 20, 20);
 	float scale = 5.0f;
-	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
+	boxModel = new Box(hemTexSpec, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
@@ -306,9 +302,9 @@ void setup()
 	
 	
 	// gui stuff
-	frameModel = new Rectangle2D(10, 10, 173, 50);
-	circleModel = new Circle2D(400, 60, 100, 1.0f);
-	frameShader = new Shader2D(resourceManager);
+	frameModel = new Rectangle2D(hemTexSpec, 10, 10, 173, 50);
+	circleModel = new Circle2D(hemTexSpec, 400, 60, 100, 1.0f);
+	//frameShader = new Shader2D(resourceManager);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
 	if (resourceManager.doesResourceExist("images/logo.tga"))
@@ -335,13 +331,13 @@ void setup()
 	// 3ds test stuff
 	Handle<Model3DSResource> linkResource = 
 		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
-	chainLinkModel = new CustomModel(*linkResource());
+	chainLinkModel = new CustomModel(hemTexSpec, *linkResource());
 	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
 					"images/linkImage", Color(195, 195, 195, 255, Color::RGBAb));
 	chainLinkTex = new Texture(linkImage());
     
     // decal stuff
-    decalSurface = new FlatSurface( 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
+    decalSurface = new FlatSurface( hemTexSpec, 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
     decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
     decal->setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
@@ -395,8 +391,6 @@ void renderScene(void)
 	Point3 lightPos(0.0f, 1000.0f, 0.0f);
 	
 	lightPos.transform(cameraMatrix);
-	shader->setLightPosition(lightPos);
-	adsShader->setLightPosition(lightPos);
 	
 	// enable blending so transparency can happen
 	glEnable (GL_BLEND); 
@@ -419,14 +413,14 @@ void renderScene(void)
     Matrix3 normal;
     mvp.multiply(projectionMatrix, transformMatrix);
     transformMatrix.extractRotation(normal);
-    hemTexShader->setMVMatrix(transformMatrix);
-    hemTexShader->setMVPMatrix(mvp);
-    hemTexShader->setNormalMatrix(normal);
-    hemTexShader->setLightPosition(lightPos);
-    hemTexShader->setSkyColor(Color(255, 255, 255));
-    hemTexShader->setGroundColor(Color(0, 0, 0));
-    hemTexShader->setTexture(*chainLinkTex);
     hemTexShader->use();
+    hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
+    hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
+    hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
+    hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
+    hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
+    hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+    hemTexShader->setTexture(       "textureMap",          chainLinkTex             );
     chainLinkModel->draw();
 	
 	// object render loop
@@ -444,14 +438,15 @@ void renderScene(void)
 		Matrix3 normal;
 		mvp.multiply(projectionMatrix, transformMatrix);
 		transformMatrix.extractRotation(normal);
-		hemTexShader->setMVMatrix(transformMatrix);
-		hemTexShader->setMVPMatrix(mvp);
-		hemTexShader->setNormalMatrix(normal);
-		hemTexShader->setLightPosition(lightPos);
-		hemTexShader->setSkyColor(Color(255, 255, 255));
-		hemTexShader->setGroundColor(Color(0, 0, 0));
-		hemTexShader->setTexture(*(*it)->getBaseTexture());
-		hemTexShader->use();
+        
+        hemTexShader->use();
+        hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
+        hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
+        hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
+        hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
+        hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
+        hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
 		
 		// draw object 
 		(*it)->draw();
@@ -486,15 +481,15 @@ void renderScene(void)
         Matrix3 normal;
         mvp.multiply(projectionMatrix, transformMatrix);
         transformMatrix.extractRotation(normal);
-        hemTexShader->setMVMatrix(transformMatrix);
-        hemTexShader->setMVPMatrix(mvp);
-        hemTexShader->setNormalMatrix(normal);
-        hemTexShader->setLightPosition(lightPos);
-        hemTexShader->setSkyColor(Color(255, 255, 255));
-        hemTexShader->setGroundColor(Color(0, 0, 0));
-        hemTexShader->setTexture(*(*it)->getBaseTexture());
-        hemTexShader->use();
         
+        hemTexShader->use();
+        hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
+        hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
+        hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
+        hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
+        hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
+        hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
         glPolygonOffset(-1.0f, -1.0f);   
@@ -504,13 +499,13 @@ void renderScene(void)
     }
 	
 	// draw GUI stuff
-	frameShader->setMVPMatrix(flatProjectionMatrix);
+	/*frameShader->setMVPMatrix(flatProjectionMatrix);
 	frameShader->setTexture(*frameTex);
 	frameShader->use();
 	frameModel->draw(VertexArray::TRIANGLE_FAN);
 	frameShader->setTexture(*circleTex);
 	frameShader->use();
-	circleModel->draw(VertexArray::TRIANGLE_FAN);
+	circleModel->draw(VertexArray::TRIANGLE_FAN);*/
 
 	
     // Do the buffer Swap

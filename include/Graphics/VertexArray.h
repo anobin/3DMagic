@@ -71,6 +71,30 @@ public:
 		UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV
 	};
 	
+	static inline int getDataTypeSize( DataTypes type )
+	{
+	    switch( (int) type )
+	    {
+	        case BYTE:
+	        case UNSIGNED_BYTE:
+	            return 1;
+	        case SHORT:
+	        case UNSIGNED_SHORT:
+	        case HALF_FLOAT:
+	            return 2;
+	        case INT:
+	        case UNSIGNED_INT:
+	        case FLOAT:
+	            return 4;
+	        case DOUBLE:
+	            return 8;
+	        case INT_2_10_10_10_REV:
+		    case UNSIGNED_INT_2_10_10_10_REV:
+		    default:
+		        throw MagicException( "Tried to get size of unsupported type" );
+	    }
+	}
+	
 	/// types of primitives
 	enum Primitives
 	{
@@ -147,7 +171,7 @@ public:
 		this->unBind();
 		
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicExceptionMacro("Failed to set attribute array");
+			throw MagicException("Failed to set attribute array");
 	}
 	
 	/// disable an attribute array from being used
@@ -170,7 +194,7 @@ public:
 		glDrawArrays(primitive, startingVertex, vertexCount);
 		this->unBind();
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicExceptionMacro("Failed to draw");
+			throw MagicException("Failed to draw");
 	}
 
 

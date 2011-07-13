@@ -34,8 +34,8 @@ namespace Magic3D
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-Rectangle2D::Rectangle2D(int x, int y, int width, int height):
-	Model(ShaderVertexInterfaceSpec::DefaultSpec_Position_Texture)
+Rectangle2D::Rectangle2D(const VertexAttribSpec* spec, int x, int y, int width, 
+    int height): Model(spec)
 {
 	this->Model::collisionShape = NULL;
 	

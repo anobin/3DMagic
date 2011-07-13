@@ -42,7 +42,7 @@ TextResource::TextResource(const char* path, const std::string& name, ResourceMa
 	if (!file.is_open() || !file.good())
 	{
 		file.close();
-		throw MagicExceptionMacro("Failed to open text resource");
+		throw MagicException("Failed to open text resource");
 	}
 
 	// get length of file:

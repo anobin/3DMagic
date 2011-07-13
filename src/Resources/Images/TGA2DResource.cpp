@@ -78,7 +78,7 @@ TGA2DResource::TGA2DResource(const char* path, const std::string& name, Resource
     // Attempt to open the file
     pFile = fopen(path, "rb");
     if(pFile == NULL)
-        throw ResourceNotFoundExceptionMacro("Could not find TGA image file");
+        throw ResourceNotFoundException("Could not find TGA image file");
 	
     // read in header
     fread(&tgaHeader, sizeof(TGAHEADER), 1, pFile);
@@ -90,7 +90,7 @@ TGA2DResource::TGA2DResource(const char* path, const std::string& name, Resource
     
     // we can only handle 8, 24, or 32 bits per pixel
     if(tgaHeader.bits != 8 && tgaHeader.bits != 24 && tgaHeader.bits != 32)
-        throw MagicExceptionMacro("Can not handle TGA image with other than 8,24, or 32 bits per pixel");
+        throw MagicException("Can not handle TGA image with other than 8,24, or 32 bits per pixel");
 	
     // Calculate size of image buffer
     length = tgaHeader.width * tgaHeader.height * imageDepth;
@@ -102,7 +102,7 @@ TGA2DResource::TGA2DResource(const char* path, const std::string& name, Resource
     if(fread(imageData, length, 1, pFile) != 1)
 	{
         delete[] imageData;
-		throw MagicExceptionMacro("Could not read TGA image data");
+		throw MagicException("Could not read TGA image data");
 	}
     
     // Set OpenGL format expected and figure out length

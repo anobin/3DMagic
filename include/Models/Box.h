@@ -41,7 +41,7 @@ protected:
 	btBoxShape* boxShape;
 	
 	/// default constructor
-	inline Box(): boxShape(NULL) {/*intentionally left blank*/}
+	inline Box(): Model(NULL), boxShape(NULL) {/*intentionally left blank*/}
 	
 public:
 	/** Standard constructor
@@ -49,7 +49,7 @@ public:
 	 * @param height the height of the box
 	 * @param depth the depth of the box
 	 */
-	Box(float width, float height, float depth);
+	Box(const VertexAttribSpec* spec, float width, float height, float depth);
 	
 	/// destructor
 	virtual ~Box();
