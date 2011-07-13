@@ -39,6 +39,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 #include "../Graphics/Texture.h"
 #include "VertexAttribSpec.h"
+#include "../Exceptions/ShaderCompileException.h"
 
 
 namespace Magic3D
@@ -55,16 +56,12 @@ protected:
     /// Vertex attribute specification
     VertexAttribSpec spec;
     
+    /// index for next named attribute to be added
+    int nextNamedIndex;
+    
 	/// default constructor
 	inline Shader() { /* intentionally left blank */ }
 	
-	/** load, compile, link, and attach shader
-     * @param vertexProgram source of the vertex program
-     * @param fragmentProgram source of the fragment program
-     * @param ... number of attributes followed by attribute pairs
-     * @return id of compiled shader
-     */
-    static GLuint loadShader(const char* vertexProgram, const char* fragmentProgram, ...);
 
 public:
     /** Create shader
@@ -78,10 +75,50 @@ public:
 	virtual ~Shader();
 
 
+
 	/** Enable this shader to be used on the next drawing operation
      * and for setting uniforms
 	 */
 	void use();
+	
+	inline void bindBuiltInAttrib( VertexAttribSpec::BuiltInAttributeType attrib, const char* name )
+	{
+	    glBindAttribLocation(programId, (int) attrib , name);
+	    
+	    // TODO: add verification for variable matches built-in type and component number
+	    
+	    spec.setBuiltIn( attrib, (int) attrib );
+	}
+	
+	inline void bindNamedAttrib( const char* attribName, const char* name, int components, VertexArray::DataTypes type )
+	{
+	    glBindAttribLocation(programId, nextNamedIndex , name);
+	    
+	    VertexAttribSpec::NamedAttribType data;
+	    data.index = nextNamedIndex;
+	    data.components = components;
+	    data.type = type;
+	    
+	    spec.setNamed( name, data );
+	    
+	    nextNamedIndex++;
+	}
+	
+	inline void link()
+	{
+	    GLint ret;
+	    
+	    // link the compiled shader program
+        glLinkProgram(programId);
+        
+        // check for link errors
+        glGetProgramiv(programId, GL_LINK_STATUS, &ret);
+        if(ret == GL_FALSE)
+        {
+            glDeleteProgram(programId);
+            throw ShaderCompileException("Shader Program failed to link");
+        }
+	}
 	
 	inline const VertexAttribSpec* getVertexAttribSpec()
 	{

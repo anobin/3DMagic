@@ -85,6 +85,8 @@ public:
         int components;
         VertexArray::DataTypes type;
         
+        inline NamedAttribType() {}
+        
         inline NamedAttribType( const NamedAttribType& d )
         {
             this->index = d.index;

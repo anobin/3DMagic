@@ -210,6 +210,10 @@ void setup()
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "vVertex"    );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::NORMAL,       "vNormal"    );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "vTexCoord0" );
+	hemTexShader->link();
 	hemTexSpec = hemTexShader->getVertexAttribSpec();
 	
 	

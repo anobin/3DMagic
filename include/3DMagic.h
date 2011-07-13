@@ -54,12 +54,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // shaders
 #include "Shaders/Shader.h"
-#include "Shaders/PointLightDiffuseShader.h"
-#include "Shaders/FlatShader.h"
-#include "Shaders/SimpleADSShader.h"
-#include "Shaders/HemisphereShader.h"
-#include "Shaders/HemisphereTexShader.h"
-#include "Shaders/Shader2D.h"
 
 // models
 #include "Models/Model.h"

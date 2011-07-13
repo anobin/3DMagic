@@ -24,8 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Shaders/Shader.h>
-#include <Exceptions/ShaderCompileException.h>
-#include <stdarg.h>
+
 
 namespace Magic3D
 {
@@ -37,47 +36,6 @@ namespace Magic3D
  */
 Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
 {
-    // load the shader
-    this->programId = Shader::loadShader(vertexProgram, fragmentProgram, // vertex and fragment source code
-                    3,              // two attributes
-                    0, "vVertex",   // first has shader var name vVertex
-                    1, "vNormal",   // second has shader var name vNormal
-                    3, "vTexCoord0" // thrid has shader var name vTexCoord0
-    );
-    
-    spec.setBuiltIn( VertexAttribSpec::POSITION, 0 );
-    spec.setBuiltIn( VertexAttribSpec::NORMAL, 1 );
-    spec.setBuiltIn( VertexAttribSpec::BASE_TEXTURE, 3 );
-    
-}
-
-/// destructor
-Shader::~Shader()
-{
-    // delete the shader from opengl memory
-    glDeleteProgram(this->programId);
-}
-
-/** Enable this shader to be used on the next drawing operation
- * and for setting uniforms
- */
-void Shader::use()
-{
-    // set opengl to use this shader
-    glUseProgram(this->programId);
-    if (glGetError() != GL_NO_ERROR)
-        throw MagicException("Could not use shader program");
-}
-
-
-/** load, compile, link, and attach shader
- * @param vertexProgram source of the vertex program
- * @param fragmentProgram source of the fragment program
- * @param ... number of attributes followed by attribute pairs
- * @return id of compiled shader
- */
-GLuint Shader::loadShader(const char* vertexProgram, const char* fragmentProgram, ...)
-{	
     // create new empty vertex and fragment shaders
     GLuint vsId = glCreateShader(GL_VERTEX_SHADER);
     GLuint fsId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -114,41 +72,36 @@ GLuint Shader::loadShader(const char* vertexProgram, const char* fragmentProgram
 	}
     
     // create new program and attach compiled shaders
-	GLuint programId = glCreateProgram();
+	programId = glCreateProgram();
     glAttachShader(programId, vsId);
     glAttachShader(programId, fsId);
-
-	// bind attributes indexes to GLSL names
-	va_list attributeList;
-	va_start(attributeList, fragmentProgram);
-	int arbCount = va_arg(attributeList, int);	// Number of attributes
-	for(int i = 0; i < arbCount; i++)
-	{
-		int index = va_arg(attributeList, int); // index of attribute
-		char* name = va_arg(attributeList, char*); // variable name for attribute
-		glBindAttribLocation(programId, index, name);
-	}
-	va_end(attributeList);
-
-
-	// link the compiled shader program
-    glLinkProgram(programId);
-	
+    
     // delete temp shader storage
     glDeleteShader(vsId);
-    glDeleteShader(fsId);  
+    glDeleteShader(fsId);
     
-    // check for link errors
-    glGetProgramiv(programId, GL_LINK_STATUS, &ret);
-    if(ret == GL_FALSE)
-	{
-		glDeleteProgram(programId);
-		throw ShaderCompileException("Shader Program failed to link");
-	}
-     
-	// return compiled and linked shader id
-	return programId;
+    // start the named attribute indices at the end of the builtin list
+    nextNamedIndex = VertexAttribSpec::BUILTIN_ATTRIB_COUNT;
 }
+
+/// destructor
+Shader::~Shader()
+{
+    // delete the shader from opengl memory
+    glDeleteProgram(this->programId);
+}
+
+/** Enable this shader to be used on the next drawing operation
+ * and for setting uniforms
+ */
+void Shader::use()
+{
+    // set opengl to use this shader
+    glUseProgram(this->programId);
+    if (glGetError() != GL_NO_ERROR)
+        throw MagicException("Could not use shader program");
+}
+
 
 
 
