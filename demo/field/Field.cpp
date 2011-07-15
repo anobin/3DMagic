@@ -58,7 +58,9 @@ ResourceManager resourceManager("../../");
 
 // shaders
 Shader* hemTexShader;
+Shader* shader2d;
 const VertexAttribSpec* hemTexSpec;
+const VertexAttribSpec* shader2dSpec;
 
 
 // textures
@@ -206,7 +208,7 @@ void setup()
 	}
 	
 	
-	// init shaders
+	// init Hemishphere texture shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
@@ -215,6 +217,15 @@ void setup()
 	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "vTexCoord0" );
 	hemTexShader->link();
 	hemTexSpec = hemTexShader->getVertexAttribSpec();
+	
+	// init 2D shader for overlays
+	Handle<TextResource> vp1 = resourceManager.get<TextResource>("shaders/Shader2D.vp");
+    Handle<TextResource> fp1 = resourceManager.get<TextResource>("shaders/Shader2D.fp");
+	shader2d = new Shader( vp1()->getText(), fp1()->getText() );
+	shader2d->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "location" );
+	shader2d->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "texCoord" );
+	shader2d->link();
+	shader2dSpec = shader2d->getVertexAttribSpec();
 	
 	
     // init models, represent data on graphics card
@@ -306,9 +317,8 @@ void setup()
 	
 	
 	// gui stuff
-	frameModel = new Rectangle2D(hemTexSpec, 10, 10, 173, 50);
-	circleModel = new Circle2D(hemTexSpec, 400, 60, 100, 1.0f);
-	//frameShader = new Shader2D(resourceManager);
+	frameModel = new Rectangle2D(shader2dSpec, 10, 10, 173, 50);
+	circleModel = new Circle2D(shader2dSpec, 400, 60, 100, 1.0f);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
 	if (resourceManager.doesResourceExist("images/logo.tga"))
@@ -503,13 +513,13 @@ void renderScene(void)
     }
 	
 	// draw GUI stuff
-	/*frameShader->setMVPMatrix(flatProjectionMatrix);
-	frameShader->setTexture(*frameTex);
-	frameShader->use();
+	shader2d->use();
+	shader2d->setUniformMatrix( "mvpMatrix", 4, flatProjectionMatrix.getArray() );
+	shader2d->setTexture( "textureMap", frameTex );
 	frameModel->draw(VertexArray::TRIANGLE_FAN);
-	frameShader->setTexture(*circleTex);
-	frameShader->use();
-	circleModel->draw(VertexArray::TRIANGLE_FAN);*/
+	shader2d->setTexture( "textureMap", circleTex );
+	shader2d->use();
+	circleModel->draw(VertexArray::TRIANGLE_FAN);
 
 	
     // Do the buffer Swap
