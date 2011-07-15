@@ -28,6 +28,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <3DMagic.h>
 using namespace Magic3D;
 
+// SDL includes
+#include <SDL/SDL.h>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdio.h>
@@ -58,7 +61,9 @@ ResourceManager resourceManager("../../");
 
 // shaders
 Shader* hemTexShader;
+Shader* shader2d;
 const VertexAttribSpec* hemTexSpec;
+const VertexAttribSpec* shader2dSpec;
 
 
 // textures
@@ -206,11 +211,24 @@ void setup()
 	}
 	
 	
-	// init shaders
+	// init Hemishphere texture shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "vVertex"    );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::NORMAL,       "vNormal"    );
+	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "vTexCoord0" );
+	hemTexShader->link();
 	hemTexSpec = hemTexShader->getVertexAttribSpec();
+	
+	// init 2D shader for overlays
+	Handle<TextResource> vp1 = resourceManager.get<TextResource>("shaders/Shader2D.vp");
+    Handle<TextResource> fp1 = resourceManager.get<TextResource>("shaders/Shader2D.fp");
+	shader2d = new Shader( vp1()->getText(), fp1()->getText() );
+	shader2d->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "location" );
+	shader2d->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "texCoord" );
+	shader2d->link();
+	shader2dSpec = shader2d->getVertexAttribSpec();
 	
 	
     // init models, represent data on graphics card
@@ -302,9 +320,8 @@ void setup()
 	
 	
 	// gui stuff
-	frameModel = new Rectangle2D(hemTexSpec, 10, 10, 173, 50);
-	circleModel = new Circle2D(hemTexSpec, 400, 60, 100, 1.0f);
-	//frameShader = new Shader2D(resourceManager);
+	frameModel = new Rectangle2D(shader2dSpec, 10, 10, 173, 50);
+	circleModel = new Circle2D(shader2dSpec, 400, 60, 100, 1.0f);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
 	if (resourceManager.doesResourceExist("images/logo.tga"))
@@ -358,6 +375,9 @@ bool paused = false;
  */
 void renderScene(void)
 {
+    static Color groundColor(25,25,25);
+    static Color skyColor(255,255,255);
+    
 	// perform bullet physics
 	if (!paused)
 	  dynamicsWorld->stepSimulation(1/60.f,10);
@@ -418,8 +438,8 @@ void renderScene(void)
     hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
     hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
     hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-    hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
-    hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+    hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
+    hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
     hemTexShader->setTexture(       "textureMap",          chainLinkTex             );
     chainLinkModel->draw();
 	
@@ -444,8 +464,8 @@ void renderScene(void)
         hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
         hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-        hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
-        hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+        hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
+        hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
         hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
 		
 		// draw object 
@@ -487,8 +507,8 @@ void renderScene(void)
         hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
         hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-        hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
-        hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
+        hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
+        hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
         hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
@@ -499,17 +519,18 @@ void renderScene(void)
     }
 	
 	// draw GUI stuff
-	/*frameShader->setMVPMatrix(flatProjectionMatrix);
-	frameShader->setTexture(*frameTex);
-	frameShader->use();
+	shader2d->use();
+	shader2d->setUniformMatrix( "mvpMatrix", 4, flatProjectionMatrix.getArray() );
+	shader2d->setTexture( "textureMap", frameTex );
 	frameModel->draw(VertexArray::TRIANGLE_FAN);
-	frameShader->setTexture(*circleTex);
-	frameShader->use();
-	circleModel->draw(VertexArray::TRIANGLE_FAN);*/
+	shader2d->setTexture( "textureMap", circleTex );
+	shader2d->use();
+	circleModel->draw(VertexArray::TRIANGLE_FAN);
 
 	
     // Do the buffer Swap
-    glutSwapBuffers();
+    //glutSwapBuffers();
+    SDL_GL_SwapBuffers();
     
     // calculate fps
     static float lastsec = 0.0f;
@@ -523,7 +544,7 @@ void renderScene(void)
     frames++;
     
 #ifdef UNLIMITED_FPS
-    glutPostRedisplay();
+    //glutPostRedisplay();
 #endif
 }
 
@@ -532,7 +553,7 @@ void renderScene(void)
  * @param x the x-coord of the mouse at the time of the press
  * @param y the y-coord of the mouse at the time of the press
  */
-void keyPressed(unsigned char key,int x, int y)
+void keyPressed(SDL_keysym* key)
 {
 	Point3 origin;
 	Vector3 forward;
@@ -545,7 +566,7 @@ void keyPressed(unsigned char key,int x, int y)
 	
 	
 	
-	switch(key)
+	switch(key->sym)
 	{
 		// space
 		case ' ':
@@ -655,7 +676,7 @@ void specialKeyPressed(int key, int x, int y)
  */
 void mouseClicked(int button, int state, int x, int y)
 {
-	if (state == GLUT_UP)
+	if (state == SDL_RELEASED)
 		return;
 	
 	
@@ -665,7 +686,7 @@ void mouseClicked(int button, int state, int x, int y)
 	
 	switch(button)
 	{
-		case GLUT_LEFT_BUTTON:
+		case SDL_BUTTON_LEFT:
 			p.set(cameraFrame);
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
@@ -736,7 +757,8 @@ void mouseMovedPassive(int x, int y)
 	cameraFrame.rotate(xDeg  * (M_PI / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
 
 	
-	glutWarpPointer(screenWidth / 2, screenHeight / 2);
+	//glutWarpPointer(screenWidth / 2, screenHeight / 2);
+	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
 }
 
 
@@ -759,8 +781,44 @@ void frameRateRegulator(int value)
 int main(int argc, char* argv[])
 {
 	
+    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) 
+    {
+        cout << "Unable to init SDL, oh noes!!" << endl;
+        exit(1);
+    }
+    cout << "SDL init!" << endl;
+    
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+    
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
+
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
+
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
+
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
+    
+    
+    SDL_Surface *screen;
+    screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | 
+        SDL_RESIZABLE | SDL_OPENGL);
+    if ( screen == NULL ) {
+        cout << "Unable to set video mode via SDL: " << SDL_GetError() << endl;
+        exit(1);
+    }
+
+
+    
 	// init glut with args
-	glutInit(&argc, argv);
+	/*glutInit(&argc, argv);
 	// Double-buffered, RGBA display with depth and stencil buffers
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
 	// initial window size
@@ -778,7 +836,7 @@ int main(int argc, char* argv[])
 	glutMouseFunc(mouseClicked); // mouse button clicked
 	glutMotionFunc(mouseMoved); // mouse clicked and moved
 	glutPassiveMotionFunc(mouseMovedPassive); // mouse moved unclicked
-	frameRateRegulator(0); // called to regulate frame rate
+	frameRateRegulator(0); // called to regulate frame rate*/
 
 
 	// init GLEW
@@ -790,10 +848,54 @@ int main(int argc, char* argv[])
 	
 	// perform setup
 	setup();
-	changeWindowSize(1,1); // to ensure transform pipeline is setup
+	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL);
+	SDL_ShowCursor( SDL_DISABLE );
+	changeWindowSize(640,480); // to ensure transform pipeline is setup
+	
+	// run SDL
+	SDL_Event event;
+	while( true )
+	{
+	    while ( SDL_PollEvent( &event ) )
+	    {
+	        switch( event.type )
+	        {
+	            case SDL_QUIT:
+	                exit(0);
+	                
+	            case SDL_VIDEORESIZE:
+	                screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | 
+	                    SDL_RESIZABLE | SDL_OPENGL);
+	                if ( screen == NULL ) {
+	                    cout << "Unable to set video mode via SDL: " << SDL_GetError() << endl;
+	                    exit(1);
+	                }
+	                changeWindowSize( event.resize.w, event.resize.h );
+	                break;
+	                
+	            case SDL_KEYDOWN:
+	                keyPressed( &event.key.keysym );
+	                break;
+	                
+	            case SDL_MOUSEMOTION:
+	                mouseMovedPassive( event.motion.x, event.motion.y );
+	                break;
+	                
+	            case SDL_MOUSEBUTTONDOWN:
+	                mouseClicked( event.button.button, event.button.state, 
+	                    event.button.x, event.button.y );
+	                break;
+	                
+	        }
+	    }
+	        
+	    renderScene();
+	}
 
 	// enter (and never exit) main execution loop
-	glutMainLoop();
+	//glutMainLoop();
+	
+	SDL_Quit();
     
 	return 0;
 }
