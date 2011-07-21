@@ -71,6 +71,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Exceptions/MagicException.h"
 #include "Exceptions/ShaderCompileException.h"
 #include "Exceptions/ResourceNotFoundException.h"
+#include "Util/magic_assert.h"
 
 
 

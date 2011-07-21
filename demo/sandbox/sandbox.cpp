@@ -159,6 +159,7 @@ void setup()
 
 	dynamicsWorld->setGravity(btVector3(0,-9.8*METER,0));
 	
+	MAGIC_ASSERT( true == false );
 	
 	glEnable(GL_DEPTH_TEST);
 	
@@ -650,8 +651,6 @@ void keyPressed(SDL_keysym* key)
             decals.clear();
             relations.clear();
 			break;
-			
-		
 			
 	}
 	
