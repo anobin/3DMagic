@@ -31,6 +31,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/VertexArray.h"
 #include "../Util/Color.h"
 #include "../Math/Math.h"
+#include "../Util/magic_assert.h"
 
 #include <map>
 
@@ -98,17 +99,14 @@ private:
 	    std::map< int, AttributeData* >::iterator it = data.find( index );
 	    
 	    // if no find, exception
-	    if ( it == data.end() )
-	        throw MagicException( "Attempt to set data using invalid attribute id" );
+	    MAGIC_ASSERT ( it != data.end() );
 	    AttributeData* d = it->second;
 	    
 	    // if type size mismatch, exception
-	    if ( VertexArray::getDataTypeSize( d->type ) != sizeof( T ) )
-	        throw MagicException( "Attempt to set data for attribute using invalid type" );
+	    MAGIC_ASSERT ( VertexArray::getDataTypeSize( d->type ) == sizeof( T ) );
 	    
 	    // if components mismatch, exception
-	    if ( d->components != components)
-	        throw MagicException( "Attempt to set data for attribute using invalid component number" );
+	    MAGIC_ASSERT ( d->components == components )
 	    
 	    return d;
 	}
