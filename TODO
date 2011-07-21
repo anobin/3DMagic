@@ -1,20 +1,22 @@
 ## Primary
-- revamp shader/model/texture interface
-	- needs to be done before anything else is done for the old interface
-	- easiest to switch to a static interface
-	- interface will be simple for now and expand later
-	- make sure to remove color from the interface
-	- vertex attributes that must be supported:
-		- location (duh!)
-		- normal vector for vertex
-		- base texture coordinate
-- add more funtionally to vertex handler and revamp custom model implementation
+- integrate SDL support
+    - demo uses it directly right now
+- add truetype and text rendering support
+    - ability to render text onto a bitmap
+    - ability to make a text bitmap, with standard chars on it
+        - for shader-directed text rendering, add shader for it
+- add shader helper classes for existing shaders
+- start adding examples
+    - examples show one to a few key concepts, unlike demos
 - add support for 
-	- rectangular (2D) textures
 	- cube maps
 	- point sprites
 	- multiple textures
-
+- add bitmap class
+    - bitmaps would represent image data in system memory
+    - textures would represent image data in graphics memory
+    - have image resources output bitmaps
+-add support for png files
 
 ## Secondary
 -add model-texture mapping interface to be used through object class
@@ -24,14 +26,9 @@
 	-also enable some default blending so at least transparency works
 -add rendering pipeline
 	-need to ensure fully opaque stuff is rendered first, then partially opaque back to front
--add text drawing and UI system
-	-Rectangle Textures are the key
 -add 2d varonoi diagram algorithm
 	-add API support for splitting a object using a varonoi diagram
 	-this will be used to create simple shattering effects
--add at least one unit test
-	-add lots of unit tests
-	-probably using google testing framework
 -add more basic models
 -add wiki for documentation and api/architecture/design decussions
 -add windows and Mac support
@@ -54,32 +51,20 @@
 	-mabye look into openMP (http://openmp.org/wp/about-openmp/)
 	-mabye look into CUDA/openCL for GPU accelerated tasks
 		-bullet doesn't currently use GPU acceleration
--multi-threaded
 -add block wall basic shape
 	- a rectangular shape made up of smaller blocks to allow for simplified destruction
--add some sort of multi-texture interface for models and objects
-	-current interface only allow for a 'base texture'
 -start to add system-level functionallity to API
 	-init physics and graphics engine
 	-manage collections of objects?
 -look into Bullet soft body support
 	-cloth, rope and the like
 -add mechanism for good frame-rate control
-	-current mechanism with GLUT timed calls is shit
--replace GLUT with SDL or XGL/WGL
 -add in sound support with openAL
 	-including new sound resources and loaders
 	-support at least OGG format
 	-may want other formats if we want to offer something akin to a music player
--add support for png files
--add in model loader
-	-try to add support for 3ds, OBJ, and collada formats
--refine shader interface in some way
-	-current shader-vertex data interface is decent, but needs to be refined
 -add more control over physics chararistics to objects
 	-more Bullet interfacing in Object class
--add support for quaternions instead of/along with 3x3 rotational matrixes and up/forward vectors?
-	-would save space and require less data movement/translation
 -add support for scripting language
 	-is necessity considering all the prototyping that is needed to get scenes correct
 	-dynamic, in that a change to the scripts can be seen in-engine without reloading
@@ -88,21 +73,13 @@
 -run me some valgrind!!
 -run some profilling just to make sure nothing stands out
 	-gprof is probably good enough
--switch over to some good compiling mechanism
-	-currently just manual makefiles
-	-CMake? may have to learn that too, damn
--make a damn teacup and monkey head model so we can have what everyone else uses
+-make a damn teacup and monkey head model
 -add support for input devices including controllers
 	-probably just through SDL
 -add support for skyboxes
 -add support for overlays and writing text to overlays
--add support for writing text to images and manipulating images
-	-probably using graphicsMagick (http://www.graphicsmagick.org/)
 -add support for saving screenshots
 	-TGA and PNG resources should have writing mechanisms, not just reading
--wait for awesomium to be ported to linux and then add it in somewhere (http://www.khrona.com/products/awesomium/)
-	-it is simply too amazing not to have in here somewhere
-	-also, it would allow for in-game UI to be written in html and css
 -add support for generating hilly terrain with heightmaps for physics in Bullet
 -after adding support for model, add support for animations
 	-nice to be able to load these animations from model files
@@ -111,15 +88,6 @@
 -add support for particle effects
 	-I don't think Bullet can do it
 	-fog, exposions, water?
--really rethink shader interface
-	-need some detail texture interface
-	-probably going to have to restrict interface a lot and just say that shaders have to adhere to it
-		-current method is too general it's making things difficult
-	-also probably make a good configurable shader that would be good for most general apps
-		-global, point, directional, and uber lights
-		-shadow maps and possibly shadow volumes
-		-basic and detail texturing
-	-support for detailing like paintballs and blood splatter (http://www.youtube.com/watch?v=tw_a_gc7NR4)
 
 
 
