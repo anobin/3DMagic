@@ -62,7 +62,7 @@ public:
 	
 };
 
-#define MagicException(x) (_MagicException((x), __FILE__, __LINE__))
+#define MagicException(x) (Magic3D::_MagicException((x), __FILE__, __LINE__))
 	
 	
 	

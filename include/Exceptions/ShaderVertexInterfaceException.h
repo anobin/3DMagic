@@ -60,7 +60,7 @@ public:
 	
 };
 
-#define ShaderVertexInterfaceException(x) (_ShaderVertexInterfaceException((x), __FILE__, __LINE__))
+#define ShaderVertexInterfaceException(x) (Magic3D::_ShaderVertexInterfaceException((x), __FILE__, __LINE__))
 	
 	
 	

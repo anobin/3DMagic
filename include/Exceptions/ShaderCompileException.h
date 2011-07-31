@@ -59,7 +59,7 @@ public:
 	
 };
 
-#define ShaderCompileException(x) (_ShaderCompileException((x), __FILE__, __LINE__))
+#define ShaderCompileException(x) (Magic3D::_ShaderCompileException((x), __FILE__, __LINE__))
 	
 	
 	

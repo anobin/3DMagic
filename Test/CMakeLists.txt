@@ -11,9 +11,6 @@
 SET(PROJECT 3DMagic_Tests)
 SET(EXE 3DMagic_Tests)
 
-# set the global compile flags
-SET(CXX_FLAGS "-g -Wall") # debugging and all warnings
-
 # make cmake stop complaining by giving it a min version number
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
@@ -43,17 +40,8 @@ TARGET_LINK_LIBRARIES(${EXE} 3DMagic ${GTEST_MAIN_LIBRARIES} ${GTEST_LIBRARIES}
 # add dependency to 3dmagic library
 ADD_DEPENDENCIES(${EXE} 3DMagic)
 
-# evaluate Math interface choices
-IF(MATH_USE_INTEL)
-    SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_INTEL")
-ELSEIF(MATH_USE_GENERIC)
-    SET(CXX_FLAGS "${CXX_FLAGS} -DM3D_MATH_USE_GENERIC")
-ELSE(MATH_USE_INTEL)
-    MESSAGE(SEND_ERROR "MATH: implementation not selected")
-ENDIF(MATH_USE_INTEL)
-
 # set compile flags on sources
-SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${CXX_FLAGS})
+SET_SOURCE_FILES_PROPERTIES(${SOURCES} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
 
 
 

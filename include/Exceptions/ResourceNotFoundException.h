@@ -66,7 +66,7 @@ public:
 	
 };
 
-#define ResourceNotFoundException(x) (_ResourceNotFoundException((x), __FILE__, __LINE__))
+#define ResourceNotFoundException(x) (Magic3D::_ResourceNotFoundException((x), __FILE__, __LINE__))
 	
 	
 	

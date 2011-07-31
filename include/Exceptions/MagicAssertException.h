@@ -67,7 +67,7 @@ public:
 	
 };
 
-#define MagicAssertException(x) (_MagicAssertException( #x , __FILE__, __LINE__))
+#define MagicAssertException(x) (Magic3D::_MagicAssertException( #x , __FILE__, __LINE__))
 	
 	
 	
