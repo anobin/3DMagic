@@ -210,7 +210,7 @@ public:
                     break;
                     
                 default:
-                    throw MagicException( "Internal error" );   
+                    throw_MagicException( "Internal error" );   
             }
             data.insert( std::pair< int, AttributeData* >( index, d ) );
         }
@@ -257,7 +257,7 @@ public:
 	    {
 	        id = this->getBuiltInAttribId( VertexAttribSpec::POSITION );
 	        if ( id == -1 )
-	            throw MagicException( "VertexHandler::position[3|4]f called without position support in shader" );
+	            throw_MagicException( "VertexHandler::position[3|4]f called without position support in shader" );
 	    }
 	    
 	    this->setAttribute4<float>( id, x, y, z, w );
@@ -272,7 +272,7 @@ public:
 	    {
 	        id = this->getBuiltInAttribId( VertexAttribSpec::NORMAL );
 	        if ( id == -1 )
-	            throw MagicException( "VertexHandler::normal3f called without normal support in shader" );
+	            throw_MagicException( "VertexHandler::normal3f called without normal support in shader" );
 	    }
 	    
 	    this->setAttribute3<float>( id, x, y, z );
@@ -287,7 +287,7 @@ public:
 	    {
 	        id = this->getBuiltInAttribId( VertexAttribSpec::BASE_TEXTURE );
 	        if ( id == -1 )
-	            throw MagicException( "VertexHandler::texCoord2f called without base texture support in shader" );
+	            throw_MagicException( "VertexHandler::texCoord2f called without base texture support in shader" );
 	    }
 	    
 	    this->setAttribute2<float>( id, x, y );
@@ -302,7 +302,7 @@ public:
 	    {
 	        id = this->getBuiltInAttribId( VertexAttribSpec::COLOR );
 	        if ( id == -1 )
-	            throw MagicException( "VertexHandler::color4f called without position support in shader" );
+	            throw_MagicException( "VertexHandler::color4f called without position support in shader" );
 	    }
 	    
 	    this->setAttribute4<float>( id, r, g, b, a );

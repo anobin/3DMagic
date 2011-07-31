@@ -37,7 +37,7 @@ namespace Magic3D
  * @param file the file the error occurred in
  * @param line the line of the file where the error occurred
  */
-_MagicException::_MagicException(const char* error, const char* file, int line)
+MagicException::MagicException(const char* error, const char* file, int line)
 {
 	std::ostringstream s;
 	s << "(" << file << ":" << line << ") " << error;
@@ -46,7 +46,7 @@ _MagicException::_MagicException(const char* error, const char* file, int line)
 
 
 /// destructor
-_MagicException::~_MagicException() throw()
+MagicException::~MagicException() throw()
 {
 		/* intentionally left blank */
 }
@@ -54,7 +54,7 @@ _MagicException::~_MagicException() throw()
 /** Retrieve error message
  * @return the error message
  */
-const char* _MagicException::what() const throw()
+const char* MagicException::what() const throw()
 {
 	return this->error.c_str();
 }

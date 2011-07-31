@@ -34,11 +34,11 @@ namespace Magic3D
 /** Thrown when a an assert happens if asserts are configured to
  * throw exceptions (MAGIC3D_ASSERT_DO_EXCEPTION)
  */
-class _MagicAssertException : public _MagicException
+class MagicAssertException : public MagicException
 {
 protected:
 	/// default constructor
-	inline _MagicAssertException(): _MagicException() {}
+	inline MagicAssertException(): MagicException() {}
 	
 	/// the string comparison that was performed for the assertion
 	std::string comparison;
@@ -49,10 +49,10 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	_MagicAssertException(const char* comparison, const char* file, int line);
+	MagicAssertException(const char* comparison, const char* file, int line);
 
 	/// destructor
-	virtual ~_MagicAssertException() throw();
+	virtual ~MagicAssertException() throw();
 	
 	/** Retrieve error message
 	 * @return the error message
@@ -67,7 +67,7 @@ public:
 	
 };
 
-#define MagicAssertException(x) (Magic3D::_MagicAssertException( #x , __FILE__, __LINE__))
+#define throw_MagicAssertException(x) (throw Magic3D::MagicAssertException( x , __FILE__, __LINE__))
 	
 	
 	

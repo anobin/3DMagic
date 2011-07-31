@@ -35,16 +35,16 @@ namespace Magic3D
  * @param file the file the error occurred in
  * @param line the line of the file where the error occurred
  */
-_ResourceNotFoundException::_ResourceNotFoundException(const char* resource, const char* file, int line): 
+ResourceNotFoundException::ResourceNotFoundException(const char* resource, const char* file, int line): 
 	missingResource(resource)
 {
 	std::ostringstream s;
 	s << "(" << file << ":" << line << ") " << "Resource \"" << resource << "\" was not found";
-	this->_MagicException::error = s.str();
+	this->MagicException::error = s.str();
 }
 	
 /// destructor
-_ResourceNotFoundException::~_ResourceNotFoundException() throw()
+ResourceNotFoundException::~ResourceNotFoundException() throw()
 {
 	/* intentionally left blank */
 }
@@ -52,9 +52,9 @@ _ResourceNotFoundException::~_ResourceNotFoundException() throw()
 /** Retrieve error message
  * @return the error message
  */
-const char* _ResourceNotFoundException::what() const throw()
+const char* ResourceNotFoundException::what() const throw()
 {
-	return this->_MagicException::error.c_str();
+	return this->MagicException::error.c_str();
 }
 	
 	
@@ -62,7 +62,7 @@ const char* _ResourceNotFoundException::what() const throw()
 /** Retrieve the resource that could not be found
  * @return name of the resource that could not be found
  */
-const char* _ResourceNotFoundException::getMissingResourceName() const throw()
+const char* ResourceNotFoundException::getMissingResourceName() const throw()
 {
 	return this->missingResource.c_str();
 }

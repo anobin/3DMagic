@@ -66,13 +66,13 @@ TEST_F(Util_MAGIC_THROW_Tests, MagicThrowEnabledTest)
     
     // when enabled, MAGIC_THROW should throw a MagicException if the
     // condition is TRUE
-    ASSERT_THROW( MAGIC_THROW( (*onep) == 1, msg ), Magic3D::_MagicException );
+    ASSERT_THROW( MAGIC_THROW( (*onep) == 1, msg ), Magic3D::MagicException );
     
     // when enabled, MAGIC_THROW_EX should throw the exception given if the
     // condition is TRUE
     ASSERT_THROW( 
         MAGIC_THROW_EX( (*onep) == 1, ShaderCompileException, msg ), 
-            Magic3D::_ShaderCompileException 
+            Magic3D::ShaderCompileException 
         );
     
     // when enabled, MAGIC_THROW should not throw a MagicException if the
@@ -117,6 +117,9 @@ TEST_F(Util_MAGIC_THROW_Tests, MagicThrowDisabledTest)
     // when disabled, MAGIC_THROW_EX should not throw the exception given if the
     // condition is FALSE
     ASSERT_NO_THROW( MAGIC_THROW_EX( (*onep) == 2, ShaderCompileException, msg ) );
+    
+    // when magic throws are disabled, then the comparison should not even be run
+    MAGIC_THROW( FAIL(), msg );
     
 }
 

@@ -28,7 +28,7 @@ CustomModel::CustomModel(const VertexAttribSpec* spec, const ModelResource& reso
 		vertices.dataType != VertexArray::FLOAT || normals.dataType != VertexArray::FLOAT ||
 		tex.dataType != VertexArray::FLOAT)
 	{
-		throw MagicException("model resource not compatiable");
+		throw_MagicException("model resource not compatiable");
 	}
 	
 	int vertexCount = resource.getVertexCount();

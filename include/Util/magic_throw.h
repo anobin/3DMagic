@@ -40,10 +40,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 
 #define MAGIC_THROW_EX(cond, ex, msg) \
-    { if (cond) { throw ex(msg); } }
+    { if (cond) { throw_##ex(msg); } }
 // generic version that always throws base exception class (MagicException)
 #define MAGIC_THROW(cond, msg) \
-    { if (cond) { throw MagicException(msg); } }
+    { if (cond) { throw_MagicException(msg); } }
     
 #endif
 

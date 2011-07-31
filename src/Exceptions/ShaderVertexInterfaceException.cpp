@@ -30,7 +30,7 @@ namespace Magic3D
 {
 
 /// destructor
-_ShaderVertexInterfaceException::~_ShaderVertexInterfaceException() throw()
+ShaderVertexInterfaceException::~ShaderVertexInterfaceException() throw()
 {
 	/* intentionally left blank */
 }
@@ -38,9 +38,9 @@ _ShaderVertexInterfaceException::~_ShaderVertexInterfaceException() throw()
 /** Retrieve error message
  * @return the error message
  */
-const char* _ShaderVertexInterfaceException::what() const throw()
+const char* ShaderVertexInterfaceException::what() const throw()
 {
-	return this->_MagicException::error.c_str();
+	return this->MagicException::error.c_str();
 }
 
 

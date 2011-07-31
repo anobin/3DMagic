@@ -35,16 +35,16 @@ namespace Magic3D
  * @param file the file the error occurred in
  * @param line the line of the file where the error occurred
  */
-_MagicAssertException::_MagicAssertException(const char* comparison, const char* file, int line): 
+MagicAssertException::MagicAssertException(const char* comparison, const char* file, int line): 
 	comparison(comparison)
 {
 	std::ostringstream s;
 	s << "(" << file << ":" << line << ") " << "Assertion: ( " << comparison << " )";
-	this->_MagicException::error = s.str();
+	this->MagicException::error = s.str();
 }
 	
 /// destructor
-_MagicAssertException::~_MagicAssertException() throw()
+MagicAssertException::~MagicAssertException() throw()
 {
 	/* intentionally left blank */
 }
@@ -52,9 +52,9 @@ _MagicAssertException::~_MagicAssertException() throw()
 /** Retrieve error message
  * @return the error message
  */
-const char* _MagicAssertException::what() const throw()
+const char* MagicAssertException::what() const throw()
 {
-	return this->_MagicException::error.c_str();
+	return this->MagicException::error.c_str();
 }
 	
 	
@@ -62,7 +62,7 @@ const char* _MagicAssertException::what() const throw()
 /** Retrieve the comparison that was performed for the assert
  * @return string version of comparison performed
  */
-const char* _MagicAssertException::getComparison() const throw()
+const char* MagicAssertException::getComparison() const throw()
 {
 	return this->comparison.c_str();
 }

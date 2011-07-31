@@ -52,7 +52,7 @@ VertexHandler::~VertexHandler()
 void VertexHandler::begin(int vertexCount)
 {
 	if (this->vertexCount != 0)
-		throw MagicException("Attempt to rebuild vertex handler");
+		throw_MagicException("Attempt to rebuild vertex handler");
 		
 	this->vertexCount = vertexCount;
 }

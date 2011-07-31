@@ -91,7 +91,7 @@ public:
 	        case INT_2_10_10_10_REV:
 		    case UNSIGNED_INT_2_10_10_10_REV:
 		    default:
-		        throw MagicException( "Tried to get size of unsupported type" );
+		        throw_MagicException( "Tried to get size of unsupported type" );
 	    }
 	}
 	
@@ -171,7 +171,7 @@ public:
 		this->unBind();
 		
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicException("Failed to set attribute array");
+			throw_MagicException("Failed to set attribute array");
 	}
 	
 	/// disable an attribute array from being used
@@ -194,7 +194,7 @@ public:
 		glDrawArrays(primitive, startingVertex, vertexCount);
 		this->unBind();
 		if (glGetError() != GL_NO_ERROR)
-			throw MagicException("Failed to draw");
+			throw_MagicException("Failed to draw");
 	}
 
 

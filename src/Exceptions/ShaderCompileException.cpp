@@ -30,7 +30,7 @@ namespace Magic3D
 {
 
 /// destructor
-_ShaderCompileException::~_ShaderCompileException() throw()
+ShaderCompileException::~ShaderCompileException() throw()
 {
 	/* intentionally left blank */
 }
@@ -38,9 +38,9 @@ _ShaderCompileException::~_ShaderCompileException() throw()
 /** Retrieve error message
  * @return the error message
  */
-const char* _ShaderCompileException::what() const throw()
+const char* ShaderCompileException::what() const throw()
 {
-	return this->_MagicException::error.c_str();
+	return this->MagicException::error.c_str();
 }
 
 

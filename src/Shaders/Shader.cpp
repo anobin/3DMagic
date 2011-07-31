@@ -61,14 +61,14 @@ Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
 		// delete shaders and throw exception
         glDeleteShader(vsId);
         glDeleteShader(fsId);
-        throw ShaderCompileException("Vertex shader failed to compile");
+        throw_ShaderCompileException("Vertex shader failed to compile");
 	}
     glGetShaderiv(fsId, GL_COMPILE_STATUS, &ret);
     if(ret == GL_FALSE)
 	{
         glDeleteShader(vsId);
         glDeleteShader(fsId);
-        throw ShaderCompileException("Fragment shader failed to compile");
+        throw_ShaderCompileException("Fragment shader failed to compile");
 	}
     
     // create new program and attach compiled shaders
@@ -99,7 +99,7 @@ void Shader::use()
     // set opengl to use this shader
     glUseProgram(this->programId);
     if (glGetError() != GL_NO_ERROR)
-        throw MagicException("Could not use shader program");
+        throw_MagicException("Could not use shader program");
 }
 
 

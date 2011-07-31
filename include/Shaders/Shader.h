@@ -116,7 +116,7 @@ public:
         if(ret == GL_FALSE)
         {
             glDeleteProgram(programId);
-            throw ShaderCompileException("Shader Program failed to link");
+            throw_ShaderCompileException("Shader Program failed to link");
         }
 	}
 	
@@ -136,10 +136,10 @@ public:
             case 3: glUniform3fv(id, count, values); break;
             case 4: glUniform4fv(id, count, values); break;
             default:
-                throw MagicException("Attempt to set uniform with invalid component size");
+                throw_MagicException("Attempt to set uniform with invalid component size");
         }
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind float uniform for shader");    
+            throw_MagicException("Could not bind float uniform for shader");    
     }
     
     inline void setUniformf( const char* name, const Scalar v1 )
@@ -147,7 +147,7 @@ public:
         GLint id = glGetUniformLocation(this->programId, name);
         glUniform1f( id, v1);
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind float uniform for shader");    
+            throw_MagicException("Could not bind float uniform for shader");    
     }
     
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2 )
@@ -155,7 +155,7 @@ public:
         GLint id = glGetUniformLocation(this->programId, name);
         glUniform2f( id, v1, v2);
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind float uniform for shader");    
+            throw_MagicException("Could not bind float uniform for shader");    
     }
     
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3 )
@@ -163,7 +163,7 @@ public:
         GLint id = glGetUniformLocation(this->programId, name);
         glUniform3f( id, v1, v2, v3);
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind float uniform for shader");    
+            throw_MagicException("Could not bind float uniform for shader");    
     }
     
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3, Scalar v4 )
@@ -171,7 +171,7 @@ public:
         GLint id = glGetUniformLocation(this->programId, name);
         glUniform4f( id, v1, v2, v3, v4);
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind float uniform for shader");    
+            throw_MagicException("Could not bind float uniform for shader");    
     }
     
     inline void setUniformiv( const char* name, int components, const int* values, int count = 1 )
@@ -184,10 +184,10 @@ public:
             case 3: glUniform3iv(id, count, values); break;
             case 4: glUniform4iv(id, count, values); break;
             default:
-                throw MagicException("Attempt to set uniform with invalid component size");
+                throw_MagicException("Attempt to set uniform with invalid component size");
         }
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind integer uniform for shader");    
+            throw_MagicException("Could not bind integer uniform for shader");    
     }
     
     inline void setUniformMatrix( const char* name, int components, const Scalar* values, int count = 1 )
@@ -199,10 +199,10 @@ public:
             case 3: glUniformMatrix3fv(id, count, GL_FALSE, values); break;
             case 4: glUniformMatrix4fv(id, count, GL_FALSE, values); break;
             default:
-                throw MagicException("Attempt to set matrix uniform with invalid component size");
+                throw_MagicException("Attempt to set matrix uniform with invalid component size");
         }
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind matrix uniform for shader");    
+            throw_MagicException("Could not bind matrix uniform for shader");    
     }
     
     inline void setTexture( const char* name, Texture* tex)
@@ -212,7 +212,7 @@ public:
         glUniform1i( id, 0 );
         
         if (glGetError() != GL_NO_ERROR)
-            throw MagicException("Could not bind texture uniform for shader");
+            throw_MagicException("Could not bind texture uniform for shader");
     }
     
 	

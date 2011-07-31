@@ -33,11 +33,11 @@ namespace Magic3D
 	
 /** Thrown when a shader fails to compile
  */
-class _ShaderCompileException : public _MagicException
+class ShaderCompileException : public MagicException
 {
 protected:
 	/// default constructor
-	inline _ShaderCompileException(): _MagicException() {}
+	inline ShaderCompileException(): MagicException() {}
 	
 public:
 	/** Standard constructor
@@ -45,11 +45,11 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	inline _ShaderCompileException(const char* error, const char* file, int line):
-		_MagicException(error, file, line) {}
+	inline ShaderCompileException(const char* error, const char* file, int line):
+		MagicException(error, file, line) {}
 
 	/// destructor
-	virtual ~_ShaderCompileException() throw();
+	virtual ~ShaderCompileException() throw();
 	
 	/** Retrieve error message
 	 * @return the error message
@@ -59,7 +59,7 @@ public:
 	
 };
 
-#define ShaderCompileException(x) (Magic3D::_ShaderCompileException((x), __FILE__, __LINE__))
+#define throw_ShaderCompileException(x) (throw Magic3D::ShaderCompileException((x), __FILE__, __LINE__))
 	
 	
 	

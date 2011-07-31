@@ -59,7 +59,7 @@ private:
 		std::map<std::string, Resource*>::iterator it = 
 			resources.find(name);
 		if (it == resources.end())
-			throw MagicException("Tried to acquire non-existent resource");
+			throw_MagicException("Tried to acquire non-existent resource");
 		it->second->handleCount += 1;
 	}
 	
@@ -69,7 +69,7 @@ private:
 		std::map<std::string, Resource*>::iterator it = 
 			resources.find(name);
 		if (it == resources.end())
-			throw MagicException("Tried to release non-existent resource");
+			throw_MagicException("Tried to release non-existent resource");
 		it->second->handleCount -= 1;
 		if (it->second->handleCount <= 0)
 		{
@@ -113,7 +113,7 @@ public:
 		
 		// otherwise, create new text resource
 		if (!this->doesResourceExist(name))
-			throw ResourceNotFoundException(name);
+			throw_ResourceNotFoundException(name);
 		T* r = new T((resourceDir + "/" + name).c_str(), std::string(name), *this);
 		resources.insert(std::pair<std::string, Resource*>(name, r));
 		Handle<T> h(*r);
