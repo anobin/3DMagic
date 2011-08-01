@@ -159,8 +159,6 @@ void setup()
 
 	dynamicsWorld->setGravity(btVector3(0,-9.8*METER,0));
 	
-	MAGIC_ASSERT( true == false );
-	
 	glEnable(GL_DEPTH_TEST);
 	
     static Color lightBlue(5, 230, 255, Color::RGBb);
@@ -325,10 +323,16 @@ void setup()
 	circleModel = new Circle2D(shader2dSpec, 400, 60, 100, 1.0f);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
-	if (resourceManager.doesResourceExist("images/logo.tga"))
+	/*if (resourceManager.doesResourceExist("images/logo.tga"))
 	{
 		Handle<TGA2DResource> logoImage = resourceManager.get
 			<TGA2DResource>("images/logo.tga");
+		frameTex = new Texture(logoImage());
+	}*/
+	if (resourceManager.doesResourceExist("images/logo.png"))
+	{
+		Handle<PNG2DResource> logoImage = resourceManager.get
+			<PNG2DResource>("images/logo.png");
 		frameTex = new Texture(logoImage());
 	}
 	else

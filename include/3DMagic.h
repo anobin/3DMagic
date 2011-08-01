@@ -49,6 +49,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Resources/TextResource.h"
 #include "Resources/Image2DResource.h"
 #include "Resources/Images/TGA2DResource.h"
+#include "Resources/Images/PNG2DResource.h"
 #include "Resources/ModelResource.h"
 #include "Resources/models/Model3DSResource.h"
 
