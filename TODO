@@ -20,6 +20,16 @@
     - graphical 'part'
     - physical 'part'
     - audio 'part'
+- Add simple keyframe animation support
+- Add renderer
+    - need Graphical bodies to contain:
+        - pointer to shader to use
+        - uniforms to use in shader
+        - model to render
+- Add attachment objects and dependencies between objects
+    - attachments can be used for decals
+    - dependencies can be used to help transparency
+- Go through math implementation and add MAGIC_THROW and MAGIC_ASSERT where neccessary
 
 ## Secondary
 -add model-texture mapping interface to be used through object class

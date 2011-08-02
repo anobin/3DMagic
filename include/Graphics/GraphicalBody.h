@@ -30,6 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
+#include "../Shaders/Shader.h"
 
 namespace Magic3D
 {
@@ -42,7 +43,10 @@ class GraphicalBody
 {
 protected:
 	/// model to use to represent this object
-	Model* model;
+	Model& model;
+	
+	/// shader to use to render this body
+	Shader* shader;
 	
 	/// base texture of object
 	Texture* baseTexture;
@@ -50,7 +54,7 @@ protected:
 	
 public:
 	/// standard constructor
-	inline GraphicalBody(Model& model): model(&model), baseTexture(NULL) {}
+	inline GraphicalBody(Model& model): model(model), shader(NULL), baseTexture(NULL) {}
 	
 	/// destructor
 	virtual ~GraphicalBody();
@@ -60,13 +64,29 @@ public:
 	 */
 	inline void draw()
 	{
-		model->draw();
+		model.draw();
 	}
 	
 	/// get the model used
-	inline Model* getModel()
+	inline Model& getModel()
 	{
 		return model;
+	}
+	
+	/// set the shader to render with
+	inline void setShader( Shader& shader )
+	{
+	     // ensure that shader can render the model
+	     // TODO
+	     
+	     // set the shader for the body
+	     this->shader = &shader;
+	}
+	
+	/// get the shader to render with
+	inline Shader* getShader()
+	{
+	    return this->shader;    
 	}
 	
 	/// set the texture

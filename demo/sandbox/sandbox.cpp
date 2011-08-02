@@ -177,9 +177,9 @@ void setup()
 				"images/bareConcrete.tga", Color::WHITE);
 		stoneTex = new Texture(stoneImage());
 	}
-	if (resourceManager.doesResourceExist("images/marble.tga"))
+	if (resourceManager.doesResourceExist("images/marble.png"))
 	{
-		Handle<TGA2DResource> marbleImage = resourceManager.get<TGA2DResource>("images/marble.tga");
+		Handle<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
 		marbleTex= new Texture(marbleImage());
 		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -242,14 +242,14 @@ void setup()
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
-	btBall->setBaseTexture(*marbleTex);
+	btBall->getGraphical().setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
 	
 	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->setBaseTexture(*stoneTex);
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
-	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
+	dynamicsWorld->addRigidBody(floorObject->getPhysical().getRigidBody());
 	
 	float wallWidth =60;
 	float wallHeight = 10;
@@ -268,9 +268,9 @@ void setup()
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
 			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
-			btBox->setBaseTexture(*brickTex);
+			btBox->getGraphical().setBaseTexture(*brickTex);
 			objects.push_back(btBox);
-			dynamicsWorld->addRigidBody(btBox->getRigidBody());
+			dynamicsWorld->addRigidBody(btBox->getPhysical().getRigidBody());
 		}
 	}
 	
@@ -361,7 +361,7 @@ void setup()
     // decal stuff
     decalSurface = new FlatSurface( hemTexSpec, 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
     decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
-    decal->setBaseTexture( *circleTex );
+    decal->getGraphical().setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
 	
@@ -471,10 +471,10 @@ void renderScene(void)
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
         hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
         hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
 		
 		// draw object 
-		(*it)->draw();
+		(*it)->getGraphical().draw();
 		
 		// unload position transform
 	}
@@ -514,12 +514,12 @@ void renderScene(void)
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
         hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
         hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
         glPolygonOffset(-1.0f, -1.0f);   
         glEnable(GL_POLYGON_OFFSET_FILL);
-        (*it)->draw();
+        (*it)->getGraphical().draw();
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
 	
@@ -568,6 +568,7 @@ void keyPressed(SDL_keysym* key)
 	Position p;
 	Object* t;
     Object* decal;
+    std::vector<Object*>::iterator it;
 	
 	
 	
@@ -627,13 +628,13 @@ void keyPressed(SDL_keysym* key)
 			
 		case 'g':
 			t = new Object(*bigSphere, 300, Point3(0.0f, 0.0f, 0.0f)); // 1 kg sphere
-			t->setBaseTexture(*marbleTex);
+			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
-			dynamicsWorld->addRigidBody(t->getRigidBody());
+			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
             
             // add decal
             decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
-            decal->setBaseTexture( *circleTex );
+            decal->getGraphical().setBaseTexture( *circleTex );
             decals.push_back(decal);
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
@@ -645,17 +646,242 @@ void keyPressed(SDL_keysym* key)
 			break;
 			
 		case 'z':
-			std::vector<Object*>::iterator it = objects.begin() + 2;
+			it = objects.begin() + 2;
 			for (; it != objects.end(); it++)
 			{
-				dynamicsWorld->removeRigidBody((*it)->getRigidBody());
+				dynamicsWorld->removeRigidBody((*it)->getPhysical().getRigidBody());
 				delete (*it);
 			}
 			objects.erase(objects.begin()+2, objects.end());
             decals.clear();
             relations.clear();
 			break;
-			
+
+        case SDLK_UNKNOWN:
+        case SDLK_BACKSPACE:
+        case SDLK_TAB:
+        case SDLK_CLEAR:
+        case SDLK_RETURN:
+        case SDLK_PAUSE:
+        case SDLK_EXCLAIM:
+        case SDLK_QUOTEDBL:
+        case SDLK_HASH:
+        case SDLK_DOLLAR:
+        case SDLK_AMPERSAND:
+        case SDLK_QUOTE:
+        case SDLK_LEFTPAREN:
+        case SDLK_RIGHTPAREN:
+        case SDLK_ASTERISK:
+        case SDLK_PLUS:
+        case SDLK_COMMA:
+        case SDLK_PERIOD:
+        case SDLK_SLASH:
+        case SDLK_0:
+        case SDLK_1:
+        case SDLK_2:
+        case SDLK_3:
+        case SDLK_4:
+        case SDLK_5:
+        case SDLK_6:
+        case SDLK_7:
+        case SDLK_8:
+        case SDLK_9:
+        case SDLK_COLON:
+        case SDLK_SEMICOLON:
+        case SDLK_LESS:
+        case SDLK_GREATER:
+        case SDLK_QUESTION:
+        case SDLK_AT:
+        case SDLK_LEFTBRACKET:
+        case SDLK_BACKSLASH:
+        case SDLK_RIGHTBRACKET:
+        case SDLK_CARET:
+        case SDLK_UNDERSCORE:
+        case SDLK_BACKQUOTE:
+        case SDLK_b:
+        case SDLK_c:
+        case SDLK_e:
+        case SDLK_f:
+        case SDLK_h:
+        case SDLK_i:
+        case SDLK_j:
+        case SDLK_k:
+        case SDLK_l:
+        case SDLK_m:
+        case SDLK_n:
+        case SDLK_o:
+        case SDLK_q:
+        case SDLK_r:
+        case SDLK_t:
+        case SDLK_u:
+        case SDLK_v:
+        case SDLK_x:
+        case SDLK_y:
+        case SDLK_DELETE:
+        case SDLK_WORLD_0:
+        case SDLK_WORLD_1:
+        case SDLK_WORLD_2:
+        case SDLK_WORLD_3:
+        case SDLK_WORLD_4:
+        case SDLK_WORLD_5:
+        case SDLK_WORLD_6:
+        case SDLK_WORLD_7:
+        case SDLK_WORLD_8:
+        case SDLK_WORLD_9:
+        case SDLK_WORLD_10:
+        case SDLK_WORLD_11:
+        case SDLK_WORLD_12:
+        case SDLK_WORLD_13:
+        case SDLK_WORLD_14:
+        case SDLK_WORLD_15:
+        case SDLK_WORLD_16:
+        case SDLK_WORLD_17:
+        case SDLK_WORLD_18:
+        case SDLK_WORLD_19:
+        case SDLK_WORLD_20:
+        case SDLK_WORLD_21:
+        case SDLK_WORLD_22:
+        case SDLK_WORLD_23:
+        case SDLK_WORLD_24:
+        case SDLK_WORLD_25:
+        case SDLK_WORLD_26:
+        case SDLK_WORLD_27:
+        case SDLK_WORLD_28:
+        case SDLK_WORLD_29:
+        case SDLK_WORLD_30:
+        case SDLK_WORLD_31:
+        case SDLK_WORLD_32:
+        case SDLK_WORLD_33:
+        case SDLK_WORLD_34:
+        case SDLK_WORLD_35:
+        case SDLK_WORLD_36:
+        case SDLK_WORLD_37:
+        case SDLK_WORLD_38:
+        case SDLK_WORLD_39:
+        case SDLK_WORLD_40:
+        case SDLK_WORLD_41:
+        case SDLK_WORLD_42:
+        case SDLK_WORLD_43:
+        case SDLK_WORLD_44:
+        case SDLK_WORLD_45:
+        case SDLK_WORLD_46:
+        case SDLK_WORLD_47:
+        case SDLK_WORLD_48:
+        case SDLK_WORLD_49:
+        case SDLK_WORLD_50:
+        case SDLK_WORLD_51:
+        case SDLK_WORLD_52:
+        case SDLK_WORLD_53:
+        case SDLK_WORLD_54:
+        case SDLK_WORLD_55:
+        case SDLK_WORLD_56:
+        case SDLK_WORLD_57:
+        case SDLK_WORLD_58:
+        case SDLK_WORLD_59:
+        case SDLK_WORLD_60:
+        case SDLK_WORLD_61:
+        case SDLK_WORLD_62:
+        case SDLK_WORLD_63:
+        case SDLK_WORLD_64:
+        case SDLK_WORLD_65:
+        case SDLK_WORLD_66:
+        case SDLK_WORLD_67:
+        case SDLK_WORLD_68:
+        case SDLK_WORLD_69:
+        case SDLK_WORLD_70:
+        case SDLK_WORLD_71:
+        case SDLK_WORLD_72:
+        case SDLK_WORLD_73:
+        case SDLK_WORLD_74:
+        case SDLK_WORLD_75:
+        case SDLK_WORLD_76:
+        case SDLK_WORLD_77:
+        case SDLK_WORLD_78:
+        case SDLK_WORLD_79:
+        case SDLK_WORLD_80:
+        case SDLK_WORLD_81:
+        case SDLK_WORLD_82:
+        case SDLK_WORLD_83:
+        case SDLK_WORLD_84:
+        case SDLK_WORLD_85:
+        case SDLK_WORLD_86:
+        case SDLK_WORLD_87:
+        case SDLK_WORLD_88:
+        case SDLK_WORLD_89:
+        case SDLK_WORLD_90:
+        case SDLK_WORLD_91:
+        case SDLK_WORLD_92:
+        case SDLK_WORLD_93:
+        case SDLK_WORLD_94:
+        case SDLK_WORLD_95:
+        case SDLK_KP0:
+        case SDLK_KP1:
+        case SDLK_KP2:
+        case SDLK_KP3:
+        case SDLK_KP4:
+        case SDLK_KP5:
+        case SDLK_KP6:
+        case SDLK_KP7:
+        case SDLK_KP8:
+        case SDLK_KP9:
+        case SDLK_KP_PERIOD:
+        case SDLK_KP_DIVIDE:
+        case SDLK_KP_MULTIPLY:
+        case SDLK_KP_MINUS:
+        case SDLK_KP_PLUS:
+        case SDLK_KP_ENTER:
+        case SDLK_KP_EQUALS:
+        case SDLK_UP:
+        case SDLK_DOWN:
+        case SDLK_RIGHT:
+        case SDLK_LEFT:
+        case SDLK_INSERT:
+        case SDLK_HOME:
+        case SDLK_END:
+        case SDLK_PAGEUP:
+        case SDLK_PAGEDOWN:
+        case SDLK_F1:
+        case SDLK_F2:
+        case SDLK_F3:
+        case SDLK_F4:
+        case SDLK_F5:
+        case SDLK_F6:
+        case SDLK_F7:
+        case SDLK_F8:
+        case SDLK_F9:
+        case SDLK_F10:
+        case SDLK_F11:
+        case SDLK_F12:
+        case SDLK_F13:
+        case SDLK_F14:
+        case SDLK_F15:
+        case SDLK_NUMLOCK:
+        case SDLK_CAPSLOCK:
+        case SDLK_SCROLLOCK:
+        case SDLK_RSHIFT:
+        case SDLK_LSHIFT:
+        case SDLK_RCTRL:
+        case SDLK_LCTRL:
+        case SDLK_RALT:
+        case SDLK_LALT:
+        case SDLK_RMETA:
+        case SDLK_LMETA:
+        case SDLK_LSUPER:
+        case SDLK_RSUPER:
+        case SDLK_MODE:
+        case SDLK_COMPOSE:
+        case SDLK_HELP:
+        case SDLK_PRINT:
+        case SDLK_SYSREQ:
+        case SDLK_BREAK:
+        case SDLK_MENU:
+        case SDLK_POWER:
+        case SDLK_EURO:
+        case SDLK_UNDO:
+        case SDLK_LAST:
+        default:
+            break;
+        
 	}
 	
 }
@@ -694,12 +920,12 @@ void mouseClicked(int button, int state, int x, int y)
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
 			t = new Object(*sphere, 500, p); // 1 kg sphere
-			t->setBaseTexture(*marbleTex);
+			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
-			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
+			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
 										  btVector3(0.0f, 0.0f, 0.0f));
-			dynamicsWorld->addRigidBody(t->getRigidBody());
+			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
 			break;
 	}
 }

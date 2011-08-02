@@ -70,20 +70,6 @@ public:
 	/// destructor
 	virtual ~Object();
 
-
-	/** Draw the object
-	 */
-	inline void draw()
-	{
-		graphical.draw();
-	}
-	
-	/// get the model used
-	inline Model* getModel()
-	{
-		return graphical.getModel();
-	}
-
 	/// set the Position
 	inline void setPosition(const Position& position)
 	{
@@ -94,24 +80,6 @@ public:
 	inline Position& getPosition()
 	{
 		return this->position;
-	}
-	
-	/// set the texture
-	inline void setBaseTexture(Texture& texture)
-	{
-		graphical.setBaseTexture( texture );
-	}
-	
-	/// get the texture
-	inline Texture* getBaseTexture()
-	{
-		return graphical.getBaseTexture();
-	}
-	
-	/// get the rigid body for this object
-	inline btRigidBody* getRigidBody()
-	{
-		return physical.getRigidBody();
 	}
 	
 	/** sync the graphical position with the physical
@@ -125,6 +93,18 @@ public:
 	inline void syncPositionToPhysics()
 	{
 		physical.syncPositionToPhysics();
+	}
+	
+	/// get physical body for this model
+	inline PhysicalBody& getPhysical()
+	{
+	    return physical;
+	}
+	
+	/// get graphical body for this model
+	inline GraphicalBody& getGraphical()
+	{
+	     return graphical;   
 	}
 
 };

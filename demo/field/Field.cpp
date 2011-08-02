@@ -240,14 +240,14 @@ void setup()
 	
 	// init objects
 	btBall = new Object(*sphere, (float) 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
-	btBall->setBaseTexture(*marbleTex);
+	btBall->getGraphical().setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
 	
 	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->setBaseTexture(*stoneTex);
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
-	dynamicsWorld->addRigidBody(floorObject->getRigidBody());
+	dynamicsWorld->addRigidBody(floorObject->getPhysical().getRigidBody());
 	
 	float wallWidth =60;
 	float wallHeight = 10;
@@ -266,9 +266,9 @@ void setup()
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
 			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
-			btBox->setBaseTexture(*brickTex);
+			btBox->getGraphical().setBaseTexture(*brickTex);
 			objects.push_back(btBox);
-			dynamicsWorld->addRigidBody(btBox->getRigidBody());
+			dynamicsWorld->addRigidBody(btBox->getPhysical().getRigidBody());
 		}
 	}
 	
@@ -353,7 +353,7 @@ void setup()
     // decal stuff
     decalSurface = new FlatSurface( hemTexSpec, 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
     decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
-    decal->setBaseTexture( *circleTex );
+    decal->getGraphical().setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
 	
@@ -460,10 +460,10 @@ void renderScene(void)
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
         hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
         hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
 		
 		// draw object 
-		(*it)->draw();
+		(*it)->getGraphical().draw();
 		
 		// unload position transform
 	}
@@ -503,12 +503,12 @@ void renderScene(void)
         hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
         hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
         hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getBaseTexture()             );
+        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
         glPolygonOffset(-1.0f, -1.0f);   
         glEnable(GL_POLYGON_OFFSET_FILL);
-        (*it)->draw();
+        (*it)->getGraphical().draw();
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
 	
@@ -615,13 +615,13 @@ void keyPressed(unsigned char key,int x, int y)
 			
 		case 'g':
 			t = new Object(*bigSphere, 300, Point3(0.0f, 0.0f, 0.0f)); // 1 kg sphere
-			t->setBaseTexture(*marbleTex);
+			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
-			dynamicsWorld->addRigidBody(t->getRigidBody());
+			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
             
             // add decal
             decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
-            decal->setBaseTexture( *circleTex );
+            decal->getGraphical().setBaseTexture( *circleTex );
             decals.push_back(decal);
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
@@ -636,7 +636,7 @@ void keyPressed(unsigned char key,int x, int y)
 			std::vector<Object*>::iterator it = objects.begin() + 2;
 			for (; it != objects.end(); it++)
 			{
-				dynamicsWorld->removeRigidBody((*it)->getRigidBody());
+				dynamicsWorld->removeRigidBody((*it)->getPhysical().getRigidBody());
 				delete (*it);
 			}
 			objects.erase(objects.begin()+2, objects.end());
@@ -684,12 +684,12 @@ void mouseClicked(int button, int state, int x, int y)
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
 			t = new Object(*sphere, 500, p); // 1 kg sphere
-			t->setBaseTexture(*marbleTex);
+			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
-			t->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
+			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
 										  btVector3(0.0f, 0.0f, 0.0f));
-			dynamicsWorld->addRigidBody(t->getRigidBody());
+			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
 			break;
 	}
 }
