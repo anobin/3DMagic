@@ -17,21 +17,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Object class
+/** Implementation file for PhysicalBody class
  *
- * @file Object.cpp
+ * @file PhysicalBody.cpp
  * @author Andrew Keating
  */
 
-#include <Objects/Object.h>
+#include <Physics/PhysicalBody.h>
 
 namespace Magic3D
 {
 	
 	
 /// destructor
-Object::~Object()
+PhysicalBody::~PhysicalBody()
 {
+	delete body;
 }
 	
 	

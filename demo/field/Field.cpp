@@ -239,7 +239,7 @@ void setup()
 	boxModel = new Box(hemTexSpec, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
 	// init objects
-	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
+	btBall = new Object(*sphere, (float) 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
 	btBall->setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
 	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
@@ -265,7 +265,7 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset), 3.0f); // 3 kg box
+			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
 			btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());

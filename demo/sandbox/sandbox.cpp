@@ -267,7 +267,7 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset), 3.0f); // 3 kg box
+			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
 			btBox->setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			dynamicsWorld->addRigidBody(btBox->getRigidBody());

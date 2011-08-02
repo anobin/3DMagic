@@ -30,10 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
-#include "../Physics/MotionState.h"
-
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
+#include "../Physics/PhysicalBody.h"
 
 namespace Magic3D
 {
@@ -53,53 +50,26 @@ protected:
 	/// base texture of object
 	Texture* baseTexture;
 	
-	/// MotionState for physical body
-	MotionState motionState;
-	
 	/// physical body for object
-	btRigidBody* body;
-	
-	/// default constructor
-	inline Object(): model(NULL), baseTexture(NULL), motionState(position), body(NULL) {}
-	
-	inline void build(float mass, float friction = 0.5f, float restitution = 0.0f,
-						float linearDamping = 0.0f)
-	{
-		// calc inertia
-		btVector3 fallInertia(0,0,0);
-		model->getCollisionShape().calculateLocalInertia(mass,fallInertia);
-		
-		// construct rigid body
-		btRigidBody::btRigidBodyConstructionInfo 
-			fallRigidBodyCI(mass, &motionState, &model->getCollisionShape(), fallInertia);
-		fallRigidBodyCI.m_friction = friction;
-		fallRigidBodyCI.m_restitution = restitution;
-		fallRigidBodyCI.m_linearDamping = linearDamping;
-		body = new btRigidBody(fallRigidBodyCI);
-	}
+	PhysicalBody physical;
+
 	
 public:
 	/// standard constructor
 	inline Object(Model& model, float mass): model(&model), baseTexture(NULL),
-			motionState(position), body(NULL) { build(mass); }
+			physical( position, model, mass ) {}
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, const Point3& location, float friction = 0.5,
-				  float restitution=0.0f, float linearDamping = 0.0f): model(&model), 
-		baseTexture(NULL), motionState(position), body(NULL) 
-	{ 
-		position.getLocation().set(location);
-		build(mass, friction, restitution, linearDamping); 
-	}
-			
+	inline Object(Model& model, float mass, Point3 location): model(&model), 
+	    position(location.getX(), location.getY(), location.getZ()), 
+	    baseTexture(NULL), physical( this->position, model, mass ) 
+	{}
+	
 	/// standard constructor
-	inline Object(Model& model, float mass, const Position& position2, float friction = 0.5f, 
-				  float restitution = 0.0f, float linearDamping = 0.0f): model(&model), 
-		baseTexture(NULL), motionState(position), body(NULL) 
-	{ 
-		this->position.set(position2);
-		build(mass, friction, restitution, linearDamping); 
-	}
+	inline Object(Model& model, float mass, Position position): model(&model), 
+	    position(position), 
+	    baseTexture(NULL), physical( this->position, model, mass ) 
+	{}
 	
 	/// destructor
 	virtual ~Object();
@@ -116,12 +86,6 @@ public:
 	inline Model* getModel()
 	{
 		return model;
-	}
-	
-	/// set the model to use
-	inline void setModel(Model& model)
-	{
-		this->model = &model;
 	}
 
 	/// set the Position
@@ -151,7 +115,7 @@ public:
 	/// get the rigid body for this object
 	inline btRigidBody* getRigidBody()
 	{
-		return body;
+		return physical.getRigidBody();
 	}
 	
 	/** sync the graphical position with the physical
@@ -164,18 +128,7 @@ public:
 	 */
 	inline void syncPositionToPhysics()
 	{
-		// position is already set, so we can get what the transform
-		// should be from our motions state.	
-		// we have to do this because bullet only gets the world
-		// transform from our motion state when the body is created
-		
-		// sync out position and the rigid body center of mass
-		btTransform transform;
-		motionState.getWorldTransform(transform);
-		body->setCenterOfMassTransform(transform);
-		
-		// tell bullet that the rigid body needs some attention
-		body->activate();
+		physical.syncPositionToPhysics();
 	}
 
 };
