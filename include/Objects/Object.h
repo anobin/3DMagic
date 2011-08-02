@@ -31,6 +31,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
 #include "../Physics/PhysicalBody.h"
+#include "../Graphics/GraphicalBody.h"
 
 namespace Magic3D
 {
@@ -41,34 +42,29 @@ namespace Magic3D
 class Object
 {
 protected:
-	/// model to use to represent this object
-	Model* model;
-	
 	/// 3D position of object
 	Position position;
 	
-	/// base texture of object
-	Texture* baseTexture;
+	/// graphical body for object
+	GraphicalBody graphical;
 	
 	/// physical body for object
 	PhysicalBody physical;
-
 	
 public:
 	/// standard constructor
-	inline Object(Model& model, float mass): model(&model), baseTexture(NULL),
+	inline Object(Model& model, float mass): graphical(model), 
 			physical( position, model, mass ) {}
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, Point3 location): model(&model), 
-	    position(location.getX(), location.getY(), location.getZ()), 
-	    baseTexture(NULL), physical( this->position, model, mass ) 
+	inline Object(Model& model, float mass, Point3 location):
+	    position(location.getX(), location.getY(), location.getZ()),
+	    graphical(model), physical( this->position, model, mass ) 
 	{}
 	
 	/// standard constructor
-	inline Object(Model& model, float mass, Position position): model(&model), 
-	    position(position), 
-	    baseTexture(NULL), physical( this->position, model, mass ) 
+	inline Object(Model& model, float mass, Position position): 
+	    position(position), graphical(model), physical( this->position, model, mass ) 
 	{}
 	
 	/// destructor
@@ -79,13 +75,13 @@ public:
 	 */
 	inline void draw()
 	{
-		model->draw();
+		graphical.draw();
 	}
 	
 	/// get the model used
 	inline Model* getModel()
 	{
-		return model;
+		return graphical.getModel();
 	}
 
 	/// set the Position
@@ -103,13 +99,13 @@ public:
 	/// set the texture
 	inline void setBaseTexture(Texture& texture)
 	{
-		this->baseTexture = &texture;
+		graphical.setBaseTexture( texture );
 	}
 	
 	/// get the texture
 	inline Texture* getBaseTexture()
 	{
-		return this->baseTexture;
+		return graphical.getBaseTexture();
 	}
 	
 	/// get the rigid body for this object
