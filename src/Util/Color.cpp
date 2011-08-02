@@ -54,22 +54,22 @@ Color::Color(float c1, float c2, float c3, float c4, Color::Format format)
 {
 	switch (format)
 	{
-		case Color::RGBAb:
+		case Color::RGBA_BYTE:
 			this->color[0] = RGB_SINGLE(c1);
 			this->color[1] = RGB_SINGLE(c2);
 			this->color[2] = RGB_SINGLE(c3);
 			this->color[3] = RGB_SINGLE(c4);
 			break;
 			
-		case Color::RGBAf:
+		case Color::RGBA_FLOAT:
 			this->color[0] = c1;
 			this->color[1] = c2;
 			this->color[2] = c3;
 			this->color[3] = c4;
 			break;
 			
-		case Color::RGBb:
-		case Color::RGBf:
+		case Color::RGB_BYTE:
+		case Color::RGB_FLOAT:
 			throw_MagicException("Tried to create a three-component color using four-component constructor");
 		default:
 			throw_MagicException("Unknown color format");
@@ -86,22 +86,22 @@ Color::Color(float c1, float c2, float c3, Color::Format format)
 {
 	switch (format)
 	{
-		case Color::RGBb:
+		case Color::RGB_BYTE:
 			this->color[0] = RGB_SINGLE(c1);
 			this->color[1] = RGB_SINGLE(c2);
 			this->color[2] = RGB_SINGLE(c3);
 			this->color[3] = 1.0f;
 			break;
 			
-		case Color::RGBf:
+		case Color::RGB_FLOAT:
 			this->color[0] = c1;
 			this->color[1] = c2;
 			this->color[2] = c3;
 			this->color[3] = 1.0f;
 			break;
 			
-		case Color::RGBAb:
-		case Color::RGBAf:
+		case Color::RGBA_BYTE:
+		case Color::RGBA_FLOAT:
 			throw_MagicException("Tried to create a four-component color using three-component constructor");
 		default:
 			throw_MagicException("Unknown color format");
@@ -116,26 +116,26 @@ void Color::getColor(float* array, Color::Format format) const
 {
 	switch (format)
 	{
-		case Color::RGBb:
+		case Color::RGB_BYTE:
 			array[0] = (float)rRGB_SINGLE(this->color[0]);
 			array[1] = (float)rRGB_SINGLE(this->color[1]);
 			array[2] = (float)rRGB_SINGLE(this->color[2]);
 			break;
 			
-		case Color::RGBf:
+		case Color::RGB_FLOAT:
 			array[0] = this->color[0];
 			array[1] = this->color[1];
 			array[2] = this->color[2];
 			break;
 			
-		case Color::RGBAb:
+		case Color::RGBA_BYTE:
 			array[0] = (float)rRGB_SINGLE(this->color[0]);
 			array[1] = (float)rRGB_SINGLE(this->color[1]);
 			array[2] = (float)rRGB_SINGLE(this->color[2]);
 			array[3] = (float)rRGB_SINGLE(this->color[3]);
 			break;
 			
-		case Color::RGBAf:
+		case Color::RGBA_FLOAT:
 			array[0] = this->color[0];
 			array[1] = this->color[1];
 			array[2] = this->color[2];

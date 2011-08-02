@@ -161,7 +161,7 @@ void setup()
 	
 	glEnable(GL_DEPTH_TEST);
 	
-    static Color lightBlue(5, 230, 255, Color::RGBb);
+    static Color lightBlue(5, 230, 255, Color::RGB_BYTE);
 	const GLfloat* c = lightBlue.getInternal();
 	glClearColor(c[0], c[1], c[2], 1.0f);
 	
@@ -204,7 +204,7 @@ void setup()
 	else
 	{
 		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
-					"images/singleBrick.tga", Color(255, 118, 27, 255, Color::RGBAb));
+					"images/singleBrick.tga", Color(255, 118, 27, 255, Color::RGBA_BYTE));
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -322,7 +322,7 @@ void setup()
 	frameModel = new Rectangle2D(shader2dSpec, 10, 10, 173, 50);
 	circleModel = new Circle2D(shader2dSpec, 400, 60, 100, 1.0f);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
-					"images/frameImage", Color(255, 118, 27, 100, Color::RGBAb));
+					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
 	/*if (resourceManager.doesResourceExist("images/logo.tga"))
 	{
 		Handle<TGA2DResource> logoImage = resourceManager.get
@@ -355,7 +355,7 @@ void setup()
 		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
 	chainLinkModel = new CustomModel(hemTexSpec, *linkResource());
 	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
-					"images/linkImage", Color(195, 195, 195, 255, Color::RGBAb));
+					"images/linkImage", Color(195, 195, 195, 255, Color::RGBA_BYTE));
 	chainLinkTex = new Texture(linkImage());
     
     // decal stuff

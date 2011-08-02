@@ -34,17 +34,17 @@ namespace Magic3D
 {
 	
 /** Represents a single color, usable in
- * multiple color systems (RGBAf, RGBAb)
+ * multiple color systems (RGBA_FLOAT, RGBA_BYTE)
  */
 class Color
 {
 private:
-	/// Internal color storage, RGBAf (openGL default)
-	GLfloat color[4]; // solid black
+	/// Internal color storage, RGBA_FLOAT (openGL default)
+	GLfloat color[4];
 	
 public:
 	/// types of color formats
-	enum Format { RGBAb, RGBAf, RGBb, RGBf };
+	enum Format { RGBA_BYTE, RGBA_FLOAT, RGB_BYTE, RGB_FLOAT };
 	
 	/// default constructor
 	Color();
@@ -56,7 +56,7 @@ public:
 	 * @param c4 the fourth component
 	 * @param format the format of the color values
 	 */
-	Color(float c1, float c2, float c3, float c4, Format format = RGBAb);
+	Color(float c1, float c2, float c3, float c4, Format format = RGBA_BYTE);
 	
 	/** Standard constructor for three-component color values
 	 * @param c1 the first component
@@ -64,7 +64,7 @@ public:
 	 * @param c3 the third component
 	 * @param format the format of the color values
 	 */
-	Color(float c1, float c2, float c3, Format format = RGBb);
+	Color(float c1, float c2, float c3, Format format = RGB_BYTE);
 	
 	/** Copy constructor
 	 * @param copy the color object to copy
@@ -89,7 +89,7 @@ public:
 	 * @param array array to store values in
 	 * @param format the format of the export data
 	 */
-	void getColor(float* array, Format format = RGBAb) const;
+	void getColor(float* array, Format format = RGBA_BYTE) const;
 	
 	/** Get read-only access to internal color data (RGBAf)
 	 * @return the internal color data
