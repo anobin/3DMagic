@@ -16,7 +16,10 @@
     - bitmaps would represent image data in system memory
     - textures would represent image data in graphics memory
     - have image resources output bitmaps
--add support for png files
+- extend object model so each object has three independent parts that can be disabled:
+    - graphical 'part'
+    - physical 'part'
+    - audio 'part'
 
 ## Secondary
 -add model-texture mapping interface to be used through object class
