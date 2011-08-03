@@ -13,10 +13,8 @@ namespace Magic3D
 /** Standard constructor
  * @param resource the resource to make a model out of
  */
-CustomModel::CustomModel(const VertexAttribSpec* spec, const ModelResource& resource):
-    Model(spec)
+CustomModel::CustomModel(const ModelResource& resource)
 {
-	// TODO: need to redo this once interface is revamped
 	
 	// get data arrays
 	const ModelResource::DataArray& vertices = resource.getVertices();
@@ -37,11 +35,20 @@ CustomModel::CustomModel(const VertexAttribSpec* spec, const ModelResource& reso
 	float* texel = (float*)tex.data;
 	
 	data.begin(vertexCount);
+	
+	// get indices for attributes we use
+	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	
 	for (int i=0,j=0,k=0; i < vertexCount; i++,j+=3,k+=2)
 	{
-		data.normal3f(normal[j], normal[j+1], normal[j+2]);
-		data.texCoord2f(texel[k], texel[k+1]);
-		data.position3f(vertex[j], vertex[j+1], vertex[j+2]);
+		normal3f(normal[j], normal[j+1], normal[j+2]);
+		texCoord2f(texel[k], texel[k+1]);
+		position3f(vertex[j], vertex[j+1], vertex[j+2]);
 	}
 	data.end();
 	

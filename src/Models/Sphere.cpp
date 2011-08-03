@@ -35,8 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-Sphere::Sphere(const VertexAttribSpec* spec, float radius, int slices, int stacks):
-    Model(spec)
+Sphere::Sphere(float radius, int slices, int stacks)
 {   
 	sphereShape = new btSphereShape(radius);
 	this->Model::collisionShape = sphereShape;
@@ -50,6 +49,15 @@ Sphere::Sphere(const VertexAttribSpec* spec, float radius, int slices, int stack
     GLint i, j;     // Looping variables
     
     data.begin(slices * stacks * 6);
+    
+    // get indices for attributes we use
+	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+    
 	for (i = 0; i < stacks; i++) 
 	{
 		GLfloat rho = (GLfloat)i * drho;
@@ -129,9 +137,9 @@ Sphere::Sphere(const VertexAttribSpec* spec, float radius, int slices, int stack
 		
 			for (int k=0; k < 3; k++)
 			{
-				data.texCoord2f(vTexture[k][0], vTexture[k][1]);
-				data.normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				data.position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+				texCoord2f(vTexture[k][0], vTexture[k][1]);
+				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
+				position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
 			}
 			
 			// Rearrange for next triangle
@@ -145,9 +153,9 @@ Sphere::Sphere(const VertexAttribSpec* spec, float radius, int slices, int stack
 					
 			for (int k=0; k < 3; k++)
 			{
-				data.texCoord2f(vTexture[k][0], vTexture[k][1]);
-				data.normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				data.position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+				texCoord2f(vTexture[k][0], vTexture[k][1]);
+				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
+				position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
 			}			
 		}
         t -= dt;

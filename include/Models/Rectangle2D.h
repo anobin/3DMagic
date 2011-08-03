@@ -34,11 +34,7 @@ namespace Magic3D
  * HUD's and GUI's
  */
 class Rectangle2D : public Model
-{
-protected:
-	/// default constructor
-	inline Rectangle2D(): Model( NULL ) {/* intentionally left blank */}
-	
+{	
 public:
 	/** Standard constructor 
 	 * @param x the upper-left x coordinate of the rectangle
@@ -46,7 +42,7 @@ public:
 	 * @param width the width of the rectangle
 	 * @param height the height of the rectangle
 	 */
-	Rectangle2D(const VertexAttribSpec* spec, int x, int y, int width, int height);
+	Rectangle2D(int x, int y, int width, int height);
 	
 	/// destructor
 	virtual ~Rectangle2D();

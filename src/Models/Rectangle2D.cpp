@@ -34,8 +34,7 @@ namespace Magic3D
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-Rectangle2D::Rectangle2D(const VertexAttribSpec* spec, int x, int y, int width, 
-    int height): Model(spec)
+Rectangle2D::Rectangle2D(int x, int y, int width, int height)
 {
 	this->Model::collisionShape = NULL;
 	
@@ -44,21 +43,27 @@ Rectangle2D::Rectangle2D(const VertexAttribSpec* spec, int x, int y, int width,
 	// 4 points using a TRIANGLE FAN
 	data.begin(4);
 	
+	// get indices for attributes we use
+	int position_index = data.getAttribId( "Location", 4, VertexArray::FLOAT );
+	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	
 	// bottom right
-	data.texCoord2f(1.0f, 0.0f);
-	data.position3f((float)x+width, (float)y, 0.0f);
+	texCoord2f(1.0f, 0.0f);
+	position3f((float)x+width, (float)y, 0.0f);
 	
 	// bottom left
-	data.texCoord2f(0.0f, 0.0f);
-	data.position3f((float)x, (float)y, 0.0f);
+	texCoord2f(0.0f, 0.0f);
+	position3f((float)x, (float)y, 0.0f);
 	
 	// top left
-	data.texCoord2f(0.0f, 1.0f);
-	data.position3f((float)x, (float)y+height, 0.0f);
+	texCoord2f(0.0f, 1.0f);
+	position3f((float)x, (float)y+height, 0.0f);
 	
 	// top right
-	data.texCoord2f(1.0f, 1.0f);
-	data.position3f((float)x+width, (float)y+height, 0.0f);
+	texCoord2f(1.0f, 1.0f);
+	position3f((float)x+width, (float)y+height, 0.0f);
 	
 	// end vertex data
 	data.end();

@@ -31,19 +31,21 @@ namespace Magic3D
 /** Standard Constructor
  * @param spec the shader-vertex interface spec to use
  */
-VertexHandler::VertexHandler(const VertexAttribSpec* spec): vertexCount(0), spec(spec)
+VertexHandler::VertexHandler(): vertexCount(0), nextIndex( 0 )
 {
-    for( int i = 0; i < (int) VertexAttribSpec::BUILTIN_ATTRIB_COUNT; i++ )
-        builtin_index[ i ] = -1;
 }
 	
 /// destructor
 VertexHandler::~VertexHandler()
 {
-	std::map<int, AttributeData*>::iterator it
-		= data.begin();
-	for(; it != data.end(); it++)
+	std::map< int, BuildData* >::iterator it =  buildData.begin();
+	for(; it != buildData.end(); it++)
 		delete it->second;
+
+	std::vector< AttributeData* >::iterator it2 =  attributeData.begin();
+	for(; it2 != attributeData.end(); it2++)
+	    delete (*it2);
+	
 }
 	
 /** Starts a vertex building sequence
@@ -51,9 +53,9 @@ VertexHandler::~VertexHandler()
  */
 void VertexHandler::begin(int vertexCount)
 {
-	if (this->vertexCount != 0)
-		throw_MagicException("Attempt to rebuild vertex handler");
-		
+	MAGIC_THROW( this->vertexCount != 0, "Attempt to rebuild vertex handler");
+	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");	
+	
 	this->vertexCount = vertexCount;
 }
 
@@ -61,29 +63,65 @@ void VertexHandler::begin(int vertexCount)
  */
 void VertexHandler::end()
 {
-	// place all data into graphics memory and bind to vertex array
-	std::map<int, AttributeData*>::iterator it =
-		data.begin();
-	for(; it != data.end(); it++)
+	// place all temporary data into graphics memory
+	std::map< int, BuildData* >::iterator temp_it;
+	for(int i=0; i < nextIndex; i++)
 	{
-		it->second->buffer = new Buffer(it->second->tempLength*
-		    VertexArray::getDataTypeSize(it->second->type), it->second->temp,
-			Buffer::STATIC_DRAW );
-
-		// delete temp data
-		delete[] it->second->temp;
-		it->second->temp = NULL;
-		it->second->tempLength = 0;
-		
-		// bind buffer to attribute index
-#ifndef MAGIC3D_NO_VERTEX_ARRAYS
-		array.setAttributeArray(it->second->index, it->second->components,
-								it->second->type, *it->second->buffer);
-#endif
+	    temp_it = buildData.find( i );
+	    MAGIC_ASSERT( temp_it != buildData.end() );
+	    BuildData* b = temp_it->second;
+		index2data.find( i )->second->buffer = new Buffer(b->tempLength,
+            b->temp, Buffer::STATIC_DRAW );
 	}
+	
+	// free all temporary build data
+	std::map< int, BuildData* >::iterator it2 =  buildData.begin();
+	for(; it2 != buildData.end(); it2++)
+		delete it2->second;
+	buildData.clear();
+	name2index.clear();
+	index2data.clear();
 	
 }
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 	

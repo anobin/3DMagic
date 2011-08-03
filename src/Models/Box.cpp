@@ -33,8 +33,7 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
- Box::Box(const VertexAttribSpec* spec, float width, float height, float depth):
-    Model(spec)
+Box::Box(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;
@@ -54,6 +53,14 @@ namespace Magic3D
 	// 6 points per side, 6 sides
 	data.begin(6*6);
 	
+	// get indices for attributes we use
+	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	
 	// top  and bottom 6 points
 	for (int i=0; i < 2; i++)
 	{
@@ -64,24 +71,24 @@ namespace Magic3D
 			h = -height;
 			n = -1.0f;
 		}
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(0.0f, 0.0f);
-		data.position3f	(-width, h, -depth); // top left
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(-width, h, depth); // bottom left
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(width, h, -depth); // top right
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(-width, h, depth); // bottom left
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(width, h, -depth); // top right
-		data.normal3f	(0.0f, n, 0.0f);
-		data.texCoord2f	(1.0f, 1.0f);
-		data.position3f	(width, h, depth); // bottom right
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(0.0f, 0.0f);
+		position3f	(-width, h, -depth); // top left
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(-width, h, depth); // bottom left
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(width, h, -depth); // top right
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(-width, h, depth); // bottom left
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(width, h, -depth); // top right
+		normal3f	(0.0f, n, 0.0f);
+		texCoord2f	(1.0f, 1.0f);
+		position3f	(width, h, depth); // bottom right
 	}
 	
 	// 2 sides, 6 points each
@@ -94,24 +101,24 @@ namespace Magic3D
 			w = width;
 			n = 1.0f;
 		}
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(0.0f, 0.0f);
-		data.position3f	(w, height, -depth); // top left
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(w, -height, -depth); // bottom left
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(w, height, depth); // top right
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(w, -height, -depth); // bottom left
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(w, height, depth); // top right
-		data.normal3f	(n, 0.0f, 0.0f);
-		data.texCoord2f	(1.0f, 1.0f);
-		data.position3f	(w, -height, depth); // bottom right
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(0.0f, 0.0f);
+		position3f	(w, height, -depth); // top left
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(w, -height, -depth); // bottom left
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(w, height, depth); // top right
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(w, -height, -depth); // bottom left
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(w, height, depth); // top right
+		normal3f	(n, 0.0f, 0.0f);
+		texCoord2f	(1.0f, 1.0f);
+		position3f	(w, -height, depth); // bottom right
 	}
 	
 	// front and back, 6 points each
@@ -124,24 +131,24 @@ namespace Magic3D
 			d = depth;
 			n = 1.0f;
 		}
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(0.0f, 0.0f);
-		data.position3f	(-width, height, d); // top left
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(-width, -height, d); // bottom left
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(width, height, d); // top right
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(0.0f, 1.0f);
-		data.position3f	(-width, -height, d); // bottom left
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(1.0f, 0.0f);
-		data.position3f	(width, height, d); // top right
-		data.normal3f	(0.0f, 0.0f, n);
-		data.texCoord2f	(1.0f, 1.0f);
-		data.position3f	(width, -height, d); // bottom right
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(0.0f, 0.0f);
+		position3f	(-width, height, d); // top left
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(-width, -height, d); // bottom left
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(width, height, d); // top right
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(0.0f, 1.0f);
+		position3f	(-width, -height, d); // bottom left
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(1.0f, 0.0f);
+		position3f	(width, height, d); // top right
+		normal3f	(0.0f, 0.0f, n);
+		texCoord2f	(1.0f, 1.0f);
+		position3f	(width, -height, d); // bottom right
 	}
 	
 	// close vertex data

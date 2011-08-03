@@ -39,16 +39,13 @@ protected:
 	/// collision shape for this model
 	btSphereShape* sphereShape;
 	
-	/// default constructor
-	inline Sphere(): Model(NULL), sphereShape(NULL) {/*intentionally left blank*/}
-	
 public:
 	/** Standard constructor
 	 * @param radius the radius of the sphere
 	 * @param slices the number of squares on width
 	 * @param stacks the number of squares on height
 	 */
-	Sphere(const VertexAttribSpec* spec, float radius, int slices, int stacks);
+	Sphere(float radius, int slices, int stacks);
 	
 	/// destructor
 	virtual ~Sphere();

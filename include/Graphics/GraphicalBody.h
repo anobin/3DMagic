@@ -28,7 +28,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Models/Model.h"
 #include "../Math/Position.h"
 #include "../Util/Color.h"
-#include "../Graphics/Texture.h"
+#include "Texture.h"
+#include "VertexArray.h"
 #include "../Exceptions/MagicException.h"
 #include "../Shaders/Shader.h"
 
@@ -48,13 +49,19 @@ protected:
 	/// shader to use to render this body
 	Shader* shader;
 	
+	/** Vertex array for body, binds attribute data on video memory to shader variables,
+	 * created for each ( shader, model ) pair when the shader is set using setShader
+	 */
+	VertexArray* array;
+	
 	/// base texture of object
 	Texture* baseTexture;
 
 	
 public:
 	/// standard constructor
-	inline GraphicalBody(Model& model): model(model), shader(NULL), baseTexture(NULL) {}
+	inline GraphicalBody(Model& model): model(model), shader(NULL), array(NULL),
+	    baseTexture(NULL) {}
 	
 	/// destructor
 	virtual ~GraphicalBody();
@@ -64,7 +71,8 @@ public:
 	 */
 	inline void draw()
 	{
-		model.draw();
+	    if (array) // TODO
+	        array->draw( VertexArray::TRIANGLES, model.getVertexCount() );
 	}
 	
 	/// get the model used
@@ -76,11 +84,30 @@ public:
 	/// set the shader to render with
 	inline void setShader( Shader& shader )
 	{
-	     // ensure that shader can render the model
-	     // TODO
+	    const VertexAttribSpec::AttribType* attrib;
+	    delete array;
+	    array = new VertexArray();
+	    
+	    // create bindings in vertex array for data in model to variables in shader
+	    const VertexAttribSpec* spec  = shader.getVertexAttribSpec();
+	    std::vector< VertexHandler::AttributeData* >& data = model.getAttributeData();
+	    std::vector< VertexHandler::AttributeData* >::iterator it = data.begin();
+	    for(; it != data.end(); it++)
+	    {
+	        // get the data for this attribute in the spec
+	        attrib = spec->getAttrib( (*it)->name );
+	        
+	        // ensure the shader attrib matches the model attribute
+	        MAGIC_THROW( attrib == NULL || attrib->components != (*it)->components || attrib->type != (*it)->type, 
+	            "Attempt to set shader for a graphical body with a model that the shader does not support." );
+	        
+	        // bind buffer to shader attrib index
+	        array->setAttributeArray(attrib->index, attrib->components, attrib->type, 
+	            *(*it)->buffer);
+	    }
 	     
-	     // set the shader for the body
-	     this->shader = &shader;
+	    // set the shader for the body
+	    this->shader = &shader;
 	}
 	
 	/// get the shader to render with

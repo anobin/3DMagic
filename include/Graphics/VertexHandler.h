@@ -32,8 +32,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Util/Color.h"
 #include "../Math/Math.h"
 #include "../Util/magic_throw.h"
+#include "../Util/magic_assert.h"
 
 #include <map>
+#include <vector>
 
 namespace Magic3D
 {
@@ -43,64 +45,89 @@ namespace Magic3D
  */
 class VertexHandler
 {
-private:
-	/// data type for storage
+public:
+	/// data for a attribute, ready to be bound to a shader
 	struct AttributeData
 	{
-		int index;
+	    /// attribute data in a buffer on graphics memory
 		Buffer* buffer;
-		char* temp;
-		int tempLength;
-		int currentVertex;
+		/// number of components in attribute
 		int components;
+		/// type of the attribute
 		VertexArray::DataTypes type;
+		/// name of the attribute in shader
+		char* name;
 		
-		inline AttributeData( int index, int components, VertexArray::DataTypes type,
-		    int vertexCount )
+		inline AttributeData( const char* name, int components, VertexArray::DataTypes type )
 		{
-		    this->index = index;
 		    this->buffer = NULL;
 		    this->components = components;
-		    this->tempLength = vertexCount * components * VertexArray::getDataTypeSize( type );
-		    this->temp = new char[ this->tempLength ];
 		    this->type = type;
-		    this->currentVertex = 0;
+		    this->name = new char[ strlen( name ) + 1 ];
+		    strcpy( this->name, name );
 		}
 		
 		inline ~AttributeData()
 		{
 		    delete buffer;
+		    delete[] name;
+		}
+		    
+	};
+
+
+private:	
+    /// datatype used when building model by hand, before end() call
+	struct BuildData
+	{
+		char* temp;
+		int tempLength;
+		int currentIndex;
+		int components;
+		VertexArray::DataTypes type;
+		
+		inline BuildData(int components, VertexArray::DataTypes type, int vertexCount )
+		{
+		    this->components = components;
+		    this->tempLength = vertexCount * components * VertexArray::getDataTypeSize( type );
+		    this->temp = new char[ this->tempLength ];
+		    this->type = type;
+		    this->currentIndex = 0;
+		}
+		
+		inline ~BuildData()
+		{
 		    delete[] temp;
 		}
 		    
 	};
-	
-	/** mapping of attribute data, filled by getBuiltInAttribId() and
-	 * getNamedAttribId(). Maps GL index to attribute data.
+    
+	/** mapping of attribute build index to build data
 	 */
-	std::map< int, AttributeData* > data;
+	std::map< int, BuildData* > buildData;
 	
-	/// vertex array that is handled
-	VertexArray array;
+	std::map< std::string, int > name2index;
+	
+	std::map< int, AttributeData* > index2data;
+	
+	/// vector of attribute data
+	std::vector< AttributeData* > attributeData;
 	
 	/// number of verticies being managed
 	int vertexCount;
 	
-	/// vertex attribute specification used
-	const VertexAttribSpec* spec;
-	
-	/// local cache of indices for built-in attributes, used in convenience methods
-    int builtin_index[ (int) VertexAttribSpec::BUILTIN_ATTRIB_COUNT ];
+	/// the next index to hand out for a new attribute being used
+	int nextIndex;
 	
 	template< typename T>
-	inline AttributeData* getData( int index, int components )
+	inline BuildData* getData( int index, int components )
 	{
 	    // try to find entry
-	    std::map< int, AttributeData* >::iterator it = data.find( index );
+	    std::map< int, BuildData* >::iterator it = buildData.find( index );
 	    
 	    // if no find, exception
-	    MAGIC_THROW ( it == data.end(), "Attempt to set data for non-existent attribute." );
-	    AttributeData* d = it->second;
+	    MAGIC_THROW ( it == buildData.end(), "Attempt to set data for non-existent attribute." );
+	    BuildData* d = it->second;
 	    
 	    // if type size mismatch, exception
 	    MAGIC_THROW ( VertexArray::getDataTypeSize( d->type ) != sizeof( T ), 
@@ -116,9 +143,8 @@ private:
 
 public:
 	/** Standard Constructor
-	 * @param spec the shader-vertex interface spec to use
 	 */
-	VertexHandler(const VertexAttribSpec* spec);
+	VertexHandler();
 	
 	/// destructor
 	~VertexHandler();
@@ -132,219 +158,99 @@ public:
 	inline void setAttribute4(int id,
 							   T c1, T c2, T c3, T c4)
 	{		
-	    AttributeData* data = this->getData<T>( id, 4 );
+	    BuildData* data = this->getData<T>( id, 4 );
 	    T* d = (T*) data->temp;
-		d[ data->currentVertex   ] = c1;
-		d[ data->currentVertex+1 ] = c2;
-		d[ data->currentVertex+2 ] = c3;
-		d[ data->currentVertex+3 ] = c4;
-		data->currentVertex += 4;
+		d[ data->currentIndex   ] = c1;
+		d[ data->currentIndex+1 ] = c2;
+		d[ data->currentIndex+2 ] = c3;
+		d[ data->currentIndex+3 ] = c4;
+		data->currentIndex += 4;
 	}
 	
 	template< typename T >
 	inline void setAttribute3(int id,
 							   T c1, T c2, T c3 )
 	{		
-	    AttributeData* data = this->getData<T>( id, 3 );
+	    BuildData* data = this->getData<T>( id, 3 );
 	    T* d = (T*) data->temp;
-		d[ data->currentVertex   ] = c1;
-		d[ data->currentVertex+1 ] = c2;
-		d[ data->currentVertex+2 ] = c3;
-		data->currentVertex += 3;
+		d[ data->currentIndex   ] = c1;
+		d[ data->currentIndex+1 ] = c2;
+		d[ data->currentIndex+2 ] = c3;
+		data->currentIndex += 3;
 	}
 	
 	template< typename T >
 	inline void setAttribute2(int id,
 							   T c1, T c2 )
 	{		
-	    AttributeData* data = this->getData<T>( id, 2 );
+	    BuildData* data = this->getData<T>( id, 2 );
 	    T* d = (T*) data->temp;
-		d[ data->currentVertex   ] = c1;
-		d[ data->currentVertex+1 ] = c2;
-		data->currentVertex += 2;
+		d[ data->currentIndex   ] = c1;
+		d[ data->currentIndex+1 ] = c2;
+		data->currentIndex += 2;
 	}
 	
 	template< typename T >
 	inline void setAttributeN(int id, int comps,
 							   T* c )
 	{		
-	    AttributeData* data = this->getData<T>( id, comps );
+	    BuildData* data = this->getData<T>( id, comps );
 	    T* d = (T*) data->temp;
 	    for( int i=0; i < comps; i++ )
-	        (*d)[ data->currentVertex+i ] = c[ i ];
-		data->currentVertex += comps;
+	        (*d)[ data->currentIndex+i ] = c[ i ];
+		data->currentIndex += comps;
 	}
 	
-	
-	
-	/** Get the id for a built-in attribute
-	 * @param attribute the attribute to get the id for
-	 * @return id of attribute, -1 for not supported
+	/** Get the id for a attribute
+	 * @param name the name of the attribute to get the id for
+	 * @return id of attribute
 	 */
-	inline int getBuiltInAttribId( VertexAttribSpec::BuiltInAttributeType attribute )
-	{
-	    int index = spec->getBuiltInAttrib( attribute );
-	    if ( index < 0 )
-	        return index; // attribute not supported by shader :(
+	inline int getAttribId( const char* name, int components, VertexArray::DataTypes type )
+	{	    
+	    int index;
+	    
+	    // ensure begin was called
+	    MAGIC_THROW( this->vertexCount <= 0, "Attempt to get attribute id before begin() was called" );
 	    
 	    // try to find current entry
-	    std::map< int, AttributeData* >::iterator it = data.find( index );
+	    std::map< std::string, int >::iterator it = name2index.find( std::string( name ) );
 	    
 	    // if no entry, create new
-	    if ( it == data.end() )
+	    if ( it == name2index.end() )
 	    {
-            AttributeData* d;
-            switch( attribute )
-            {
-                case VertexAttribSpec::POSITION:
-                    d = new AttributeData( index, 4, VertexArray::FLOAT, vertexCount );
-                    break;
-                case VertexAttribSpec::NORMAL:
-                    d = new AttributeData( index, 3, VertexArray::FLOAT, vertexCount );
-                    break;
-                case VertexAttribSpec::COLOR:
-                    d = new AttributeData( index, 4, VertexArray::FLOAT, vertexCount );
-                    break;
-                case VertexAttribSpec::BASE_TEXTURE:
-                    d = new AttributeData( index, 2, VertexArray::FLOAT, vertexCount );
-                    break;
-                    
-                default:
-                    throw_MagicException( "Internal error" );   
-            }
-            data.insert( std::pair< int, AttributeData* >( index, d ) );
+	        index = nextIndex;
+	        nextIndex++;
+	        
+	        // add attribute data
+            AttributeData* d = new AttributeData( name, components, type );
+            attributeData.push_back( d );
+            index2data.insert( std::pair< int, AttributeData* >( index, d ) );
+            
+            // add temporary build data
+            BuildData* b = new BuildData( components, type, this->vertexCount );
+            buildData.insert( std::pair< int, BuildData* >( index, b ) );
+            name2index.insert( std::pair< std::string, int >( std::string(name), index ) ); 
         }
+        else
+            index = it->second;
 	    
 	    return index;
-	}
-	
-	/** Get the id for a named attribute
-	 * @param name the name of the attribute to get the id for
-	 * @return id of attribute, -1 for not supported
-	 */
-	inline int getNamedAttribId( const char* name )
-	{
-	    const VertexAttribSpec::NamedAttribType* a = spec->getNamedAttrib( name );
-	    if ( a->index < 0 )
-	        return a->index; // attribute not supported by shader :(
-	    
-	    // try to find current entry
-	    std::map< int, AttributeData* >::iterator it = data.find( a->index );
-	    
-	    // if no entry, create new
-	    if ( it == data.end() )
-	    {
-            AttributeData* d = new AttributeData( a->index, a->components, a->type, vertexCount );
-            data.insert( std::pair< int, AttributeData* >( a->index, d ) );
-        }
-	    
-	    return a->index;
-	}
-	
-	
-	inline void position3f( float x, float y, float z )
-	{
-	    this->position4f( x, y, z, 1.0f );
-	}
-	
-	
-	inline void position4f( float x, float y, float z, float w )
-	{
-	    int id = builtin_index[ (int) VertexAttribSpec::POSITION  ];
-	    
-	    // lazy instantionation
-	    if (id == -1)
-	    {
-	        id = this->getBuiltInAttribId( VertexAttribSpec::POSITION );
-	        if ( id == -1 )
-	            throw_MagicException( "VertexHandler::position[3|4]f called without position support in shader" );
-	    }
-	    
-	    this->setAttribute4<float>( id, x, y, z, w );
-	}
-	
-	inline void normal3f( float x, float y, float z )
-	{
-	    int id = builtin_index[ (int) VertexAttribSpec::NORMAL  ];
-	    
-	    // lazy instantionation
-	    if (id == -1)
-	    {
-	        id = this->getBuiltInAttribId( VertexAttribSpec::NORMAL );
-	        if ( id == -1 )
-	            throw_MagicException( "VertexHandler::normal3f called without normal support in shader" );
-	    }
-	    
-	    this->setAttribute3<float>( id, x, y, z );
-	}
-	
-	inline void texCoord2f( float x, float y )
-	{
-	    int id = builtin_index[ (int) VertexAttribSpec::BASE_TEXTURE  ];
-	    
-	    // lazy instantionation
-	    if (id == -1)
-	    {
-	        id = this->getBuiltInAttribId( VertexAttribSpec::BASE_TEXTURE );
-	        if ( id == -1 )
-	            throw_MagicException( "VertexHandler::texCoord2f called without base texture support in shader" );
-	    }
-	    
-	    this->setAttribute2<float>( id, x, y );
-	}
-	
-	inline void color4f( float r, float g, float b, float a )
-	{
-	    int id = builtin_index[ (int) VertexAttribSpec::COLOR  ];
-	    
-	    // lazy instantionation
-	    if (id == -1)
-	    {
-	        id = this->getBuiltInAttribId( VertexAttribSpec::COLOR );
-	        if ( id == -1 )
-	            throw_MagicException( "VertexHandler::color4f called without position support in shader" );
-	    }
-	    
-	    this->setAttribute4<float>( id, r, g, b, a );
 	}
 	
 	
 	/** end a vertex building sequence
 	 */
 	void end();
-	
-	/// draw all verticies
-	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
+
+	inline std::vector< AttributeData* >& getAttributeData()
 	{
-#ifdef MAGIC3D_NO_VERTEX_ARRAYS
-		std::map<int, AttributeData*>::iterator it =
-		data.begin();
-		for(; it != data.end(); it++)
-		{
-			array.setAttributeArray(it->second->index, it->second->components,
-								it->second->type, *it->second->buffer);
-		}
-#endif
-
-		array.draw(primitive, vertexCount);
-
-#ifdef MAGIC3D_NO_VERTEX_ARRAYS
-		it = data.begin();
-		for(; it != data.end(); it++)
-		{
-			glDisableVertexAttribArray(it->second->index);
-		}
-#endif
+	     return attributeData;   
 	}
-
-
-
-
-
-
-
-
-
+	
+	inline int getVertexCount()
+	{
+	    return vertexCount;
+	}
 
 };
 

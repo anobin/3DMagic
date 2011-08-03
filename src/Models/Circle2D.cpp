@@ -37,8 +37,7 @@ namespace Magic3D
  * @param precisionAngle the angle between any two points on the edge of the
 						circle, the lower angle, the better looking
  */
-Circle2D::Circle2D(const VertexAttribSpec* spec, int x, int y, int radius, 
-    float precisionAngle): Model(spec)
+Circle2D::Circle2D(int x, int y, int radius, float precisionAngle)
 {
 	// no physics for 2D models
 	this->Model::collisionShape = NULL;
@@ -49,9 +48,15 @@ Circle2D::Circle2D(const VertexAttribSpec* spec, int x, int y, int radius,
 	int edges = int(360.0f/precisionAngle);
 	data.begin(1 + edges);
 	
+	// get indices for attributes we use
+	int position_index = data.getAttribId( "Location", 4, VertexArray::FLOAT );
+	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	
 	// center
-	data.texCoord2f(0.5f, 0.5f);
-	data.position3f((float)x, (float)y, 0.0f);
+	texCoord2f(0.5f, 0.5f);
+	position3f((float)x, (float)y, 0.0f);
 	
 	// draw verticies around the center
 	float theta = (float)(precisionAngle * M_PI / 180.0f);
@@ -74,8 +79,8 @@ Circle2D::Circle2D(const VertexAttribSpec* spec, int x, int y, int radius,
 			vx = (float)(x1 + (r * cos(float(i)*theta)));
 			vy = (float)(y1 + (r * sin(float(i)*theta)));
 		}
-		data.texCoord2f((float)(0.5f + 0.5f * ((vx-x1)/r)), (float)(0.5f + 0.5f * ((vy-y1)/r)));
-		data.position3f(vx, vy, 0.0f);
+		texCoord2f((float)(0.5f + 0.5f * ((vx-x1)/r)), (float)(0.5f + 0.5f * ((vy-y1)/r)));
+		position3f(vx, vy, 0.0f);
 	}
 
 	// end vertex data

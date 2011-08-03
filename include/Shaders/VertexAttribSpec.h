@@ -65,29 +65,17 @@ class Shader;
 class VertexAttribSpec
 {
 public:
-    
-    /** The types of built-in attributes
+    /** The type for a attribute
      */
-    enum BuiltInAttributeType
-    {
-        POSITION     = 0,   // float vector 4
-        NORMAL       = 1,   // float vector 3
-        COLOR        = 2,   // float vector 4
-        BASE_TEXTURE = 3,   // float vector 2
-        BUILTIN_ATTRIB_COUNT = 4
-    };
-    
-    /** The type for a named attribute
-     */
-    struct NamedAttribType
+    struct AttribType
     {
         int index;
         int components;
         VertexArray::DataTypes type;
         
-        inline NamedAttribType() {}
+        inline AttribType() {}
         
-        inline NamedAttribType( const NamedAttribType& d )
+        inline AttribType( const AttribType& d )
         {
             this->index = d.index;
             this->components = d.components;
@@ -95,47 +83,30 @@ public:
         }
     };
 
-private:
-    /// GL indexes for built-in types, -1 for invalid
-    int builtin_index[ (int) BUILTIN_ATTRIB_COUNT ];
-    
+private:    
     /// map of name to GL index for named attributes
-    std::map<std::string, NamedAttribType*> named_index;
+    std::map<std::string, AttribType*> index;
     
 protected:
     
     /* Friend access is given to Shader class to aid in constructing a spec
      */
     friend class Magic3D::Shader;
-    
-    /** Set the index for a built-in attribute
-     * @param type the type to set the index for
-     * @param index the index to set
-     */
-    inline void setBuiltIn( BuiltInAttributeType type, int index )
-    {
-        builtin_index[ (int) type ] = index;
-    }
      
     /** Set the index for a named attribute
      * @param name the name to set
      * @param data data to set for named attribute
      */
-    inline void setNamed( const char* name, const NamedAttribType& data )
+    inline void setAttrib( const char* name, const AttribType& data )
     {
-        NamedAttribType* m = new NamedAttribType( data );
-        named_index.insert( std::pair<std::string, NamedAttribType*> 
+        AttribType* m = new AttribType( data );
+        index.insert( std::pair<std::string, AttribType*> 
             ( std::string( name ), m ) );
     }
     
     /// default constructor
     inline VertexAttribSpec()
     {
-        // ensure every built-in type has an invalid index
-        for ( int i=0; i < BUILTIN_ATTRIB_COUNT; i++)
-        {
-            builtin_index[ i ] = -1;
-        }
     }
 
 public:
@@ -143,33 +114,24 @@ public:
     /// deconstructor
     inline ~VertexAttribSpec()
     {
-        // free all allocated named types
-        std::map<std::string, NamedAttribType*>::iterator it = named_index.begin();
-        for( ; it != named_index.end(); it++ )
+        // free all allocated attribute types
+        std::map<std::string, AttribType*>::iterator it = index.begin();
+        for( ; it != index.end(); it++ )
         {
             delete it->second;
         }
     }
-    
-    /** Get the GL index for a built-in attribute
-     * @param attribute the attribute to get the index for
-     * @return the index for the attribute, -1 for not supported
-     */
-     inline int getBuiltInAttrib( BuiltInAttributeType attribute ) const
-     {
-         return builtin_index[ (int) attribute ];
-     }
      
-     /** Get the data for a named attribute
+     /** Get the data for a attribute
       * @param name the name of the attribute
       * @return the data for the attribute, or NULL for unsupported
       */
-      inline const NamedAttribType* getNamedAttrib( const char* name ) const
+      inline const AttribType* getAttrib( const char* name ) const
       {
           std::string n( name );
-          std::map<std::string, NamedAttribType*>::const_iterator it =
-            named_index.find( n );
-          if ( it == named_index.end() )
+          std::map<std::string, AttribType*>::const_iterator it =
+            index.find( n );
+          if ( it == index.end() )
               return NULL;
           return it->second;
       }

@@ -40,16 +40,13 @@ protected:
 	/// box collison shape for physics
 	btBoxShape* boxShape;
 	
-	/// default constructor
-	inline Box(): Model(NULL), boxShape(NULL) {/*intentionally left blank*/}
-	
 public:
 	/** Standard constructor
 	 * @param width the width of the box
 	 * @param height the height of the box
 	 * @param depth the depth of the box
 	 */
-	Box(const VertexAttribSpec* spec, float width, float height, float depth);
+	Box(float width, float height, float depth);
 	
 	/// destructor
 	virtual ~Box();

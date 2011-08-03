@@ -26,6 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MODEL_H
 
 #include "../Graphics/VertexHandler.h"
+#include "../Shaders/Shader.h"
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
@@ -33,6 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+    
 
 /** Base class for all models (collection of vertex attributes
  * on graphics memory)
@@ -48,18 +50,10 @@ protected:
 	
 public:
     /// default constructor
-    inline Model(const VertexAttribSpec* spec): data(spec), collisionShape(NULL) {}
+    inline Model(): data(), collisionShape(NULL) {}
     
 	/// destructor
 	virtual ~Model();
-
-
-	/** Draw the object
-	 */
-	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
-	{
-		data.draw(primitive);
-	}
 
 	/** Get the model's type name
 	 */
@@ -70,6 +64,16 @@ public:
 	inline btCollisionShape& getCollisionShape()
 	{
 		return *this->collisionShape;
+	}
+	
+	inline std::vector< VertexHandler::AttributeData* >& getAttributeData()
+	{
+	     return data.getAttributeData();   
+	}
+	
+	inline int getVertexCount()
+	{
+	    return data.getVertexCount();
 	}
 
 };

@@ -131,7 +131,7 @@ void changeWindowSize(int w, int h)
 	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
 	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
 	
-	frameModel = new Rectangle2D(hemTexSpec, w-173-10, 10, 173, 50);
+	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
 }
 
 
@@ -212,9 +212,9 @@ void setup()
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
-	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "vVertex"    );
-	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::NORMAL,       "vNormal"    );
-	hemTexShader->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "vTexCoord0" );
+	hemTexShader->bindAttrib( "Position","vVertex", 4, VertexArray::FLOAT    );
+	hemTexShader->bindAttrib( "Normal","vNormal", 3, VertexArray::FLOAT    );
+	hemTexShader->bindAttrib( "TexCoord", "vTexCoord0", 2, VertexArray::FLOAT );
 	hemTexShader->link();
 	hemTexSpec = hemTexShader->getVertexAttribSpec();
 	
@@ -222,21 +222,21 @@ void setup()
 	Handle<TextResource> vp1 = resourceManager.get<TextResource>("shaders/Shader2D.vp");
     Handle<TextResource> fp1 = resourceManager.get<TextResource>("shaders/Shader2D.fp");
 	shader2d = new Shader( vp1()->getText(), fp1()->getText() );
-	shader2d->bindBuiltInAttrib( VertexAttribSpec::POSITION,     "location" );
-	shader2d->bindBuiltInAttrib( VertexAttribSpec::BASE_TEXTURE, "texCoord" );
+	shader2d->bindAttrib( "Location",     "location", 4, VertexArray::FLOAT );
+	shader2d->bindAttrib( "TexCoord", "texCoord", 2, VertexArray::FLOAT );
 	shader2d->link();
 	shader2dSpec = shader2d->getVertexAttribSpec();
 	
 	
     // init models, represent data on graphics card
-	sphere = new Sphere(hemTexSpec, 2*FOOT, 55, 32);
+	sphere = new Sphere(2*FOOT, 55, 32);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
-	bigSphere = new Box(hemTexSpec, 2, 4, 3);
-	ceilingModel = new FlatSurface(hemTexSpec, ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
-	floorModel = new FlatSurface(hemTexSpec, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
-	wallModel = new FlatSurface(hemTexSpec, ROOM_SIZE*2, ROOM_SIZE, 20, 20);
+	bigSphere = new Box(2, 4, 3);
+	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
+	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
+	wallModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE, 20, 20);
 	float scale = 5.0f;
-	boxModel = new Box(hemTexSpec, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
+	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
 	// init objects
 	btBall = new Object(*sphere, (float) 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
@@ -317,8 +317,8 @@ void setup()
 	
 	
 	// gui stuff
-	frameModel = new Rectangle2D(shader2dSpec, 10, 10, 173, 50);
-	circleModel = new Circle2D(shader2dSpec, 400, 60, 100, 1.0f);
+	frameModel = new Rectangle2D(10, 10, 173, 50);
+	circleModel = new Circle2D(400, 60, 100, 1.0f);
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
 	if (resourceManager.doesResourceExist("images/logo.tga"))
@@ -345,13 +345,13 @@ void setup()
 	// 3ds test stuff
 	Handle<Model3DSResource> linkResource = 
 		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
-	chainLinkModel = new CustomModel(hemTexSpec, *linkResource());
+	chainLinkModel = new CustomModel(*linkResource());
 	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
 					"images/linkImage", Color(195, 195, 195, 255, Color::RGBA_BYTE));
 	chainLinkTex = new Texture(linkImage());
     
     // decal stuff
-    decalSurface = new FlatSurface( hemTexSpec, 6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
+    decalSurface = new FlatSurface(6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
     decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
     decal->getGraphical().setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
@@ -435,7 +435,7 @@ void renderScene(void)
     hemTexShader->setUniformfv(     "skyColor",         3, Color(255, 255, 255).getInternal()     );
     hemTexShader->setUniformfv(     "groundColor",      3, Color(0, 0, 0).getInternal()           );
     hemTexShader->setTexture(       "textureMap",          chainLinkTex             );
-    chainLinkModel->draw();
+    //chainLinkModel->draw();
 	
 	// object render loop
 	std::vector<Object*>::iterator it = objects.begin();
@@ -463,6 +463,7 @@ void renderScene(void)
         hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
 		
 		// draw object 
+		(*it)->getGraphical().setShader( *hemTexShader );
 		(*it)->getGraphical().draw();
 		
 		// unload position transform
@@ -508,6 +509,7 @@ void renderScene(void)
         // draw object, make sure to lie to the depth buffer :) 
         glPolygonOffset(-1.0f, -1.0f);   
         glEnable(GL_POLYGON_OFFSET_FILL);
+        (*it)->getGraphical().setShader( *hemTexShader );
         (*it)->getGraphical().draw();
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
@@ -516,10 +518,10 @@ void renderScene(void)
 	shader2d->use();
 	shader2d->setUniformMatrix( "mvpMatrix", 4, flatProjectionMatrix.getArray() );
 	shader2d->setTexture( "textureMap", frameTex );
-	frameModel->draw(VertexArray::TRIANGLE_FAN);
+	//frameModel->draw(VertexArray::TRIANGLE_FAN);
 	shader2d->setTexture( "textureMap", circleTex );
 	shader2d->use();
-	circleModel->draw(VertexArray::TRIANGLE_FAN);
+	//circleModel->draw(VertexArray::TRIANGLE_FAN);
 
 	
     // Do the buffer Swap

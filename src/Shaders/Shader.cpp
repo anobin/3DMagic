@@ -80,8 +80,7 @@ Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
     glDeleteShader(vsId);
     glDeleteShader(fsId);
     
-    // start the named attribute indices at the end of the builtin list
-    nextNamedIndex = VertexAttribSpec::BUILTIN_ATTRIB_COUNT;
+    nextIndex = 0; // lowest valid shader attribute id is 0
 }
 
 /// destructor

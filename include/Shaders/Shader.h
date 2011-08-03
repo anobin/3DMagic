@@ -40,6 +40,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/Texture.h"
 #include "VertexAttribSpec.h"
 #include "../Exceptions/ShaderCompileException.h"
+#include "../Util/magic_throw.h"
 
 
 namespace Magic3D
@@ -57,7 +58,7 @@ protected:
     VertexAttribSpec spec;
     
     /// index for next named attribute to be added
-    int nextNamedIndex;
+    int nextIndex;
     
 	/// default constructor
 	inline Shader() { /* intentionally left blank */ }
@@ -74,34 +75,25 @@ public:
 	/// destructor
 	virtual ~Shader();
 
-
-
 	/** Enable this shader to be used on the next drawing operation
      * and for setting uniforms
 	 */
 	void use();
 	
-	inline void bindBuiltInAttrib( VertexAttribSpec::BuiltInAttributeType attrib, const char* name )
+	inline void bindAttrib( const char* attribName, const char* name, int components, VertexArray::DataTypes type )
 	{
-	    glBindAttribLocation(programId, (int) attrib , name);
+	    glBindAttribLocation(programId, nextIndex , name);
 	    
-	    // TODO: add verification for variable matches built-in type and component number
+	    MAGIC_THROW( glGetError() != GL_NO_ERROR, "Failed to bind attribute." );
 	    
-	    spec.setBuiltIn( attrib, (int) attrib );
-	}
-	
-	inline void bindNamedAttrib( const char* attribName, const char* name, int components, VertexArray::DataTypes type )
-	{
-	    glBindAttribLocation(programId, nextNamedIndex , name);
-	    
-	    VertexAttribSpec::NamedAttribType data;
-	    data.index = nextNamedIndex;
+	    VertexAttribSpec::AttribType data;
+	    data.index = nextIndex;
 	    data.components = components;
 	    data.type = type;
 	    
-	    spec.setNamed( name, data );
+	    spec.setAttrib( attribName, data );
 	    
-	    nextNamedIndex++;
+	    nextIndex++;
 	}
 	
 	inline void link()
