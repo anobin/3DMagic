@@ -25,9 +25,11 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_RENDERER_H
 #define MAGIC3D_RENDERER_H
 
+#include <vector>
 
 // local includes
 #include "../Graphics/GraphicalBody.h"
+#include "../Objects/Object.h"
 
 
 namespace Magic3D
@@ -46,7 +48,7 @@ public:
 	/// destructor
 	virtual ~Renderer();
 
-	virtual void render( const GraphicalBody& body ) = 0;
+	virtual void render( const std::vector<Object*>& bodies ) = 0;
 
 };
 
