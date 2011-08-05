@@ -39,6 +39,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // graphics
 #include "Graphics/Texture.h"
 
+// renderers
+#include "Renderers/Renderer.h"
+#include "Renderers/HemRenderer.h"
+
 // time
 #include "Time/StopWatch.h"
 

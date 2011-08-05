@@ -82,7 +82,7 @@ void Position::getRotationMatrix(Matrix3& out)
 }
 
 /// get a matrix that can be used to move objects around the camera
-void Position::getCameraMatrix(Matrix4& out)
+void Position::getCameraMatrix(Matrix4& out) const
 {
     // z is reversed
     Vector3 z(-forward.getX(), -forward.getY(), -forward.getZ());

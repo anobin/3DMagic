@@ -60,11 +60,10 @@ Matrix4 projectionMatrix;
 ResourceManager resourceManager("../../");
 
 // shaders
-Shader* hemTexShader;
 Shader* shader2d;
-const VertexAttribSpec* hemTexSpec;
 const VertexAttribSpec* shader2dSpec;
 
+HemRenderer* renderer;
 
 // textures
 Texture* stoneTex = NULL;
@@ -108,6 +107,9 @@ Matrix4 flatProjectionMatrix;
 
 // legacy
 Position             cameraFrame;
+Point3 lightPos(0.0f, 1000.0f, 0.0f);
+Color groundColor(25,25,25);
+Color skyColor(255,255,255);
 
 bool wireframe = false;
 
@@ -116,6 +118,7 @@ int screenHeight = 0;
 
 // tracks game time
 StopWatch	timer;
+StopWatch   physicsTimer;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -135,6 +138,9 @@ void changeWindowSize(int w, int h)
 	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
 	
 	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
+	
+	if (renderer)
+	    renderer->setProjectionMatrix( projectionMatrix );
 }
 
 
@@ -208,17 +214,6 @@ void setup()
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
-	
-	
-	// init Hemishphere texture shader
-	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
-    Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
-	hemTexShader = new Shader( vp()->getText(), fp()->getText() );
-	hemTexShader->bindAttrib( "Position", "vVertex", 4, VertexArray::FLOAT );
-	hemTexShader->bindAttrib( "Normal", "vNormal", 3, VertexArray::FLOAT );
-	hemTexShader->bindAttrib( "TexCoord", "vTexCoord0", 2, VertexArray::FLOAT );
-	hemTexShader->link();
-	hemTexSpec = hemTexShader->getVertexAttribSpec();
 	
 	// init 2D shader for overlays
 	Handle<TextResource> vp1 = resourceManager.get<TextResource>("shaders/Shader2D.vp");
@@ -370,6 +365,13 @@ void setup()
     cameraFrame.getLocation().set(0.0f, 6 * FOOT, ROOM_SIZE);
 	cameraFrame.getForwardVector().set(0.0f, 0.0f, -1.0f);
 	
+	// init renderer
+	renderer = new HemRenderer(resourceManager);
+	renderer->setCamera( cameraFrame );
+	renderer->setLightSource( lightPos );
+	renderer->setSkyColor( skyColor );
+	renderer->setGroundColor( groundColor );
+	
 	
 	srand(time(NULL));
 }
@@ -380,12 +382,14 @@ bool paused = false;
  */
 void renderScene(void)
 {
-    static Color groundColor(25,25,25);
-    static Color skyColor(255,255,255);
     
 	// perform bullet physics
-	if (!paused)
-	  dynamicsWorld->stepSimulation(1/60.f,10);
+	if (!paused && physicsTimer.getElapsedTime() > (1/60.0f) )
+	{
+	    float t = physicsTimer.getElapsedTime();
+	    physicsTimer.reset();
+	    dynamicsWorld->stepSimulation(t,10);
+	}
 	
     // Time Based animation
 	static float dir = -1.0;
@@ -407,25 +411,15 @@ void renderScene(void)
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-    
-    // Save the current modelview matrix (the identity matrix)
-    Matrix4 cameraMatrix;
-    cameraFrame.getCameraMatrix(cameraMatrix);
-
-    // Transform the light position into eye coordinates
-	Point3 lightPos(0.0f, 1000.0f, 0.0f);
-	
-	lightPos.transform(cameraMatrix);
-	
 	// enable blending so transparency can happen
 	glEnable (GL_BLEND); 
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     // draw chain link
-    Matrix4 positionMatrix;
+    /*Matrix4 positionMatrix;
     Matrix4 scale;
     scale.createScaleMatrix(0.01, 0.01, 0.01);
-    Position(0.0f, 3.0f*FOOT /** (1.0f/0.01)*/, 0.0f).getTransformMatrix(positionMatrix);
+    Position(0.0f, 3.0f*FOOT, 0.0f).getTransformMatrix(positionMatrix);
     Matrix4 transformMatrix;
     transformMatrix.multiply(cameraMatrix);
     transformMatrix.multiply(positionMatrix);
@@ -446,42 +440,13 @@ void renderScene(void)
     hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
     hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
     hemTexShader->setTexture(       "textureMap",          chainLinkTex             );
-    //chainLinkModel->draw();
+    //chainLinkModel->draw();*/
 	
 	// object render loop
-	std::vector<Object*>::iterator it = objects.begin();
-	for (; it != objects.end(); it++)
-	{
-		// apply position transform
-		Matrix4 positionMatrix;
-		(*it)->getPosition().getTransformMatrix(positionMatrix);
-		Matrix4 transformMatrix;
-		transformMatrix.multiply(cameraMatrix, positionMatrix);
-		
-		// pick and prep shader
-		Matrix4 mvp;
-		Matrix3 normal;
-		mvp.multiply(projectionMatrix, transformMatrix);
-		transformMatrix.extractRotation(normal);
-        
-        hemTexShader->use();
-        hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
-        hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
-        hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-        hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-        hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
-        hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
-		
-		// draw object 
-		(*it)->getGraphical().setShader( *hemTexShader );
-		(*it)->getGraphical().draw();
-		
-		// unload position transform
-	}
+	renderer->render( objects );
 	
 	// draw decals
-	it = decals.begin();
+	/*it = decals.begin();
     std::map<Object*,Object*>::iterator rit;
     for (; it != decals.end(); it++)
 	{
@@ -508,22 +473,22 @@ void renderScene(void)
         mvp.multiply(projectionMatrix, transformMatrix);
         transformMatrix.extractRotation(normal);
         
-        hemTexShader->use();
-        hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
-        hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
-        hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-        hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-        hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
-        hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-        hemTexShader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
+        shader = (*it)->getGraphical().getShader();
+        shader->use();
+        shader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
+        shader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
+        shader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
+        shader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
+        shader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
+        shader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
+        shader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
         glPolygonOffset(-1.0f, -1.0f);   
         glEnable(GL_POLYGON_OFFSET_FILL);
-        (*it)->getGraphical().setShader( *hemTexShader );
         (*it)->getGraphical().draw();
         glDisable(GL_POLYGON_OFFSET_FILL);
-    }
+    }*/
 	
 	// draw GUI stuff
 	shader2d->use();
@@ -990,20 +955,6 @@ void mouseMovedPassive(int x, int y)
 	
 	//glutWarpPointer(screenWidth / 2, screenHeight / 2);
 	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
-}
-
-
-/** Called to regulate framerate
- */
-void frameRateRegulator(int value)
-{
-	// post a redisplay 
-	glutPostRedisplay();
-	
-	// reregister callback
-#ifndef UNLIMITED_FPS
-	glutTimerFunc(FPS2MS(60), frameRateRegulator, 0);
-#endif
 }
 
 

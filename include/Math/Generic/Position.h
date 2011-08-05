@@ -126,7 +126,7 @@ public:
     void getRotationMatrix(Matrix3& out);
 
     /// get a matrix that can be used to move objects around the camera
-    void getCameraMatrix(Matrix4& out);
+    void getCameraMatrix(Matrix4& out) const;
 
     /// rotate this position in world coordinates
     void rotate(Scalar angle, const Vector3 &axis);

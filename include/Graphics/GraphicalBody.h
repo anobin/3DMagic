@@ -75,6 +75,23 @@ public:
 	        array->draw( VertexArray::TRIANGLES, model.getVertexCount() );
 	}
 	
+	/** Render the object
+	 */
+	inline void render()
+	{
+	    if (!array)
+	        return; // temporary
+	    
+	    // 'use' the shader
+	    shader->use();
+	    
+	    // set the uniform values
+	    
+	    
+	    // draw the object
+	    array->draw( VertexArray::TRIANGLES, model.getVertexCount() );
+	}
+	
 	/// get the model used
 	inline Model& getModel()
 	{
