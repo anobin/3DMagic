@@ -360,6 +360,27 @@ void setup()
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
 	
+	// chain link stuff
+    /*Matrix4 scale;
+    scale.createScaleMatrix(0.01, 0.01, 0.01);
+    Position(0.0f, 3.0f*FOOT, 0.0f).getTransformMatrix(positionMatrix);
+    Matrix4 transformMatrix;
+    transformMatrix.multiply(cameraMatrix);
+    transformMatrix.multiply(positionMatrix);
+    transformMatrix.multiply(scale);
+    scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
+    transformMatrix.multiply(scale);*/
+    
+    Matrix4 tempm;
+    Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f) );
+    chainLink->getGraphical().setBaseTexture(*chainLinkTex);
+    Matrix4& adjust = chainLink->getGraphical().getAdjustmentMatrix();
+    tempm.createScaleMatrix(0.001, 0.001, 0.001);
+    adjust.multiply( tempm );
+    tempm.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
+    adjust.multiply( tempm );
+    objects.push_back(chainLink);
+	
         
     // set eye level
     cameraFrame.getLocation().set(0.0f, 6 * FOOT, ROOM_SIZE);
@@ -414,33 +435,6 @@ void renderScene(void)
 	// enable blending so transparency can happen
 	glEnable (GL_BLEND); 
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    // draw chain link
-    /*Matrix4 positionMatrix;
-    Matrix4 scale;
-    scale.createScaleMatrix(0.01, 0.01, 0.01);
-    Position(0.0f, 3.0f*FOOT, 0.0f).getTransformMatrix(positionMatrix);
-    Matrix4 transformMatrix;
-    transformMatrix.multiply(cameraMatrix);
-    transformMatrix.multiply(positionMatrix);
-    transformMatrix.multiply(scale);
-    scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
-    transformMatrix.multiply(scale);
-    
-    // pick and prep shader
-    Matrix4 mvp;
-    Matrix3 normal;
-    mvp.multiply(projectionMatrix, transformMatrix);
-    transformMatrix.extractRotation(normal);
-    hemTexShader->use();
-    hemTexShader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
-    hemTexShader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
-    hemTexShader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-    hemTexShader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-    hemTexShader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
-    hemTexShader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-    hemTexShader->setTexture(       "textureMap",          chainLinkTex             );
-    //chainLinkModel->draw();*/
 	
 	// object render loop
 	renderer->render( objects );

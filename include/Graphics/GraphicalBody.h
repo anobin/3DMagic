@@ -56,6 +56,9 @@ protected:
 	
 	/// base texture of object
 	Texture* baseTexture;
+	
+	/// adjustment matrix applied before every render
+	Matrix4 adjustmentMatrix;
 
 	
 public:
@@ -143,6 +146,11 @@ public:
 	inline Texture* getBaseTexture()
 	{
 		return this->baseTexture;
+	}
+	
+	inline Matrix4& getAdjustmentMatrix()
+	{
+	    return adjustmentMatrix;
 	}
 
 };

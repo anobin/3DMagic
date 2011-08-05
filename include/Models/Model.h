@@ -61,9 +61,9 @@ public:
 	
 	/** Get the collision shape for this model
 	 */
-	inline btCollisionShape& getCollisionShape()
+	inline btCollisionShape* getCollisionShape()
 	{
-		return *this->collisionShape;
+		return this->collisionShape;
 	}
 	
 	inline std::vector< VertexHandler::AttributeData* >& getAttributeData()

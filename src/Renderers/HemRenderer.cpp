@@ -84,6 +84,9 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 		(*it)->getPosition().getTransformMatrix(positionMatrix);
 		transformMatrix.multiply(cameraMatrix, positionMatrix);
 		
+		// apply adjustment matrix
+		transformMatrix.multiply( body.getAdjustmentMatrix() );
+		
 		// create mvp matrix from projection and transform (model-view)
 		Matrix4 mvp;
 		mvp.multiply(this->projectionMatrix, transformMatrix);

@@ -53,13 +53,20 @@ protected:
 	inline void build(float mass, Model& model, float friction = 0.5f, float restitution = 0.0f,
 						float linearDamping = 0.0f)
 	{
+	    // check for no collision shape, thus no physics
+	    if ( model.getCollisionShape() == NULL )
+	    {
+	        body = NULL;
+	        return;
+	    }
+	    
 		// calc inertia
 		btVector3 fallInertia(0,0,0);
-		model.getCollisionShape().calculateLocalInertia(mass,fallInertia);
+		model.getCollisionShape()->calculateLocalInertia(mass,fallInertia);
 		
 		// construct rigid body
 		btRigidBody::btRigidBodyConstructionInfo 
-			fallRigidBodyCI(mass, &motionState, &model.getCollisionShape(), fallInertia);
+			fallRigidBodyCI(mass, &motionState, model.getCollisionShape(), fallInertia);
 		fallRigidBodyCI.m_friction = friction;
 		fallRigidBodyCI.m_restitution = restitution;
 		fallRigidBodyCI.m_linearDamping = linearDamping;
