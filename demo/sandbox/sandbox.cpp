@@ -367,7 +367,7 @@ void setup()
 	
 	// init renderer
 	renderer = new HemRenderer(resourceManager);
-	renderer->setCamera( cameraFrame );
+	renderer->setCamera( &cameraFrame );
 	renderer->setLightSource( lightPos );
 	renderer->setSkyColor( skyColor );
 	renderer->setGroundColor( groundColor );

@@ -46,15 +46,15 @@ class HemRenderer
 protected:
     const Position* camera;
     
-    const Point3* lightSource;
+    Point3 lightSource;
     
     Shader* shader;
     
-    const Color* skyColor;
+    Color skyColor;
     
-    const Color* groundColor;
+    Color groundColor;
     
-    const Matrix4* projectionMatrix;
+    Matrix4 projectionMatrix;
     
 public: 
     
@@ -66,29 +66,29 @@ public:
 
 	virtual void render( const std::vector<Object*>& bodies );
 
-	inline void setCamera( const Position& camera )
+	inline void setCamera( const Position* camera )
 	{
-	    this->camera = &camera;
+	    this->camera = camera;
 	}
 	
 	inline void setLightSource( const Point3& lightSource )
 	{
-	    this->lightSource = &lightSource;
+	    this->lightSource.set(lightSource);
 	}
 	
 	inline void setSkyColor( const Color& skyColor )
 	{
-	    this->skyColor = &skyColor;
+	    this->skyColor.set(skyColor);
 	}
 	
 	inline void setGroundColor( const Color& groundColor )
 	{
-	    this->groundColor = &groundColor;
+	    this->groundColor.set(groundColor);
 	}
 	
 	inline void setProjectionMatrix( const Matrix4& projectionMatrix )
 	{
-	    this->projectionMatrix = &projectionMatrix;
+	    this->projectionMatrix.set(projectionMatrix);
 	}
 	
 };

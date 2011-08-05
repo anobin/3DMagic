@@ -30,8 +30,7 @@ namespace Magic3D
 {
     
 /// standard constructor
-HemRenderer::HemRenderer(ResourceManager& resourceManager):
-    camera( NULL ), lightSource( NULL ), shader( NULL )
+HemRenderer::HemRenderer(ResourceManager& resourceManager): camera( NULL )
 {
     // create shader that will be used
     Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
@@ -54,18 +53,15 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 {
     // verify that we have valid data
     MAGIC_ASSERT( shader      != NULL ); // assert becuase we should have created shader
-    MAGIC_THROW(  camera      == NULL, "" ); // throw becuase 'they' should have given us a camera
-    MAGIC_THROW(  lightSource == NULL, "" ); // throw becuase 'they' should have given us a light source
-    MAGIC_THROW(  skyColor    == NULL, "" );
-    MAGIC_THROW(  groundColor == NULL, "" );
-    MAGIC_THROW( projectionMatrix == NULL, "" );
-    
+    MAGIC_THROW( camera == NULL,         // throw becuase 'they' should have given us a camera 
+        "Attempt to render without a camera set." );
+                                      
     // get camera matrix
     Matrix4 cameraMatrix;
     camera->getCameraMatrix(cameraMatrix);
 
     // Transform the light position into eye coordinates
-    Point3 lightPos ( *lightSource );
+    Point3 lightPos ( lightSource );
 	lightPos.transform(cameraMatrix);
 	
 	// 'use' shader
@@ -73,14 +69,15 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 	
 	// set shader uniforms that are the same for all bodies
 	shader->setUniformf(    "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-    shader->setUniformfv(   "skyColor",         3, skyColor->getInternal()     );
-    shader->setUniformfv(   "groundColor",      3, groundColor->getInternal()           );
+    shader->setUniformfv(   "skyColor",         3, skyColor.getInternal()     );
+    shader->setUniformfv(   "groundColor",      3, groundColor.getInternal()           );
     
     std::vector<Object*>::const_iterator it = bodies.begin();
     Matrix4 positionMatrix;
     Matrix4 transformMatrix;
 	for (; it != bodies.end(); it++)
 	{
+	    // get graphical body for object
 	    GraphicalBody& body = (*it)->getGraphical();
 	    
 		// get tranform (model-view) matrix from position (model) and camera (view) matrices 
@@ -89,7 +86,7 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 		
 		// create mvp matrix from projection and transform (model-view)
 		Matrix4 mvp;
-		mvp.multiply(*this->projectionMatrix, transformMatrix);
+		mvp.multiply(this->projectionMatrix, transformMatrix);
 		
 		// extract normal matrix from transform matrix
 		Matrix3 normal;
