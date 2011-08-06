@@ -40,7 +40,7 @@ OPTION(MATH_USE_INTEL   "Use Intel Math implementation"   OFF)
 
 # allow the user to disable building and/or enable running tests
 OPTION(BUILD_TESTS "Build the test suite" ON)
-OPTION(RUN_TESTS "Run the Test Suite during build" OFF)
+OPTION(RUN_TESTS "Run the Test Suite during build" ON)
 
 # allow the user to disable building demos
 OPTION(BUILD_DEMOS "Build the demos" ON)
@@ -94,9 +94,6 @@ IF(BUILD_DEMOS)
     ADD_SUBDIRECTORY(demo/field)
     ADD_SUBDIRECTORY(demo/sandbox)
 ENDIF(BUILD_DEMOS)
-
-
-
 
 
 
