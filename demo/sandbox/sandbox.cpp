@@ -59,10 +59,8 @@ Matrix4 projectionMatrix;
 // resource manager
 ResourceManager resourceManager("../../");
 
-// shaders
-Shader* shader2d;
-const VertexAttribSpec* shader2dSpec;
-
+// renderers
+Renderer2D* renderer2D;
 HemRenderer* renderer;
 
 // textures
@@ -100,9 +98,11 @@ Texture* chainLinkTex;
 // GUI stuff
 Rectangle2D* frameModel;
 Circle2D* circleModel;
-Shader* frameShader;
 Texture* frameTex;
 Texture* circleTex;
+Object* frameObject;
+Object* circleObject;
+std::vector<Object*> objects2d;
 Matrix4 flatProjectionMatrix;
 
 // legacy
@@ -141,6 +141,8 @@ void changeWindowSize(int w, int h)
 	
 	if (renderer)
 	    renderer->setProjectionMatrix( projectionMatrix );
+	if (renderer2D)
+	    renderer2D->setFlatProjectionMatrix( flatProjectionMatrix );
 }
 
 
@@ -214,15 +216,6 @@ void setup()
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
-	
-	// init 2D shader for overlays
-	Handle<TextResource> vp1 = resourceManager.get<TextResource>("shaders/Shader2D.vp");
-    Handle<TextResource> fp1 = resourceManager.get<TextResource>("shaders/Shader2D.fp");
-	shader2d = new Shader( vp1()->getText(), fp1()->getText() );
-	shader2d->bindAttrib( "Location", "location", 4, VertexArray::FLOAT );
-	shader2d->bindAttrib( "TexCoord", "texCoord", 2, VertexArray::FLOAT );
-	shader2d->link();
-	shader2dSpec = shader2d->getVertexAttribSpec();
 	
 	
     // init models, represent data on graphics card
@@ -345,6 +338,13 @@ void setup()
 		circleTex = new Texture(frameImage());
 	}
 	
+	frameObject = new Object( *frameModel, 0);
+	frameObject->getGraphical().setBaseTexture( *frameTex );
+	objects2d.push_back( frameObject );
+	circleObject = new Object( *circleModel, 0);
+	circleObject->getGraphical().setBaseTexture( *circleTex );
+	objects2d.push_back( circleObject );
+	
 	// 3ds test stuff
 	Handle<Model3DSResource> linkResource = 
 		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
@@ -393,6 +393,8 @@ void setup()
 	renderer->setSkyColor( skyColor );
 	renderer->setGroundColor( groundColor );
 	
+	// init 2D renderer
+	renderer2D = new Renderer2D(resourceManager);
 	
 	srand(time(NULL));
 }
@@ -439,6 +441,9 @@ void renderScene(void)
 	// object render loop
 	renderer->render( objects );
 	
+	// 2d object render loop
+	renderer2D->render( objects2d );
+	
 	// draw decals
 	/*it = decals.begin();
     std::map<Object*,Object*>::iterator rit;
@@ -483,15 +488,6 @@ void renderScene(void)
         (*it)->getGraphical().draw();
         glDisable(GL_POLYGON_OFFSET_FILL);
     }*/
-	
-	// draw GUI stuff
-	shader2d->use();
-	shader2d->setUniformMatrix( "mvpMatrix", 4, flatProjectionMatrix.getArray() );
-	shader2d->setTexture( "textureMap", frameTex );
-	//frameModel->draw(VertexArray::TRIANGLE_FAN);
-	shader2d->setTexture( "textureMap", circleTex );
-	shader2d->use();
-	//circleModel->draw(VertexArray::TRIANGLE_FAN);
 
 	
     // Do the buffer Swap

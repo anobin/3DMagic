@@ -42,6 +42,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // renderers
 #include "Renderers/Renderer.h"
 #include "Renderers/HemRenderer.h"
+#include "Renderers/Renderer2D.h"
 
 // time
 #include "Time/StopWatch.h"

@@ -72,27 +72,10 @@ public:
 
 	/** Draw the object
 	 */
-	inline void draw()
+	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
 	{
 	    if (array) // TODO
-	        array->draw( VertexArray::TRIANGLES, model.getVertexCount() );
-	}
-	
-	/** Render the object
-	 */
-	inline void render()
-	{
-	    if (!array)
-	        return; // temporary
-	    
-	    // 'use' the shader
-	    shader->use();
-	    
-	    // set the uniform values
-	    
-	    
-	    // draw the object
-	    array->draw( VertexArray::TRIANGLES, model.getVertexCount() );
+	        array->draw( primitive, model.getVertexCount() );
 	}
 	
 	/// get the model used
