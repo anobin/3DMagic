@@ -53,6 +53,7 @@ private:
     
     bool initialized;
     
+    /// SDL screen surface, do not try to ever free
     SDL_Surface *screen;
     
     int displayWidth;
@@ -70,7 +71,10 @@ public:
     }
 
     /// destructor
-    inline ~GraphicsSystem() {}
+    inline ~GraphicsSystem() 
+    {
+        SDL_Quit();
+    }
     
     /// initialize
     void init();

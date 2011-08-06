@@ -981,7 +981,7 @@ int main(int argc, char* argv[])
 	// enter (and never exit) main execution loop
 	//glutMainLoop();
 	
-	SDL_Quit();
+	
     
 	return 0;
 }
