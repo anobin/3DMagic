@@ -20,10 +20,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 /** Generates a 3D environment used to test different features
  */
 
-// include Bullet physics
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
-
 // 3DMagic includes
 #include <3DMagic.h>
 using namespace Magic3D;
@@ -120,6 +116,7 @@ StopWatch   physicsTimer;
 
 // world and systems
 GraphicsSystem graphics;
+PhysicsSystem physics;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -145,8 +142,6 @@ void changeWindowSize(int w, int h)
 }
 
 
-btDiscreteDynamicsWorld* dynamicsWorld;
-
 Object* btBall; // graphical presence of ball used for bullet
 Object* btBox;
 
@@ -155,16 +150,8 @@ Object* btBox;
 void setup()
 {	
 	// bullet setup
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
- 
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-
-	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-
-	dynamicsWorld->setGravity(btVector3(0,-9.8*METER,0));
+	physics.init();
+	physics.setGravity(0,-9.8*METER,0);
 	
 	graphics.enableDepthTest();
 	
@@ -230,12 +217,12 @@ void setup()
 	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
 	btBall->getGraphical().setBaseTexture(*marbleTex);
 	objects.push_back(btBall);
-	//dynamicsWorld->addRigidBody(btBall->getRigidBody());
+	//physics.addBody(btBall->getPhyscial());
 	
 	floorObject = new Object(*floorModel, 0); // static object
 	floorObject->getGraphical().setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
-	dynamicsWorld->addRigidBody(floorObject->getPhysical().getRigidBody());
+	physics.addBody(floorObject->getPhysical());
 	
 	float wallWidth =60;
 	float wallHeight = 10;
@@ -256,7 +243,7 @@ void setup()
 			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
 			btBox->getGraphical().setBaseTexture(*brickTex);
 			objects.push_back(btBox);
-			dynamicsWorld->addRigidBody(btBox->getPhysical().getRigidBody());
+			physics.addBody(btBox->getPhysical());
 		}
 	}
 	
@@ -409,7 +396,7 @@ void renderScene(void)
 	{
 	    float t = physicsTimer.getElapsedTime();
 	    physicsTimer.reset();
-	    dynamicsWorld->stepSimulation(t,10);
+	    physics.stepSimulation(t,10);
 	}
 	
 	static float lastTime = 0.0f;
@@ -568,7 +555,7 @@ void keyPressed(SDL_keysym* key)
 			t = new Object(*bigSphere, 300, Point3(0.0f, 0.0f, 0.0f)); // 1 kg sphere
 			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
-			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
+			physics.addBody(t->getPhysical());
             
             // add decal
             decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
@@ -587,7 +574,7 @@ void keyPressed(SDL_keysym* key)
 			it = objects.begin() + 2;
 			for (; it != objects.end(); it++)
 			{
-				dynamicsWorld->removeRigidBody((*it)->getPhysical().getRigidBody());
+				physics.removeBody((*it)->getPhysical());
 				delete (*it);
 			}
 			objects.erase(objects.begin()+2, objects.end());
@@ -863,7 +850,7 @@ void mouseClicked(int button, int state, int x, int y)
 			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
 										  btVector3(0.0f, 0.0f, 0.0f));
-			dynamicsWorld->addRigidBody(t->getPhysical().getRigidBody());
+			physics.addBody(t->getPhysical());
 			break;
 	}
 }
@@ -977,9 +964,6 @@ int main(int argc, char* argv[])
 	        
 	    renderScene();
 	}
-
-	// enter (and never exit) main execution loop
-	//glutMainLoop();
 	
 	
     

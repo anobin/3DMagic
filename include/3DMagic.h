@@ -81,6 +81,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // world and systems
 #include "Graphics/GraphicsSystem.h"
+#include "Physics/PhysicsSystem.h"
 
 
 
