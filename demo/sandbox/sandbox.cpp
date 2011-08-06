@@ -42,9 +42,7 @@ using namespace Magic3D;
 #include <list>
 using std::cout;
 using std::endl;
-
-// include GLUT
-#include <GL/glut.h>           
+         
 
 #define FPS2MS(x) (1000 / (x))
 #define RGB_SINGLE(x) ((1.0f/255.0f)*(x))
@@ -120,14 +118,15 @@ int screenHeight = 0;
 StopWatch	timer;
 StopWatch   physicsTimer;
 
+// world and systems
+GraphicsSystem graphics;
+
 /** Called when the window size changes
  * @param w width of the new window
  * @param h hieght of the new window
  */
 void changeWindowSize(int w, int h)
 {
-	glViewport(0, 0, w, h);
-	
 	screenWidth = w;
 	screenHeight = h;
 	
@@ -167,11 +166,10 @@ void setup()
 
 	dynamicsWorld->setGravity(btVector3(0,-9.8*METER,0));
 	
-	glEnable(GL_DEPTH_TEST);
+	graphics.enableDepthTest();
 	
     static Color lightBlue(5, 230, 255, Color::RGB_BYTE);
-	const GLfloat* c = lightBlue.getInternal();
-	glClearColor(c[0], c[1], c[2], 1.0f);
+	graphics.setClearColor(lightBlue );
 	
 	// init textures
 	if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
@@ -414,29 +412,14 @@ void renderScene(void)
 	    dynamicsWorld->stepSimulation(t,10);
 	}
 	
-    // Time Based animation
-	static float dir = -1.0;
 	static float lastTime = 0.0f;
-	static float laserDistance = 0.0f;
-	laserDistance += (timer.getElapsedTime() - lastTime) * (54*FOOT) * dir;
-	
 	lastTime = timer.getElapsedTime();
-	//bigBall.getPosition().rotate(m3dDegToRad(360.0f/120), Vector3f(0.0f, 1.0f, 0.0f));
-
-	
-	// check laser physics
-	if (laserDistance < (-ROOM_SIZE))
-		dir = 1.0f;
-	else if (laserDistance > (ROOM_SIZE))
-		dir = -1.0f;
-	//laser.getPosition().setLocation(0.0f, 5*FOOT, laserDistance);
 	
 	// Clear the color and depth buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	graphics.clearDisplay();
 	
 	// enable blending so transparency can happen
-	glEnable (GL_BLEND); 
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	graphics.enableBlending();
 	
 	// object render loop
 	renderer->render( objects );
@@ -483,16 +466,14 @@ void renderScene(void)
         shader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
        
         // draw object, make sure to lie to the depth buffer :) 
-        glPolygonOffset(-1.0f, -1.0f);   
-        glEnable(GL_POLYGON_OFFSET_FILL);
+        graphics.setDepthOffset(-1.0f);
         (*it)->getGraphical().draw();
-        glDisable(GL_POLYGON_OFFSET_FILL);
+        graphics.disableDepthOffset();
     }*/
 
 	
     // Do the buffer Swap
-    //glutSwapBuffers();
-    SDL_GL_SwapBuffers();
+    graphics.swapBuffers();
     
     // calculate fps
     static float lastsec = 0.0f;
@@ -942,9 +923,7 @@ void mouseMovedPassive(int x, int y)
 	float xDeg = m * X_AXIS_SENSITIVITY;
 	cameraFrame.rotate(xDeg  * (M_PI / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
 
-	
-	//glutWarpPointer(screenWidth / 2, screenHeight / 2);
-	SDL_WarpMouse(screenWidth / 2, screenHeight / 2);
+	graphics.warpMouse(screenWidth / 2, screenHeight / 2);
 }
 
 
@@ -953,75 +932,14 @@ void mouseMovedPassive(int x, int y)
 int main(int argc, char* argv[])
 {
 	
-    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) 
-    {
-        cout << "Unable to init SDL, oh noes!!" << endl;
-        exit(1);
-    }
-    cout << "SDL init!" << endl;
-    
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-    
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
-
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
-    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
-
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
-
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
-    
-    
-    SDL_Surface *screen;
-    screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | 
-        SDL_RESIZABLE | SDL_OPENGL);
-    if ( screen == NULL ) {
-        cout << "Unable to set video mode via SDL: " << SDL_GetError() << endl;
-        exit(1);
-    }
-
-
-    
-	// init glut with args
-	/*glutInit(&argc, argv);
-	// Double-buffered, RGBA display with depth and stencil buffers
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
-	// initial window size
-	glutInitWindowSize(800, 600);
-	// create window with title
-	glutCreateWindow("The Room");
-	
-	glutWarpPointer(screenWidth / 2, screenHeight / 2);
-	
-	// register event funtions
-    glutReshapeFunc(changeWindowSize); // window resized
-    glutDisplayFunc(renderScene); // to render frame
-	glutKeyboardFunc(keyPressed); // normal key pressed
-	glutSpecialFunc(specialKeyPressed); // special key pressed
-	glutMouseFunc(mouseClicked); // mouse button clicked
-	glutMotionFunc(mouseMoved); // mouse clicked and moved
-	glutPassiveMotionFunc(mouseMovedPassive); // mouse moved unclicked
-	frameRateRegulator(0); // called to regulate frame rate*/
-
-
-	// init GLEW
-	GLenum err = glewInit();
-	if (GLEW_OK != err) {
-		fprintf(stderr, "GLEW Error: %s\n", glewGetErrorString(err));
-		return 1;
-	}
+	graphics.init();
+	graphics.setDisplaySize( 640, 480 );
+	graphics.createScreen();
 	
 	// perform setup
 	setup();
 	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL);
-	SDL_ShowCursor( SDL_DISABLE );
+	graphics.showCursor( false );
 	changeWindowSize(640,480); // to ensure transform pipeline is setup
 	
 	// run SDL
@@ -1036,12 +954,8 @@ int main(int argc, char* argv[])
 	                exit(0);
 	                
 	            case SDL_VIDEORESIZE:
-	                screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | 
-	                    SDL_RESIZABLE | SDL_OPENGL);
-	                if ( screen == NULL ) {
-	                    cout << "Unable to set video mode via SDL: " << SDL_GetError() << endl;
-	                    exit(1);
-	                }
+	                graphics.setDisplaySize( event.resize.w, event.resize.h );
+	                graphics.createScreen();
 	                changeWindowSize( event.resize.w, event.resize.h );
 	                break;
 	                

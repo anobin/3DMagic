@@ -79,6 +79,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Exceptions/ResourceNotFoundException.h"
 #include "Util/magic_assert.h"
 
+// world and systems
+#include "Graphics/GraphicsSystem.h"
 
 
 
