@@ -17,38 +17,35 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for PhysicsSystem class
+/** Implementation file for EventSystem class
  *
- * @file PhyicsSystem.cpp
+ * @file EventSystem.cpp
  * @author Andrew Keating
  */
  
-#include <Physics/PhysicsSystem.h>
+#include <Event/EventSystem.h>
+
 
 
 namespace Magic3D
 {
     
+extern int init_SDL(unsigned int flags);
+extern void quit_SDL(unsigned int flags);
     
-void PhysicsSystem::init()
-{
-    btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-
-    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
+bool EventSystem::one = false;
+    
+/// initialize
+void EventSystem::init()
+{   
+    if ( init_SDL(0) < 0 ) 
+        throw_MagicException ( "Failed to initalize event system (SDL)" );
 }
-    
-/// destructor
-void PhysicsSystem::deinit()
-{
-    delete broadphase;
-    delete collisionConfiguration;
-    delete dispatcher;
-    delete solver;
 
-    delete dynamicsWorld;
+/// deinitalize
+void EventSystem::deinit()
+{
+    quit_SDL(0); // no SDL subsystem for events
 }
     
     
@@ -64,15 +61,6 @@ void PhysicsSystem::deinit()
     
     
 };
-
-
-
-
-
-
-
-
-
 
 
 

@@ -73,11 +73,14 @@ public:
     /// destructor
     inline ~GraphicsSystem() 
     {
-        SDL_Quit();
+        one = false;
     }
     
     /// initialize
     void init();
+    
+    /// deinitalize
+    void deinit();
     
     inline void setDisplaySize( int width, int height )
     {

@@ -52,9 +52,13 @@ public:
         dispatcher(NULL), solver(NULL), dynamicsWorld( NULL ) {}
     
     /// destructor
-    ~PhysicsSystem();
+    inline ~PhysicsSystem()
+    {   
+    }
 
     void init();
+    
+    void deinit();
     
     inline void setGravity( float x, float y, float z )
     {
@@ -68,7 +72,8 @@ public:
     
     inline void removeBody( PhysicalBody& body )
     {
-        dynamicsWorld->removeRigidBody(body.getRigidBody());
+        if (body.getRigidBody())
+            dynamicsWorld->removeRigidBody(body.getRigidBody());
     }
 
     inline void stepSimulation( float secs, int substeps )

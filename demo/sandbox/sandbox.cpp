@@ -44,7 +44,6 @@ using std::endl;
 #define RGB_SINGLE(x) ((1.0f/255.0f)*(x))
 #define RGB(r, g, b) {RGB_SINGLE((r)), RGB_SINGLE((g)), RGB_SINGLE((b)), 1.0f}
 
-
 #define ROOM_SIZE (20.0f * FOOT)
 
 
@@ -62,12 +61,14 @@ Texture* stoneTex = NULL;
 Texture* marbleTex = NULL;
 Texture* bunkerTex = NULL;
 Texture* brickTex = NULL;
+Texture* blueTex = NULL;
 
 // models
 FlatSurface* ceilingModel;
 FlatSurface* floorModel;
 FlatSurface* wallModel;
 Sphere* sphere;
+Model* tinySphere;
 Box* bigSphere;
 Box* boxModel;
 
@@ -114,9 +115,16 @@ int screenHeight = 0;
 StopWatch	timer;
 StopWatch   physicsTimer;
 
+bool lockCursor = false;
+bool moveForward = false;
+bool moveBack = false;
+bool moveLeft = false;
+bool moveRight = false;
+
 // world and systems
 GraphicsSystem graphics;
 PhysicsSystem physics;
+EventSystem events;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -150,7 +158,6 @@ Object* btBox;
 void setup()
 {	
 	// bullet setup
-	physics.init();
 	physics.setGravity(0,-9.8*METER,0);
 	
 	graphics.enableDepthTest();
@@ -201,10 +208,15 @@ void setup()
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
+	Handle<SingleColor2DResource> blueImage = resourceManager.injectSingleColor2D(
+					"images/blue.tga", Color(31, 97, 240, 255, Color::RGBA_BYTE));
+	blueTex = new Texture(blueImage());
+	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
 	
     // init models, represent data on graphics card
 	sphere = new Sphere(2*FOOT, 55, 32);
+	tinySphere = new Sphere( 0.1*FOOT, 4, 4);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
 	bigSphere = new Box(2, 4, 3);
 	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
@@ -249,46 +261,6 @@ void setup()
 	
 
 	
-	
-	
-	/*ceiling.setModel(*ceilingModel);
-	ceiling.setColor(Color::WHITE);
-	ceiling.setBaseTexture(*marbleTex);
-	ceiling.getPosition().setLocation(0.0f, ROOM_SIZE, 0.0f);
-	//objects.push_back(&ceiling);
-	
-	for(int i=0; i < 4; i++)
-	{
-		wall[i].setModel(*wallModel);
-		wall[i].setColor(Color::WHITE);
-		wall[i].setBaseTexture(*bunkerTex);
-		wall[i].getPosition().setLocation(0.0f, ROOM_SIZE/2, 0.0f);
-		// move walls into place
-		switch(i)
-		{
-			case 0:
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(1.0f, 0.0f, 0.0f));
-				wall[i].getPosition().translate(0.0f,0.0f, -ROOM_SIZE);
-				break;
-			case 1:
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(1.0f, 0.0f, 0.0f));
-				wall[i].getPosition().translate(0.0f,0.0f, ROOM_SIZE);
-				wall[i].getPosition().rotate(m3dDegToRad(180.0f), Vector3f(0.0f, 1.0f, 0.0f));
-				break;
-			case 2:
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(1.0f, 0.0f, 0.0f));
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(0.0f, 1.0f, 0.0f));
-				wall[i].getPosition().translate(ROOM_SIZE, 0.0f, 0.0f);
-				wall[i].getPosition().rotate(m3dDegToRad(180.0f), Vector3f(0.0f, 1.0f, 0.0f));
-				break;
-			case 3:
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(1.0f, 0.0f, 0.0f));
-				wall[i].getPosition().rotate(m3dDegToRad(90.0f), Vector3f(0.0f, 1.0f, 0.0f));
-				wall[i].getPosition().translate(-ROOM_SIZE, 0.0f, 0.0f);
-				break;
-		}
-		//objects.push_back(&wall[i]);
-	}*/
 	
 	
 	// gui stuff
@@ -399,6 +371,23 @@ void renderScene(void)
 	    physics.stepSimulation(t,10);
 	}
 	
+	// move
+	Vector3 side;
+	if (moveForward)
+	    cameraFrame.translate(FOOT, 0.0f, FOOT);
+	if (moveBack)
+		cameraFrame.translate(-FOOT, 0.0f, -FOOT);
+	if (moveLeft)
+	{
+	    cameraFrame.getLocalXAxis(side);
+		cameraFrame.translate(side.getX()*FOOT, 0.0f, side.getZ()*FOOT);
+	}
+	if (moveRight)
+	{
+		cameraFrame.getLocalXAxis(side);
+		cameraFrame.translate(-side.getX()*FOOT, 0.0f, -side.getZ()*FOOT);
+	}
+	
 	static float lastTime = 0.0f;
 	lastTime = timer.getElapsedTime();
 	
@@ -483,7 +472,7 @@ void renderScene(void)
  * @param x the x-coord of the mouse at the time of the press
  * @param y the y-coord of the mouse at the time of the press
  */
-void keyPressed(SDL_keysym* key)
+void keyPressed(int key)
 {
 	Point3 origin;
 	Vector3 forward;
@@ -494,10 +483,11 @@ void keyPressed(SDL_keysym* key)
 	Object* t;
     Object* decal;
     std::vector<Object*>::iterator it;
+    int i;
 	
 	
 	
-	switch(key->sym)
+	switch(key)
 	{
 		// space
 		case ' ':
@@ -552,7 +542,7 @@ void keyPressed(SDL_keysym* key)
 			break;
 			
 		case 'g':
-			t = new Object(*bigSphere, 300, Point3(0.0f, 0.0f, 0.0f)); // 1 kg sphere
+			t = new Object(*bigSphere, 300, Point3(0.0f, 5.0f, 0.0f)); // 1 kg sphere
 			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			physics.addBody(t->getPhysical());
@@ -562,6 +552,18 @@ void keyPressed(SDL_keysym* key)
             decal->getGraphical().setBaseTexture( *circleTex );
             decals.push_back(decal);
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
+			break;
+		case 'h':
+		    for (i = 0; i < 20; i++)
+		    {
+                t = new Object(*tinySphere, 1, Point3(0.2f * (i%5), 10.0f, 0.2f * (i/5))); // 0.01 kg sphere
+                t->getGraphical().setBaseTexture(*blueTex);
+                objects.push_back(t);
+                
+                t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
+                                              btVector3(0.0f, 0.0f, 0.0f));
+                physics.addBody(t->getPhysical());
+            }
 			break;
 		case 'p':
 			if (paused)
@@ -581,229 +583,14 @@ void keyPressed(SDL_keysym* key)
             decals.clear();
             relations.clear();
 			break;
+			
+		case 'u':
+		    if (lockCursor)
+		        lockCursor = false;
+		    else
+		        lockCursor = true;
+		    break;
 
-        case SDLK_UNKNOWN:
-        case SDLK_BACKSPACE:
-        case SDLK_TAB:
-        case SDLK_CLEAR:
-        case SDLK_RETURN:
-        case SDLK_PAUSE:
-        case SDLK_EXCLAIM:
-        case SDLK_QUOTEDBL:
-        case SDLK_HASH:
-        case SDLK_DOLLAR:
-        case SDLK_AMPERSAND:
-        case SDLK_QUOTE:
-        case SDLK_LEFTPAREN:
-        case SDLK_RIGHTPAREN:
-        case SDLK_ASTERISK:
-        case SDLK_PLUS:
-        case SDLK_COMMA:
-        case SDLK_PERIOD:
-        case SDLK_SLASH:
-        case SDLK_0:
-        case SDLK_1:
-        case SDLK_2:
-        case SDLK_3:
-        case SDLK_4:
-        case SDLK_5:
-        case SDLK_6:
-        case SDLK_7:
-        case SDLK_8:
-        case SDLK_9:
-        case SDLK_COLON:
-        case SDLK_SEMICOLON:
-        case SDLK_LESS:
-        case SDLK_GREATER:
-        case SDLK_QUESTION:
-        case SDLK_AT:
-        case SDLK_LEFTBRACKET:
-        case SDLK_BACKSLASH:
-        case SDLK_RIGHTBRACKET:
-        case SDLK_CARET:
-        case SDLK_UNDERSCORE:
-        case SDLK_BACKQUOTE:
-        case SDLK_b:
-        case SDLK_c:
-        case SDLK_e:
-        case SDLK_f:
-        case SDLK_h:
-        case SDLK_i:
-        case SDLK_j:
-        case SDLK_k:
-        case SDLK_l:
-        case SDLK_m:
-        case SDLK_n:
-        case SDLK_o:
-        case SDLK_q:
-        case SDLK_r:
-        case SDLK_t:
-        case SDLK_u:
-        case SDLK_v:
-        case SDLK_x:
-        case SDLK_y:
-        case SDLK_DELETE:
-        case SDLK_WORLD_0:
-        case SDLK_WORLD_1:
-        case SDLK_WORLD_2:
-        case SDLK_WORLD_3:
-        case SDLK_WORLD_4:
-        case SDLK_WORLD_5:
-        case SDLK_WORLD_6:
-        case SDLK_WORLD_7:
-        case SDLK_WORLD_8:
-        case SDLK_WORLD_9:
-        case SDLK_WORLD_10:
-        case SDLK_WORLD_11:
-        case SDLK_WORLD_12:
-        case SDLK_WORLD_13:
-        case SDLK_WORLD_14:
-        case SDLK_WORLD_15:
-        case SDLK_WORLD_16:
-        case SDLK_WORLD_17:
-        case SDLK_WORLD_18:
-        case SDLK_WORLD_19:
-        case SDLK_WORLD_20:
-        case SDLK_WORLD_21:
-        case SDLK_WORLD_22:
-        case SDLK_WORLD_23:
-        case SDLK_WORLD_24:
-        case SDLK_WORLD_25:
-        case SDLK_WORLD_26:
-        case SDLK_WORLD_27:
-        case SDLK_WORLD_28:
-        case SDLK_WORLD_29:
-        case SDLK_WORLD_30:
-        case SDLK_WORLD_31:
-        case SDLK_WORLD_32:
-        case SDLK_WORLD_33:
-        case SDLK_WORLD_34:
-        case SDLK_WORLD_35:
-        case SDLK_WORLD_36:
-        case SDLK_WORLD_37:
-        case SDLK_WORLD_38:
-        case SDLK_WORLD_39:
-        case SDLK_WORLD_40:
-        case SDLK_WORLD_41:
-        case SDLK_WORLD_42:
-        case SDLK_WORLD_43:
-        case SDLK_WORLD_44:
-        case SDLK_WORLD_45:
-        case SDLK_WORLD_46:
-        case SDLK_WORLD_47:
-        case SDLK_WORLD_48:
-        case SDLK_WORLD_49:
-        case SDLK_WORLD_50:
-        case SDLK_WORLD_51:
-        case SDLK_WORLD_52:
-        case SDLK_WORLD_53:
-        case SDLK_WORLD_54:
-        case SDLK_WORLD_55:
-        case SDLK_WORLD_56:
-        case SDLK_WORLD_57:
-        case SDLK_WORLD_58:
-        case SDLK_WORLD_59:
-        case SDLK_WORLD_60:
-        case SDLK_WORLD_61:
-        case SDLK_WORLD_62:
-        case SDLK_WORLD_63:
-        case SDLK_WORLD_64:
-        case SDLK_WORLD_65:
-        case SDLK_WORLD_66:
-        case SDLK_WORLD_67:
-        case SDLK_WORLD_68:
-        case SDLK_WORLD_69:
-        case SDLK_WORLD_70:
-        case SDLK_WORLD_71:
-        case SDLK_WORLD_72:
-        case SDLK_WORLD_73:
-        case SDLK_WORLD_74:
-        case SDLK_WORLD_75:
-        case SDLK_WORLD_76:
-        case SDLK_WORLD_77:
-        case SDLK_WORLD_78:
-        case SDLK_WORLD_79:
-        case SDLK_WORLD_80:
-        case SDLK_WORLD_81:
-        case SDLK_WORLD_82:
-        case SDLK_WORLD_83:
-        case SDLK_WORLD_84:
-        case SDLK_WORLD_85:
-        case SDLK_WORLD_86:
-        case SDLK_WORLD_87:
-        case SDLK_WORLD_88:
-        case SDLK_WORLD_89:
-        case SDLK_WORLD_90:
-        case SDLK_WORLD_91:
-        case SDLK_WORLD_92:
-        case SDLK_WORLD_93:
-        case SDLK_WORLD_94:
-        case SDLK_WORLD_95:
-        case SDLK_KP0:
-        case SDLK_KP1:
-        case SDLK_KP2:
-        case SDLK_KP3:
-        case SDLK_KP4:
-        case SDLK_KP5:
-        case SDLK_KP6:
-        case SDLK_KP7:
-        case SDLK_KP8:
-        case SDLK_KP9:
-        case SDLK_KP_PERIOD:
-        case SDLK_KP_DIVIDE:
-        case SDLK_KP_MULTIPLY:
-        case SDLK_KP_MINUS:
-        case SDLK_KP_PLUS:
-        case SDLK_KP_ENTER:
-        case SDLK_KP_EQUALS:
-        case SDLK_UP:
-        case SDLK_DOWN:
-        case SDLK_RIGHT:
-        case SDLK_LEFT:
-        case SDLK_INSERT:
-        case SDLK_HOME:
-        case SDLK_END:
-        case SDLK_PAGEUP:
-        case SDLK_PAGEDOWN:
-        case SDLK_F1:
-        case SDLK_F2:
-        case SDLK_F3:
-        case SDLK_F4:
-        case SDLK_F5:
-        case SDLK_F6:
-        case SDLK_F7:
-        case SDLK_F8:
-        case SDLK_F9:
-        case SDLK_F10:
-        case SDLK_F11:
-        case SDLK_F12:
-        case SDLK_F13:
-        case SDLK_F14:
-        case SDLK_F15:
-        case SDLK_NUMLOCK:
-        case SDLK_CAPSLOCK:
-        case SDLK_SCROLLOCK:
-        case SDLK_RSHIFT:
-        case SDLK_LSHIFT:
-        case SDLK_RCTRL:
-        case SDLK_LCTRL:
-        case SDLK_RALT:
-        case SDLK_LALT:
-        case SDLK_RMETA:
-        case SDLK_LMETA:
-        case SDLK_LSUPER:
-        case SDLK_RSUPER:
-        case SDLK_MODE:
-        case SDLK_COMPOSE:
-        case SDLK_HELP:
-        case SDLK_PRINT:
-        case SDLK_SYSREQ:
-        case SDLK_BREAK:
-        case SDLK_MENU:
-        case SDLK_POWER:
-        case SDLK_EURO:
-        case SDLK_UNDO:
-        case SDLK_LAST:
         default:
             break;
         
@@ -828,11 +615,8 @@ void specialKeyPressed(int key, int x, int y)
  * @param x the x-coord of the mouse at the time of the press
  * @param y the y-coord of the mouse at the time of the press
  */
-void mouseClicked(int button, int state, int x, int y)
+void mouseClicked(Event::MouseButtons button, int x, int y)
 {
-	if (state == SDL_RELEASED)
-		return;
-	
 	
 	Position p;
 	Object* t;
@@ -840,7 +624,7 @@ void mouseClicked(int button, int state, int x, int y)
 	
 	switch(button)
 	{
-		case SDL_BUTTON_LEFT:
+	    case Event::LEFT:
 			p.set(cameraFrame);
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
@@ -852,6 +636,12 @@ void mouseClicked(int button, int state, int x, int y)
 										  btVector3(0.0f, 0.0f, 0.0f));
 			physics.addBody(t->getPhysical());
 			break;
+			
+		case Event::MIDDLE: 
+        case Event::RIGHT: 
+        case Event::WHEEL_UP: 
+        case Event::WHEEL_DOWN:
+            break;
 	}
 }
 
@@ -874,6 +664,9 @@ void mouseMoved(int x, int y)
  */
 void mouseMovedPassive(int x, int y)
 {
+    if (!lockCursor)
+        return;
+    
 	// avoid reprocess from warp pointer call
 	if (x == (screenWidth/2) && y == (screenHeight/2))
 		return;
@@ -920,51 +713,60 @@ int main(int argc, char* argv[])
 {
 	
 	graphics.init();
-	graphics.setDisplaySize( 640, 480 );
+	graphics.setDisplaySize( 1280, 1024 );
 	graphics.createScreen();
+	
+	physics.init();
+	
+	events.init();
 	
 	// perform setup
 	setup();
-	SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL);
 	graphics.showCursor( false );
-	changeWindowSize(640,480); // to ensure transform pipeline is setup
+	changeWindowSize(1280,1024); // to ensure transform pipeline is setup
+	graphics.createScreen();
 	
 	// run SDL
-	SDL_Event event;
+	Event event;
 	while( true )
 	{
-	    while ( SDL_PollEvent( &event ) )
+	    while ( events.poll( &event ) )
 	    {
-	        switch( event.type )
+	        switch( event.data.type )
 	        {
-	            case SDL_QUIT:
+	            case Event::QUIT:
 	                exit(0);
 	                
-	            case SDL_VIDEORESIZE:
-	                graphics.setDisplaySize( event.resize.w, event.resize.h );
+	            case Event::VIDEO_RESIZE:
+	                graphics.setDisplaySize( event.data.resize.w, event.data.resize.h );
 	                graphics.createScreen();
-	                changeWindowSize( event.resize.w, event.resize.h );
+	                changeWindowSize( event.data.resize.w, event.data.resize.h );
 	                break;
 	                
-	            case SDL_KEYDOWN:
-	                keyPressed( &event.key.keysym );
+	            case Event::KEY_DOWN:
+	                keyPressed( event.data.key.key );
 	                break;
 	                
-	            case SDL_MOUSEMOTION:
-	                mouseMovedPassive( event.motion.x, event.motion.y );
+	            case Event::MOUSE_MOTION:
+	                mouseMovedPassive( event.data.motion.x, event.data.motion.y );
 	                break;
 	                
-	            case SDL_MOUSEBUTTONDOWN:
-	                mouseClicked( event.button.button, event.button.state, 
-	                    event.button.x, event.button.y );
+	            case Event::MOUSE_BUTTON_DOWN:
+	                mouseClicked( event.data.button.button, event.data.button.x, event.data.button.y );
 	                break;
 	                
+	            case Event::MOUSE_BUTTON_UP:
+	            case Event::KEY_UP:
+	                break;
 	        }
 	    }
 	        
 	    renderScene();
 	}
 	
+	graphics.deinit();
+	physics.deinit();
+	events.deinit();
 	
     
 	return 0;

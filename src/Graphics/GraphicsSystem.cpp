@@ -30,6 +30,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
     
+extern int init_SDL(unsigned int flags);
+extern void quit_SDL(unsigned int flags);
+    
 bool GraphicsSystem::one = false;
     
 /// initialize
@@ -38,7 +41,7 @@ void GraphicsSystem::init()
     if (initialized)
         throw_MagicException( "Attempt to initalize a graphics system twice" );
     
-    if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) 
+    if ( init_SDL( SDL_INIT_VIDEO ) < 0 ) 
         throw_MagicException ( "Failed to initalize grpahics system (SDL)" );
     
     // becuase GLEW needs a display 
@@ -51,6 +54,12 @@ void GraphicsSystem::init()
     if (GLEW_OK != err)
         throw_MagicException ( "Failed to initalize graphics system (GLEW)" );
     initialized = true;
+}
+
+/// deinitalize
+void GraphicsSystem::deinit()
+{
+    quit_SDL(SDL_INIT_VIDEO);
 }
     
 
