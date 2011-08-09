@@ -139,15 +139,13 @@ void changeWindowSize(int w, int h)
 	screenHeight = h;
 	
     // Create the projection matrix
-    projectionMatrix.createPerspectiveMatrix(60.0f, float(w)/float(h), INCH, 1000*FOOT);
+    camera.setPerspectiveProjection(60.0f, float(w)/float(h), INCH, 1000*FOOT);
 	
 	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
 	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
 	
 	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
 	
-	if (renderer)
-	    renderer->setProjectionMatrix( projectionMatrix );
 	if (renderer2D)
 	    renderer2D->setFlatProjectionMatrix( flatProjectionMatrix );
 }
@@ -362,7 +360,7 @@ void setup()
 	
 	// init renderer
 	renderer = new HemRenderer(resourceManager);
-	renderer->setCamera( &camera.getPosition() );
+	renderer->setCamera( &camera );
 	renderer->setLightSource( lightPos );
 	renderer->setSkyColor( skyColor );
 	renderer->setGroundColor( groundColor );
@@ -611,6 +609,7 @@ void keyPressed(int key)
 		    }
 		    else
 		    {
+		        graphics.warpMouse(screenWidth / 2, screenHeight / 2);
 		        graphics.showCursor( false );
 		        lockCursor = true;
 		    }

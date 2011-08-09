@@ -30,6 +30,10 @@
     - attachments can be used for decals
     - dependencies can be used to help transparency
 - Go through math implementation and add MAGIC_THROW and MAGIC_ASSERT where neccessary
+- ensure all openGL calls and types are in clases in Graphics folder, so a replacementable
+  implementation system can be made for the graphics
+- ensure all bullet calls and types are in classes in Physics folder, so a replacementable
+  implementation system can be made for the graphics
 
 ## Secondary
 -add model-texture mapping interface to be used through object class
@@ -102,8 +106,12 @@
 	-I don't think Bullet can do it
 	-fog, exposions, water?
 
+## Demo ideas
+- A box that spawns tiny blue balls to simulate water and a bowl for the particles to fall into
 
-
+## Examples ideas
+- most basic starting demo with a ground and a single object
+- using camera and framebuffer objects to render a scene from multiple angles
 
 
 

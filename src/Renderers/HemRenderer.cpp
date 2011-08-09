@@ -58,7 +58,7 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
                                       
     // get camera matrix
     Matrix4 cameraMatrix;
-    camera->getCameraMatrix(cameraMatrix);
+    camera->getPosition().getCameraMatrix(cameraMatrix);
 
     // Transform the light position into eye coordinates
     Point3 lightPos ( lightSource );
@@ -89,7 +89,7 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 		
 		// create mvp matrix from projection and transform (model-view)
 		Matrix4 mvp;
-		mvp.multiply(this->projectionMatrix, transformMatrix);
+		mvp.multiply(camera->getProjectionMatrix(), transformMatrix);
 		
 		// extract normal matrix from transform matrix
 		Matrix3 normal;

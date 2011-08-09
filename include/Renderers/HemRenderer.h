@@ -34,6 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Math/Point3.h"
 #include "../Shaders/Shader.h"
 #include "../Resources/ResourceManager.h"
+#include "../Cameras/Camera.h"
 
 
 namespace Magic3D
@@ -44,7 +45,7 @@ namespace Magic3D
 class HemRenderer
 {
 protected:
-    const Position* camera;
+    const Camera* camera;
     
     Point3 lightSource;
     
@@ -53,8 +54,6 @@ protected:
     Color skyColor;
     
     Color groundColor;
-    
-    Matrix4 projectionMatrix;
     
 public: 
     
@@ -66,7 +65,7 @@ public:
 
 	virtual void render( const std::vector<Object*>& bodies );
 
-	inline void setCamera( const Position* camera )
+	inline void setCamera( const Camera* camera )
 	{
 	    this->camera = camera;
 	}
@@ -84,11 +83,6 @@ public:
 	inline void setGroundColor( const Color& groundColor )
 	{
 	    this->groundColor.set(groundColor);
-	}
-	
-	inline void setProjectionMatrix( const Matrix4& projectionMatrix )
-	{
-	    this->projectionMatrix.set(projectionMatrix);
 	}
 	
 };
