@@ -17,64 +17,60 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Renderer2D class
+/** Header file for Camera2D class
  *
- * @file Renderer2D.h
+ * @file Camera2D.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_2D_RENDERER_H
-#define MAGIC3D_2D_RENDERER_H
+#ifndef MAGIC3D_CAMERA_2D_H
+#define MAGIC3D_CAMERA_2D_H
 
-#include <vector>
-
-// local includes
-#include "../Objects/Object.h"
-#include "../Graphics/GraphicalBody.h"
+#include "../Math/Vector3.h"
 #include "../Math/Position.h"
-#include "../Math/Point3.h"
-#include "../Shaders/Shader.h"
-#include "../Resources/ResourceManager.h"
-#include "../Cameras/Camera.h"
-#include "Renderer.h"
+#include "Camera.h"
+
+#include <iostream>
+
 
 
 namespace Magic3D
 {
-	
-/** Contains logic to render an object using a the 2DShader.
+    
+/** Represents a 2D camera, used when rendering GUI objects.
  */
-class Renderer2D: public Renderer 
+ class Camera2D : public Camera
 {
-protected:
-    Shader* shader;
+private:
+    // doesn't really matter
+    Position position;
     
-    const Camera* camera;
+public:
+    inline Camera2D() {}
     
-public: 
+    virtual ~Camera2D();
     
-    /// standard constructor
-    Renderer2D(ResourceManager& resourceManager);
+    virtual const Position& getPosition() const;
     
-	/// destructor
-	virtual ~Renderer2D();
+};   
+    
 
-	virtual void render( const std::vector<Object*>& bodies );
-	
-	inline void setCamera( const Camera* camera )
-	{
-	    this->camera = camera;
-	}
-	
+    
 };
 
-	
-};
+
+
+
+
+
+
+
+
+
+
 
 
 
 #endif
-
-
 
 
 

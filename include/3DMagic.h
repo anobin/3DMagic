@@ -87,6 +87,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // cameras
 #include "Cameras/FPCamera.h"
+#include "Cameras/Camera2D.h"
 
 
 

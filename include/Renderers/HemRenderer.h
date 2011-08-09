@@ -35,6 +35,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Shaders/Shader.h"
 #include "../Resources/ResourceManager.h"
 #include "../Cameras/Camera.h"
+#include "Renderer.h"
 
 
 namespace Magic3D
@@ -42,7 +43,7 @@ namespace Magic3D
 	
 /** Contains logic to render an object using a the HemisphereTexShader.
  */
-class HemRenderer
+class HemRenderer: public Renderer 
 {
 protected:
     const Camera* camera;

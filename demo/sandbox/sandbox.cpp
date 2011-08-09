@@ -107,6 +107,7 @@ Color groundColor(25,25,25);
 Color skyColor(255,255,255);
 
 FPCamera camera;
+Camera2D camera2d;
 
 bool wireframe = false;
 
@@ -142,12 +143,9 @@ void changeWindowSize(int w, int h)
     camera.setPerspectiveProjection(60.0f, float(w)/float(h), INCH, 1000*FOOT);
 	
 	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
-	flatProjectionMatrix.createOrthographicMatrix(0, w, 0, h, -1.0, 1.0);
+	camera2d.setOrthographicProjection(0, w, 0, h, -1.0, 1.0);
 	
 	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
-	
-	if (renderer2D)
-	    renderer2D->setFlatProjectionMatrix( flatProjectionMatrix );
 }
 
 
@@ -367,6 +365,7 @@ void setup()
 	
 	// init 2D renderer
 	renderer2D = new Renderer2D(resourceManager);
+	renderer2D->setCamera( &camera2d );
 	
 	srand(time(NULL));
 }

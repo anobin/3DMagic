@@ -30,7 +30,7 @@ namespace Magic3D
 {
     
 /// standard constructor
-Renderer2D::Renderer2D(ResourceManager& resourceManager): shader(NULL)
+Renderer2D::Renderer2D(ResourceManager& resourceManager): shader(NULL), camera(NULL)
 {
     // create shader that will be used
     Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/Shader2D.vp");
@@ -52,12 +52,13 @@ void Renderer2D::render( const std::vector<Object*>& bodies )
 {
     // verify that we have valid data
     MAGIC_ASSERT( shader      != NULL ); // assert becuase we should have created shader
+    MAGIC_THROW( camera == NULL, "Attempt to render without camera" );
                                       
     // 'use' shader
 	shader->use();
 	
 	// set uniforms that are the same for all objects
-	shader->setUniformMatrix( "mvpMatrix", 4, this->flatProjectionMatrix.getArray() );
+	shader->setUniformMatrix( "mvpMatrix", 4, camera->getProjectionMatrix().getArray() );
 	
 	// render every object
     std::vector<Object*>::const_iterator it = bodies.begin();
