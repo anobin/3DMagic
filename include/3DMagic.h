@@ -85,7 +85,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Event/EventSystem.h"
 
 
-
+// cameras
+#include "Cameras/FPCamera.h"
 
 
 

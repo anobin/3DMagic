@@ -77,7 +77,7 @@ Object* bigBall;
 Object* laser;
 Object* floorObject;
 Object* ceiling;
-Object* wall[4];
+Object* wallObject;
 std::vector<Object*> objects;
 
 // decal stuff
@@ -101,10 +101,12 @@ std::vector<Object*> objects2d;
 Matrix4 flatProjectionMatrix;
 
 // legacy
-Position             cameraFrame;
+//Position             cameraFrame;
 Point3 lightPos(0.0f, 1000.0f, 0.0f);
 Color groundColor(25,25,25);
 Color skyColor(255,255,255);
+
+FPCamera camera;
 
 bool wireframe = false;
 
@@ -120,6 +122,7 @@ bool moveForward = false;
 bool moveBack = false;
 bool moveLeft = false;
 bool moveRight = false;
+bool releaseWater = false;
 
 // world and systems
 GraphicsSystem graphics;
@@ -216,12 +219,12 @@ void setup()
 	
     // init models, represent data on graphics card
 	sphere = new Sphere(2*FOOT, 55, 32);
-	tinySphere = new Sphere( 0.1*FOOT, 4, 4);
+	tinySphere = new Sphere( 1*FOOT, 4, 4);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
 	bigSphere = new Box(2, 4, 3);
 	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
 	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
-	wallModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE, 20, 20);
+	wallModel = new FlatSurface(5*FOOT, 5*FOOT, 20, 20);
 	float scale = 5.0f;
 	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
 	
@@ -235,6 +238,34 @@ void setup()
 	floorObject->getGraphical().setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
 	physics.addBody(floorObject->getPhysical());
+	
+	/*floorObject = new Object(*floorModel, 0); // static object
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
+	floorObject->getPosition().rotate(45.0f*M_PI/180.0f, Vector3(1, 0, 0));
+	objects.push_back(floorObject);
+	physics.addBody(floorObject->getPhysical());
+	floorObject->getPhysical().syncPositionToPhysics();
+	
+	floorObject = new Object(*floorModel, 0); // static object
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
+	floorObject->getPosition().rotate(-45.0f*M_PI/180.0f, Vector3(1, 0, 0));
+	objects.push_back(floorObject);
+	physics.addBody(floorObject->getPhysical());
+	floorObject->getPhysical().syncPositionToPhysics();
+	
+	floorObject = new Object(*floorModel, 0); // static object
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
+	floorObject->getPosition().rotate(-45.0f*M_PI/180.0f, Vector3(0, 0, 1));
+	objects.push_back(floorObject);
+	physics.addBody(floorObject->getPhysical());
+	floorObject->getPhysical().syncPositionToPhysics();
+	
+	floorObject = new Object(*floorModel, 0); // static object
+	floorObject->getGraphical().setBaseTexture(*stoneTex);
+	floorObject->getPosition().rotate(45.0f*M_PI/180.0f, Vector3(0, 0, 1));
+	objects.push_back(floorObject);
+	physics.addBody(floorObject->getPhysical());
+	floorObject->getPhysical().syncPositionToPhysics();*/
 	
 	float wallWidth =60;
 	float wallHeight = 10;
@@ -258,10 +289,6 @@ void setup()
 			physics.addBody(btBox->getPhysical());
 		}
 	}
-	
-
-	
-	
 	
 	// gui stuff
 	frameModel = new Rectangle2D(10, 10, 173, 50);
@@ -316,17 +343,6 @@ void setup()
     decal->getGraphical().setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
-	
-	// chain link stuff
-    /*Matrix4 scale;
-    scale.createScaleMatrix(0.01, 0.01, 0.01);
-    Position(0.0f, 3.0f*FOOT, 0.0f).getTransformMatrix(positionMatrix);
-    Matrix4 transformMatrix;
-    transformMatrix.multiply(cameraMatrix);
-    transformMatrix.multiply(positionMatrix);
-    transformMatrix.multiply(scale);
-    scale.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
-    transformMatrix.multiply(scale);*/
     
     Matrix4 tempm;
     Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f) );
@@ -340,12 +356,13 @@ void setup()
 	
         
     // set eye level
-    cameraFrame.getLocation().set(0.0f, 6 * FOOT, ROOM_SIZE);
-	cameraFrame.getForwardVector().set(0.0f, 0.0f, -1.0f);
+    camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
+	camera.setStepSpeed( FOOT );
+	camera.setStrafeSpeed( FOOT );
 	
 	// init renderer
 	renderer = new HemRenderer(resourceManager);
-	renderer->setCamera( &cameraFrame );
+	renderer->setCamera( &camera.getPosition() );
 	renderer->setLightSource( lightPos );
 	renderer->setSkyColor( skyColor );
 	renderer->setGroundColor( groundColor );
@@ -364,29 +381,34 @@ void renderScene(void)
 {
     
 	// perform bullet physics
-	if (!paused && physicsTimer.getElapsedTime() > (1/60.0f) )
-	{
-	    float t = physicsTimer.getElapsedTime();
-	    physicsTimer.reset();
-	    physics.stepSimulation(t,10);
-	}
+	if (!paused )
+	    physics.stepSimulation((1/60.0f),10);
 	
 	// move
 	Vector3 side;
 	if (moveForward)
-	    cameraFrame.translate(FOOT, 0.0f, FOOT);
+	    camera.step(1);
 	if (moveBack)
-		cameraFrame.translate(-FOOT, 0.0f, -FOOT);
+		camera.step(-1);
 	if (moveLeft)
-	{
-	    cameraFrame.getLocalXAxis(side);
-		cameraFrame.translate(side.getX()*FOOT, 0.0f, side.getZ()*FOOT);
-	}
+	    camera.strafe(1);
 	if (moveRight)
+	    camera.strafe(-1);
+	
+	// release water
+	if (releaseWater)
 	{
-		cameraFrame.getLocalXAxis(side);
-		cameraFrame.translate(-side.getX()*FOOT, 0.0f, -side.getZ()*FOOT);
-	}
+	    for (int i = 0; i < 20; i++)
+        {
+            Object* t = new Object(*tinySphere, 0.01f, Point3(/*1.1f * (i%5)*/0, 10.0f, /*1.1f * (i/5)*/0)); // 0.01 kg sphere
+            t->getGraphical().setBaseTexture(*blueTex);
+            objects.push_back(t);
+            
+            t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
+                                          btVector3(0.0f, 0.0f, 0.0f));
+            physics.addBody(t->getPhysical());
+        }
+    }
 	
 	static float lastTime = 0.0f;
 	lastTime = timer.getElapsedTime();
@@ -483,7 +505,7 @@ void keyPressed(int key)
 	Object* t;
     Object* decal;
     std::vector<Object*>::iterator it;
-    int i;
+    //int i;
 	
 	
 	
@@ -495,9 +517,9 @@ void keyPressed(int key)
 				wireframe = false;
 			else
 				wireframe = true;*/
-			cameraFrame.getLocation().set(0.0f, 6.0f * FOOT, 20.0f * FOOT);
-			cameraFrame.getForwardVector().set(0.0f, 0.0f, -1.0f);
-			cameraFrame.getUpVector().set(0.0f, 1.0f, 0.0f);
+			camera.setLocation( Point3(0.0f, 6.0f * FOOT, 20.0f * FOOT) );
+			//camera.getPosition().getForwardVector().set(0.0f, 0.0f, -1.0f);
+			//camera.getPosition().getUpVector().set(0.0f, 1.0f, 0.0f);
 			
 			// manually set new position for ball
 			btBall->getPosition().getLocation().setY(10*FOOT);
@@ -510,35 +532,39 @@ void keyPressed(int key)
 			
 		// w, forward
 		case 'w':
-			cameraFrame.translate(cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
-								  cameraFrame.getForwardVector().getZ()*FOOT);
+			//cameraFrame.translate(cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
+			//					  cameraFrame.getForwardVector().getZ()*FOOT);
+			moveForward = true;
 			break;
 			
 		// s, backward
 		case 's':
-			cameraFrame.translate(-cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
-								  -cameraFrame.getForwardVector().getZ()*FOOT);
+			//cameraFrame.translate(-cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
+			//					  -cameraFrame.getForwardVector().getZ()*FOOT);
+			moveBack = true;
 			break;
 			
 		// a, strafe left
 		case 'a':
-			cameraFrame.getLocalXAxis(side);
-			cameraFrame.translate(side.getX()*FOOT, 0.0f, side.getZ()*FOOT);
+			//cameraFrame.getLocalXAxis(side);
+			//cameraFrame.translate(side.getX()*FOOT, 0.0f, side.getZ()*FOOT);
+			moveLeft = true;
 			break;
 			
 		// d, strafe right
 		case 'd':
 			// can only move in the xz plane
-			cameraFrame.getLocalXAxis(side);
-			cameraFrame.translate(-side.getX()*FOOT, 0.0f, -side.getZ()*FOOT);
+			//cameraFrame.getLocalXAxis(side);
+			//cameraFrame.translate(-side.getX()*FOOT, 0.0f, -side.getZ()*FOOT);
+			moveRight = true;
 			break;
 			
 		case '-':
-			cameraFrame.translate(0.0f, -1.0f, 0.0f);
+			//camera.getPosition().translate(0.0f, -1.0f, 0.0f);
 			break;
 			
 		case '=':
-			cameraFrame.translate(0.0f, 1.0f, 0.0f);
+			//camera.getPosition().translate(0.0f, 1.0f, 0.0f);
 			break;
 			
 		case 'g':
@@ -546,6 +572,8 @@ void keyPressed(int key)
 			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			physics.addBody(t->getPhysical());
+			
+			camera.lookat( Point3(0, 30, 0) );
             
             // add decal
             decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
@@ -554,16 +582,7 @@ void keyPressed(int key)
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
 		case 'h':
-		    for (i = 0; i < 20; i++)
-		    {
-                t = new Object(*tinySphere, 1, Point3(0.2f * (i%5), 10.0f, 0.2f * (i/5))); // 0.01 kg sphere
-                t->getGraphical().setBaseTexture(*blueTex);
-                objects.push_back(t);
-                
-                t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
-                                              btVector3(0.0f, 0.0f, 0.0f));
-                physics.addBody(t->getPhysical());
-            }
+		    releaseWater = true;
 			break;
 		case 'p':
 			if (paused)
@@ -573,26 +592,80 @@ void keyPressed(int key)
 			break;
 			
 		case 'z':
-			it = objects.begin() + 2;
+			it = objects.begin() + 6;
 			for (; it != objects.end(); it++)
 			{
 				physics.removeBody((*it)->getPhysical());
 				delete (*it);
 			}
-			objects.erase(objects.begin()+2, objects.end());
+			objects.erase(objects.begin()+6, objects.end());
             decals.clear();
             relations.clear();
 			break;
 			
 		case 'u':
 		    if (lockCursor)
+		    {
+		        graphics.showCursor( true );
 		        lockCursor = false;
+		    }
 		    else
+		    {
+		        graphics.showCursor( false );
 		        lockCursor = true;
+		    }
 		    break;
 
         default:
             break;
+        
+	}
+	
+}
+
+/** Called when a normal key is pressed on the keyboard
+ * @param key the key pressed
+ * @param x the x-coord of the mouse at the time of the press
+ * @param y the y-coord of the mouse at the time of the press
+ */
+void keyReleased(int key)
+{	
+	
+	switch(key)
+	{
+			
+		// w, forward
+		case 'w':
+			//cameraFrame.translate(cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
+			//					  cameraFrame.getForwardVector().getZ()*FOOT);
+			moveForward = false;
+			break;
+			
+		// s, backward
+		case 's':
+			//cameraFrame.translate(-cameraFrame.getForwardVector().getX()*FOOT, 0.0f, 
+			//					  -cameraFrame.getForwardVector().getZ()*FOOT);
+			moveBack = false;
+			break;
+			
+		// a, strafe left
+		case 'a':
+			//cameraFrame.getLocalXAxis(side);
+			//cameraFrame.translate(side.getX()*FOOT, 0.0f, side.getZ()*FOOT);
+			moveLeft = false;
+			break;
+			
+		// d, strafe right
+		case 'd':
+			// can only move in the xz plane
+			//cameraFrame.getLocalXAxis(side);
+			//cameraFrame.translate(-side.getX()*FOOT, 0.0f, -side.getZ()*FOOT);
+			moveRight = false;
+			break;
+			
+		case 'h':
+		    releaseWater = false;
+		    break;
         
 	}
 	
@@ -620,12 +693,12 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	
 	Position p;
 	Object* t;
-	static float speed = 4700 * 300;
+	static float speed = 14700 * 300;
 	
 	switch(button)
 	{
 	    case Event::LEFT:
-			p.set(cameraFrame);
+			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
 			t = new Object(*sphere, 500, p); // 1 kg sphere
@@ -671,37 +744,9 @@ void mouseMovedPassive(int x, int y)
 	if (x == (screenWidth/2) && y == (screenHeight/2))
 		return;
 	
-	// rotate on Y-axis (around X-axis)
-	// rotate with rederence to local coords
-	int m = 0;
-	if (y > (screenHeight/2))
-		m = (y - (screenHeight/2));
-	else
-		m = -((screenHeight/2) - y);
-	float yDeg = m * Y_AXIS_SENSITIVITY;
-	cameraFrame.rotateLocal(yDeg / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
-
-	
-	// check Y-axis bounds
-	Vector3& forward = cameraFrame.getForwardVector();
-	Vector3& up = cameraFrame.getUpVector();
-	// enforce bounds by never allowing the up (Y-axis) vector to go negative
-	while (up.getY() < 0)
-	{
-		if (forward.getY() > 0)
-			cameraFrame.rotateLocal(1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
-		else
-			cameraFrame.rotateLocal(-1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
-	}
-	
-	// rotate on X-axis (around Y-axis)
-	// rotate with reference to world coords
-	if (x > (screenWidth/2))
-		m = -(x - (screenWidth/2));
-	else
-		m = ((screenWidth/2) - x);
-	float xDeg = m * X_AXIS_SENSITIVITY;
-	cameraFrame.rotate(xDeg  * (M_PI / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
+	camera.panView( -(x - (screenWidth/2))  * X_AXIS_SENSITIVITY, 
+	                 (y - (screenHeight/2)) * Y_AXIS_SENSITIVITY 
+	              );
 
 	graphics.warpMouse(screenWidth / 2, screenHeight / 2);
 }
@@ -722,9 +767,11 @@ int main(int argc, char* argv[])
 	
 	// perform setup
 	setup();
-	graphics.showCursor( false );
+	
 	changeWindowSize(1280,1024); // to ensure transform pipeline is setup
 	graphics.createScreen();
+	
+	StopWatch frameTimer;
 	
 	// run SDL
 	Event event;
@@ -756,12 +803,18 @@ int main(int argc, char* argv[])
 	                break;
 	                
 	            case Event::MOUSE_BUTTON_UP:
+	                break;
+	                
 	            case Event::KEY_UP:
+	                keyReleased( event.data.key.key );
 	                break;
 	        }
 	    }
 	        
 	    renderScene();
+	    
+	    while (frameTimer.getElapsedTime() < (1/60.0f));
+	    frameTimer.reset();
 	}
 	
 	graphics.deinit();
