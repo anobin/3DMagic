@@ -38,6 +38,13 @@ namespace Magic3D
  */
 class PhysicsSystem
 {
+public:
+    enum CollisionSolverType
+    {
+        DISCRETE_COLLISIONS,        // collisions can be missed for fast-moving bodies
+        CONTINOUS_COLLISIONS        // collisions aren't missed, but slower
+    };
+    
 private:
     btBroadphaseInterface* broadphase;
 	btDefaultCollisionConfiguration* collisionConfiguration;
@@ -56,7 +63,7 @@ public:
     {   
     }
 
-    void init();
+    void init(CollisionSolverType collision = DISCRETE_COLLISIONS);
     
     void deinit();
     
