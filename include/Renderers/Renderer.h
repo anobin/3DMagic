@@ -47,8 +47,12 @@ protected:
 public: 
 	/// destructor
 	virtual ~Renderer();
+	
+	virtual void setup (unsigned int pass) = 0;
 
-	virtual void render( const std::vector<Object*>& bodies ) = 0;
+	virtual void render( Object* object, unsigned int pass ) = 0;
+	
+	virtual unsigned int getPassCount() = 0;
 
 };
 

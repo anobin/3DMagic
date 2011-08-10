@@ -48,7 +48,12 @@ Renderer2D::~Renderer2D()
     delete shader;
 }
 
-void Renderer2D::render( const std::vector<Object*>& bodies )
+unsigned int Renderer2D::getPassCount()
+{
+    return 1; // only ever one pass
+}
+
+void Renderer2D::setup (unsigned int pass)
 {
     // verify that we have valid data
     MAGIC_ASSERT( shader      != NULL ); // assert becuase we should have created shader
@@ -59,24 +64,26 @@ void Renderer2D::render( const std::vector<Object*>& bodies )
 	
 	// set uniforms that are the same for all objects
 	shader->setUniformMatrix( "mvpMatrix", 4, camera->getProjectionMatrix().getArray() );
+}
+
+void Renderer2D::render( Object* object, unsigned int pass )
+{                                      
+    // 'use' shader
+	shader->use();
 	
-	// render every object
-    std::vector<Object*>::const_iterator it = bodies.begin();
-	for (; it != bodies.end(); it++)
-	{
-	    // get graphical body for object
-	    GraphicalBody& body = (*it)->getGraphical();
-	    
-	    // set uniforms that vary per object
-		shader->setTexture( "textureMap", body.getBaseTexture() );
-        
-        // ensure the body's vertex data is bound to this shader's variables
-        if ( body.getShader() != this->shader )
-            body.setShader( *this->shader );
-		
-        // draw body
-	    body.draw(VertexArray::TRIANGLE_FAN);
-    }
+    // get graphical body for object
+    GraphicalBody& body = object->getGraphical();
+    
+    // set uniforms that vary per object
+    shader->setTexture( "textureMap", body.getBaseTexture() );
+    
+    // ensure the body's vertex data is bound to this shader's variables
+    if ( body.getShader() != this->shader )
+        body.setShader( *this->shader );
+    
+    // draw body
+    body.draw(VertexArray::TRIANGLE_FAN);
+    
 }
 
 

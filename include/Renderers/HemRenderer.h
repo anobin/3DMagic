@@ -56,6 +56,10 @@ protected:
     
     Color groundColor;
     
+    // data passed from setup to renderer
+    Point3 lightPos;
+    Matrix4 cameraMatrix;
+    
 public: 
     
     /// standard constructor
@@ -64,7 +68,11 @@ public:
 	/// destructor
 	virtual ~HemRenderer();
 
-	virtual void render( const std::vector<Object*>& bodies );
+	virtual void setup (unsigned int pass);
+
+	virtual void render( Object* object, unsigned int pass );
+	
+	virtual unsigned int getPassCount();
 
 	inline void setCamera( const Camera* camera )
 	{

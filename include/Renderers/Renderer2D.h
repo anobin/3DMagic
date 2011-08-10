@@ -58,7 +58,11 @@ public:
 	/// destructor
 	virtual ~Renderer2D();
 
-	virtual void render( const std::vector<Object*>& bodies );
+	virtual void setup (unsigned int pass);
+
+	virtual void render( Object* object, unsigned int pass );
+	
+	virtual unsigned int getPassCount();
 	
 	inline void setCamera( const Camera* camera )
 	{

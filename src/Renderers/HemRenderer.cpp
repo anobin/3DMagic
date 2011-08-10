@@ -49,19 +49,25 @@ HemRenderer::~HemRenderer()
     delete shader;
 }
 
-void HemRenderer::render( const std::vector<Object*>& bodies )
+unsigned int HemRenderer::getPassCount()
 {
+    return 1; // only ever one pass    
+}
+
+void HemRenderer::setup(unsigned int pass)
+{
+    // we don't care about pass number in this renderer
+    
     // verify that we have valid data
     MAGIC_ASSERT( shader      != NULL ); // assert becuase we should have created shader
     MAGIC_THROW( camera == NULL,         // throw becuase 'they' should have given us a camera 
         "Attempt to render without a camera set." );
                                       
     // get camera matrix
-    Matrix4 cameraMatrix;
     camera->getPosition().getCameraMatrix(cameraMatrix);
 
     // Transform the light position into eye coordinates
-    Point3 lightPos ( lightSource );
+    lightPos.set( lightSource );
 	lightPos.transform(cameraMatrix);
 	
 	// 'use' shader
@@ -70,44 +76,48 @@ void HemRenderer::render( const std::vector<Object*>& bodies )
 	// set shader uniforms that are the same for all bodies
 	shader->setUniformf(    "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
     shader->setUniformfv(   "skyColor",         3, skyColor.getInternal()     );
-    shader->setUniformfv(   "groundColor",      3, groundColor.getInternal()           );
+    shader->setUniformfv(   "groundColor",      3, groundColor.getInternal()  );
+}
+
+void HemRenderer::render( Object* object, unsigned int pass )
+{	
+    // we don't care about pass number in this renderer
     
-    std::vector<Object*>::const_iterator it = bodies.begin();
+	// 'use' shader
+    shader->use();
+    
+    // get graphical body for object
+    GraphicalBody& body = object->getGraphical();
+    
+    // get tranform (model-view) matrix from position (model) and camera (view) matrices 
     Matrix4 positionMatrix;
     Matrix4 transformMatrix;
-	for (; it != bodies.end(); it++)
-	{
-	    // get graphical body for object
-	    GraphicalBody& body = (*it)->getGraphical();
-	    
-		// get tranform (model-view) matrix from position (model) and camera (view) matrices 
-		(*it)->getPosition().getTransformMatrix(positionMatrix);
-		transformMatrix.multiply(cameraMatrix, positionMatrix);
-		
-		// apply adjustment matrix
-		transformMatrix.multiply( body.getAdjustmentMatrix() );
-		
-		// create mvp matrix from projection and transform (model-view)
-		Matrix4 mvp;
-		mvp.multiply(camera->getProjectionMatrix(), transformMatrix);
-		
-		// extract normal matrix from transform matrix
-		Matrix3 normal;
-		transformMatrix.extractRotation(normal);
-        
-        // set uniforms that are different per body
-        shader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
-        shader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
-        shader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-        shader->setTexture(       "textureMap",  body.getBaseTexture()   );
-        
-        // ensure the body's vertex data is bound to this shader's variables
-        if ( body.getShader() != this->shader )
-            body.setShader( *this->shader );
-		
-        // draw body
-	    (*it)->getGraphical().draw();
-    }
+    object->getPosition().getTransformMatrix(positionMatrix);
+    transformMatrix.multiply(cameraMatrix, positionMatrix);
+    
+    // apply adjustment matrix
+    transformMatrix.multiply( body.getAdjustmentMatrix() );
+    
+    // create mvp matrix from projection and transform (model-view)
+    Matrix4 mvp;
+    mvp.multiply(camera->getProjectionMatrix(), transformMatrix);
+    
+    // extract normal matrix from transform matrix
+    Matrix3 normal;
+    transformMatrix.extractRotation(normal);
+    
+    // set uniforms that are different per body
+    shader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
+    shader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
+    shader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
+    shader->setTexture(       "textureMap",  body.getBaseTexture()   );
+    
+    // ensure the body's vertex data is bound to this shader's variables
+    if ( body.getShader() != this->shader )
+        body.setShader( *this->shader );
+    
+    // draw body
+    body.draw();
 }
 
 

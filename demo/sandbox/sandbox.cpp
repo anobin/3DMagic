@@ -417,10 +417,16 @@ void renderScene(void)
 	graphics.enableBlending();
 	
 	// object render loop
-	renderer->render( objects );
+	std::vector< Object*>::iterator it = objects.begin();
+	renderer->setup( 0 );
+	for (; it != objects.end(); it++)
+	    renderer->render( *it, 0 );
 	
 	// 2d object render loop
-	renderer2D->render( objects2d );
+	it = objects2d.begin();
+	renderer2D->setup( 0 );
+	for (; it != objects2d.end(); it++)
+	    renderer2D->render( *it, 0 );
 	
 	// draw decals
 	/*it = decals.begin();

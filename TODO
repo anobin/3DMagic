@@ -34,6 +34,12 @@
   implementation system can be made for the graphics
 - ensure all bullet calls and types are in classes in Physics folder, so a replacementable
   implementation system can be made for the graphics
+- add support for multi-pass renderers
+- add support for hook-up to motion state (physics position update)
+- add support for custom attributes for bodies, that can be used by renderer
+    - named or just id's with variabfiable names.
+- add more hooks into pipeline
+- add support for objects with multiple parts or object groups
 
 ## Secondary
 -add model-texture mapping interface to be used through object class
@@ -112,6 +118,7 @@
 ## Examples ideas
 - most basic starting demo with a ground and a single object
 - using camera and framebuffer objects to render a scene from multiple angles
+- using a multi-pass renderer, make a motion blur demo
 
 
 
