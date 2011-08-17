@@ -212,6 +212,29 @@ void setup()
 	blueTex = new Texture(blueImage());
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
+	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
+					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
+	if (resourceManager.doesResourceExist("images/splatter.tga"))
+	{
+		Handle<TGA2DResource> splatterImage = resourceManager.get
+			<TGA2DResource>("images/splatter.tga");
+		circleTex = new Texture(splatterImage());
+	}
+	else
+	{
+		circleTex = new Texture(frameImage());
+	}
+	if (resourceManager.doesResourceExist("images/logo.png"))
+	{
+		Handle<PNG2DResource> logoImage = resourceManager.get
+			<PNG2DResource>("images/logo.png");
+		frameTex = new Texture(logoImage());
+	}
+	else
+	{
+		frameTex = new Texture(frameImage());
+	}
+	
 	
     // init models, represent data on graphics card
 	sphere = new Sphere(2*FOOT, 55, 32);
@@ -227,7 +250,12 @@ void setup()
 	wallModel = new FlatSurface(5*FOOT, 5*FOOT, 20, 20);
 	float scale = 5.0f;
 	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
-	boxModel->setTexture(brickTex);
+	boxModel->setFrontTexture(brickTex);
+	boxModel->setBackTexture(brickTex);
+	boxModel->setTopTexture(marbleTex);
+	boxModel->setBottomTexture(blueTex);
+	boxModel->setLeftTexture(stoneTex);
+	boxModel->setRightTexture(blueTex);
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
@@ -382,35 +410,15 @@ void setup()
 	frameModel = new Rectangle2D(10, 10, 173, 50);
 	circleModel = new Circle2D(400, 60, 100, 1.0f);
 	
-	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
-					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
+	
 	/*if (resourceManager.doesResourceExist("images/logo.tga"))
 	{
 		Handle<TGA2DResource> logoImage = resourceManager.get
 			<TGA2DResource>("images/logo.tga");
 		frameTex = new Texture(logoImage());
 	}*/
-	if (resourceManager.doesResourceExist("images/logo.png"))
-	{
-		Handle<PNG2DResource> logoImage = resourceManager.get
-			<PNG2DResource>("images/logo.png");
-		frameTex = new Texture(logoImage());
-	}
-	else
-	{
-		frameTex = new Texture(frameImage());
-	}
 	frameModel->setTexture(frameTex);
-	if (resourceManager.doesResourceExist("images/splatter.tga"))
-	{
-		Handle<TGA2DResource> splatterImage = resourceManager.get
-			<TGA2DResource>("images/splatter.tga");
-		circleTex = new Texture(splatterImage());
-	}
-	else
-	{
-		circleTex = new Texture(frameImage());
-	}
+	
 	circleModel->setTexture(circleTex);
 	
 	frameObject = new Object( *frameModel, 0);

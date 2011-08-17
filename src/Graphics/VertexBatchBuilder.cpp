@@ -80,6 +80,8 @@ void VertexBatchBuilder::end()
 	index2data.clear();
 
     batch = NULL;	
+    this->vertexCount = 0;
+    this->nextIndex = 0;
 }
 	
 

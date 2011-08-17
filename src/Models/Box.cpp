@@ -53,7 +53,7 @@ Box::Box(float width, float height, float depth)
 	
 	// 6 points per side, 6 sides
 	VertexBatchBuilder builder;
-	builder.begin(6*6, &batch);
+	builder.begin(6, &topbatch);
 	
 	// get indices for attributes we use
 	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
@@ -65,13 +65,18 @@ Box::Box(float width, float height, float depth)
 	
 	// top  and bottom 6 points
 	for (int i=0; i < 2; i++)
-	{
+	{   
 		float h = height;
 		float n = 1.0f;
 		if (i == 1)
 		{
+		    builder.end();
 			h = -height;
 			n = -1.0f;
+			builder.begin(6, &bottombatch);
+			position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+			normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+			tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
 		}
 		normal3f	(0.0f, n, 0.0f);
 		texCoord2f	(0.0f, 0.0f);
@@ -92,16 +97,26 @@ Box::Box(float width, float height, float depth)
 		texCoord2f	(1.0f, 1.0f);
 		position3f	(width, h, depth); // bottom right
 	}
+	builder.end();
 	
 	// 2 sides, 6 points each
+	builder.begin(6, &rightbatch);
+	position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+    normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+    tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
 	for (int i=0; i < 2; i++)
 	{
 		float w = -width;
 		float n = -1.0f;
 		if (i == 1)
 		{
+		    builder.end();
 			w = width;
 			n = 1.0f;
+			builder.begin(6, &leftbatch);
+			position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+			normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+			tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
 		}
 		normal3f	(n, 0.0f, 0.0f);
 		texCoord2f	(0.0f, 0.0f);
@@ -122,16 +137,26 @@ Box::Box(float width, float height, float depth)
 		texCoord2f	(1.0f, 1.0f);
 		position3f	(w, -height, depth); // bottom right
 	}
+	builder.end();
 	
 	// front and back, 6 points each
+	builder.begin(6, &backbatch);
+	position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+    normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+    tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
 	for (int i=0; i < 2; i++)
 	{
 		float d = -depth;
 		float n = -1.0f;
 		if (i == 1)
 		{
+		    builder.end();
 			d = depth;
 			n = 1.0f;
+			builder.begin(6, &frontbatch);
+			position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+			normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+			tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
 		}
 		normal3f	(0.0f, 0.0f, n);
 		texCoord2f	(0.0f, 0.0f);
@@ -152,10 +177,14 @@ Box::Box(float width, float height, float depth)
 		texCoord2f	(1.0f, 1.0f);
 		position3f	(width, -height, d); // bottom right
 	}
-	
-	// close vertex data
 	builder.end();
-	this->Model::data.push_back(&batch);
+	
+	this->Model::data.push_back(&topbatch);
+	this->Model::data.push_back(&bottombatch);
+	this->Model::data.push_back(&leftbatch);
+	this->Model::data.push_back(&rightbatch);
+	this->Model::data.push_back(&frontbatch);
+	this->Model::data.push_back(&backbatch);
 }
 	
 /// destructor

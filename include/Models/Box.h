@@ -40,8 +40,12 @@ protected:
 	/// box collison shape for physics
 	btBoxShape* boxShape;
 	
-	/// single vertex batch
-	VertexBatch batch;
+	VertexBatch topbatch;
+	VertexBatch bottombatch;
+	VertexBatch leftbatch;
+	VertexBatch rightbatch;
+	VertexBatch frontbatch;
+	VertexBatch backbatch;
 	
 public:
 	/** Standard constructor
@@ -60,8 +64,45 @@ public:
 
 	inline void setTexture( Texture* t)
 	{
-	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    topbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    bottombatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    leftbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    rightbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    frontbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	    backbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
 	}
+	
+	inline void setTopTexture( Texture* t)
+	{
+	    topbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	inline void setBottomTexture( Texture* t)
+	{
+	    bottombatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	inline void setLeftTexture( Texture* t)
+	{
+	    leftbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	inline void setRightTexture( Texture* t)
+	{
+	    rightbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	inline void setFrontTexture( Texture* t)
+	{
+	    frontbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	inline void setBackTexture( Texture* t)
+	{
+	    backbatch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
+	
+	
 
 };
 
