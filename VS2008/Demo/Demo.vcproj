@@ -3,8 +3,9 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Demo"
-	ProjectGUID="{5FD1BD8C-2DE0-4474-BF2D-5CFAEB178BE2}"
+	ProjectGUID="{1998C2FC-1892-4DAD-9F46-90ECD13D55F6}"
 	RootNamespace="Demo"
+	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -20,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,10 +42,11 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\external\include&quot;;&quot;$(ProjectDir)\..\..\include&quot;"
-				PreprocessorDefinitions="M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -59,9 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="freeglut.lib glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib"
+				AdditionalDependencies="glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib libpng.lib SDL.lib Opengl32.lib zdll.lib SDLmain.lib"
+				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\..\external\lib&quot;"
 				GenerateDebugInformation="true"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -91,7 +95,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -113,10 +117,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\external\include&quot;;&quot;$(ProjectDir)\..\..\include&quot;"
-				PreprocessorDefinitions="M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -131,9 +135,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="freeglut.lib glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\..\external\lib&quot;"
+				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -174,7 +178,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\demo\field\Field.cpp"
+				RelativePath="..\..\demo\sandbox\sandbox.cpp"
 				>
 			</File>
 		</Filter>

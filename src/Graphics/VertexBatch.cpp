@@ -35,34 +35,6 @@ VertexBatch::~VertexBatch()
 	for(; it2 != attributeData.end(); it2++)
 	    delete (*it2);
 }
-	
-
-template<> 
-float VertexBatch::getProperty<float>(PropertyIndex p)
-{
-    return properties[(int)p].data.u_float;
-}
-
-
-template<>
-Texture* VertexBatch::getProperty<Texture*>(PropertyIndex p)
-{
-    return properties[(int)p].data.u_texture;
-}
-
-template<>
-void VertexBatch::setProperty<float>(PropertyIndex p, float f)
-{
-    properties[(int)p].data.u_float = f;
-    properties[(int)p].set = true;
-}
-
-template<>
-void VertexBatch::setProperty<Texture*>(PropertyIndex p, Texture* t)
-{
-    properties[(int)p].data.u_texture = t;
-    properties[(int)p].set = true;
-}
 
 	
 	

@@ -156,6 +156,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Cameras\Camera.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Cameras\Camera2D.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Models\Circle2D.cpp"
 				>
 			</File>
@@ -168,7 +176,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Shaders\FlatShader.cpp"
+				RelativePath="..\src\Event\Event.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Event\EventSystem.cpp"
 				>
 			</File>
 			<File
@@ -176,11 +188,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Shaders\HemisphereShader.cpp"
+				RelativePath="..\src\Cameras\FPCamera.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Shaders\HemisphereTexShader.cpp"
+				RelativePath="..\src\Graphics\GraphicalBody.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\GraphicsSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Renderers\HemRenderer.cpp"
 				>
 			</File>
 			<File
@@ -188,19 +208,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Exceptions\MagicAssertException.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Exceptions\MagicException.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Math\Generic\Matrix3.cc"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Math\Matrix3.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Math\Generic\Matrix4.cc"
 				>
 			</File>
 			<File
@@ -228,19 +244,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Math\Generic\Point3.cc"
+				RelativePath="..\src\Physics\PhysicalBody.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Physics\PhysicsSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resources\Images\PNG2DResource.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Math\Point3.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Shaders\PointLightDiffuseShader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Math\Generic\Position.cc"
 				>
 			</File>
 			<File
@@ -256,6 +272,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Renderers\Renderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Renderers\Renderer2D.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Resources\Resource.cpp"
 				>
 			</File>
@@ -268,11 +292,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Shaders\Shader.cpp"
+				RelativePath="..\src\Util\SDL_Init.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Shaders\Shader2D.cpp"
+				RelativePath="..\src\Shaders\Shader.cpp"
 				>
 			</File>
 			<File
@@ -281,14 +305,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Exceptions\ShaderVertexInterfaceException.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Shaders\ShaderVertexInterfaceSpec.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Shaders\SimpleADSShader.cpp"
 				>
 			</File>
 			<File
@@ -312,10 +328,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Math\Generic\Vector3.cc"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Math\Vector3.cpp"
 				>
 			</File>
@@ -324,7 +336,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Graphics\VertexHandler.cpp"
+				RelativePath="..\src\Shaders\VertexAttribSpec.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\VertexBatch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\VertexBatchBuilder.cpp"
 				>
 			</File>
 		</Filter>
@@ -334,35 +354,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\Graphics\AttributeArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Graphics\Buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Graphics\DynamicVertexHandler.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Physics\MotionState.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Shaders\ShaderVertexInterfaceSpec.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Graphics\Texture.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Graphics\VertexArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\Graphics\VertexHandler.h"
+				RelativePath="..\include\Graphics\VertexBatch.h"
 				>
 			</File>
 		</Filter>

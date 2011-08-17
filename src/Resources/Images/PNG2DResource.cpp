@@ -125,13 +125,16 @@ PNG2DResource::PNG2DResource(const char* path, const std::string& name, Resource
     
     // setup pointers to rows for reading in using libpng
     // note that PNG stores it's rows in reverse order of openGL
-    png_bytep row_pointers[ this->height ];
+    png_bytep* row_pointers =  new png_bytep[ this->height ];
     for (int i=0, j = this->height-1; i<this->height; i++, j--)
         row_pointers[i] = (png_bytep) &this->imageData[ row_width * j ];
         
     // Setup the jump point used by png_read_image() if an error occurs
     if (setjmp(png_jmpbuf(png_ptr)))
+    {
+        delete[] row_pointers;
         throw_MagicException( "Error reading in PNG 2D resource file data" );
+    }
 
     // read in PNG data
     png_read_image(png_ptr, row_pointers);
@@ -139,6 +142,7 @@ PNG2DResource::PNG2DResource(const char* path, const std::string& name, Resource
     // free read and info structures
     png_read_end( png_ptr, NULL );
     png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
+    delete[] row_pointers;
 
     // close file pointer
     fclose(fp);

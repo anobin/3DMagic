@@ -149,6 +149,32 @@ public:
 	
 };
 
+template<> 
+inline float VertexBatch::getProperty<float>(PropertyIndex p)
+{
+    return properties[(int)p].data.u_float;
+}
+
+
+template<>
+inline Texture* VertexBatch::getProperty<Texture*>(PropertyIndex p)
+{
+    return properties[(int)p].data.u_texture;
+}
+
+template<>
+inline void VertexBatch::setProperty<float>(PropertyIndex p, float f)
+{
+    properties[(int)p].data.u_float = f;
+    properties[(int)p].set = true;
+}
+
+template<>
+inline void VertexBatch::setProperty<Texture*>(PropertyIndex p, Texture* t)
+{
+    properties[(int)p].data.u_texture = t;
+    properties[(int)p].set = true;
+}
 
 
 
