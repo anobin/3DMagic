@@ -74,15 +74,27 @@ void Renderer2D::render( Object* object, unsigned int pass )
     // get graphical body for object
     GraphicalBody& body = object->getGraphical();
     
-    // set uniforms that vary per object
-    shader->setTexture( "textureMap", body.getBaseTexture() );
-    
     // ensure the body's vertex data is bound to this shader's variables
     if ( body.getShader() != this->shader )
         body.setShader( *this->shader );
     
-    // draw body
-    body.draw(VertexArray::TRIANGLE_FAN);
+    // render every batch in the body
+    std::vector<GraphicalBody::RenderBatch*>& batch = body.getRenderData();
+    std::vector<GraphicalBody::RenderBatch*>::iterator it = batch.begin();
+    for(; it != batch.end(); it++)
+    {
+        GraphicalBody::RenderBatch& b = *(*it);
+        
+        // set texture
+        MAGIC_THROW( !b.isPropertySet(VertexBatch::TEXTURE),
+            "Attempt to render graphical body whose model does not have a texture set." );
+        Texture* tex = b.getProperty<Texture*>(VertexBatch::TEXTURE);
+        shader->setTexture( "textureMap", tex );
+        
+        // draw batch
+        b.draw(VertexArray::TRIANGLE_FAN);
+    
+    }
     
 }
 

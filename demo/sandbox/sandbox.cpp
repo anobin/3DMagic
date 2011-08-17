@@ -68,7 +68,7 @@ FlatSurface* ceilingModel;
 FlatSurface* floorModel;
 FlatSurface* wallModel;
 Sphere* sphere;
-Model* tinySphere;
+Sphere* tinySphere;
 Box* bigSphere;
 Box* boxModel;
 
@@ -215,23 +215,27 @@ void setup()
 	
     // init models, represent data on graphics card
 	sphere = new Sphere(2*FOOT, 55, 32);
+	sphere->setTexture(marbleTex);
 	tinySphere = new Sphere( 1*FOOT, 4, 4);
+	tinySphere->setTexture(blueTex);
 	//bigSphere = new Sphere(50*FOOT, 55, 32);
 	bigSphere = new Box(2, 4, 3);
+	bigSphere->setTexture(marbleTex);
 	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
 	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
+	floorModel->setTexture(stoneTex);
 	wallModel = new FlatSurface(5*FOOT, 5*FOOT, 20, 20);
 	float scale = 5.0f;
 	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
+	boxModel->setTexture(brickTex);
 	
 	// init objects
 	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
-	btBall->getGraphical().setBaseTexture(*marbleTex);
+	
 	objects.push_back(btBall);
 	//physics.addBody(btBall->getPhyscial());
 	
 	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->getGraphical().setBaseTexture(*stoneTex);
 	objects.push_back(floorObject);
 	physics.addBody(floorObject->getPhysical());
 	
@@ -263,13 +267,14 @@ void setup()
 	physics.addBody(floorObject->getPhysical());
 	floorObject->getPhysical().syncPositionToPhysics();*/
 	
-	float wallWidth =60;
+	float wallWidth =40;
 	float wallHeight = 10;
 	float brickHeight = 3*INCH*scale;
 	float brickWidth = 6*INCH*scale;
 	float h = brickHeight/2;
 	float xOffset = -(brickWidth*wallWidth)/2;
 	float zOffset = -100*FOOT;
+	Object* last = NULL;
 	for (int i=0; i < wallHeight; i++, h+=brickHeight)
 	{
 		float w = xOffset;
@@ -280,15 +285,103 @@ void setup()
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
 			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
-			btBox->getGraphical().setBaseTexture(*brickTex);
 			objects.push_back(btBox);
 			physics.addBody(btBox->getPhysical());
+			if ( last != NULL )
+			{
+			    //btPoint2PointConstraint* c = new btPoint2PointConstraint(*last->getPhysical().getRigidBody(), 
+			    //    *btBox->getPhysical().getRigidBody(), btVector3(brickWidth/2.0f+ 0.5f, 0, 0), btVector3(-brickWidth/2.0f - 0.5f, 0, 0) );
+			    /*btVector3 axisA(0.f, 1.f, 0.f); 
+                btVector3 axisB(0.f, 1.f, 0.f); 
+                btVector3 pivotA(-5.f, 0.f, 0.f);
+                btVector3 pivotB( 5.f, 0.f, 0.f);
+                btHingeConstraint* c = new btHingeConstraint(*last->getPhysical().getRigidBody(), *btBox->getPhysical().getRigidBody(), pivotA, pivotB, axisA, axisB);*/
+                /*btPoint2PointConstraint* c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(brickWidth/2.0f, 0, 0) );
+                physics.addConstraint( c );
+                c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(-brickWidth/2.0f, 0, 0) );
+			    physics.addConstraint( c );
+			    c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(0, brickHeight/2.0f, 0) );
+			    physics.addConstraint( c );
+			    c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(0, -brickHeight/2.0f, 0) );
+			    physics.addConstraint( c );*/
+			    
+			    /*btTransform tl, tr;
+			    tl = btTransform::getIdentity();
+			    tr = btTransform::getIdentity();
+			    tl.setOrigin(btVector3(brickWidth/2.0f, 0, 0));
+			    tr.setOrigin(btVector3(-brickWidth/2.0f, 0, 0));
+			    
+			    btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*last->getPhysical().getRigidBody(), 
+			        *btBox->getPhysical().getRigidBody(), tl, tr, false );
+			    c->setLinearLowerLimit( btVector3(0,0,0) );
+			    c->setLinearUpperLimit( btVector3(0,0,0) );
+			    c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
+		        c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
+			    physics.addConstraint( c );
+			    
+			    c->setParam(BT_CONSTRAINT_ERP, 0.5);
+			    c->setParam(BT_CONSTRAINT_CFM, 0);
+			    
+			    if ( j == wallWidth-1)
+			    {
+			        btTransform tl, tr;
+                    tl = btTransform::getIdentity();
+                    tl.setOrigin(btVector3(-brickWidth/2.0f, 0, 0));
+                    
+                    btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
+                    c->setLinearLowerLimit( btVector3(0,0,0) );
+                    c->setLinearUpperLimit( btVector3(0,0,0) );
+                    c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
+                    c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
+                    c->setParam(BT_CONSTRAINT_ERP, 0.5);
+			    c->setParam(BT_CONSTRAINT_CFM, 0);
+                    physics.addConstraint( c );
+			    }*/
+			    
+			    /*btVector3 v(w-(brickWidth/2.0f), h, zOffset);
+			    btVector3 q(0,1,0);
+			    btVector3 r(0,0,1);
+			    btUniversalConstraint* c = new btUniversalConstraint(*last->getPhysical().getRigidBody(), 
+			        *btBox->getPhysical().getRigidBody(), v, q, r );
+			    c->setUpperLimit( 0,0);
+			    c->setLowerLimit( 0,0);
+			    physics.addConstraint(c);*/
+			    
+			    btTransform tl, tr;
+                tl = btTransform::getIdentity();
+                tl.setOrigin(btVector3(0, -brickHeight/2.0f, 0));
+                
+                btGeneric6DofConstraint* c1 = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
+                c1->setLinearLowerLimit( btVector3(0,0,0) );
+                c1->setLinearUpperLimit( btVector3(0,0,0) );
+                c1->setAngularLowerLimit(btVector3(0, 0.f, 0));
+                c1->setAngularUpperLimit(btVector3(0, 0.f, 0));
+//c1->setBreakingImpulseThreshold(10.2);
+                physics.addConstraint( c1 );
+			}
+			else
+			{
+			    /*btTransform tl, tr;
+                tl = btTransform::getIdentity();
+                tl.setOrigin(btVector3(brickWidth/2.0f, 0, 0));
+                
+                btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
+                c->setLinearLowerLimit( btVector3(0,0,0) );
+                c->setLinearUpperLimit( btVector3(0,0,0) );
+                c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
+                c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
+                c->setParam(BT_CONSTRAINT_ERP, 0.9);
+			    c->setParam(BT_CONSTRAINT_CFM, 0);
+                physics.addConstraint( c );*/
+			}
+			last = btBox;
 		}
 	}
 	
 	// gui stuff
 	frameModel = new Rectangle2D(10, 10, 173, 50);
 	circleModel = new Circle2D(400, 60, 100, 1.0f);
+	
 	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
 					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
 	/*if (resourceManager.doesResourceExist("images/logo.tga"))
@@ -307,6 +400,7 @@ void setup()
 	{
 		frameTex = new Texture(frameImage());
 	}
+	frameModel->setTexture(frameTex);
 	if (resourceManager.doesResourceExist("images/splatter.tga"))
 	{
 		Handle<TGA2DResource> splatterImage = resourceManager.get
@@ -317,12 +411,11 @@ void setup()
 	{
 		circleTex = new Texture(frameImage());
 	}
+	circleModel->setTexture(circleTex);
 	
 	frameObject = new Object( *frameModel, 0);
-	frameObject->getGraphical().setBaseTexture( *frameTex );
 	objects2d.push_back( frameObject );
 	circleObject = new Object( *circleModel, 0);
-	circleObject->getGraphical().setBaseTexture( *circleTex );
 	objects2d.push_back( circleObject );
 	
 	// 3ds test stuff
@@ -332,22 +425,15 @@ void setup()
 	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
 					"images/linkImage", Color(195, 195, 195, 255, Color::RGBA_BYTE));
 	chainLinkTex = new Texture(linkImage());
+	chainLinkModel->setTexture(chainLinkTex);
     
     // decal stuff
     decalSurface = new FlatSurface(6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
     decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
-    decal->getGraphical().setBaseTexture( *circleTex );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
     
-    Matrix4 tempm;
     Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f) );
-    chainLink->getGraphical().setBaseTexture(*chainLinkTex);
-    Matrix4& adjust = chainLink->getGraphical().getAdjustmentMatrix();
-    tempm.createScaleMatrix(0.001, 0.001, 0.001);
-    adjust.multiply( tempm );
-    tempm.createRotationMatrix(90.0f*M_PI/180.0f, 1.0f, 0.0f, 0.0f);
-    adjust.multiply( tempm );
     objects.push_back(chainLink);
 	
         
@@ -371,15 +457,23 @@ void setup()
 }
 
 
-bool paused = false;
+bool paused = true;
+int slow = 0;
 /** Called to render each and every frame
  */
 void renderScene(void)
 {
     
 	// perform bullet physics
-	if (!paused )
-	    physics.stepSimulation((1/60.0f),10);
+	static int slowCounter = 0;
+	if (!paused && slowCounter >= slow)
+	{
+	    physics.stepSimulation(1/60.0f,10);
+	    slowCounter = 0;
+	}
+	else
+	    slowCounter++;
+	    
 	
 	// move
 	Vector3 side;
@@ -398,7 +492,6 @@ void renderScene(void)
 	    for (int i = 0; i < 20; i++)
         {
             Object* t = new Object(*tinySphere, 0.01f, Point3(/*1.1f * (i%5)*/0, 10.0f, /*1.1f * (i/5)*/0)); // 0.01 kg sphere
-            t->getGraphical().setBaseTexture(*blueTex);
             objects.push_back(t);
             
             t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
@@ -563,16 +656,15 @@ void keyPressed(int key)
 			break;
 			
 		case '-':
-			//camera.getPosition().translate(0.0f, -1.0f, 0.0f);
+			camera.elevate( -3*FOOT );
 			break;
 			
 		case '=':
-			//camera.getPosition().translate(0.0f, 1.0f, 0.0f);
+			camera.elevate( 3*FOOT );
 			break;
 			
 		case 'g':
 			t = new Object(*bigSphere, 300, Point3(0.0f, 5.0f, 0.0f)); // 1 kg sphere
-			t->getGraphical().setBaseTexture(*marbleTex);
 			objects.push_back(t);
 			physics.addBody(t->getPhysical());
 			
@@ -580,7 +672,6 @@ void keyPressed(int key)
             
             // add decal
             decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
-            decal->getGraphical().setBaseTexture( *circleTex );
             decals.push_back(decal);
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
@@ -618,6 +709,17 @@ void keyPressed(int key)
 		        graphics.showCursor( false );
 		        lockCursor = true;
 		    }
+		    break;
+		    
+		case ',':
+		    if (slow != 0)
+		        slow--;
+		    cout << "physics speed is " << slow << "x" << endl;
+		    break;
+		    
+		case '.':
+		    slow++;
+		    cout << "physics is " << slow << "x" << endl;
 		    break;
 
         default:
@@ -697,7 +799,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	
 	Position p;
 	Object* t;
-	static float speed = 14700 * 300;
+	static float speed = 700 * 300;
 	
 	switch(button)
 	{
@@ -705,8 +807,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
-			t = new Object(*sphere, 500, p); // 1 kg sphere
-			t->getGraphical().setBaseTexture(*marbleTex);
+			t = new Object(*sphere, 100, p); // 1 kg sphere
 			objects.push_back(t);
 			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 

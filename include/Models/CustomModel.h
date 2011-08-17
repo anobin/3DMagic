@@ -18,7 +18,9 @@ namespace Magic3D
 class CustomModel : public Model
 {
 protected:
-	
+	/// single vertex batch
+	VertexBatch batch;
+    
 public:
 	/** Standard constructor
 	 * @param resource the resource to make a model out of
@@ -32,6 +34,10 @@ public:
 	 */
 	virtual const char* getTypeName();
 
+	inline void setTexture( Texture* t)
+	{
+	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
 };
 
 };

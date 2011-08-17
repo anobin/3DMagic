@@ -33,15 +33,53 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 #include "../Shaders/Shader.h"
 
+#include <vector>
+
 namespace Magic3D
 {
 
+class GraphicalBody;
 
 /** Graphical body of an object. Contains graphical properties
  * (texture, position, model).
  */
 class GraphicalBody
 {
+public:
+    struct RenderBatch
+    {
+    private:
+        friend class GraphicalBody;
+        VertexArray array;
+        VertexBatch* batch;
+        int vertexCount;
+        
+    public:
+        
+        inline bool isPropertySet(VertexBatch::PropertyIndex p)
+        {
+            return batch->isPropertySet(p);
+        }
+        
+        template<class T>
+        inline T getProperty(VertexBatch::PropertyIndex p)
+        {
+            return batch->getProperty<T>(p);
+        }
+        
+        template<class T>
+        inline void setProperty(VertexBatch::PropertyIndex p, T t)
+        {
+            batch->setProperty<T>(p, t);
+        }
+        
+        inline void draw( VertexArray::Primitives primitive )
+        {
+            array.draw(primitive, vertexCount);
+        }
+        
+    };
+    
 protected:
 	/// model to use to represent this object
 	Model& model;
@@ -49,34 +87,14 @@ protected:
 	/// shader to use to render this body
 	Shader* shader;
 	
-	/** Vertex array for body, binds attribute data on video memory to shader variables,
-	 * created for each ( shader, model ) pair when the shader is set using setShader
-	 */
-	VertexArray* array;
-	
-	/// base texture of object
-	Texture* baseTexture;
-	
-	/// adjustment matrix applied before every render
-	Matrix4 adjustmentMatrix;
-
+	std::vector<RenderBatch*> data;
 	
 public:
 	/// standard constructor
-	inline GraphicalBody(Model& model): model(model), shader(NULL), array(NULL),
-	    baseTexture(NULL) {}
+	inline GraphicalBody(Model& model): model(model), shader(NULL) {}
 	
 	/// destructor
 	virtual ~GraphicalBody();
-
-
-	/** Draw the object
-	 */
-	inline void draw(VertexArray::Primitives primitive = VertexArray::TRIANGLES)
-	{
-	    if (array) // TODO
-	        array->draw( primitive, model.getVertexCount() );
-	}
 	
 	/// get the model used
 	inline Model& getModel()
@@ -88,26 +106,41 @@ public:
 	inline void setShader( Shader& shader )
 	{
 	    const VertexAttribSpec::AttribType* attrib;
-	    delete array;
-	    array = new VertexArray();
+	    
+	    // clear out any old vertex arrays
+	    std::vector<RenderBatch*>::iterator ait;
+	    for (ait = data.begin(); ait != data.end(); ait++)
+	        delete (*ait);
+	    data.clear();
 	    
 	    // create bindings in vertex array for data in model to variables in shader
 	    const VertexAttribSpec* spec  = shader.getVertexAttribSpec();
-	    std::vector< VertexHandler::AttributeData* >& data = model.getAttributeData();
-	    std::vector< VertexHandler::AttributeData* >::iterator it = data.begin();
-	    for(; it != data.end(); it++)
+	    std::vector< VertexBatch* >& batch = model.getBatchData();
+	    std::vector< VertexBatch*>::iterator b_it = batch.begin();
+	    for(; b_it != batch.end(); b_it++ )
 	    {
-	        // get the data for this attribute in the spec
-	        attrib = spec->getAttrib( (*it)->name );
-	        
-	        // ensure the shader attrib matches the model attribute
-	        MAGIC_THROW( attrib == NULL || attrib->components != (*it)->components || attrib->type != (*it)->type, 
-	            "Attempt to set shader for a graphical body with a model that the shader does not support." );
-	        
-	        // bind buffer to shader attrib index
-	        array->setAttributeArray(attrib->index, attrib->components, attrib->type, 
-	            *(*it)->buffer);
-	    }
+	    
+            std::vector< VertexBatch::AttributeData* >& data = (*b_it)->getAttributeData();
+            std::vector< VertexBatch::AttributeData* >::iterator it = data.begin();
+            RenderBatch* a = new RenderBatch();
+            for(; it != data.end(); it++)
+            {
+                // get the data for this attribute in the spec
+                attrib = spec->getAttrib( (*it)->name );
+                
+                // ensure the shader attrib matches the model attribute
+                MAGIC_THROW( attrib == NULL || attrib->components != (*it)->components || attrib->type != (*it)->type, 
+                    "Attempt to set shader for a graphical body with a model that the shader does not support." );
+                
+                // bind buffer to shader attrib index
+                a->array.setAttributeArray(attrib->index, attrib->components, attrib->type, 
+                    *(*it)->buffer);
+            }
+            a->batch = (*b_it);
+            a->vertexCount = (*b_it)->getVertexCount();
+            this->data.push_back(a);
+            
+        }
 	     
 	    // set the shader for the body
 	    this->shader = &shader;
@@ -119,21 +152,9 @@ public:
 	    return this->shader;    
 	}
 	
-	/// set the texture
-	inline void setBaseTexture(Texture& texture)
+	inline std::vector<RenderBatch*>& getRenderData()
 	{
-		this->baseTexture = &texture;
-	}
-	
-	/// get the texture
-	inline Texture* getBaseTexture()
-	{
-		return this->baseTexture;
-	}
-	
-	inline Matrix4& getAdjustmentMatrix()
-	{
-	    return adjustmentMatrix;
+	    return this->data;
 	}
 
 };

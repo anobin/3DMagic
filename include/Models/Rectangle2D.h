@@ -35,6 +35,10 @@ namespace Magic3D
  */
 class Rectangle2D : public Model
 {	
+protected:
+    /// single vertex batch
+	VertexBatch batch;
+    
 public:
 	/** Standard constructor 
 	 * @param x the upper-left x coordinate of the rectangle
@@ -50,6 +54,11 @@ public:
 	/** get the object's type name
 	 */
 	virtual const char* getTypeName();
+	
+	inline void setTexture( Texture* t)
+	{
+	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
 };
 
 

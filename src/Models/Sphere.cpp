@@ -26,6 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Models/Sphere.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <Graphics/VertexBatchBuilder.h>
 
 namespace Magic3D
 {
@@ -48,15 +49,16 @@ Sphere::Sphere(float radius, int slices, int stacks)
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    data.begin(slices * stacks * 6);
+    VertexBatchBuilder builder;
+    builder.begin(slices * stacks * 6, &batch);
     
     // get indices for attributes we use
-	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
     
 	for (i = 0; i < stacks; i++) 
 	{
@@ -160,7 +162,8 @@ Sphere::Sphere(float radius, int slices, int stacks)
 		}
         t -= dt;
 	}
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 }
 	
 /// destructor

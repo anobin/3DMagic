@@ -95,8 +95,9 @@ void HemRenderer::render( Object* object, unsigned int pass )
     object->getPosition().getTransformMatrix(positionMatrix);
     transformMatrix.multiply(cameraMatrix, positionMatrix);
     
-    // apply adjustment matrix
-    transformMatrix.multiply( body.getAdjustmentMatrix() );
+    // ensure the body's vertex data is bound to this shader's variables
+    if ( body.getShader() != this->shader )
+        body.setShader( *this->shader );
     
     // create mvp matrix from projection and transform (model-view)
     Matrix4 mvp;
@@ -110,14 +111,24 @@ void HemRenderer::render( Object* object, unsigned int pass )
     shader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
     shader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
     shader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-    shader->setTexture(       "textureMap",  body.getBaseTexture()   );
     
-    // ensure the body's vertex data is bound to this shader's variables
-    if ( body.getShader() != this->shader )
-        body.setShader( *this->shader );
-    
-    // draw body
-    body.draw();
+    // render every batch in the body
+    std::vector<GraphicalBody::RenderBatch*>& batch = body.getRenderData();
+    std::vector<GraphicalBody::RenderBatch*>::iterator it = batch.begin();
+    for(; it != batch.end(); it++)
+    {
+        GraphicalBody::RenderBatch& b = *(*it);
+        
+        // set texture
+        MAGIC_THROW( !b.isPropertySet(VertexBatch::TEXTURE),
+            "Attempt to render graphical body whose model does not have a texture set." );
+        Texture* tex = b.getProperty<Texture*>(VertexBatch::TEXTURE);
+        shader->setTexture( "textureMap", tex );
+        
+        // draw body
+        b.draw(VertexArray::TRIANGLES);
+        
+    }
 }
 
 

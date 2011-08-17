@@ -49,7 +49,7 @@ private:
     btBroadphaseInterface* broadphase;
 	btDefaultCollisionConfiguration* collisionConfiguration;
 	btCollisionDispatcher* dispatcher;
-	btSequentialImpulseConstraintSolver* solver;
+	btConstraintSolver* solver;
     
 	btDiscreteDynamicsWorld* dynamicsWorld;
 
@@ -86,6 +86,11 @@ public:
     inline void stepSimulation( float secs, int substeps )
     {
         dynamicsWorld->stepSimulation(secs,substeps);
+    }
+    
+    inline void addConstraint( btTypedConstraint* c )
+    {
+        dynamicsWorld->addConstraint( c );
     }
 
 };

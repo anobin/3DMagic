@@ -17,13 +17,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for VertexHandler class
+/** Implementation file for VertexBatchBuilder class
  * 
- * @file VertexHandler.cpp
+ * @file VertexBatchBuilder.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/VertexHandler.h>
+#include <Graphics/VertexBatchBuilder.h>
 
 namespace Magic3D
 {
@@ -31,37 +31,34 @@ namespace Magic3D
 /** Standard Constructor
  * @param spec the shader-vertex interface spec to use
  */
-VertexHandler::VertexHandler(): vertexCount(0), nextIndex( 0 )
+VertexBatchBuilder::VertexBatchBuilder(): batch(NULL), vertexCount(0), nextIndex( 0 )
 {
 }
 	
 /// destructor
-VertexHandler::~VertexHandler()
+VertexBatchBuilder::~VertexBatchBuilder()
 {
 	std::map< int, BuildData* >::iterator it =  buildData.begin();
 	for(; it != buildData.end(); it++)
 		delete it->second;
-
-	std::vector< AttributeData* >::iterator it2 =  attributeData.begin();
-	for(; it2 != attributeData.end(); it2++)
-	    delete (*it2);
-	
 }
 	
 /** Starts a vertex building sequence
  * @param vertexCount the number of verticies to be handled
  */
-void VertexHandler::begin(int vertexCount)
+void VertexBatchBuilder::begin(int vertexCount, VertexBatch* batch)
 {
 	MAGIC_THROW( this->vertexCount != 0, "Attempt to rebuild vertex handler");
 	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");	
 	
+	this->batch = batch;
+	this->batch->vertexCount = vertexCount;
 	this->vertexCount = vertexCount;
 }
 
 /** end a vertex building sequence
  */
-void VertexHandler::end()
+void VertexBatchBuilder::end()
 {
 	// place all temporary data into graphics memory
 	std::map< int, BuildData* >::iterator temp_it;
@@ -81,7 +78,8 @@ void VertexHandler::end()
 	buildData.clear();
 	name2index.clear();
 	index2data.clear();
-	
+
+    batch = NULL;	
 }
 	
 

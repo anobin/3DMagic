@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Models/FlatSurface.h>
+#include <Graphics/VertexBatchBuilder.h>
 #include <string.h>
 
 namespace Magic3D
@@ -40,15 +41,16 @@ FlatSurface::FlatSurface(float width, float height, int slices, int stacks, bool
 	planeShape = new btStaticPlaneShape(btVector3(0,1,0),0);
 	this->Model::collisionShape = planeShape;
 	
-	data.begin(slices*stacks*6);
+	VertexBatchBuilder builder;
+	builder.begin(slices*stacks*6, &batch);
 	
 	// get indices for attributes we use
-	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
 	
 	float x = -width/2;
 	float z = -height/2;
@@ -114,7 +116,8 @@ FlatSurface::FlatSurface(float width, float height, int slices, int stacks, bool
 		}	
 	}
 	
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 }
 	
 /// destructor

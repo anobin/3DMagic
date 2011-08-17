@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Models/Rectangle2D.h>
+#include <Graphics/VertexBatchBuilder.h>
 
 namespace Magic3D
 {
@@ -41,13 +42,14 @@ Rectangle2D::Rectangle2D(int x, int y, int width, int height)
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// 4 points using a TRIANGLE FAN
-	data.begin(4);
+	VertexBatchBuilder builder;
+	builder.begin(4, &batch);
 	
 	// get indices for attributes we use
-	int position_index = data.getAttribId( "Location", 4, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Location", 4, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
 	
 	// bottom right
 	texCoord2f(1.0f, 0.0f);
@@ -66,7 +68,8 @@ Rectangle2D::Rectangle2D(int x, int y, int width, int height)
 	position3f((float)x+width, (float)y+height, 0.0f);
 	
 	// end vertex data
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 }
 	
 /// destructor

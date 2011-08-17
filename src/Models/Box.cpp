@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Models/Box.h>
+#include <Graphics/VertexBatchBuilder.h>
 
 namespace Magic3D
 {
@@ -51,15 +52,16 @@ Box::Box(float width, float height, float depth)
 	// becuase some points require normals in two different directions
 	
 	// 6 points per side, 6 sides
-	data.begin(6*6);
+	VertexBatchBuilder builder;
+	builder.begin(6*6, &batch);
 	
 	// get indices for attributes we use
-	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
 	
 	// top  and bottom 6 points
 	for (int i=0; i < 2; i++)
@@ -152,7 +154,8 @@ Box::Box(float width, float height, float depth)
 	}
 	
 	// close vertex data
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 }
 	
 /// destructor

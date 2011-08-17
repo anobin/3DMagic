@@ -26,8 +26,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_FLAT_SURFACE_H
 
 #include "Model.h"
-#include "../Graphics/VertexHandler.h"
 #include "../Util/Units.h"
+#include "../Graphics/VertexBatch.h"
 
 namespace Magic3D
 {
@@ -40,6 +40,9 @@ class FlatSurface : public Model
 protected:
 	/// plane shape
 	btStaticPlaneShape* planeShape;
+	
+	/// single vertex batch
+	VertexBatch batch;
 	
 public:
 	/** Standard constructor
@@ -61,7 +64,10 @@ public:
 	 */
 	virtual const char* getTypeName();
 
-
+	inline void setTexture( Texture* t)
+	{
+	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
 
 
 };

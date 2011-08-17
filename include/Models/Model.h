@@ -25,8 +25,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_MODEL_H
 #define MAGIC3D_MODEL_H
 
-#include "../Graphics/VertexHandler.h"
+#include "../Graphics/VertexBatch.h"
 #include "../Shaders/Shader.h"
+
+#include <vector>
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
@@ -42,8 +44,8 @@ namespace Magic3D
 class Model
 {
 protected:
-	/// vertex handler to handler vertex attribute data
-	VertexHandler data;
+	/// vertex batch(es)
+	std::vector<VertexBatch*> data;
 	
 	/// shape of model used for collisions on physics engine
 	btCollisionShape* collisionShape;
@@ -66,14 +68,9 @@ public:
 		return this->collisionShape;
 	}
 	
-	inline std::vector< VertexHandler::AttributeData* >& getAttributeData()
+	inline std::vector< VertexBatch* >& getBatchData()
 	{
-	     return data.getAttributeData();   
-	}
-	
-	inline int getVertexCount()
-	{
-	    return data.getVertexCount();
+	     return data;   
 	}
 
 };

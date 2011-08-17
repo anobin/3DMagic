@@ -35,6 +35,10 @@ namespace Magic3D
  */
 class Circle2D : public Model
 {	
+protected:
+    /// single vertex batch
+	VertexBatch batch;
+    
 public:
 	/** Standard constructor 
 	 * @param x the x coordinate of the center
@@ -51,6 +55,11 @@ public:
 	/** get the object's type name
 	 */
 	virtual const char* getTypeName();
+	
+	inline void setTexture( Texture* t)
+	{
+	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
 };
 
 

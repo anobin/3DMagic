@@ -40,6 +40,7 @@
     - named or just id's with variabfiable names.
 - add more hooks into pipeline
 - add support for objects with multiple parts or object groups
+- add support for specifying vertex batch intended use to be passed along to buffer
 
 ## Secondary
 -add model-texture mapping interface to be used through object class

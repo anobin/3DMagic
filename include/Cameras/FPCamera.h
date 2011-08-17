@@ -102,6 +102,11 @@ public:
     
     void lookat( const Point3& point );
     
+    inline void elevate( float a )
+    {
+        position.getLocation().setY( position.getLocation().getY()+a );
+    }
+    
 };   
     
 

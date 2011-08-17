@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_SPHERE_H
 
 #include "Model.h"
-#include "../Graphics/VertexHandler.h"
+#include "../Graphics/VertexBatch.h"
 
 namespace Magic3D
 {
@@ -38,6 +38,9 @@ class Sphere : public Model
 protected:
 	/// collision shape for this model
 	btSphereShape* sphereShape;
+	
+	/// single vertex batch
+	VertexBatch batch;
 	
 public:
 	/** Standard constructor
@@ -53,6 +56,11 @@ public:
 	/** Get the object's type name
 	 */
 	virtual const char* getTypeName();
+	
+	inline void setTexture( Texture* t)
+	{
+	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
+	}
 	
 };
 

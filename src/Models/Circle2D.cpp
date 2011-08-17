@@ -27,6 +27,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <Graphics/VertexBatchBuilder.h>
+
 namespace Magic3D
 {
 
@@ -46,13 +48,14 @@ Circle2D::Circle2D(int x, int y, int radius, float precisionAngle)
 	
 	// points using a TRIANGLE FAN
 	int edges = int(360.0f/precisionAngle);
-	data.begin(1 + edges);
+	VertexBatchBuilder builder;
+	builder.begin(1 + edges, &batch);
 	
 	// get indices for attributes we use
-	int position_index = data.getAttribId( "Location", 4, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Location", 4, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
 	
 	// center
 	texCoord2f(0.5f, 0.5f);
@@ -84,7 +87,8 @@ Circle2D::Circle2D(int x, int y, int radius, float precisionAngle)
 	}
 
 	// end vertex data
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 }
 	
 /// destructor

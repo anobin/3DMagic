@@ -17,18 +17,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for VertexHandler class
+/** Header file for VertexBatchBuilder class
  *
- * @file VertexHandler.h
+ * @file VertexBatchBuilder.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_VERTEX_HANDLER_H
-#define MAGIC3D_VERTEX_HANDLER_H
+#ifndef MAGIC3D_VERTEX_BATCH_BUILDER_H
+#define MAGIC3D_VERTEX_BATCH_BUILDER_H
 
 #include "../Exceptions/MagicException.h"
 #include "../Shaders/VertexAttribSpec.h"
 #include "../Shaders/Shader.h"
-#include "../Graphics/VertexArray.h"
+#include "VertexArray.h"
+#include "VertexBatch.h"
 #include "../Util/Color.h"
 #include "../Math/Math.h"
 #include "../Util/magic_throw.h"
@@ -43,39 +44,8 @@ namespace Magic3D
 /** Helps to manage vertex attributes when
  * building and drawing objects.
  */
-class VertexHandler
+class VertexBatchBuilder
 {
-public:
-	/// data for a attribute, ready to be bound to a shader
-	struct AttributeData
-	{
-	    /// attribute data in a buffer on graphics memory
-		Buffer* buffer;
-		/// number of components in attribute
-		int components;
-		/// type of the attribute
-		VertexArray::DataTypes type;
-		/// name of the attribute in shader
-		char* name;
-		
-		inline AttributeData( const char* name, int components, VertexArray::DataTypes type )
-		{
-		    this->buffer = NULL;
-		    this->components = components;
-		    this->type = type;
-		    this->name = new char[ strlen( name ) + 1 ];
-		    strcpy( this->name, name );
-		}
-		
-		inline ~AttributeData()
-		{
-		    delete buffer;
-		    delete[] name;
-		}
-		    
-	};
-
-
 private:	
     /// datatype used when building model by hand, before end() call
 	struct BuildData
@@ -108,10 +78,9 @@ private:
 	
 	std::map< std::string, int > name2index;
 	
-	std::map< int, AttributeData* > index2data;
+	std::map< int, VertexBatch::AttributeData* > index2data;
 	
-	/// vector of attribute data
-	std::vector< AttributeData* > attributeData;
+	VertexBatch* batch;
 	
 	/// number of verticies being managed
 	int vertexCount;
@@ -144,15 +113,15 @@ private:
 public:
 	/** Standard Constructor
 	 */
-	VertexHandler();
+	VertexBatchBuilder();
 	
 	/// destructor
-	~VertexHandler();
+	~VertexBatchBuilder();
 	
 	/** Starts a vertex building sequence
 	 * @param vertexCount the number of verticies to be handled
 	 */
-	void begin(int vertexCount);
+	void begin(int vertexCount, VertexBatch* batch);
 	
 	template< typename T >
 	inline void setAttribute4(int id,
@@ -218,13 +187,15 @@ public:
 	    // if no entry, create new
 	    if ( it == name2index.end() )
 	    {
+	        MAGIC_THROW(batch == NULL, "Attempt to get attrib id before calling begin()");
+	        
 	        index = nextIndex;
 	        nextIndex++;
 	        
 	        // add attribute data
-            AttributeData* d = new AttributeData( name, components, type );
-            attributeData.push_back( d );
-            index2data.insert( std::pair< int, AttributeData* >( index, d ) );
+	        VertexBatch::AttributeData* d = new VertexBatch::AttributeData( name, components, type );
+            batch->attributeData.push_back( d );
+            index2data.insert( std::pair< int, VertexBatch::AttributeData* >( index, d ) );
             
             // add temporary build data
             BuildData* b = new BuildData( components, type, this->vertexCount );
@@ -241,16 +212,6 @@ public:
 	/** end a vertex building sequence
 	 */
 	void end();
-
-	inline std::vector< AttributeData* >& getAttributeData()
-	{
-	     return attributeData;   
-	}
-	
-	inline int getVertexCount()
-	{
-	    return vertexCount;
-	}
 
 };
 

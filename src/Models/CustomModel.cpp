@@ -7,6 +7,8 @@
 #include <Models/CustomModel.h>
 #include <Exceptions/MagicException.h>
 
+#include <Graphics/VertexBatchBuilder.h>
+
 namespace Magic3D
 {
 	
@@ -34,15 +36,16 @@ CustomModel::CustomModel(const ModelResource& resource)
 	float* normal = (float*)normals.data;
 	float* texel = (float*)tex.data;
 	
-	data.begin(vertexCount);
+	VertexBatchBuilder builder;
+	builder.begin(vertexCount, &batch);
 	
 	// get indices for attributes we use
-	int position_index = data.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = data.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = data.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {data.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {data.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {data.setAttribute2<float>(tex_index, (x), (y));}
+	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
+	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
+	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
+	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
+	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
+	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
 	
 	for (int i=0,j=0,k=0; i < vertexCount; i++,j+=3,k+=2)
 	{
@@ -50,7 +53,8 @@ CustomModel::CustomModel(const ModelResource& resource)
 		texCoord2f(texel[k], texel[k+1]);
 		position3f(vertex[j], vertex[j+1], vertex[j+2]);
 	}
-	data.end();
+	builder.end();
+	this->Model::data.push_back(&batch);
 	
 }
 

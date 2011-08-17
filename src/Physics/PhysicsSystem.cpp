@@ -32,15 +32,25 @@ namespace Magic3D
     
 void PhysicsSystem::init(PhysicsSystem::CollisionSolverType collision)
 {
-    btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+     broadphase = new btDbvtBroadphase();
+    collisionConfiguration = new btDefaultCollisionConfiguration();
+    dispatcher = new btCollisionDispatcher(collisionConfiguration);
+    solver = new btSequentialImpulseConstraintSolver;
 
     if ( collision == PhysicsSystem::CONTINOUS_COLLISIONS )
         dynamicsWorld = new btContinuousDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
     else
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
+    //dynamicsWorld->getSolverInfo().m_splitImpulse = true;
+    //dynamicsWorld->getSolverInfo().m_splitImpulsePenetrationThreshold =0.0f;
+    //dynamicsWorld->getSolverInfo().m_restitution = 0.8f;
+    //dynamicsWorld->getSolverInfo().m_damping = 1.5f;
+    //dynamicsWorld->getSolverInfo().m_tau = 0;
+    //dynamicsWorld->getSolverInfo().m_friction = 0.01f;
+    //dynamicsWorld->getSolverInfo().m_solverMode = SOLVER_SIMD;
+    //dynamicsWorld->getSolverInfo().m_linearSlop = -0.1f;
+    //dynamicsWorld->getSolverInfo().m_sor = 0;
+    
         
 }
     
