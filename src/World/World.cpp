@@ -57,15 +57,17 @@ void World::processFrame()
 	Object* ob;
 	int passCount;
 	bool check = true;
-	for(; it != transObjects.end(); it++)
+	for(; ; it++)
 	{
-	    if (it == objects.end())
+	    if (check && it == objects.end())
 	    {
 	        it = transObjects.begin();
 	        if (it == transObjects.end())
 	            break;
 	        check = false;
 	    }
+        else if (!check && it == transObjects.end())
+            break;
 	    
 	    ob = (*it);
 	    ren = ob->getGraphical().getRenderer();

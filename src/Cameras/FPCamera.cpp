@@ -46,7 +46,7 @@ const Position& FPCamera::getPosition() const
 {
     // rotate on Y-axis (around X-axis)
     // rotate with rederence to local coords
-    position.rotateLocal(y / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
+    position.rotateLocal(y / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
 
     // check Y-axis bounds
     Vector3& forward = position.getForwardVector();
@@ -56,16 +56,16 @@ const Position& FPCamera::getPosition() const
     while (up.getY() < 0)
     {
         if (forward.getY() > 0)
-            position.rotateLocal(1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
+            position.rotateLocal(1.0f / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
         else
-            position.rotateLocal(-1.0f / 180.0f * M_PI, Vector3(1.0f, 0.0f, 0.0f));
+            position.rotateLocal(-1.0f / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
     }
     
     // rotate on X-axis (around Y-axis)
     // rotate with reference to world coords, since we are standing on the 'ground'
-    position.rotate(x * (M_PI / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
+    position.rotate(x * (((float)M_PI) / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
     Matrix4 rotMat;
-    rotMat.createRotationMatrix(x * (M_PI / 180.0f), 0, 1, 0);
+    rotMat.createRotationMatrix(x * (((float)M_PI) / 180.0f), 0, 1, 0);
     facing.transform(rotMat); 
 }
     

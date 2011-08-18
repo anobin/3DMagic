@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib libpng.lib SDL.lib Opengl32.lib zdll.lib SDLmain.lib"
+				AdditionalDependencies="glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib libpng15d.lib SDL.lib Opengl32.lib zdll.lib SDLmain.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\..\external\lib&quot;"
 				GenerateDebugInformation="true"

@@ -60,12 +60,12 @@ public:
 	/// standard constructor
 	inline Object(Model& model, float mass, Point3 location, Renderer* ren):
 	    position(location.getX(), location.getY(), location.getZ()),
-	    graphical(model, ren), physical( this->position, model, mass ) 
+	    graphical(model, ren), physical( position, model, mass ) 
 	{}
 	
 	/// standard constructor
 	inline Object(Model& model, float mass, Position position, Renderer* ren): 
-	    position(position), graphical(model, ren), physical( this->position, model, mass ) 
+	    position(position), graphical(model, ren), physical( position, model, mass ) 
 	{}
 	
 	/// destructor

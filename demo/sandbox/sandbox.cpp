@@ -223,13 +223,13 @@ void setup()
 	{
 		circleTex = new Texture(frameImage());
 	}
-	if (resourceManager.doesResourceExist("images/logo.png"))
+	/*if (resourceManager.doesResourceExist("images/logo.png"))
 	{
 		Handle<PNG2DResource> logoImage = resourceManager.get
 			<PNG2DResource>("images/logo.png");
 		frameTex = new Texture(logoImage());
 	}
-	else
+	else*/
 	{
 		frameTex = new Texture(frameImage());
 	}
