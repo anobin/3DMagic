@@ -1,4 +1,12 @@
 ## Primary
+- lock down interfaces and add listeners for changes:
+    - object renderer
+    - object position
+    - object model
+- add type checks to set/getProperty in Vertex batch
+- add object factory
+    - provide specification to factory
+    - allow objects to not have certain bodies
 - integrate SDL support
     - demo uses it directly right now
 - add truetype and text rendering support

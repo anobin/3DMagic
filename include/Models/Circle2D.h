@@ -60,6 +60,12 @@ public:
 	{
 	    batch.setProperty<Texture*>(VertexBatch::TEXTURE, t);
 	}
+	
+	inline void setTransparency( bool t )
+	{
+	    batch.setProperty<bool>(VertexBatch::TRANSPARENCY, t);
+	}
+	
 };
 
 

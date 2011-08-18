@@ -78,7 +78,6 @@ Object* laser;
 Object* floorObject;
 Object* ceiling;
 Object* wallObject;
-std::vector<Object*> objects;
 
 // decal stuff
 Object* decal;
@@ -97,7 +96,6 @@ Texture* frameTex;
 Texture* circleTex;
 Object* frameObject;
 Object* circleObject;
-std::vector<Object*> objects2d;
 Matrix4 flatProjectionMatrix;
 
 // legacy
@@ -129,6 +127,7 @@ bool releaseWater = false;
 GraphicsSystem graphics;
 PhysicsSystem physics;
 EventSystem events;
+World* world;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -257,43 +256,24 @@ void setup()
 	boxModel->setLeftTexture(stoneTex);
 	boxModel->setRightTexture(blueTex);
 	
+	// init renderer
+	renderer = new HemRenderer(resourceManager);
+	renderer->setCamera( &camera );
+	renderer->setLightSource( lightPos );
+	renderer->setSkyColor( skyColor );
+	renderer->setGroundColor( groundColor );
+	
+	// init 2D renderer
+	renderer2D = new Renderer2D(resourceManager);
+	renderer2D->setCamera( &camera2d );
+	
 	// init objects
-	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f)); // 1 kg sphere
+	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f), renderer); // 1 kg sphere
 	
-	objects.push_back(btBall);
-	//physics.addBody(btBall->getPhyscial());
+	world->addObject(btBall);
 	
-	floorObject = new Object(*floorModel, 0); // static object
-	objects.push_back(floorObject);
-	physics.addBody(floorObject->getPhysical());
-	
-	/*floorObject = new Object(*floorModel, 0); // static object
-	floorObject->getGraphical().setBaseTexture(*stoneTex);
-	floorObject->getPosition().rotate(45.0f*M_PI/180.0f, Vector3(1, 0, 0));
-	objects.push_back(floorObject);
-	physics.addBody(floorObject->getPhysical());
-	floorObject->getPhysical().syncPositionToPhysics();
-	
-	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->getGraphical().setBaseTexture(*stoneTex);
-	floorObject->getPosition().rotate(-45.0f*M_PI/180.0f, Vector3(1, 0, 0));
-	objects.push_back(floorObject);
-	physics.addBody(floorObject->getPhysical());
-	floorObject->getPhysical().syncPositionToPhysics();
-	
-	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->getGraphical().setBaseTexture(*stoneTex);
-	floorObject->getPosition().rotate(-45.0f*M_PI/180.0f, Vector3(0, 0, 1));
-	objects.push_back(floorObject);
-	physics.addBody(floorObject->getPhysical());
-	floorObject->getPhysical().syncPositionToPhysics();
-	
-	floorObject = new Object(*floorModel, 0); // static object
-	floorObject->getGraphical().setBaseTexture(*stoneTex);
-	floorObject->getPosition().rotate(45.0f*M_PI/180.0f, Vector3(0, 0, 1));
-	objects.push_back(floorObject);
-	physics.addBody(floorObject->getPhysical());
-	floorObject->getPhysical().syncPositionToPhysics();*/
+	floorObject = new Object(*floorModel, 0, renderer); // static object
+	world->addObject(floorObject);
 	
 	float wallWidth =40;
 	float wallHeight = 10;
@@ -302,7 +282,6 @@ void setup()
 	float h = brickHeight/2;
 	float xOffset = -(brickWidth*wallWidth)/2;
 	float zOffset = -100*FOOT;
-	Object* last = NULL;
 	for (int i=0; i < wallHeight; i++, h+=brickHeight)
 	{
 		float w = xOffset;
@@ -312,97 +291,8 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/); // 3 kg box
-			objects.push_back(btBox);
-			physics.addBody(btBox->getPhysical());
-			if ( last != NULL )
-			{
-			    //btPoint2PointConstraint* c = new btPoint2PointConstraint(*last->getPhysical().getRigidBody(), 
-			    //    *btBox->getPhysical().getRigidBody(), btVector3(brickWidth/2.0f+ 0.5f, 0, 0), btVector3(-brickWidth/2.0f - 0.5f, 0, 0) );
-			    /*btVector3 axisA(0.f, 1.f, 0.f); 
-                btVector3 axisB(0.f, 1.f, 0.f); 
-                btVector3 pivotA(-5.f, 0.f, 0.f);
-                btVector3 pivotB( 5.f, 0.f, 0.f);
-                btHingeConstraint* c = new btHingeConstraint(*last->getPhysical().getRigidBody(), *btBox->getPhysical().getRigidBody(), pivotA, pivotB, axisA, axisB);*/
-                /*btPoint2PointConstraint* c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(brickWidth/2.0f, 0, 0) );
-                physics.addConstraint( c );
-                c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(-brickWidth/2.0f, 0, 0) );
-			    physics.addConstraint( c );
-			    c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(0, brickHeight/2.0f, 0) );
-			    physics.addConstraint( c );
-			    c = new btPoint2PointConstraint(*btBox->getPhysical().getRigidBody(), btVector3(0, -brickHeight/2.0f, 0) );
-			    physics.addConstraint( c );*/
-			    
-			    /*btTransform tl, tr;
-			    tl = btTransform::getIdentity();
-			    tr = btTransform::getIdentity();
-			    tl.setOrigin(btVector3(brickWidth/2.0f, 0, 0));
-			    tr.setOrigin(btVector3(-brickWidth/2.0f, 0, 0));
-			    
-			    btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*last->getPhysical().getRigidBody(), 
-			        *btBox->getPhysical().getRigidBody(), tl, tr, false );
-			    c->setLinearLowerLimit( btVector3(0,0,0) );
-			    c->setLinearUpperLimit( btVector3(0,0,0) );
-			    c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
-		        c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
-			    physics.addConstraint( c );
-			    
-			    c->setParam(BT_CONSTRAINT_ERP, 0.5);
-			    c->setParam(BT_CONSTRAINT_CFM, 0);
-			    
-			    if ( j == wallWidth-1)
-			    {
-			        btTransform tl, tr;
-                    tl = btTransform::getIdentity();
-                    tl.setOrigin(btVector3(-brickWidth/2.0f, 0, 0));
-                    
-                    btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
-                    c->setLinearLowerLimit( btVector3(0,0,0) );
-                    c->setLinearUpperLimit( btVector3(0,0,0) );
-                    c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
-                    c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
-                    c->setParam(BT_CONSTRAINT_ERP, 0.5);
-			    c->setParam(BT_CONSTRAINT_CFM, 0);
-                    physics.addConstraint( c );
-			    }*/
-			    
-			    /*btVector3 v(w-(brickWidth/2.0f), h, zOffset);
-			    btVector3 q(0,1,0);
-			    btVector3 r(0,0,1);
-			    btUniversalConstraint* c = new btUniversalConstraint(*last->getPhysical().getRigidBody(), 
-			        *btBox->getPhysical().getRigidBody(), v, q, r );
-			    c->setUpperLimit( 0,0);
-			    c->setLowerLimit( 0,0);
-			    physics.addConstraint(c);*/
-			    
-			    btTransform tl, tr;
-                tl = btTransform::getIdentity();
-                tl.setOrigin(btVector3(0, -brickHeight/2.0f, 0));
-                
-                btGeneric6DofConstraint* c1 = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
-                c1->setLinearLowerLimit( btVector3(0,0,0) );
-                c1->setLinearUpperLimit( btVector3(0,0,0) );
-                c1->setAngularLowerLimit(btVector3(0, 0.f, 0));
-                c1->setAngularUpperLimit(btVector3(0, 0.f, 0));
-//c1->setBreakingImpulseThreshold(10.2);
-                physics.addConstraint( c1 );
-			}
-			else
-			{
-			    /*btTransform tl, tr;
-                tl = btTransform::getIdentity();
-                tl.setOrigin(btVector3(brickWidth/2.0f, 0, 0));
-                
-                btGeneric6DofConstraint* c = new btGeneric6DofConstraint(*btBox->getPhysical().getRigidBody(), tl, false );
-                c->setLinearLowerLimit( btVector3(0,0,0) );
-                c->setLinearUpperLimit( btVector3(0,0,0) );
-                c->setAngularLowerLimit(btVector3(0.f, 0.f, 0));
-                c->setAngularUpperLimit(btVector3(0.f, 0.f, 0));
-                c->setParam(BT_CONSTRAINT_ERP, 0.9);
-			    c->setParam(BT_CONSTRAINT_CFM, 0);
-                physics.addConstraint( c );*/
-			}
-			last = btBox;
+			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/, renderer); // 3 kg box
+			world->addObject(btBox);
 		}
 	}
 	
@@ -411,20 +301,15 @@ void setup()
 	circleModel = new Circle2D(400, 60, 100, 1.0f);
 	
 	
-	/*if (resourceManager.doesResourceExist("images/logo.tga"))
-	{
-		Handle<TGA2DResource> logoImage = resourceManager.get
-			<TGA2DResource>("images/logo.tga");
-		frameTex = new Texture(logoImage());
-	}*/
 	frameModel->setTexture(frameTex);
-	
+	frameModel->setTransparency(true);
 	circleModel->setTexture(circleTex);
+	circleModel->setTransparency(true);
 	
-	frameObject = new Object( *frameModel, 0);
-	objects2d.push_back( frameObject );
-	circleObject = new Object( *circleModel, 0);
-	objects2d.push_back( circleObject );
+	frameObject = new Object( *frameModel, 0, renderer2D);
+	world->addObject( frameObject );
+	circleObject = new Object( *circleModel, 0, renderer2D);
+	world->addObject( circleObject );
 	
 	// 3ds test stuff
 	Handle<Model3DSResource> linkResource = 
@@ -437,12 +322,12 @@ void setup()
     
     // decal stuff
     decalSurface = new FlatSurface(6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
-    decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ) );
+    decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ), renderer );
     decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
 	decals.push_back(decal);
     
-    Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f) );
-    objects.push_back(chainLink);
+    Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f), renderer );
+    world->addObject(chainLink);
 	
         
     // set eye level
@@ -450,16 +335,8 @@ void setup()
 	camera.setStepSpeed( FOOT );
 	camera.setStrafeSpeed( FOOT );
 	
-	// init renderer
-	renderer = new HemRenderer(resourceManager);
-	renderer->setCamera( &camera );
-	renderer->setLightSource( lightPos );
-	renderer->setSkyColor( skyColor );
-	renderer->setGroundColor( groundColor );
-	
-	// init 2D renderer
-	renderer2D = new Renderer2D(resourceManager);
-	renderer2D->setCamera( &camera2d );
+	// enable blending so transparency can happen
+	graphics.enableBlending();
 	
 	srand(time(NULL));
 }
@@ -470,19 +347,7 @@ int slow = 0;
 /** Called to render each and every frame
  */
 void renderScene(void)
-{
-    
-	// perform bullet physics
-	static int slowCounter = 0;
-	if (!paused && slowCounter >= slow)
-	{
-	    physics.stepSimulation(1/60.0f,10);
-	    slowCounter = 0;
-	}
-	else
-	    slowCounter++;
-	    
-	
+{	
 	// move
 	Vector3 side;
 	if (moveForward)
@@ -499,98 +364,14 @@ void renderScene(void)
 	{
 	    for (int i = 0; i < 20; i++)
         {
-            Object* t = new Object(*tinySphere, 0.01f, Point3(/*1.1f * (i%5)*/0, 10.0f, /*1.1f * (i/5)*/0)); // 0.01 kg sphere
-            objects.push_back(t);
+            Object* t = new Object(*tinySphere, 0.01f, Point3(/*1.1f * (i%5)*/0, 10.0f, /*1.1f * (i/5)*/0), renderer); // 0.01 kg sphere
+            world->addObject(t);
             
             t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
                                           btVector3(0.0f, 0.0f, 0.0f));
-            physics.addBody(t->getPhysical());
         }
     }
-	
-	static float lastTime = 0.0f;
-	lastTime = timer.getElapsedTime();
-	
-	// Clear the color and depth buffers
-	graphics.clearDisplay();
-	
-	// enable blending so transparency can happen
-	graphics.enableBlending();
-	
-	// object render loop
-	std::vector< Object*>::iterator it = objects.begin();
-	renderer->setup( 0 );
-	for (; it != objects.end(); it++)
-	    renderer->render( *it, 0 );
-	
-	// 2d object render loop
-	it = objects2d.begin();
-	renderer2D->setup( 0 );
-	for (; it != objects2d.end(); it++)
-	    renderer2D->render( *it, 0 );
-	
-	// draw decals
-	/*it = decals.begin();
-    std::map<Object*,Object*>::iterator rit;
-    for (; it != decals.end(); it++)
-	{
-        Matrix4 positionMatrix;
-        Matrix4 transformMatrix;
-        
-        // get related object if one
-        rit = relations.find( (*it) );
-        if ( rit == relations.end())
-        {
-            (*it)->getPosition().getTransformMatrix(positionMatrix);
-        }
-        else
-        {
-            Position p(rit->second->getPosition());
-            p.translateLocal( 0.0f, 2.0f, 0.0f );
-            p.getTransformMatrix(positionMatrix);
-        }
-        transformMatrix.multiply(cameraMatrix, positionMatrix);
-        
-        // pick and prep shader
-        Matrix4 mvp;
-        Matrix3 normal;
-        mvp.multiply(projectionMatrix, transformMatrix);
-        transformMatrix.extractRotation(normal);
-        
-        shader = (*it)->getGraphical().getShader();
-        shader->use();
-        shader->setUniformMatrix( "mvMatrix",         4, transformMatrix.getArray()          );
-        shader->setUniformMatrix( "mvpMatrix",        4, mvp.getArray()                      );
-        shader->setUniformMatrix( "normalMatrix",     3, normal.getArray()                   );
-        shader->setUniformf(      "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-        shader->setUniformfv(     "skyColor",         3, skyColor.getInternal()     );
-        shader->setUniformfv(     "groundColor",      3, groundColor.getInternal()           );
-        shader->setTexture(       "textureMap",          (*it)->getGraphical().getBaseTexture()             );
-       
-        // draw object, make sure to lie to the depth buffer :) 
-        graphics.setDepthOffset(-1.0f);
-        (*it)->getGraphical().draw();
-        graphics.disableDepthOffset();
-    }*/
-
-	
-    // Do the buffer Swap
-    graphics.swapBuffers();
     
-    // calculate fps
-    static float lastsec = 0.0f;
-    static int frames = 0;
-    if ( (timer.getElapsedTime() - lastsec) >= 1.0f)
-    {
-        cout << "fps: " << frames << endl;
-        frames = 0;
-        lastsec = timer.getElapsedTime();
-    }
-    frames++;
-    
-#ifdef UNLIMITED_FPS
-    //glutPostRedisplay();
-#endif
 }
 
 /** Called when a normal key is pressed on the keyboard
@@ -672,14 +453,13 @@ void keyPressed(int key)
 			break;
 			
 		case 'g':
-			t = new Object(*bigSphere, 300, Point3(0.0f, 5.0f, 0.0f)); // 1 kg sphere
-			objects.push_back(t);
-			physics.addBody(t->getPhysical());
+			t = new Object(*bigSphere, 300, Point3(0.0f, 5.0f, 0.0f), renderer); // 1 kg sphere
+			world->addObject(t);
 			
 			camera.lookat( Point3(0, 30, 0) );
             
             // add decal
-            decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ) );
+            decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ), renderer);
             decals.push_back(decal);
             relations.insert( std::pair<Object*,Object*>( decal, t ) );
 			break;
@@ -694,15 +474,6 @@ void keyPressed(int key)
 			break;
 			
 		case 'z':
-			it = objects.begin() + 6;
-			for (; it != objects.end(); it++)
-			{
-				physics.removeBody((*it)->getPhysical());
-				delete (*it);
-			}
-			objects.erase(objects.begin()+6, objects.end());
-            decals.clear();
-            relations.clear();
 			break;
 			
 		case 'u':
@@ -815,12 +586,11 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
-			t = new Object(*sphere, 100, p); // 1 kg sphere
-			objects.push_back(t);
+			t = new Object(*sphere, 100, p, renderer); // 1 kg sphere
+			world->addObject(t);
 			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
 										  btVector3(0.0f, 0.0f, 0.0f));
-			physics.addBody(t->getPhysical());
 			break;
 			
 		case Event::MIDDLE: 
@@ -876,6 +646,8 @@ int main(int argc, char* argv[])
 	
 	physics.init();
 	
+	world = new World(&graphics, &physics);
+	
 	events.init();
 	
 	// perform setup
@@ -884,12 +656,12 @@ int main(int argc, char* argv[])
 	changeWindowSize(1280,1024); // to ensure transform pipeline is setup
 	graphics.createScreen();
 	
-	StopWatch frameTimer;
-	
 	// run SDL
 	Event event;
 	while( true )
 	{
+	    world->startFrame();
+	    
 	    while ( events.poll( &event ) )
 	    {
 	        switch( event.data.type )
@@ -926,8 +698,9 @@ int main(int argc, char* argv[])
 	        
 	    renderScene();
 	    
-	    while (frameTimer.getElapsedTime() < (1/60.0f));
-	    frameTimer.reset();
+	    world->processFrame();
+	    
+	    world->endFrame();
 	}
 	
 	graphics.deinit();

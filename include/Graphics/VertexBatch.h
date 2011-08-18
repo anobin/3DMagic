@@ -83,6 +83,7 @@ public:
 	{
 	    TEXTURE,            // texture for this batch, pointer
 	    RENDER_OFFSET,      // purely graphical offset to counter z-fighting, float
+	    TRANSPARENCY,       // whether the batch is meant to be partially transparent
 	    PROPERTY_COUNT
 	};
 
@@ -98,6 +99,7 @@ private:
         {
             float u_float;
             Texture* u_texture;
+            bool u_bool;
         } data;
         
         inline PropertyEntry(): set(false) {}
@@ -163,6 +165,12 @@ inline Texture* VertexBatch::getProperty<Texture*>(PropertyIndex p)
 }
 
 template<>
+inline bool VertexBatch::getProperty<bool>(PropertyIndex p)
+{
+    return properties[(int)p].data.u_bool;
+}
+
+template<>
 inline void VertexBatch::setProperty<float>(PropertyIndex p, float f)
 {
     properties[(int)p].data.u_float = f;
@@ -176,6 +184,12 @@ inline void VertexBatch::setProperty<Texture*>(PropertyIndex p, Texture* t)
     properties[(int)p].set = true;
 }
 
+template<>
+inline void VertexBatch::setProperty<bool>(PropertyIndex p, bool b)
+{
+    properties[(int)p].data.u_bool = b;
+    properties[(int)p].set = true;
+}
 
 
 };

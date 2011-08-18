@@ -39,6 +39,7 @@ namespace Magic3D
 {
 
 class GraphicalBody;
+class Renderer;
 
 /** Graphical body of an object. Contains graphical properties
  * (texture, position, model).
@@ -87,11 +88,14 @@ protected:
 	/// shader to use to render this body
 	Shader* shader;
 	
+	Renderer* renderer;
+	
 	std::vector<RenderBatch*> data;
 	
 public:
 	/// standard constructor
-	inline GraphicalBody(Model& model): model(model), shader(NULL) {}
+	inline GraphicalBody(Model& model, Renderer* ren): model(model), shader(NULL),
+	    renderer(ren) {}
 	
 	/// destructor
 	virtual ~GraphicalBody();
@@ -155,6 +159,11 @@ public:
 	inline std::vector<RenderBatch*>& getRenderData()
 	{
 	    return this->data;
+	}
+	
+	inline Renderer* getRenderer()
+	{
+	    return this->renderer;
 	}
 
 };

@@ -34,6 +34,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+class World;
+    
 /** Represents master interface to physics system
  */
 class PhysicsSystem
@@ -52,6 +54,26 @@ private:
 	btConstraintSolver* solver;
     
 	btDiscreteDynamicsWorld* dynamicsWorld;
+	
+protected:
+    friend class World;
+    
+    inline void addBody( PhysicalBody& body )
+    {
+        if (body.getRigidBody())
+            dynamicsWorld->addRigidBody(body.getRigidBody());
+    }
+    
+    inline void removeBody( PhysicalBody& body )
+    {
+        if (body.getRigidBody())
+            dynamicsWorld->removeRigidBody(body.getRigidBody());
+    }
+
+    inline void stepSimulation( float secs, int substeps )
+    {
+        dynamicsWorld->stepSimulation(secs,substeps);
+    }
 
 public:
     /// standard constructor
@@ -70,22 +92,6 @@ public:
     inline void setGravity( float x, float y, float z )
     {
         dynamicsWorld->setGravity(btVector3(x,y,z));
-    }
-    
-    inline void addBody( PhysicalBody& body )
-    {
-        dynamicsWorld->addRigidBody(body.getRigidBody());
-    }
-    
-    inline void removeBody( PhysicalBody& body )
-    {
-        if (body.getRigidBody())
-            dynamicsWorld->removeRigidBody(body.getRigidBody());
-    }
-
-    inline void stepSimulation( float secs, int substeps )
-    {
-        dynamicsWorld->stepSimulation(secs,substeps);
     }
     
     inline void addConstraint( btTypedConstraint* c )

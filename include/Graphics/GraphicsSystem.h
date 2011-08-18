@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 #ifndef MAGIC3D_GRAPHICS_SYSTEM_H
-#define MAGIC3D_GRPAHICS_SYSTEM_H
+#define MAGIC3D_GRAPHICS_SYSTEM_H
 
 // SDL includes
 #include <SDL/SDL.h>

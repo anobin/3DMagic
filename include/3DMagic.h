@@ -83,6 +83,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Graphics/GraphicsSystem.h"
 #include "Physics/PhysicsSystem.h"
 #include "Event/EventSystem.h"
+#include "World/World.h"
 
 
 // cameras

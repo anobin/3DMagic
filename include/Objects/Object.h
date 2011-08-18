@@ -36,6 +36,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+class Renderer;
 
 /** Base class for all objects 
  */
@@ -53,18 +54,18 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(Model& model, float mass): graphical(model), 
+	inline Object(Model& model, float mass, Renderer* ren): graphical(model, ren), 
 			physical( position, model, mass ) {}
 			
 	/// standard constructor
-	inline Object(Model& model, float mass, Point3 location):
+	inline Object(Model& model, float mass, Point3 location, Renderer* ren):
 	    position(location.getX(), location.getY(), location.getZ()),
-	    graphical(model), physical( this->position, model, mass ) 
+	    graphical(model, ren), physical( this->position, model, mass ) 
 	{}
 	
 	/// standard constructor
-	inline Object(Model& model, float mass, Position position): 
-	    position(position), graphical(model), physical( this->position, model, mass ) 
+	inline Object(Model& model, float mass, Position position, Renderer* ren): 
+	    position(position), graphical(model, ren), physical( this->position, model, mass ) 
 	{}
 	
 	/// destructor
