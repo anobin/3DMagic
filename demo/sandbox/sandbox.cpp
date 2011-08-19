@@ -468,9 +468,16 @@ void keyPressed(int key)
 			break;
 		case 'p':
 			if (paused)
+			{
 				paused = false;
+				world->alignPhysicsStepToFPS(true);
+			}
 			else
+			{
 				paused = true;
+				world->alignPhysicsStepToFPS(false);
+				world->setPhysicsStepsPerFrame(0);
+			}
 			break;
 			
 		case 'z':
