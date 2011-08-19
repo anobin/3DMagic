@@ -4,6 +4,19 @@
     - shader
     - texture
     - everything needed to render except position
+- redefine shader attributes interface to include a static set of allowable 
+  attributes with set names
+    - mesh builder will offer methods for allowable attributes
+    - most attributes automatically bound
+    - no run-time checks, if shader has a attribute not fullfilled by a mesh or
+      mesh has an attribute not fullfilled by a shader, too bad soo sad
+        - no interface checks
+    - mabye have custom attributes
+    - mainly just remove interface specs and checks
+- mostly just remove interface check
+- Allow auto-bound and custom uniforms
+    - custom uniforms means a value has to be supplied in material
+    - auto-uniforms are from position calculations, or material properties
 - lock down interfaces and add listeners for changes:
     - object renderer
     - object position
