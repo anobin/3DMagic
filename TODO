@@ -1,4 +1,9 @@
 ## Primary
+- change vertex batch to mesh
+- add materials
+    - shader
+    - texture
+    - everything needed to render except position
 - lock down interfaces and add listeners for changes:
     - object renderer
     - object position
@@ -49,8 +54,13 @@
 - add more hooks into pipeline
 - add support for objects with multiple parts or object groups
 - add support for specifying vertex batch intended use to be passed along to buffer
-
-## Secondary
+- add fustrum culling to graphical pipeline
+- add object sorting to graphical pipeline
+    - opaque objects should be renderered front to back
+    - transparent objects should be rendered back to front
+    - objects using the same material should be grouped together
+        - want to avoid switching resources constantly
+- add factories and pools for parts to keep memory contigous
 -add model-texture mapping interface to be used through object class
 -add option to render everything in wireframe
 -add MMX assembly solutions for matrix and vector ops

@@ -64,8 +64,8 @@ public:
 	{}
 	
 	/// standard constructor
-	inline Object(Model& model, float mass, Position position, Renderer* ren): 
-	    position(position), graphical(model, ren), physical( position, model, mass ) 
+	inline Object(Model& model, float mass, Position p, Renderer* ren): 
+	    position(p), graphical(model, ren), physical( position, model, mass ) 
 	{}
 	
 	/// destructor
