@@ -17,38 +17,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for GraphicalBody class
+/** Implementation file for ModelBuilder class
  *
- * @file GraphicalBody.cpp
+ * @file ModelBuilder.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/GraphicalBody.h>
-
-namespace Magic3D
-{
-	
-	
-/// destructor
-GraphicalBody::~GraphicalBody()
-{
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-};
-
+#include <Graphics/ModelBuilder.h>
 
 
 

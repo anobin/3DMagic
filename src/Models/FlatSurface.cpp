@@ -17,40 +17,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for FlatSurface class
+/** Implementation file for built-in FlatSurface mesh
  *
  * @file FlatSurface.cpp
  * @author Andrew Keating
  */
 
-#include <Models/FlatSurface.h>
-#include <Graphics/VertexBatchBuilder.h>
-#include <string.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
 	
-/** Standard constructor
+/** Build a flat surface
  * @param width the width of the surface
  * @param height the height of the surface
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-FlatSurface::FlatSurface(float width, float height, int slices, int stacks, bool texRepeat, float texPerX, float texPerY)
+ void MeshBuilder::buildFlatSurface(Mesh* mesh, float width, float height, int slices, 
+    int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-	planeShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	this->Model::collisionShape = planeShape;
-	
-	VertexBatchBuilder builder;
-	builder.begin(slices*stacks*6, &batch);
-	
-	// get indices for attributes we use
-	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
+    this->begin(slices*stacks*6, mesh);
 	
 	float x = -width/2;
 	float z = -height/2;
@@ -75,32 +62,32 @@ FlatSurface::FlatSurface(float width, float height, int slices, int stacks, bool
 		// top left
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*i, texY*j);
-		position3f(x, 0.0f, z);
+		vertex3f(x, 0.0f, z);
 		
 		// bottom left
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*i, texY*(j+1));
-		position3f(x, 0.0f, z+zStep);
+		vertex3f(x, 0.0f, z+zStep);
 	
 		// top right
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*(i+1), texY*j);
-		position3f(x+xStep, 0.0f, z);
+		vertex3f(x+xStep, 0.0f, z);
 		
 		// top right
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*(i+1), texY*j);
-		position3f(x+xStep, 0.0f, z);
+		vertex3f(x+xStep, 0.0f, z);
 
 		// bottom left
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*i, texY*(j+1));
-		position3f(x, 0.0f, z+zStep);
+		vertex3f(x, 0.0f, z+zStep);
 
 		// bottom right
 		normal3f(0.0f, 1.0f, 0.0f);
 		texCoord2f(texX*(i+1), texY*(j+1));
-		position3f(x+xStep, 0.0f, z+zStep);
+		vertex3f(x+xStep, 0.0f, z+zStep);
 		
 		i++;
 		if (i < slices)
@@ -116,22 +103,7 @@ FlatSurface::FlatSurface(float width, float height, int slices, int stacks, bool
 		}	
 	}
 	
-	builder.end();
-	this->Model::data.push_back(&batch);
-}
-	
-/// destructor
-FlatSurface::~FlatSurface()
-{
-	delete planeShape;
-}
-	
-	
-/** Get the object's type name
- */
-const char* FlatSurface::getTypeName()
-{
-	return "FlatSurface";
+	this->end();
 }
 	
 	

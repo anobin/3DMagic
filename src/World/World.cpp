@@ -24,17 +24,17 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 #include <World/World.h>
-#include <Renderers/Renderer.h>
+#include <Cameras/FPCamera.h>
 
+extern Magic3D::FPCamera camera;
 
 namespace Magic3D
 {
+    
+
 
 void World::processFrame()
-{
-    std::set<Renderer*> renderers;
-    std::set<Object*> transObjects;
-    
+{   
     // step physics
     if ( physicsStepTime > 0.0f )
     {
@@ -52,54 +52,107 @@ void World::processFrame()
 
 	// render all objects
 	std::set<Object*>::iterator it = objects.begin();
-	std::set<Renderer*>::iterator rit;
-	Renderer* ren;
 	Object* ob;
-	int passCount;
-	bool check = true;
-	for(; ; it++)
+	GraphicalEntity* en;
+	const Model* model;
+	const Mesh* mesh;
+	const Mesh** meshes;
+	const Material** materials;
+	int meshCount;
+	const Material* material;
+	VertexArray* array;
+	const Mesh::AttributeData* adata;
+	int attributeCount;
+	int vertexCount;
+	Shader* shader; 
+	for(; it != objects.end(); it++)
 	{
-	    if (check && it == objects.end())
-	    {
-	        it = transObjects.begin();
-	        if (it == transObjects.end())
-	            break;
-	        check = false;
-	    }
-        else if (!check && it == transObjects.end())
-            break;
-	    
+	    // get object and entity
 	    ob = (*it);
-	    ren = ob->getGraphical().getRenderer();
-	    passCount = ren->getPassCount();
+	    en = ob->getGraphical();
 	    
-	    // check for transparency
-	    bool t = false;
-	    std::vector< VertexBatch* >& batches = ob->getGraphical().getModel().getBatchData();
-	    std::vector< VertexBatch* >::iterator batch = batches.begin();
-	    for(; batch != batches.end() && check; batch++)
+	    // ensure there is a graphical part to this entity
+	    if (en == NULL)
+	        continue; // no graphical part to render
+	    
+	    // get model
+	    model = en->getModel();
+	    MAGIC_ASSERT(model != NULL);
+	    
+	    // get mesh and material data
+	    meshes = model->getMeshData();
+	    materials = model->getMaterialData();
+	    meshCount = model->getMeshCount();
+	    
+	    // ensure there is at least one mesh
+	    MAGIC_ASSERT(meshCount > 0);
+	    
+	    // render each mesh
+	    for(int i=0; i < meshCount; i++)   
 	    {
-	        if ( (*batch)->isPropertySet(VertexBatch::TRANSPARENCY) && 
-	             (*batch)->getProperty<bool>(VertexBatch::TRANSPARENCY) )
+	        // get mesh and material
+	        mesh = meshes[i];
+	        material = materials[i];
+	        
+	        // ensure there is a shader
+	        shader = material->shader;
+	        MAGIC_ASSERT(shader != NULL);
+	        
+	        // get mesh data
+	        adata = mesh->getAttributeData();
+	        attributeCount = mesh->getAttributeCount();
+	        vertexCount = mesh->getVertexCount();
+	        
+	        // get camera matrix
+	        Matrix4 cameraMatrix;
+	        camera.getPosition().getCameraMatrix(cameraMatrix);
+	        
+	        // get tranform (model-view) matrix from position (model) and camera (view) matrices 
+            Matrix4 positionMatrix;
+            Matrix4 transformMatrix;
+            ob->getPosition().getTransformMatrix(positionMatrix);
+            transformMatrix.multiply(cameraMatrix, positionMatrix);
+            
+            // create mvp matrix from projection and transform (model-view)
+            Matrix4 mvp;
+            mvp.multiply(camera.getProjectionMatrix(), transformMatrix);
+            
+            // extract normal matrix from transform matrix
+            Matrix3 normal;
+            transformMatrix.extractRotation(normal);
+            
+            // 'use' shader
+	        shader->use();
+	        
+	        // set named uniforms
+	        shader->setUniformf(  "lightPosition", 0.0f, 1000.0f, 0.0f );
+	        shader->setUniformf( "skyColor", 25, 25, 25);
+	        shader->setUniformf( "groundColor", 255, 255, 255);
+	        
+	        // set auto uniforms
+	        shader->setUniformMatrix( "mvMatrix",     4, transformMatrix.getArray() );
+	        shader->setUniformMatrix( "mvpMatrix",    4, mvp.getArray()             );
+	        shader->setUniformMatrix( "normalMatrix", 3, normal.getArray()          );
+	        
+	        
+	        // bind vertexArray
+	        array = new VertexArray();
+	        for(int j=0; j < attributeCount; j++)
 	        {
-	            transObjects.insert(ob);
-	            t = true;
-	            break;
+	            int bind = shader->getAttribBinding( 
+	                Mesh::attributeTypeNames[(int)adata[j].type] );
+	            if (bind < 0)
+	                continue; // shader does not have attribute
+	            array->setAttributeArray(bind, Mesh::attributeTypeCompCount[(int)adata[j].type],
+	                VertexArray::FLOAT, adata[j].buffer);
 	        }
+	        
+	        // draw mesh
+	        array->draw(material->primitive, vertexCount);
+	        
+	        // delete bound array
+	        delete array;
 	    }
-	    if (t)
-	        continue;
-	    
-	    // check if the renderer has been setup
-	    rit = renderers.find(ren);
-	    if (rit == renderers.end())
-	    {
-	        ren->setup(0);
-	        renderers.insert(ren);
-	    }
-	    
-	    // render object
-	    ren->render( ob, 0 );
 	}
 	
 	// Do the buffer Swap

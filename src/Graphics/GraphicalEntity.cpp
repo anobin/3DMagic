@@ -17,28 +17,37 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for VertexAttribSpec class
+/** Implementation file for GrpahicalEntity class
  *
- * @param VertexAttribSpec.cpp
+ * @file GrpahicalEntity.cpp
  * @author Andrew Keating
  */
 
-#include <Shaders/VertexAttribSpec.h>
+#include <Graphics/GraphicalEntity.h>
 
 namespace Magic3D
 {
-
-
-
+	
+	
+/// destructor
+GraphicalEntity::~GraphicalEntity()
+{
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 };
-
-
-
-
-
-
-
-
 
 
 

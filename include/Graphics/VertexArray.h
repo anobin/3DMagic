@@ -155,7 +155,7 @@ public:
 	 * @param buffer the buffer to be used as the attribute array
 	 */
 	inline void setAttributeArray(unsigned int index, int components, DataTypes type, 
-								  Buffer& buffer)
+								  const Buffer& buffer)
 	{
 		this->bind();
 		glEnableVertexAttribArray(index);

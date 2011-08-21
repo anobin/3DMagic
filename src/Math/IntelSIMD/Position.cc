@@ -27,7 +27,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 /// get a transformation matrix that represents this position
-void Position::getTransformMatrix(Matrix4& out)
+void Position::getTransformMatrix(Matrix4& out) const 
 {
     // get local x axis
     Vector3 xAxis;
@@ -59,7 +59,7 @@ void Position::getTransformMatrix(Matrix4& out)
 }
 
 /// get a rotation matrix that represents the orientation of this position
-void Position::getRotationMatrix(Matrix3& out)
+void Position::getRotationMatrix(Matrix3& out) const 
 {
     // get local x axis
     Vector3 xAxis;

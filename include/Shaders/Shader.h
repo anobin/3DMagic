@@ -25,6 +25,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_SHADER_H
 #define MAGIC3D_SHADER_H
 
+#include <map>
+#include <string>
+
 // include opengl
 #ifdef _WIN32
 #include <gl/glew.h>
@@ -38,7 +41,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Math/MathTypes.h"
 #include "../Exceptions/MagicException.h"
 #include "../Graphics/Texture.h"
-#include "VertexAttribSpec.h"
 #include "../Exceptions/ShaderCompileException.h"
 #include "../Util/magic_throw.h"
 
@@ -54,11 +56,11 @@ protected:
     /// id of compiled and linked shader program
     GLuint programId;
     
-    /// Vertex attribute specification
-    VertexAttribSpec spec;
-    
-    /// index for next named attribute to be added
+    /// next index to use for arribute bind
     int nextIndex;
+    
+    /// attribute indexes
+    std::map<std::string, int> attribIndexes;
     
 	/// default constructor
 	inline Shader() { /* intentionally left blank */ }
@@ -80,20 +82,23 @@ public:
 	 */
 	void use();
 	
-	inline void bindAttrib( const char* attribName, const char* name, int components, VertexArray::DataTypes type )
+	inline void bindAttrib( const char* name )
 	{
 	    glBindAttribLocation(programId, nextIndex , name);
 	    
 	    MAGIC_THROW( glGetError() != GL_NO_ERROR, "Failed to bind attribute." );
 	    
-	    VertexAttribSpec::AttribType data;
-	    data.index = nextIndex;
-	    data.components = components;
-	    data.type = type;
-	    
-	    spec.setAttrib( attribName, data );
+	    attribIndexes.insert( std::pair<std::string, int>( std::string(name), nextIndex ) );
 	    
 	    nextIndex++;
+	}
+	
+	inline int getAttribBinding( const char* name )
+	{
+	    std::map<std::string, int>::iterator it = attribIndexes.find(std::string(name));
+	    if (it == attribIndexes.end())
+	        return -1;
+	    return it->second;
 	}
 	
 	inline void link()
@@ -110,11 +115,6 @@ public:
             glDeleteProgram(programId);
             throw_ShaderCompileException("Shader Program failed to link");
         }
-	}
-	
-	inline const VertexAttribSpec* getVertexAttribSpec()
-	{
-	    return &spec;
 	}
 
     

@@ -17,34 +17,28 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for VertexBatch class
- * 
- * @file VertexHandler.cpp
+/** Implementation file for Model class
+ *
+ * @file Model.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/VertexBatch.h>
+#include <Graphics/Model.h>
 
 namespace Magic3D
 {
 	
 /// destructor
-VertexBatch::~VertexBatch()
+Model::~Model()
 {
-	std::vector< AttributeData* >::iterator it2 =  attributeData.begin();
-	for(; it2 != attributeData.end(); it2++)
-	    delete (*it2);
+    delete[] mesh;
+    delete[] material;
 }
-
-	
-	
-	
-	
-	
-	
 	
 	
 	
 	
 	
 };
+
+

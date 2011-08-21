@@ -17,30 +17,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Sphere class
+/** Implementation file for buillt-in Sphere mesh
  *
  * @file Sphere.cpp
  * @author Andrew Keating
  */
 
-#include <Models/Sphere.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <Graphics/VertexBatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
 	
-/** Standard constructor
+/** Build sphere
  * @param radius the radius of the sphere
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-Sphere::Sphere(float radius, int slices, int stacks)
+void MeshBuilder::buildSphere(Mesh* mesh, float radius, int slices, int stacks)
 {   
-	sphereShape = new btSphereShape(radius);
-	this->Model::collisionShape = sphereShape;
-	
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
     GLfloat dtheta = 2.0f * (GLfloat)(M_PI) / (GLfloat) slices;
 	GLfloat ds = 1.0f / (GLfloat) slices;
@@ -49,16 +45,7 @@ Sphere::Sphere(float radius, int slices, int stacks)
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    VertexBatchBuilder builder;
-    builder.begin(slices * stacks * 6, &batch);
-    
-    // get indices for attributes we use
-	int position_index = builder.getAttribId( "Position", 4, VertexArray::FLOAT );
-	int normal_index = builder.getAttribId( "Normal", 3, VertexArray::FLOAT );
-	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define normal3f(x, y, z) {builder.setAttribute3<float>(normal_index, (x), (y), (z));}
-	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
+    this->begin(slices * stacks * 6, mesh);
     
 	for (i = 0; i < stacks; i++) 
 	{
@@ -141,7 +128,7 @@ Sphere::Sphere(float radius, int slices, int stacks)
 			{
 				texCoord2f(vTexture[k][0], vTexture[k][1]);
 				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+				vertex3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
 			}
 			
 			// Rearrange for next triangle
@@ -157,30 +144,13 @@ Sphere::Sphere(float radius, int slices, int stacks)
 			{
 				texCoord2f(vTexture[k][0], vTexture[k][1]);
 				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				position3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+				vertex3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
 			}			
 		}
         t -= dt;
 	}
-	builder.end();
-	this->Model::data.push_back(&batch);
-}
-	
-/// destructor
-Sphere::~Sphere()
-{
-	/* intentionally left blank */
-}
-	
-/** Get the object's type name
- */
-const char* Sphere::getTypeName()
-{
-	return "Sphere";
-}
-	
-	
-	
+	this->end();
+}	
 	
 	
 	

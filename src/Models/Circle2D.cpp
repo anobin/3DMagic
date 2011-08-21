@@ -17,49 +17,39 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Circle2D class
+/** Implementation file for built-in Circle2D mesh
  * 
  * @file Circle2D.cpp
  * @author Andrew Keating
  */
 
-#include <Models/Circle2D.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <Graphics/VertexBatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
 
-/** Standard constructor 
+/** Build a 2D circle mesh
  * @param x the x coordinate of the center
  * @param y the y coordinate of the center
  * @param radius the radius of the circle
  * @param precisionAngle the angle between any two points on the edge of the
-						circle, the lower angle, the better looking
+                        circle, the lower angle, the better looking
  */
-Circle2D::Circle2D(int x, int y, int radius, float precisionAngle)
+void MeshBuilder::build2DCircle(Mesh* mesh, int x, int y, int radius, float precisionAngle )
 {
-	// no physics for 2D models
-	this->Model::collisionShape = NULL;
 	
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// points using a TRIANGLE FAN
 	int edges = int(360.0f/precisionAngle);
-	VertexBatchBuilder builder;
-	builder.begin(1 + edges, &batch);
-	
-	// get indices for attributes we use
-	int position_index = builder.getAttribId( "Location", 4, VertexArray::FLOAT );
-	int tex_index = builder.getAttribId( "TexCoord", 2, VertexArray::FLOAT );
-	#define position3f(x, y, z) {builder.setAttribute4<float>(position_index, (x), (y), (z), 1.0f);}
-	#define texCoord2f(x, y) {builder.setAttribute2<float>(tex_index, (x), (y));}
+	this->begin(1 + edges, mesh);
 	
 	// center
 	texCoord2f(0.5f, 0.5f);
-	position3f((float)x, (float)y, 0.0f);
+	vertex3f((float)x, (float)y, 0.0f);
 	
 	// draw verticies around the center
 	float theta = (float)(precisionAngle * M_PI / 180.0f);
@@ -83,27 +73,12 @@ Circle2D::Circle2D(int x, int y, int radius, float precisionAngle)
 			vy = (float)(y1 + (r * sin(float(i)*theta)));
 		}
 		texCoord2f((float)(0.5f + 0.5f * ((vx-x1)/r)), (float)(0.5f + 0.5f * ((vy-y1)/r)));
-		position3f(vx, vy, 0.0f);
+		vertex3f(vx, vy, 0.0f);
 	}
 
 	// end vertex data
-	builder.end();
-	this->Model::data.push_back(&batch);
+	this->end();
 }
-	
-/// destructor
-Circle2D::~Circle2D()
-{
-	/* intentionall left blank */
-}
-	
-/** get the object's type name
- */
-const char* Circle2D::getTypeName()
-{
-	return "Circle2D";
-}
-
 
 };
 

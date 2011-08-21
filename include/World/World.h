@@ -70,7 +70,8 @@ public:
    inline void addObject(Object* object)
    {
        objects.insert( object );
-       physics.addBody( object->getPhysical() );
+       if (object->getPhysical())
+           physics.addBody( *object->getPhysical() );
    }
    
    inline void removeObject(Object* object)
@@ -79,7 +80,8 @@ public:
        if ( it != objects.end() )
        {
            objects.erase(it);
-           physics.removeBody(object->getPhysical());
+           if (object->getPhysical())
+               physics.removeBody(*object->getPhysical());
        }
    }
    

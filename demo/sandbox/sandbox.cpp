@@ -52,10 +52,6 @@ Matrix4 projectionMatrix;
 // resource manager
 ResourceManager resourceManager("../../");
 
-// renderers
-Renderer2D* renderer2D;
-HemRenderer* renderer;
-
 // textures
 Texture* stoneTex = NULL;
 Texture* marbleTex = NULL;
@@ -64,13 +60,25 @@ Texture* brickTex = NULL;
 Texture* blueTex = NULL;
 
 // models
-FlatSurface* ceilingModel;
-FlatSurface* floorModel;
-FlatSurface* wallModel;
-Sphere* sphere;
-Sphere* tinySphere;
-Box* bigSphere;
-Box* boxModel;
+Model floorModel;
+Model sphereModel;
+Model tinySphereModel;
+Model bigSphereModel;
+Model boxModel;
+
+// meshes
+Mesh floorMesh;
+Mesh sphereMesh;
+Mesh tinySphereMesh;
+Mesh bigSphereMesh;
+Mesh boxMesh;
+
+// materials
+Material floorMaterial;
+Material sphereMaterial;
+Material tinySphereMaterial;
+Material bigSphereMaterial;
+Material boxMaterial; 
 
 // objects
 Object* bigBall;
@@ -79,33 +87,16 @@ Object* floorObject;
 Object* ceiling;
 Object* wallObject;
 
-// decal stuff
-Object* decal;
-FlatSurface* decalSurface;
-std::vector<Object*> decals;
-std::map<Object*, Object*> relations;
-
-// 3ds test
-CustomModel* chainLinkModel;
-Texture* chainLinkTex;
-
-// GUI stuff
-Rectangle2D* frameModel;
-Circle2D* circleModel;
-Texture* frameTex;
-Texture* circleTex;
-Object* frameObject;
-Object* circleObject;
-Matrix4 flatProjectionMatrix;
-
-// legacy
-//Position             cameraFrame;
-Point3 lightPos(0.0f, 1000.0f, 0.0f);
+// shader uniforms
+float lightPos[] = {0.0f, 1000.0f, 0.0f};
 Color groundColor(25,25,25);
 Color skyColor(255,255,255);
 
+// shaders
+Shader* shader;
+
+// cameras
 FPCamera camera;
-Camera2D camera2d;
 
 bool wireframe = false;
 
@@ -129,6 +120,11 @@ PhysicsSystem physics;
 EventSystem events;
 World* world;
 
+// builders
+MeshBuilder meshBuilder;
+MaterialBuilder materialBuilder;
+ModelBuilder modelBuilder;
+
 /** Called when the window size changes
  * @param w width of the new window
  * @param h hieght of the new window
@@ -140,11 +136,6 @@ void changeWindowSize(int w, int h)
 	
     // Create the projection matrix
     camera.setPerspectiveProjection(60.0f, float(w)/float(h), INCH, 1000*FOOT);
-	
-	// create the orthographic/flat project matrix for the screen size and -1 to 1 depth
-	camera2d.setOrthographicProjection(0, w, 0, h, -1.0, 1.0);
-	
-	frameModel = new Rectangle2D(w-173-10, 10, 173, 50);
 }
 
 
@@ -211,68 +202,89 @@ void setup()
 	blueTex = new Texture(blueImage());
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
-	Handle<SingleColor2DResource> frameImage = resourceManager.injectSingleColor2D(
-					"images/frameImage", Color(255, 118, 27, 100, Color::RGBA_BYTE));
-	if (resourceManager.doesResourceExist("images/splatter.tga"))
-	{
-		Handle<TGA2DResource> splatterImage = resourceManager.get
-			<TGA2DResource>("images/splatter.tga");
-		circleTex = new Texture(splatterImage());
-	}
-	else
-	{
-		circleTex = new Texture(frameImage());
-	}
-	/*if (resourceManager.doesResourceExist("images/logo.png"))
-	{
-		Handle<PNG2DResource> logoImage = resourceManager.get
-			<PNG2DResource>("images/logo.png");
-		frameTex = new Texture(logoImage());
-	}
-	else*/
-	{
-		frameTex = new Texture(frameImage());
-	}
+	// init shader
+	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
+    Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
+	shader = new Shader( vp()->getText(), fp()->getText() );
+	shader->bindAttrib( "vVertex" );
+	shader->bindAttrib( "vNormal" );
+	shader->bindAttrib( "vTexCoord0" );
+	shader->link();
 	
 	
-    // init models, represent data on graphics card
-	sphere = new Sphere(2*FOOT, 55, 32);
-	sphere->setTexture(marbleTex);
-	tinySphere = new Sphere( 1*FOOT, 4, 4);
-	tinySphere->setTexture(blueTex);
-	//bigSphere = new Sphere(50*FOOT, 55, 32);
-	bigSphere = new Box(2, 4, 3);
-	bigSphere->setTexture(marbleTex);
-	ceilingModel = new FlatSurface(ROOM_SIZE*2, ROOM_SIZE*2, 20, 20, true, 15*FOOT, 12*FOOT);
-	floorModel = new FlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, true, 15*FOOT, 12*FOOT);
-	floorModel->setTexture(stoneTex);
-	wallModel = new FlatSurface(5*FOOT, 5*FOOT, 20, 20);
+	// init meshes
+	meshBuilder.buildSphere(&sphereMesh, 2*FOOT, 55, 32);
+	meshBuilder.buildSphere(&tinySphereMesh, 1*FOOT, 4, 4);
+	meshBuilder.buildBox(&bigSphereMesh, 2, 4, 3);
+	meshBuilder.buildFlatSurface(&floorMesh, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+	    true, 15*FOOT, 12*FOOT );
 	float scale = 5.0f;
-	boxModel = new Box(6*INCH*scale, 3*INCH*scale, 3*INCH*scale);
-	boxModel->setFrontTexture(brickTex);
-	boxModel->setBackTexture(brickTex);
-	boxModel->setTopTexture(marbleTex);
-	boxModel->setBottomTexture(blueTex);
-	boxModel->setLeftTexture(stoneTex);
-	boxModel->setRightTexture(blueTex);
+	meshBuilder.buildBox(&boxMesh, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
 	
-	// init renderer
-	renderer = new HemRenderer(resourceManager);
-	renderer->setCamera( &camera );
-	renderer->setLightSource( lightPos );
-	renderer->setSkyColor( skyColor );
-	renderer->setGroundColor( groundColor );
+	// init materials
+	materialBuilder.begin(&sphereMaterial, 3, 3);
+	materialBuilder.setShader(shader);
+	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+	materialBuilder.addNamedUniform( "lightPosition", VertexArray::FLOAT, 3, lightPos);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	materialBuilder.setTexture(marbleTex);
+	materialBuilder.end();
+	materialBuilder.begin(&tinySphereMaterial, 3, 3);
+	materialBuilder.setShader(shader);
+	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+	materialBuilder.addNamedUniform( "lightPosition", VertexArray::FLOAT, 3, lightPos);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	materialBuilder.setTexture(blueTex);
+	materialBuilder.end();
+	materialBuilder.begin(&bigSphereMaterial, 3, 3);
+	materialBuilder.setShader(shader);
+	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+	materialBuilder.addNamedUniform( "lightPosition", VertexArray::FLOAT, 3, lightPos);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	materialBuilder.setTexture(blueTex);
+	materialBuilder.end();
+	materialBuilder.begin(&floorMaterial, 3, 3);
+	materialBuilder.setShader(shader);
+	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+	materialBuilder.addNamedUniform( "lightPosition", VertexArray::FLOAT, 3, lightPos);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	materialBuilder.setTexture(stoneTex);
+	materialBuilder.end();
+	materialBuilder.begin(&boxMaterial, 3, 3);
+	materialBuilder.setShader(shader);
+	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+	materialBuilder.addNamedUniform( "lightPosition", VertexArray::FLOAT, 3, lightPos);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	materialBuilder.setTexture(brickTex);
+	materialBuilder.end();
 	
-	// init 2D renderer
-	renderer2D = new Renderer2D(resourceManager);
-	renderer2D->setCamera( &camera2d );
+    // init models
+    modelBuilder.buildSimpleModel(&sphereModel, &sphereMesh, &sphereMaterial);
+	modelBuilder.buildSimpleModel(&tinySphereModel, &tinySphereMesh, &tinySphereMaterial);
+	modelBuilder.buildSimpleModel(&bigSphereModel, &bigSphereMesh, &bigSphereMaterial);
+	modelBuilder.buildSimpleModel(&floorModel, &floorMesh, &floorMaterial);
+	modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
 	
 	// init objects
-	btBall = new Object(*sphere, 1, Point3(0.0f, 150*FOOT, 0.0f), renderer); // 1 kg sphere
-	
+	btBall = new Object(&sphereModel, Point3(0.0f, 150*FOOT, 0.0f));
 	world->addObject(btBall);
 	
-	floorObject = new Object(*floorModel, 0, renderer); // static object
+	floorObject = new Object(&floorModel); // static object
 	world->addObject(floorObject);
 	
 	float wallWidth =40;
@@ -291,44 +303,10 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(*boxModel, 4, Point3(w, h, zOffset)/*, 3.0f*/, renderer); // 3 kg box
+			btBox = new Object(&boxModel, Point3(w, h, zOffset) );
 			world->addObject(btBox);
 		}
 	}
-	
-	// gui stuff
-	frameModel = new Rectangle2D(10, 10, 173, 50);
-	circleModel = new Circle2D(400, 60, 100, 1.0f);
-	
-	
-	frameModel->setTexture(frameTex);
-	frameModel->setTransparency(true);
-	circleModel->setTexture(circleTex);
-	circleModel->setTransparency(true);
-	
-	frameObject = new Object( *frameModel, 0, renderer2D);
-	world->addObject( frameObject );
-	circleObject = new Object( *circleModel, 0, renderer2D);
-	world->addObject( circleObject );
-	
-	// 3ds test stuff
-	Handle<Model3DSResource> linkResource = 
-		resourceManager.get<Model3DSResource>("models/chainLink.3ds");
-	chainLinkModel = new CustomModel(*linkResource());
-	Handle<SingleColor2DResource> linkImage = resourceManager.injectSingleColor2D(
-					"images/linkImage", Color(195, 195, 195, 255, Color::RGBA_BYTE));
-	chainLinkTex = new Texture(linkImage());
-	chainLinkModel->setTexture(chainLinkTex);
-    
-    // decal stuff
-    decalSurface = new FlatSurface(6*FOOT, 6*FOOT, 20, 20, true, 6*FOOT, 6*FOOT );
-    decal = new Object( *decalSurface, 0, Point3( 0.0f, 3*FOOT, -2*FOOT ), renderer );
-    decal->getPosition().rotate( 90.0f / 180.0f * M_PI,  Vector3( 1.0f, 0.0f, 0.0f ) );
-	decals.push_back(decal);
-    
-    Object* chainLink = new Object( *chainLinkModel, 3, Point3(0.0f, 3.0f*FOOT, 0.0f), renderer );
-    world->addObject(chainLink);
-	
         
     // set eye level
     camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
@@ -364,11 +342,11 @@ void renderScene(void)
 	{
 	    for (int i = 0; i < 20; i++)
         {
-            Object* t = new Object(*tinySphere, 0.01f, Point3(/*1.1f * (i%5)*/0, 10.0f, /*1.1f * (i/5)*/0), renderer); // 0.01 kg sphere
+            Object* t = new Object(&tinySphereModel, Point3(0, 10.0f, 0) );
             world->addObject(t);
             
-            t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
-                                          btVector3(0.0f, 0.0f, 0.0f));
+            //t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
+            //                              btVector3(0.0f, 0.0f, 0.0f));
         }
     }
     
@@ -388,7 +366,6 @@ void keyPressed(int key)
 	btTransform transform;
 	Position p;
 	Object* t;
-    Object* decal;
     std::vector<Object*>::iterator it;
     //int i;
 	
@@ -407,8 +384,6 @@ void keyPressed(int key)
 			//camera.getPosition().getUpVector().set(0.0f, 1.0f, 0.0f);
 			
 			// manually set new position for ball
-			btBall->getPosition().getLocation().setY(10*FOOT);
-			btBall->syncPositionToPhysics();
 			break;
 			
 		// escape
@@ -453,15 +428,11 @@ void keyPressed(int key)
 			break;
 			
 		case 'g':
-			t = new Object(*bigSphere, 300, Point3(0.0f, 5.0f, 0.0f), renderer); // 1 kg sphere
+			t = new Object(&bigSphereModel, Point3(0.0f, 5.0f, 0.0f) );
 			world->addObject(t);
 			
 			camera.lookat( Point3(0, 30, 0) );
-            
-            // add decal
-            decal = new Object( *decalSurface, 0, Point3( 0.0f, 0.0f, 0.0f ), renderer);
-            decals.push_back(decal);
-            relations.insert( std::pair<Object*,Object*>( decal, t ) );
+			
 			break;
 		case 'h':
 		    releaseWater = true;
@@ -585,7 +556,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	
 	Position p;
 	Object* t;
-	static float speed = 700 * 300;
+	//static float speed = 700 * 300;
 	
 	switch(button)
 	{
@@ -593,11 +564,11 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
-			t = new Object(*sphere, 100, p, renderer); // 1 kg sphere
+			t = new Object(&sphereModel, p );
 			world->addObject(t);
-			t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
-										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
-										  btVector3(0.0f, 0.0f, 0.0f));
+			//t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
+			//							p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
+			//							  btVector3(0.0f, 0.0f, 0.0f));
 			break;
 			
 		case Event::MIDDLE: 

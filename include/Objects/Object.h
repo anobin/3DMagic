@@ -25,18 +25,15 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_OBJECT_H
 #define MAGIC3D_OBJECT_H
 
-#include "../Models/Model.h"
 #include "../Math/Position.h"
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
 #include "../Physics/PhysicalBody.h"
-#include "../Graphics/GraphicalBody.h"
+#include "../Graphics/GraphicalEntity.h"
 
 namespace Magic3D
 {
-
-class Renderer;
 
 /** Base class for all objects 
  */
@@ -47,26 +44,24 @@ protected:
 	Position position;
 	
 	/// graphical body for object
-	GraphicalBody graphical;
+	GraphicalEntity graphical;
 	
 	/// physical body for object
-	PhysicalBody physical;
+	PhysicalBody* physical;
 	
 public:
 	/// standard constructor
-	inline Object(Model& model, float mass, Renderer* ren): graphical(model, ren), 
-			physical( position, model, mass ) {}
-			
-	/// standard constructor
-	inline Object(Model& model, float mass, Point3 location, Renderer* ren):
-	    position(location.getX(), location.getY(), location.getZ()),
-	    graphical(model, ren), physical( position, model, mass ) 
-	{}
-	
-	/// standard constructor
-	inline Object(Model& model, float mass, Position p, Renderer* ren): 
-	    position(p), graphical(model, ren), physical( position, model, mass ) 
-	{}
+	inline Object(Model* model): 
+	    graphical(model), physical(NULL) {}
+	    
+	inline Object(Model* model, Position& p): position(p), 
+	    graphical(model), physical(NULL) {}
+	    
+	inline Object(Model* model, Point3 location): 
+	    graphical(model), physical(NULL) 
+	{
+	    position.getLocation().set(location);
+	}
 	
 	/// destructor
 	virtual ~Object();
@@ -74,38 +69,27 @@ public:
 	/// set the Position
 	inline void setPosition(const Position& position)
 	{
+	    if (physical)
+	        physical->syncPositionToPhysics();
 		this->position.set(position);
 	}
 	
 	/// get the position for modification
-	inline Position& getPosition()
+	inline const Position& getPosition()
 	{
 		return this->position;
 	}
 	
-	/** sync the graphical position with the physical
-	 * position.
-	 * @note call this after manually setting the position,
-	 * this method does not need to be called for the physics
-	 * to update the position, only the other way around
-	 * @note try to avoid manually setting an object's position
-	 * in the first place, use forces and constraints where possible
-	 */
-	inline void syncPositionToPhysics()
-	{
-		physical.syncPositionToPhysics();
-	}
-	
 	/// get physical body for this model
-	inline PhysicalBody& getPhysical()
+	inline PhysicalBody* getPhysical()
 	{
 	    return physical;
 	}
 	
 	/// get graphical body for this model
-	inline GraphicalBody& getGraphical()
+	inline GraphicalEntity* getGraphical()
 	{
-	     return graphical;   
+	     return &graphical;   
 	}
 
 };

@@ -17,15 +17,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for GraphicalBody class
+/** Header file for GraphicalEntity class
  *
- * @file GraphicalBody.h
+ * @file GraphicalEntity.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_GRAPHICAL_BODY_H
-#define MAGIC3D_GRAPHICAL_BODY_H
+#ifndef MAGIC3D_GRAPHICAL_ENTITY_H
+#define MAGIC3D_GRAPHICAL_ENTITY_H
 
-#include "../Models/Model.h"
+#include "Model.h"
 #include "../Math/Position.h"
 #include "../Util/Color.h"
 #include "Texture.h"
@@ -38,76 +38,32 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
-class GraphicalBody;
-class Renderer;
+class GraphicalEntity;
 
 /** Graphical body of an object. Contains graphical properties
  * (texture, position, model).
  */
-class GraphicalBody
-{
-public:
-    struct RenderBatch
-    {
-    private:
-        friend class GraphicalBody;
-        VertexArray array;
-        VertexBatch* batch;
-        int vertexCount;
-        
-    public:
-        
-        inline bool isPropertySet(VertexBatch::PropertyIndex p)
-        {
-            return batch->isPropertySet(p);
-        }
-        
-        template<class T>
-        inline T getProperty(VertexBatch::PropertyIndex p)
-        {
-            return batch->getProperty<T>(p);
-        }
-        
-        template<class T>
-        inline void setProperty(VertexBatch::PropertyIndex p, T t)
-        {
-            batch->setProperty<T>(p, t);
-        }
-        
-        inline void draw( VertexArray::Primitives primitive )
-        {
-            array.draw(primitive, vertexCount);
-        }
-        
-    };
-    
+class GraphicalEntity
+{    
 protected:
-	/// model to use to represent this object
-	Model& model;
-	
-	/// shader to use to render this body
-	Shader* shader;
-	
-	Renderer* renderer;
-	
-	std::vector<RenderBatch*> data;
+	/// model to use to represent this entity
+	Model* model;
 	
 public:
 	/// standard constructor
-	inline GraphicalBody(Model& model, Renderer* ren): model(model), shader(NULL),
-	    renderer(ren) {}
+	inline GraphicalEntity(Model* model): model(model) {}
 	
 	/// destructor
-	virtual ~GraphicalBody();
+	virtual ~GraphicalEntity();
 	
 	/// get the model used
-	inline Model& getModel()
+	inline Model* getModel()
 	{
 		return model;
 	}
 	
 	/// set the shader to render with
-	inline void setShader( Shader& shader )
+	/*inline void setShader( Shader& shader )
 	{
 	    const VertexAttribSpec::AttribType* attrib;
 	    
@@ -119,13 +75,13 @@ public:
 	    
 	    // create bindings in vertex array for data in model to variables in shader
 	    const VertexAttribSpec* spec  = shader.getVertexAttribSpec();
-	    std::vector< VertexBatch* >& batch = model.getBatchData();
-	    std::vector< VertexBatch*>::iterator b_it = batch.begin();
+	    std::vector< Mesh* >& batch = model.getBatchData();
+	    std::vector< Mesh*>::iterator b_it = batch.begin();
 	    for(; b_it != batch.end(); b_it++ )
 	    {
 	    
-            std::vector< VertexBatch::AttributeData* >& data = (*b_it)->getAttributeData();
-            std::vector< VertexBatch::AttributeData* >::iterator it = data.begin();
+            std::vector< Mesh::AttributeData* >& data = (*b_it)->getAttributeData();
+            std::vector< Mesh::AttributeData* >::iterator it = data.begin();
             RenderBatch* a = new RenderBatch();
             for(; it != data.end(); it++)
             {
@@ -148,23 +104,7 @@ public:
 	     
 	    // set the shader for the body
 	    this->shader = &shader;
-	}
-	
-	/// get the shader to render with
-	inline Shader* getShader()
-	{
-	    return this->shader;    
-	}
-	
-	inline std::vector<RenderBatch*>& getRenderData()
-	{
-	    return this->data;
-	}
-	
-	inline Renderer* getRenderer()
-	{
-	    return this->renderer;
-	}
+	}*/
 
 };
 

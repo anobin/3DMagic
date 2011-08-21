@@ -38,11 +38,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // graphics
 #include "Graphics/Texture.h"
-
-// renderers
-#include "Renderers/Renderer.h"
-#include "Renderers/HemRenderer.h"
-#include "Renderers/Renderer2D.h"
+#include "Graphics/ModelBuilder.h"
+#include "Graphics/MeshBuilder.h"
+#include "Graphics/MaterialBuilder.h"
 
 // time
 #include "Time/StopWatch.h"
@@ -60,15 +58,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // shaders
 #include "Shaders/Shader.h"
-
-// models
-#include "Models/Model.h"
-#include "Models/FlatSurface.h"
-#include "Models/Sphere.h"
-#include "Models/Box.h"
-#include "Models/Rectangle2D.h"
-#include "Models/Circle2D.h"
-#include "Models/CustomModel.h"
 
 // physics
 #include "Physics/MotionState.h"

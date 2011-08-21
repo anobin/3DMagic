@@ -206,19 +206,19 @@ public:
 	 * other openGL functions to implicity use it
 	 * @param point the binding point to bind to
 	 */
-	inline void bind(BindingPoints point)
+	inline void bind(BindingPoints point) const
 	{
 		Buffer::bindBuffer(point, bufferId);
 	}
 	
 	/// unbind this buffer
-	inline void unBind()
+	inline void unBind() const
 	{
 		Buffer::unBindBuffer(bufferId);
 	}
 	
 	/// get the current buffer binding
-	inline BindingPoints getBinding()
+	inline BindingPoints getBinding() const
 	{
 		return Buffer::getBindPoint(bufferId);
 	}

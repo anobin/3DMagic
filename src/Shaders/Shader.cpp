@@ -80,7 +80,7 @@ Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
     glDeleteShader(vsId);
     glDeleteShader(fsId);
     
-    nextIndex = 0; // lowest valid shader attribute id is 0
+    nextIndex = 0;
 }
 
 /// destructor

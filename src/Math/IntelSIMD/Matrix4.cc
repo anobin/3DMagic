@@ -277,6 +277,8 @@ void Matrix4::createOrthographicMatrix(Scalar xMin, Scalar xMax, Scalar yMin, Sc
 /// create rotation matrix
 void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
 {
+	/* inline assembly version for 32-bit MSVC compiler */
+#ifdef _MSC_VER
     __asm PUSH      ecx                 // save "this" pointer for later
     ALIGN(16, static Scalar ones[4]) = {1.0f, 1.0f, 1.0f, 1.0f};
     ALIGN(16, static Scalar finalColumn[4]) = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -388,6 +390,68 @@ void Matrix4::createRotationMatrix(Scalar angle, Scalar x, Scalar y, Scalar z)
         MOVAPS      xmm0,       finalColumn
         MOVAPS      [ecx + 12 * TYPE Scalar],       xmm0
     }
+    
+	/* inline assembly version for 64-bit GCC compiler */
+#elif defined(__GNUC__)
+#define MAGIC3D_A(row,col)  data[(col*4)+row]
+        Scalar mag, s, c;
+        Scalar xx, yy, zz, xy, yz, zx, xs, ys, zs, one_c;
+
+        s = sin(angle);
+        c = cos(angle);
+
+        mag = sqrt( x*x + y*y + z*z );
+
+        // no rotation, return identity matrix
+        if (mag == 0.0f) 
+        {
+            memcpy(this->data, Matrix4::identity, sizeof(Scalar)*4*4);
+            return;
+        }
+
+        // Rotation matrix is normalized
+        x /= mag;
+        y /= mag;
+        z /= mag;
+
+        xx = x * x;
+        yy = y * y;
+        zz = z * z;
+        xy = x * y;
+        yz = y * z;
+        zx = z * x;
+        xs = x * s;
+        ys = y * s;
+        zs = z * s;
+        one_c = Scalar(1.0f) - c;
+
+        MAGIC3D_A(0,0) = (one_c * xx) + c;
+        MAGIC3D_A(0,1) = (one_c * xy) - zs;
+        MAGIC3D_A(0,2) = (one_c * zx) + ys;
+        MAGIC3D_A(0,3) = 0.0f;
+
+        MAGIC3D_A(1,0) = (one_c * xy) + zs;
+        MAGIC3D_A(1,1) = (one_c * yy) + c;
+        MAGIC3D_A(1,2) = (one_c * yz) - xs;
+        MAGIC3D_A(1,3) = 0.0f;
+
+        MAGIC3D_A(2,0) = (one_c * zx) - ys;
+        MAGIC3D_A(2,1) = (one_c * yz) + xs;
+        MAGIC3D_A(2,2) = (one_c * zz) + c;
+        MAGIC3D_A(2,3) = 0.0f;
+
+        MAGIC3D_A(3,0) = 0.0f;
+        MAGIC3D_A(3,1) = 0.0f;
+        MAGIC3D_A(3,2) = 0.0f;
+        MAGIC3D_A(3,3) = 1.0f;
+        
+#undef MAGIC3D_A
+    /* end of inline assembly version for 64-bit GCC compiler */
+        
+#else
+#error Unrecognized compiler - cannot determine how to inline assembly
+#endif
+
 }
 
 /// create a translation matrix

@@ -25,7 +25,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_PHYSICAL_BODY_H
 #define MAGIC3D_PHYSICAL_BODY_H
 
-#include "../Models/Model.h"
 #include "../Math/Position.h"
 #include "../Exceptions/MagicException.h"
 #include "MotionState.h"
@@ -50,23 +49,16 @@ protected:
 	/// physical body for object
 	btRigidBody* body;
 	
-	inline void build(float mass, Model& model, float friction = 0.5f, float restitution = 0.0f,
-						float linearDamping = 0.0f)
-	{
-	    // check for no collision shape, thus no physics
-	    if ( model.getCollisionShape() == NULL )
-	    {
-	        body = NULL;
-	        return;
-	    }
-	    
+	inline void build(float mass, btCollisionShape* shape, float friction = 0.5f, 
+	    float restitution = 0.0f, float linearDamping = 0.0f)
+	{   
 		// calc inertia
 		btVector3 fallInertia(0,0,0);
-		model.getCollisionShape()->calculateLocalInertia(mass,fallInertia);
+		shape->calculateLocalInertia(mass,fallInertia);
 		
 		// construct rigid body
 		btRigidBody::btRigidBodyConstructionInfo 
-			fallRigidBodyCI(mass, &motionState, model.getCollisionShape(), fallInertia);
+			fallRigidBodyCI(mass, &motionState, shape, fallInertia);
 		fallRigidBodyCI.m_friction = friction;
 		fallRigidBodyCI.m_restitution = restitution;
 		fallRigidBodyCI.m_linearDamping = linearDamping;
@@ -75,9 +67,10 @@ protected:
 	
 public:
 	/// standard constructor
-	inline PhysicalBody(Position& position, Model& model, float mass): motionState(position), body(NULL) 
+	inline PhysicalBody(Position& position, btCollisionShape* shape, float mass): 
+	    motionState(position), body(NULL) 
 	{ 
-	    build(mass, model); 
+	    build(mass, shape); 
 	}
 	
 	/// destructor

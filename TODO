@@ -1,5 +1,6 @@
 ## Primary
 - change vertex batch to mesh
+    - just attribute data
 - add materials
     - shader
     - texture
@@ -14,6 +15,7 @@
     - mabye have custom attributes
     - mainly just remove interface specs and checks
 - mostly just remove interface check
+- no more custom render pipelines
 - Allow auto-bound and custom uniforms
     - custom uniforms means a value has to be supplied in material
     - auto-uniforms are from position calculations, or material properties
@@ -143,6 +145,12 @@
 -add support for particle effects
 	-I don't think Bullet can do it
 	-fog, exposions, water?
+-add algorithm to stitch together multiple intersecting meshes into one mesh
+    - most common use is to generate a physical mesh from a complicated graphical model
+    - vertices not "visible" should be removed
+    - return error if not all meshes are intersecting
+-add algorithm to remove non-visible vertices from a mesh
+    - assumes all meshes are opaque
 
 ## Demo ideas
 - A box that spawns tiny blue balls to simulate water and a bowl for the particles to fall into
