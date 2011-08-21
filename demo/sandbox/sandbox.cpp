@@ -206,9 +206,9 @@ void setup()
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 	shader = new Shader( vp()->getText(), fp()->getText() );
-	shader->bindAttrib( "vVertex" );
-	shader->bindAttrib( "vNormal" );
-	shader->bindAttrib( "vTexCoord0" );
+	shader->bindAttrib( "vertex" );
+	shader->bindAttrib( "normal" );
+	shader->bindAttrib( "texcoord0" );
 	shader->link();
 	
 	
