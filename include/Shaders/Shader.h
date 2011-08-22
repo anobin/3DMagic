@@ -121,6 +121,7 @@ public:
     inline void setUniformfv( const char* name, int components, const Scalar* values, int count = 1 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         switch( components )
         {
             case 1: glUniform1fv(id, count, values); break;
@@ -137,6 +138,7 @@ public:
     inline void setUniformf( const char* name, const Scalar v1 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         glUniform1f( id, v1);
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind float uniform for shader");    
@@ -145,6 +147,7 @@ public:
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         glUniform2f( id, v1, v2);
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind float uniform for shader");    
@@ -153,6 +156,7 @@ public:
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         glUniform3f( id, v1, v2, v3);
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind float uniform for shader");    
@@ -161,6 +165,7 @@ public:
     inline void setUniformf( const char* name, const Scalar v1, const Scalar v2, const Scalar v3, Scalar v4 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         glUniform4f( id, v1, v2, v3, v4);
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind float uniform for shader");    
@@ -169,6 +174,7 @@ public:
     inline void setUniformiv( const char* name, int components, const int* values, int count = 1 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         switch( components )
         {
             case 1: glUniform1iv(id, count, values); break;
@@ -185,6 +191,7 @@ public:
     inline void setUniformMatrix( const char* name, int components, const Scalar* values, int count = 1 )
     {
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         switch( components )
         {
             case 2: glUniformMatrix2fv(id, count, GL_FALSE, values); break;
@@ -201,8 +208,9 @@ public:
     {
         tex->bind();
         GLint id = glGetUniformLocation(this->programId, name);
+        MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
         glUniform1i( id, 0 );
-        
+    
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind texture uniform for shader");
     }
