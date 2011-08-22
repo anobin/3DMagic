@@ -44,23 +44,24 @@ class Material
 public:
     enum AutoUniformType
     {
-        MODEL_MATRIX,
-        VIEW_MATRIX,
-        PROJECTION_MATRIX,
-        MODEL_VIEW_MATRIX,
-        VIEW_PROJECTION_MATRIX,
-        MODEL_PROJECTION_MATRIX,
-        MODEL_VIEW_PROJECTION_MATRIX,
-        NORMAL_MATRIX,
-        FPS,
-        TEXTURE0,
-        TEXTURE1,
-        TEXTURE2,
-        TEXTURE3,
-        TEXTURE4,
-        TEXTURE5,
-        TEXTURE6,
-        TEXTURE7,
+        MODEL_MATRIX,                   // mat4
+        VIEW_MATRIX,                    // mat4
+        PROJECTION_MATRIX,              // mat4
+        MODEL_VIEW_MATRIX,              // mat4
+        VIEW_PROJECTION_MATRIX,         // mat4
+        MODEL_PROJECTION_MATRIX,        // mat4
+        MODEL_VIEW_PROJECTION_MATRIX,   // mat4
+        NORMAL_MATRIX,                  // mat3
+        FPS,                            // int
+        TEXTURE0,                       // sampler2D
+        TEXTURE1,                       // sampler2D
+        TEXTURE2,                       // sampler2D
+        TEXTURE3,                       // sampler2D
+        TEXTURE4,                       // sampler2D
+        TEXTURE5,                       // sampler2D
+        TEXTURE6,                       // sampler2D
+        TEXTURE7,                       // sampler2D
+        LIGHT_LOCATION,                 // vec3
         MAX_AUTO_UNIFORM_TYPE
     };
     
