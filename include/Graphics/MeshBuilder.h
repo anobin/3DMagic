@@ -57,8 +57,8 @@ private:
 		{
 		    // type for auto-bound attribute is always float
 		    int components = Mesh::attributeTypeCompCount[(int)type];
-		    this->tempLength = vertexCount * components;
-		    this->temp = new float[ this->tempLength ];
+		    this->tempLength = vertexCount * components * sizeof(float);
+		    this->temp = new float[ vertexCount * components ];
 		    this->currentIndex = 0;
 		    this->currentVertex = 0;
 		}
@@ -72,7 +72,7 @@ private:
     
 	/** mapping of attribute build index to build data
 	 */
-	 BuildData* buildData[ Mesh::MAX_ATTRIBUTE_TYPES ];
+	BuildData* buildData[ Mesh::MAX_ATTRIBUTE_TYPES ];
 	
 	/// the mesh currently being built
 	Mesh* batch;

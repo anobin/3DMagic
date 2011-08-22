@@ -55,6 +55,11 @@ void MeshBuilder::buildBox(Mesh* mesh, float width, float height, float depth )
 	{   
 		float h = height;
 		float n = 1.0f;
+		if (i == 1)
+		{
+		    h = -height;
+		    n = -1.0f;
+		}
 		
 		normal3f	(0.0f, n, 0.0f);
 		texCoord2f	(0.0f, 0.0f);
@@ -81,7 +86,12 @@ void MeshBuilder::buildBox(Mesh* mesh, float width, float height, float depth )
 	{
 		float w = -width;
 		float n = -1.0f;
-
+		if (i==1)
+		{
+		    w = width;
+		    n = 1.0f;
+        }
+		
 		normal3f	(n, 0.0f, 0.0f);
 		texCoord2f	(0.0f, 0.0f);
 		vertex3f	(w, height, -depth); // top left
@@ -107,6 +117,11 @@ void MeshBuilder::buildBox(Mesh* mesh, float width, float height, float depth )
 	{
 		float d = -depth;
 		float n = -1.0f;
+		if (i==1)
+		{
+		    d = depth;
+		    n = 1.0f;
+		}
 		
 		normal3f	(0.0f, 0.0f, n);
 		texCoord2f	(0.0f, 0.0f);

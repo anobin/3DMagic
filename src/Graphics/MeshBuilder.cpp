@@ -50,7 +50,13 @@ MeshBuilder::~MeshBuilder()
 void MeshBuilder::begin(int vertexCount, Mesh* batch)
 {
 	MAGIC_THROW( this->vertexCount != 0, "Attempt to rebuild vertex handler");
-	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");	
+	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");
+
+    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    {
+        delete buildData[i];
+        buildData[i] = NULL;
+    }
 	
 	this->batch = batch;
 	this->vertexCount = vertexCount;

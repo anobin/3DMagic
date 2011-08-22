@@ -27,6 +27,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Cameras/FPCamera.h>
 
 extern Magic3D::FPCamera camera;
+extern Magic3D::Texture* blueTex;
 
 namespace Magic3D
 {
@@ -121,11 +122,15 @@ void World::processFrame()
             Matrix3 normal;
             transformMatrix.extractRotation(normal);
             
+            // transform the light position into eye coordinates
+            Point3 lightPos(0.0f, 1000.0f, 0.0f );
+            lightPos.transform(cameraMatrix);
+            
             // 'use' shader
 	        shader->use();
 	        
 	        // set named uniforms
-	        shader->setUniformf(  "lightPosition", 0.0f, 1000.0f, 0.0f );
+	        shader->setUniformf(  "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
 	        shader->setUniformf( "skyColor", 25, 25, 25);
 	        shader->setUniformf( "groundColor", 255, 255, 255);
 	        
@@ -133,6 +138,7 @@ void World::processFrame()
 	        shader->setUniformMatrix( "mvMatrix",     4, transformMatrix.getArray() );
 	        shader->setUniformMatrix( "mvpMatrix",    4, mvp.getArray()             );
 	        shader->setUniformMatrix( "normalMatrix", 3, normal.getArray()          );
+	        shader->setTexture( "textureMap", blueTex );
 	        
 	        
 	        // bind vertexArray
@@ -141,8 +147,8 @@ void World::processFrame()
 	        {
 	            int bind = shader->getAttribBinding( 
 	                Mesh::attributeTypeNames[(int)adata[j].type] );
-	            if (bind < 0)
-	                continue; // shader does not have attribute
+	            if (bind < 0) // shader does not have attribute
+	                continue; 
 	            array->setAttributeArray(bind, Mesh::attributeTypeCompCount[(int)adata[j].type],
 	                VertexArray::FLOAT, adata[j].buffer);
 	        }
@@ -152,7 +158,7 @@ void World::processFrame()
 	        
 	        // delete bound array
 	        delete array;
-	    }
+	    }   
 	}
 	
 	// Do the buffer Swap
