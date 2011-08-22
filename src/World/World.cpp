@@ -27,7 +27,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Cameras/FPCamera.h>
 
 extern Magic3D::FPCamera camera;
-extern Magic3D::Texture* blueTex;
+extern Magic3D::Texture* marbleTex;
 
 namespace Magic3D
 {
@@ -131,14 +131,14 @@ void World::processFrame()
 	        
 	        // set named uniforms
 	        shader->setUniformf(  "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-	        shader->setUniformf( "skyColor", 25, 25, 25);
-	        shader->setUniformf( "groundColor", 255, 255, 255);
+	        shader->setUniformf( "skyColor", 1.0f, 1.0f, 1.0f);
+	        shader->setUniformf( "groundColor", 0.1f, 0.1f, 0.1f);
 	        
 	        // set auto uniforms
 	        shader->setUniformMatrix( "mvMatrix",     4, transformMatrix.getArray() );
 	        shader->setUniformMatrix( "mvpMatrix",    4, mvp.getArray()             );
 	        shader->setUniformMatrix( "normalMatrix", 3, normal.getArray()          );
-	        shader->setTexture( "textureMap", blueTex );
+	        shader->setTexture( "textureMap", material->textures[0] );
 	        
 	        
 	        // bind vertexArray
