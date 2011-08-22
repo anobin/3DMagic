@@ -65,10 +65,13 @@ private:
     
     Camera* camera;
     
+    Position* light;
+    
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
-        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL) {} 
+        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL),
+        light(NULL) {} 
     
    inline void addObject(Object* object)
    {
@@ -91,6 +94,11 @@ public:
    inline void setCamera(Camera* camera)
    {
        this->camera = camera;
+   }
+   
+   inline void setLight(Position* light)
+   {
+       this->light = light;
    }
    
    inline void setTargetFPS(int fps)

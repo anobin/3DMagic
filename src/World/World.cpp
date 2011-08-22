@@ -113,11 +113,6 @@ void World::processFrame()
 	        attributeCount = mesh->getAttributeCount();
 	        vertexCount = mesh->getVertexCount();
             
-            // transform the light position into eye coordinates
-            // REMOVE when lights are added
-            Point3 lightPos(0.0f, 1000.0f, 0.0f );
-            lightPos.transform(view);
-            
             // 'use' shader
 	        shader->use();
 	        
@@ -139,13 +134,11 @@ void World::processFrame()
 	            }
 	        }
 	        
-	        // REMOVE when lights are added
-	        shader->setUniformf(  "lightPosition", lightPos.getX(), lightPos.getY(), lightPos.getZ() );
-	        
 	        // set auto uniforms
 	        Matrix4 temp4m;
 	        Matrix4 temp4m2;
 	        Matrix3 temp3m;
+	        Point3 tempp3;
 	        for(int i=0; i < material->autoUniformCount; i++)
 	        {
 	            Material::AutoUniform& u = material->uniforms[i];
@@ -226,7 +219,12 @@ void World::processFrame()
                         shader->setTexture( u.varName, material->textures[7] );
                         break;
                     case Material::LIGHT_LOCATION:                 // vec3
-                        // TODO
+                        MAGIC_THROW(light == NULL, "Material has the light location "
+                            "auto-bound uniform set, but no light is set for the world." );
+                        tempp3.set(light->getLocation());
+                        tempp3.transform(view);
+                        shader->setUniformf( u.varName, tempp3.getX(),
+                            tempp3.getY(), tempp3.getZ() );
                         break;
 	                default:
 	                    MAGIC_ASSERT( false );
