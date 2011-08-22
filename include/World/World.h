@@ -25,6 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_WORLD_H
 #define MAGIC3D_WORLD_H
 
+#include "../Cameras/Camera.h"
 #include "../Graphics/GraphicsSystem.h"
 #include "../Physics/PhysicsSystem.h"
 #include "../Objects/Object.h"
@@ -62,10 +63,12 @@ private:
     
     int actualFPS;
     
+    Camera* camera;
+    
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
-        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0) {} 
+        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL) {} 
     
    inline void addObject(Object* object)
    {
@@ -83,6 +86,11 @@ public:
            if (object->getPhysical())
                physics.removeBody(*object->getPhysical());
        }
+   }
+   
+   inline void setCamera(Camera* camera)
+   {
+       this->camera = camera;
    }
    
    inline void setTargetFPS(int fps)

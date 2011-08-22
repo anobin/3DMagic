@@ -639,6 +639,8 @@ int main(int argc, char* argv[])
 	changeWindowSize(1280,1024); // to ensure transform pipeline is setup
 	graphics.createScreen();
 	
+	world->setCamera(&camera);
+	
 	// run SDL
 	Event event;
 	while( true )

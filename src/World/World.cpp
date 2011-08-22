@@ -26,8 +26,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <World/World.h>
 #include <Cameras/FPCamera.h>
 
-extern Magic3D::FPCamera camera;
-
 namespace Magic3D
 {
     
@@ -35,6 +33,9 @@ namespace Magic3D
 
 void World::processFrame()
 {   
+    // ensure that we have a camera
+    MAGIC_THROW(camera == NULL, "Tried to process a frame without a camera set." );
+    
     // step physics
     if ( physicsStepTime > 0.0f )
     {
@@ -52,8 +53,8 @@ void World::processFrame()
 	
 	// get view and projection matrices for scene (same for all objects)
     Matrix4 view;
-    camera.getPosition().getCameraMatrix(view);
-    const Matrix4& projection = camera.getProjectionMatrix();
+    camera->getPosition().getCameraMatrix(view);
+    const Matrix4& projection = camera->getProjectionMatrix();
 
 	// render all objects
 	std::set<Object*>::iterator it = objects.begin();
