@@ -38,11 +38,6 @@ using namespace Magic3D;
 #include <list>
 using std::cout;
 using std::endl;
-         
-
-#define FPS2MS(x) (1000 / (x))
-#define RGB_SINGLE(x) ((1.0f/255.0f)*(x))
-#define RGB(r, g, b) {RGB_SINGLE((r)), RGB_SINGLE((g)), RGB_SINGLE((b)), 1.0f}
 
 #define ROOM_SIZE (20.0f * FOOT)
 
@@ -154,7 +149,7 @@ Object* btBox;
 void setup()
 {	
 	// bullet setup
-	physics.setGravity(0,-9.8*METER,0);
+	physics.setGravity(0,-9.8f*METER,0);
 	
 	graphics.enableDepthTest();
 	
@@ -328,7 +323,7 @@ void setup()
 	// enable blending so transparency can happen
 	graphics.enableBlending();
 	
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 }
 
 
@@ -581,7 +576,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	{
 	    case Event::LEFT:
 			p.set(camera.getPosition());
-			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
+			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			t = new Object(&sphereModel, &sphereShape, p );
 			world->addObject(t);
