@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\include&quot;;&quot;$(ProjectDir)\..\external\include&quot;"
-				PreprocessorDefinitions="M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="M3D_MATH_USE_INTEL;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -148,7 +148,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\Models\Box.cpp"
+				RelativePath="..\src\Meshes\Box.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\CollisionShapes\BoxCollisionShape.cpp"
 				>
 			</File>
 			<File
@@ -164,15 +168,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Models\Circle2D.cpp"
+				RelativePath="..\src\Meshes\Circle2D.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\CollisionShapes\CollisionShape.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Util\Color.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Models\CustomModel.cpp"
 				>
 			</File>
 			<File
@@ -184,7 +188,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Models\FlatSurface.cpp"
+				RelativePath="..\src\Meshes\FlatSurface.cpp"
 				>
 			</File>
 			<File
@@ -192,15 +196,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Graphics\GraphicalBody.cpp"
+				RelativePath="..\src\Graphics\GraphicalEntity.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Graphics\GraphicsSystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Renderers\HemRenderer.cpp"
 				>
 			</File>
 			<File
@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Graphics\MaterialBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Math\Matrix3.cpp"
 				>
 			</File>
@@ -224,11 +228,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Models\Model.cpp"
+				RelativePath="..\src\Graphics\Mesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\MeshBuilder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\Model.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Resources\models\Model3DSResource.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\ModelBuilder.cpp"
 				>
 			</File>
 			<File
@@ -252,6 +268,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\CollisionShapes\PlaneCollisionShape.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Resources\Images\PNG2DResource.cpp"
 				>
 			</File>
@@ -264,19 +284,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Models\Rectangle2D.cpp"
+				RelativePath="..\src\Meshes\Rectangle2D.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\GUI\RectTexture.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Renderers\Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Renderers\Renderer2D.cpp"
 				>
 			</File>
 			<File
@@ -312,7 +324,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Models\Sphere.cpp"
+				RelativePath="..\src\Meshes\Sphere.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\CollisionShapes\SphereCollisionShape.cpp"
 				>
 			</File>
 			<File
@@ -336,14 +352,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Graphics\VertexBatch.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Graphics\VertexBatchBuilder.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\World\World.cpp"
 				>
 			</File>
@@ -353,10 +361,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\include\Graphics\VertexBatch.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
