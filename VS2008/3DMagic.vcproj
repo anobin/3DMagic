@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\include&quot;;&quot;$(ProjectDir)\..\external\include&quot;"
-				PreprocessorDefinitions="M3D_MATH_USE_INTEL;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

@@ -120,10 +120,10 @@ public:
     }
 
     /// get a transformation matrix that represents this position
-    void getTransformMatrix(Matrix4& out);
+    void getTransformMatrix(Matrix4& out) const;
 
     /// get a rotation matrix that represents the orientation of this position
-    void getRotationMatrix(Matrix3& out);
+    void getRotationMatrix(Matrix3& out) const;
 
     /// get a matrix that can be used to move objects around the camera
     void getCameraMatrix(Matrix4& out) const;
