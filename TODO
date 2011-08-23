@@ -2,8 +2,6 @@
 - add support for custom named vertex attributes
 - add support to mesh builder to add an array of attribute data in one call
     - instead of piecemeal
-- add back in basic physics support
-    - start to expand interface and collision shape options
 - add more advanced lights interface to World
 - add support to material builder to expand upon existing material
 - standardize modelresource
@@ -23,6 +21,8 @@
 - add hashing algorithms
     - one super-fast collision-happy one
     - one decently fast and collision-resistant one
+- add more physics collision shapes
+- add physics options parameter passed on object creation
 
 ## Secondary
 - add truetype and text rendering support
