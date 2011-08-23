@@ -80,6 +80,13 @@ Material tinySphereMaterial;
 Material bigSphereMaterial;
 Material boxMaterial; 
 
+// collisions shapes
+PlaneCollisionShape floorShape( Vector3(0,1,0) );
+SphereCollisionShape sphereShape( 2*FOOT );
+SphereCollisionShape tinySphereShape( 1*FOOT );
+BoxCollisionShape bigSphereShape( 2, 4, 3 );
+BoxCollisionShape boxShape( 6*INCH*5.0f, 3*INCH*5.0f, 3*INCH*5.0f );
+
 // objects
 Object* bigBall;
 Object* laser;
@@ -286,10 +293,10 @@ void setup()
 	modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
 	
 	// init objects
-	btBall = new Object(&sphereModel, Point3(0.0f, 150*FOOT, 0.0f));
+	btBall = new Object(&sphereModel, &sphereShape, Point3(0.0f, 150*FOOT, 0.0f));
 	world->addObject(btBall);
 	
-	floorObject = new Object(&floorModel); // static object
+	floorObject = new Object(&floorModel, &floorShape, 0); // static object
 	world->addObject(floorObject);
 	
 	float wallWidth =40;
@@ -308,7 +315,7 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(&boxModel, Point3(w, h, zOffset) );
+			btBox = new Object(&boxModel, &boxShape, Point3(w, h, zOffset) );
 			world->addObject(btBox);
 		}
 	}
@@ -327,6 +334,7 @@ void setup()
 
 bool paused = true;
 int slow = 0;
+float change = -1.0f;
 /** Called to render each and every frame
  */
 void renderScene(void)
@@ -347,13 +355,19 @@ void renderScene(void)
 	{
 	    for (int i = 0; i < 20; i++)
         {
-            Object* t = new Object(&tinySphereModel, Point3(0, 10.0f, 0) );
+            Object* t = new Object(&tinySphereModel, &tinySphereShape, Point3(0, 10.0f, 0) );
             world->addObject(t);
             
             //t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
             //                              btVector3(0.0f, 0.0f, 0.0f));
         }
     }
+    
+    if (lightPos.getLocation().getY() <= -400.0f)
+        change = 1.0f;
+    else if (lightPos.getLocation().getY() >= 400.0f)
+        change = -1.0f;
+    lightPos.getLocation().setY(lightPos.getLocation().getY()+change);
     
 }
 
@@ -433,7 +447,7 @@ void keyPressed(int key)
 			break;
 			
 		case 'g':
-			t = new Object(&bigSphereModel, Point3(0.0f, 5.0f, 0.0f) );
+			t = new Object(&bigSphereModel, &bigSphereShape, Point3(0.0f, 5.0f, 0.0f) );
 			world->addObject(t);
 			
 			camera.lookat( Point3(0, 30, 0) );
@@ -561,7 +575,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	
 	Position p;
 	Object* t;
-	//static float speed = 700 * 300;
+	static float speed = 10 * 300;
 	
 	switch(button)
 	{
@@ -569,11 +583,11 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5*FOOT, -2.0*FOOT);
 			
-			t = new Object(&sphereModel, p );
+			t = new Object(&sphereModel, &sphereShape, p );
 			world->addObject(t);
-			//t->getPhysical().getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
-			//							p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
-			//							  btVector3(0.0f, 0.0f, 0.0f));
+			t->getPhysical()->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
+										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
+										  btVector3(0.0f, 0.0f, 0.0f));
 			break;
 			
 		case Event::MIDDLE: 

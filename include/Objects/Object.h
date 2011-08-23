@@ -44,23 +44,40 @@ protected:
 	Position position;
 	
 	/// graphical body for object
-	GraphicalEntity graphical;
+	GraphicalEntity* graphical;
 	
 	/// physical body for object
 	PhysicalBody* physical;
 	
+	inline void build(Model* model, CollisionShape* shape, float mass)
+	{
+	    if (model)
+	        graphical = new GraphicalEntity(model);
+	    if (shape)
+	        physical = new PhysicalBody(position, *shape, mass); // mass of 1 is temporary
+	    MAGIC_THROW(!model && !shape, "Cannot build a object with neither a graphical "
+	        "nor physical entity.");
+	}
+	
 public:
 	/// standard constructor
-	inline Object(Model* model): 
-	    graphical(model), physical(NULL) {}
+	inline Object(Model* model, CollisionShape* shape, float mass=1): 
+	    graphical(NULL), physical(NULL)
+	{
+	    this->build(model, shape, mass);       
+	}
 	    
-	inline Object(Model* model, Position& p): position(p), 
-	    graphical(model), physical(NULL) {}
+	inline Object(Model* model, CollisionShape* shape, Position& p): position(p), 
+	    graphical(NULL), physical(NULL) 
+	{
+	    this->build(model, shape, 1);
+	}
 	    
-	inline Object(Model* model, Point3 location): 
-	    graphical(model), physical(NULL) 
+	inline Object(Model* model, CollisionShape* shape, Point3 location): 
+	    graphical(NULL), physical(NULL) 
 	{
 	    position.getLocation().set(location);
+	    this->build(model, shape, 1);
 	}
 	
 	/// destructor
@@ -89,7 +106,7 @@ public:
 	/// get graphical body for this model
 	inline GraphicalEntity* getGraphical()
 	{
-	     return &graphical;   
+	     return graphical;   
 	}
 
 };

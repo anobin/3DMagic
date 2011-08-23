@@ -29,6 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 #include "MotionState.h"
 #include "../Util/magic_assert.h"
+#include "../CollisionShapes/CollisionShape.h"
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
@@ -67,10 +68,10 @@ protected:
 	
 public:
 	/// standard constructor
-	inline PhysicalBody(Position& position, btCollisionShape* shape, float mass): 
+	inline PhysicalBody(Position& position, CollisionShape& shape, float mass): 
 	    motionState(position), body(NULL) 
 	{ 
-	    build(mass, shape); 
+	    build(mass, shape.getShape()); 
 	}
 	
 	/// destructor
