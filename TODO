@@ -1,74 +1,49 @@
 ## Primary
-- change vertex batch to mesh
-    - just attribute data
-- add materials
-    - shader
-    - texture
-    - everything needed to render except position
-- redefine shader attributes interface to include a static set of allowable 
-  attributes with set names
-    - mesh builder will offer methods for allowable attributes
-    - most attributes automatically bound
-    - no run-time checks, if shader has a attribute not fullfilled by a mesh or
-      mesh has an attribute not fullfilled by a shader, too bad soo sad
-        - no interface checks
-    - mabye have custom attributes
-    - mainly just remove interface specs and checks
-- mostly just remove interface check
-- no more custom render pipelines
-- Allow auto-bound and custom uniforms
-    - custom uniforms means a value has to be supplied in material
-    - auto-uniforms are from position calculations, or material properties
-- lock down interfaces and add listeners for changes:
-    - object renderer
-    - object position
-    - object model
-- add type checks to set/getProperty in Vertex batch
-- add object factory
-    - provide specification to factory
-    - allow objects to not have certain bodies
-- integrate SDL support
-    - demo uses it directly right now
+- add support for custom named vertex attributes
+- add support to mesh builder to add an array of attribute data in one call
+    - instead of piecemeal
+- add back in basic physics support
+    - start to expand interface and collision shape options
+- add more advanced lights interface to World
+- add support to material builder to expand upon existing material
+- standardize modelresource
+    - add ability to create a model from a model resource, meshes and optional materials
+- start optimizing graphics pipeline
+    - caching resources do they don't need to rebuild and/or rebound between meshes or frames
+- add special handling for transparent meshes to piepline
+- add support for multiple passes to materials
+- add support for multiple 'techniques' to materials
+- add ability to mesh builder to modify existing mesh
+- add ability to material builder to modify existing material
+- need to decide what resources can't be modified without notifying the object and/or world
+    - meshes and materials can be modified outside, but may cause issues with optimiziations
+      in graphics pipeline
+    - changes in physical properties or collision shape require rebuilding a rigid body, thus
+      needs to notify body and world
+- add hashing algorithms
+    - one super-fast collision-happy one
+    - one decently fast and collision-resistant one
+
+## Secondary
 - add truetype and text rendering support
     - ability to render text onto a bitmap
     - ability to make a text bitmap, with standard chars on it
         - for shader-directed text rendering, add shader for it
-- add shader helper classes for existing shaders
 - start adding examples
     - examples show one to a few key concepts, unlike demos
 - add support for 
 	- cube maps
 	- point sprites
-	- multiple textures
-- add bitmap class
-    - bitmaps would represent image data in system memory
-    - textures would represent image data in graphics memory
-    - have image resources output bitmaps
-- extend object model so each object has three independent parts that can be disabled:
-    - graphical 'part'
-    - physical 'part'
-    - audio 'part'
+    - bump map auto-bound uniform
 - Add simple keyframe animation support
-- Add renderer
-    - need Graphical bodies to contain:
-        - pointer to shader to use
-        - uniforms to use in shader
-        - model to render
 - Add attachment objects and dependencies between objects
     - attachments can be used for decals
-    - dependencies can be used to help transparency
 - Go through math implementation and add MAGIC_THROW and MAGIC_ASSERT where neccessary
 - ensure all openGL calls and types are in clases in Graphics folder, so a replacementable
   implementation system can be made for the graphics
 - ensure all bullet calls and types are in classes in Physics folder, so a replacementable
   implementation system can be made for the graphics
-- add support for multi-pass renderers
-- add support for hook-up to motion state (physics position update)
-- add support for custom attributes for bodies, that can be used by renderer
-    - named or just id's with variabfiable names.
 - add more hooks into pipeline
-- add support for objects with multiple parts or object groups
-- add support for specifying vertex batch intended use to be passed along to buffer
 - add fustrum culling to graphical pipeline
 - add object sorting to graphical pipeline
     - opaque objects should be renderered front to back
@@ -81,8 +56,6 @@
 -add MMX assembly solutions for matrix and vector ops
 -add functionally for messing with blending
 	-also enable some default blending so at least transparency works
--add rendering pipeline
-	-need to ensure fully opaque stuff is rendered first, then partially opaque back to front
 -add 2d varonoi diagram algorithm
 	-add API support for splitting a object using a varonoi diagram
 	-this will be used to create simple shattering effects
@@ -91,60 +64,21 @@
 -add windows and Mac support
 	-add visual studio support
 	-add Xcode support
--create sandbox class/classes
-	-for testing, demo, and protyping purposes
-	-flat plane environment with selectable camera
-	-can place standard models
-	-can load models and textures from filesystem and arrange models
-	-test out physics
-	-meant to ease learning curve
-		-people who don't even know programming can start by using this to get concepts down
-		-and then ease into programming
-		-just look at how many good looking, but barely functioning games are made in blender's "game engine"
--add multi-threaded support
-	-add small options to make some tasks multi-threaded
-	-also make it so some things are "thread-safe" so that the app code can run multi-threaded
-		-need to outline these in documentation very specifically
-	-mabye look into openMP (http://openmp.org/wp/about-openmp/)
-	-mabye look into CUDA/openCL for GPU accelerated tasks
-		-bullet doesn't currently use GPU acceleration
--add block wall basic shape
-	- a rectangular shape made up of smaller blocks to allow for simplified destruction
--start to add system-level functionallity to API
-	-init physics and graphics engine
-	-manage collections of objects?
 -look into Bullet soft body support
 	-cloth, rope and the like
--add mechanism for good frame-rate control
 -add in sound support with openAL
 	-including new sound resources and loaders
 	-support at least OGG format
 	-may want other formats if we want to offer something akin to a music player
--add more control over physics chararistics to objects
-	-more Bullet interfacing in Object class
 -add support for scripting language
-	-is necessity considering all the prototyping that is needed to get scenes correct
-	-dynamic, in that a change to the scripts can be seen in-engine without reloading
-	-sadly, Lua is the best bet; I may have to learn the damn thing
-	-try to keep the scripting langauge and C++ interfaces as seperated as possible for simplicity and consistency
--run me some valgrind!!
 -run some profilling just to make sure nothing stands out
 	-gprof is probably good enough
--make a damn teacup and monkey head model
--add support for input devices including controllers
-	-probably just through SDL
--add support for skyboxes
--add support for overlays and writing text to overlays
 -add support for saving screenshots
 	-TGA and PNG resources should have writing mechanisms, not just reading
 -add support for generating hilly terrain with heightmaps for physics in Bullet
--after adding support for model, add support for animations
-	-nice to be able to load these animations from model files
 -fill out camera support
 	-at least an FPS, flying, and fixed camera
 -add support for particle effects
-	-I don't think Bullet can do it
-	-fog, exposions, water?
 -add algorithm to stitch together multiple intersecting meshes into one mesh
     - most common use is to generate a physical mesh from a complicated graphical model
     - vertices not "visible" should be removed
