@@ -148,6 +148,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\Graphics\Batch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Graphics\BatchBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Meshes\Box.cpp"
 				>
 			</File>
@@ -229,10 +237,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Graphics\Mesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Graphics\MeshBuilder.cpp"
 				>
 			</File>
 			<File
@@ -357,6 +361,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\include\Graphics\Material.h"
+				>
+			</File>
 			<File
 				RelativePath="..\include\Resources\ModelResource.h"
 				>

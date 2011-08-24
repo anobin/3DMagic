@@ -76,6 +76,20 @@ protected:
         AutoUniformType type;
         
         inline AutoUniform(): varName(NULL) {}
+
+        inline AutoUniform(const AutoUniform& u): type(u.type)
+        {
+            this->varName = new char[strlen(u.varName)+1];
+            strcpy(this->varName, u.varName);
+        }
+
+        inline void set(const AutoUniform& u)
+        {
+            this->type = u.type;
+            delete[] varName;
+            this->varName = new char[strlen(u.varName)+1];
+            strcpy(this->varName, u.varName);
+        }
         
         inline ~AutoUniform()
         {
@@ -91,6 +105,23 @@ protected:
         const void* data;
         
         inline NamedUniform(): varName(NULL), comp_count(0), data(NULL) {}
+
+        inline NamedUniform(const NamedUniform& u): datatype(u.datatype), 
+            comp_count(u.comp_count), data(u.data)
+        {
+            this->varName = new char[strlen(u.varName)+1];
+            strcpy(this->varName, u.varName);
+        }
+
+        inline void set(const NamedUniform& u)
+        {
+            this->datatype = u.datatype;
+            this->comp_count = u.comp_count;
+            this->data = u.data;
+            delete[] this->varName;
+            this->varName = new char[strlen(u.varName)+1];
+            strcpy(this->varName, u.varName);
+        }
         
         inline ~NamedUniform()
         {
@@ -137,6 +168,41 @@ public:
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
+    }
+
+    inline Material(const Material& m): shader(m.shader), primitive(m.primitive),
+        transparent(m.transparent), autoUniformCount(m.autoUniformCount), 
+        namedUniformCount(m.namedUniformCount)
+    {
+        this->uniforms = new AutoUniform[autoUniformCount];
+        this->namedUniforms = new NamedUniform[autoUniformCount];
+        for(int i=0; i < this->autoUniformCount; i++)
+            this->uniforms[i].set(m.uniforms[i]);
+        for(int i=0; i < this->namedUniformCount; i++)
+            this->namedUniforms[i].set(m.namedUniforms[i]);
+        for(int i=0; i < 8; i++)
+            this->textures[i] = m.textures[i];
+    }
+
+    inline void set(const Material& m)
+    {
+        delete[] this->uniforms;
+        delete[] this->namedUniforms;
+
+        this->shader = m.shader;
+        this->primitive = m.primitive;
+        this->transparent = m.transparent;
+        this->autoUniformCount = m.autoUniformCount;
+        this->namedUniformCount = m.namedUniformCount;
+
+        this->uniforms = new AutoUniform[autoUniformCount];
+        this->namedUniforms = new NamedUniform[autoUniformCount];
+        for(int i=0; i < this->autoUniformCount; i++)
+            this->uniforms[i].set(m.uniforms[i]);
+        for(int i=0; i < this->namedUniformCount; i++)
+            this->namedUniforms[i].set(m.namedUniforms[i]);
+        for(int i=0; i < 8; i++)
+            this->textures[i] = m.textures[i];
     }
     
     inline ~Material()

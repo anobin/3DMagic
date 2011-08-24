@@ -250,48 +250,20 @@ void setup()
 	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
 	materialBuilder.setTexture(marbleTex);
 	materialBuilder.end();
-	materialBuilder.begin(&tinySphereMaterial, 5, 2);
-	materialBuilder.setShader(shader);
-	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+
+	materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
 	materialBuilder.setTexture(blueTex);
 	materialBuilder.end();
-	materialBuilder.begin(&bigSphereMaterial, 5, 2);
-	materialBuilder.setShader(shader);
-	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+
+	materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
 	materialBuilder.setTexture(blueTex);
 	materialBuilder.end();
-	materialBuilder.begin(&floorMaterial, 5, 2);
-	materialBuilder.setShader(shader);
-	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+
+	materialBuilder.expand(&floorMaterial, sphereMaterial);
 	materialBuilder.setTexture(stoneTex);
 	materialBuilder.end();
-	materialBuilder.begin(&boxMaterial, 5, 2);
-	materialBuilder.setShader(shader);
-	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+
+	materialBuilder.expand(&boxMaterial, sphereMaterial);
 	materialBuilder.setTexture(brickTex);
 	materialBuilder.end();
 	

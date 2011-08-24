@@ -51,6 +51,23 @@ public:
     {
         this->material = material;
         material->allocate(autoUniformCount, namedUniformCount);
+        this->curAutoUniform = 0;
+        this->curNamedUniform = 0;
+    }
+
+    inline void modify(Material* material)
+    {
+        this->material = material;
+        this->curAutoUniform = material->autoUniformCount;
+        this->curNamedUniform = material->namedUniformCount;
+    }
+
+    inline void expand(Material* material, const Material& basis)
+    {
+        this->material = material;
+        this->material->set(basis);
+        this->curAutoUniform = material->autoUniformCount;
+        this->curNamedUniform = material->namedUniformCount;
     }
     
     inline void setShader(Shader* shader)
