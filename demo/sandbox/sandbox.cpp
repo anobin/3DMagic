@@ -150,6 +150,7 @@ void changeWindowSize(int w, int h)
 
 Object* btBall; // graphical presence of ball used for bullet
 Object* btBox;
+bool fun = false;
 
 /** Global setup-related steps are performed here
  */
@@ -378,6 +379,35 @@ void renderScene(void)
         change = -1.0f;
     lightPos.getLocation().setY(lightPos.getLocation().getY()+change);
     
+    
+    // fun stuff
+    float c1, c2, c3;
+    static float acc = 0;
+    float c;
+    if (fun)
+    {
+        if ( rand()%2 && acc < 3)
+            c = 1.0f;
+        else if (acc > -3)
+            c = -0.3f;
+        else
+            c = 0.3f;
+        acc += c;
+        batchBuilder.modify(&boxBatch);
+        for (int i=0; i < boxBatch.getVertexCount(); i++)
+        {
+            batchBuilder.getVertex3f(&c1, &c2, &c3);
+            
+            batchBuilder.vertex3f(
+                c1<0?c1-c:c1+c, 
+                c2<0?c2-c:c2+c, 
+                c3<0?c3-c:c3+c
+            );
+        }
+        batchBuilder.end();
+        boxMesh.copyBatchIn(boxBatch);
+    }
+    
 }
 
 /** Called when a normal key is pressed on the keyboard
@@ -505,6 +535,10 @@ void keyPressed(int key)
 		case '.':
 		    slow++;
 		    cout << "physics is " << slow << "x" << endl;
+		    break;
+		    
+		case 'x':
+		    fun = !fun;
 		    break;
 
         default:

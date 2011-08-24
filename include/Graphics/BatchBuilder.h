@@ -58,6 +58,12 @@ private:
 		    this->currentIndex = 0;
 		    this->currentVertex = 0;
 		}
+		
+		inline void setCurrentVertex(int cur, int comps)
+		{
+		    this->currentVertex = cur;
+		    this->currentIndex = cur * comps;
+		}
 		    
 	};
     
@@ -76,6 +82,8 @@ private:
 	
 	inline BuildData* setupBuildData( Mesh::AttributeType type )
 	{
+	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+	    
 	    BuildData* b = this->buildData[(int)type];
 	    if (b != NULL)
 	        return b; // already setup
@@ -103,6 +111,16 @@ private:
 	    // create build data and return it
 	    this->buildData[(int)type] = new BuildData(data);
 	    return this->buildData[(int)type];
+	}
+	
+	inline BuildData* getBuildData( Mesh::AttributeType type )
+	{
+	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+	    
+	    BuildData* b = this->buildData[(int)type];
+	    MAGIC_THROW(b == NULL, "Tried to get data for unused attribute." );
+	    
+	    return b;
 	}
 	
 	inline void setAttribute4(BuildData* data, float c1, float c2, float c3, float c4)
@@ -138,6 +156,27 @@ private:
 		data->currentVertex++;
 	}
 	
+	inline void getAttribute4(BuildData* data, float* c1, float* c2, float* c3, float* c4)
+	{
+		(*c1) = data->data[ data->currentIndex   ];
+		(*c2) = data->data[ data->currentIndex+1 ];
+		(*c3) = data->data[ data->currentIndex+2 ];
+		(*c4) = data->data[ data->currentIndex+3 ];
+	}
+	
+	inline void getAttribute3(BuildData* data, float* c1, float* c2, float* c3)
+	{		
+	    (*c1) = data->data[ data->currentIndex   ];
+		(*c2) = data->data[ data->currentIndex+1 ];
+		(*c3) = data->data[ data->currentIndex+2 ];
+	}
+	
+	inline void getAttribute2(BuildData* data, float* c1, float* c2)
+	{
+	    (*c1) = data->data[ data->currentIndex   ];
+		(*c2) = data->data[ data->currentIndex+1 ];
+	}
+	
 
 public:
 	/** Standard Constructor
@@ -152,6 +191,20 @@ public:
 	 */
 	void begin(int vertexCount, int attributeCount, Batch* batch);
 	
+	/** Modify a current batch.
+	 * @param batch the batch to modify
+	 */
+	void modify(Batch* batch);
+	
+	/** Manually set the current vertex for all currently 
+	 * know attributes. Note that any skipped over values are not set
+	 * to any specified value and that any new attributes set after this
+	 * will start at 0 as normal and not this vertex.
+	 * @param currentVertex the vertex to set
+	 */
+	void setCurrentVertex( int currentVertex );
+	 
+	
 	inline void vertex4f(float v1, float v2, float v3, float v4)
 	{
 	    this->setAttribute4( this->setupBuildData( Mesh::VERTEX ), 
@@ -162,6 +215,13 @@ public:
 	{
 	    this->setAttribute4( this->setupBuildData( Mesh::VERTEX ), 
 	        v1, v2, v3, 1.0f );
+	}
+	
+	inline void getVertex3f(float* v1, float* v2, float* v3)
+	{
+	    float dummy;
+	    this->getAttribute4( this->getBuildData( Mesh::VERTEX ), 
+	        v1, v2, v3, &dummy );
 	}
 	
 	inline void normal3f(float v1, float v2, float v3)

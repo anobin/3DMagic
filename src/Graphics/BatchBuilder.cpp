@@ -69,6 +69,34 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
 	this->curAttributeCount = 0; // no current attributes
 }
 
+/** Modify a current batch.
+ * @param batch the batch to modify
+ */
+void BatchBuilder::modify(Batch* batch)
+{
+    MAGIC_THROW(batch->data == NULL, "Tried to call modify() on a new batch, use begin()." );
+    MAGIC_THROW( this->batch != NULL, "Called modify() before end() of previous build sequence." );
+    
+    // clear any current build data
+    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    {
+        delete buildData[i];
+        buildData[i] = NULL;
+    }
+    
+    // init build data to attributes in batch
+    for(int i=0; i < batch->attributeCount; i++)
+    {
+        Batch::AttributeData& b = batch->data[i];
+        buildData[(int)b.type] = new BuildData(&b);
+    }
+	
+    // init internal members
+	this->batch = batch;
+	this->vertexCount = batch->vertexCount;
+	this->curAttributeCount = batch->attributeCount;
+}
+
 /** end a vertex building sequence
  */
 void BatchBuilder::end()
@@ -79,11 +107,7 @@ void BatchBuilder::end()
    
     // go through all build data
 	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
-	{
-	    // make sure the full vertex count for each attribute was specified
-	    MAGIC_THROW( buildData[i] != NULL && buildData[i]->currentVertex != this->vertexCount,
-	        "Did not specify the full specified vertex count for a attribute" );
-	    
+	{   
 	    // free all temporary build data
         delete buildData[i];
         buildData[i] = NULL;
@@ -95,7 +119,29 @@ void BatchBuilder::end()
     this->curAttributeCount = 0;
 }
 	
-
+/** Manually set the current vertex for all currently 
+ * know attributes. Note that any skipped over values are not set
+ * to any specified value and that any new attributes set after this
+ * will start at 0 as normal and not this vertex.
+ * @param currentVertex the vertex to set
+ */
+void BatchBuilder::setCurrentVertex( int currentVertex )
+{
+    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+    MAGIC_THROW(currentVertex < 0 || currentVertex >= this->vertexCount,
+        "Invalid current vertex to set." );
+    
+    // go through all build data
+    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    {
+        // set the current index for each valid attribute
+        if (buildData[i] != NULL)
+        {
+            buildData[i]->setCurrentVertex(currentVertex,    
+                Mesh::attributeTypeCompCount[i] );
+        }
+    }
+}
 
 
 

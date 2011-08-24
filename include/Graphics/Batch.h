@@ -95,7 +95,10 @@ public:
     virtual ~Batch();
     
     
-    
+    inline int getVertexCount()
+    {
+        return this->vertexCount;
+    }
     
     
     
