@@ -17,28 +17,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for MeshBuilder class
+/** Implementation file for BatchBuilder class
  * 
- * @file MeshBuilder.cpp
+ * @file BatchBuilder.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 	
 /** Standard Constructor
- * @param spec the shader-vertex interface spec to use
  */
-MeshBuilder::MeshBuilder(): batch(NULL), vertexCount(0)
+BatchBuilder::BatchBuilder(): batch(NULL), vertexCount(0), curAttributeCount(0)
 {
     for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
         buildData[i] = NULL;
 }
 	
 /// destructor
-MeshBuilder::~MeshBuilder()
+BatchBuilder::~BatchBuilder()
 {
 	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
         delete buildData[i];
@@ -47,64 +46,47 @@ MeshBuilder::~MeshBuilder()
 /** Starts a vertex building sequence
  * @param vertexCount the number of verticies to be handled
  */
-void MeshBuilder::begin(int vertexCount, Mesh* batch)
+void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
 {
-	MAGIC_THROW( this->vertexCount != 0, "Attempt to rebuild vertex handler");
+    MAGIC_THROW( this->batch != NULL, "Called begin() before end() of previous build sequence." );
 	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");
-
+	MAGIC_THROW( attributeCount <= 0 || attributeCount >= Mesh::MAX_ATTRIBUTE_TYPES, 
+	    "Invalid attribute count given to begin()");
+	
+	// clear any build data
     for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
     {
         delete buildData[i];
         buildData[i] = NULL;
     }
+    
+    // init batch members, this also frees any current data
+    batch->allocate(vertexCount, attributeCount);
 	
+    // init internal members
 	this->batch = batch;
 	this->vertexCount = vertexCount;
+	this->curAttributeCount = 0; // no current attributes
 }
 
 /** end a vertex building sequence
  */
-void MeshBuilder::end()
+void BatchBuilder::end()
 {
-    int attributeCount = 0;
+    MAGIC_THROW(this->curAttributeCount != batch->attributeCount, 
+        "Failed to use the full number of specified attributes." );
     
-    // count attributes
-	for(int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
-	{
-	    if (this->buildData[i] != NULL)
-	        attributeCount++;
-	}
-	
-	// allocate mesh
-	batch->allocate( this->vertexCount, attributeCount );
-    
-	// place all temporary data into graphics memory
-	for(int i=0, a=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
-	{
-	    BuildData* b = this->buildData[i];
-	    if (b == NULL)
-	        continue; // skip it if attribute is not in mesh
-	    
-	    MAGIC_THROW(b->currentVertex != this->vertexCount, "Called end() without setting "
-	        "all attributes for specified number of vertices." );
-	    
-	    // setup this attribute
-	    Mesh::AttributeData* data =  &batch->attributeData[a];
-	    data->_type = (Mesh::AttributeType) i;
-		data->_buffer.allocate(b->tempLength, b->temp, Buffer::STATIC_DRAW );
-        
-		// increment to next attribute
-        a++;
-	}
-	
 	// free all temporary build data
 	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
 	{
         delete buildData[i];
         buildData[i] = NULL;
     }
+    
+    // reset internal members
     this->batch = NULL;	
     this->vertexCount = 0;
+    this->curAttributeCount = 0;
 }
 	
 

@@ -61,6 +61,13 @@ Model tinySphereModel;
 Model bigSphereModel;
 Model boxModel;
 
+// batches
+Batch floorBatch;
+Batch sphereBatch;
+Batch tinySphereBatch;
+Batch bigSphereBatch;
+Batch boxBatch;
+
 // meshes
 Mesh floorMesh;
 Mesh sphereMesh;
@@ -123,7 +130,7 @@ EventSystem events;
 World* world;
 
 // builders
-MeshBuilder meshBuilder;
+BatchBuilder batchBuilder;
 MaterialBuilder materialBuilder;
 ModelBuilder modelBuilder;
 
@@ -214,14 +221,21 @@ void setup()
 	shader->link();
 	
 	
-	// init meshes
-	meshBuilder.buildSphere(&sphereMesh, 2*FOOT, 55, 32);
-	meshBuilder.buildSphere(&tinySphereMesh, 1*FOOT, 4, 4);
-	meshBuilder.buildBox(&bigSphereMesh, 2, 4, 3);
-	meshBuilder.buildFlatSurface(&floorMesh, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+	// init batches
+	batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
+	batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
+	batchBuilder.buildBox(&bigSphereBatch, 2, 4, 3);
+	batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 	    true, 15*FOOT, 12*FOOT );
 	float scale = 5.0f;
-	meshBuilder.buildBox(&boxMesh, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
+	batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
+	
+	// init meshes
+	sphereMesh.copyBatchIn(sphereBatch);
+	tinySphereMesh.copyBatchIn(tinySphereBatch);
+	bigSphereMesh.copyBatchIn(bigSphereBatch);
+	floorMesh.copyBatchIn(floorBatch);
+	boxMesh.copyBatchIn(boxBatch);
 	
 	// init materials
 	materialBuilder.begin(&sphereMaterial, 5, 2);

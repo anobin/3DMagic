@@ -17,29 +17,29 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for build-in 2D Rectangle mesh
+/** Implementation file for build-in 2D Rectangle batch
  * 
  * @file Rectangle2D.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 
-/** Build 2D rectangle
+/** Build 2D rectangle batch
  * @param x the upper-left x coordinate of the rectangle
  * @param y the upper-left y coordinate of the rectangle
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-void MeshBuilder::build2DRectangle(Mesh* mesh, int x, int y, int width, int height)
+void BatchBuilder::build2DRectangle(Batch* batch, int x, int y, int width, int height)
 {	
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// 4 points using a TRIANGLE FAN
-	this->begin(4, mesh);
+	this->begin(4, 3, batch);
 	
 	// bottom right
 	texCoord2f(1.0f, 0.0f);

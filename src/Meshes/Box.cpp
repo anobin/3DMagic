@@ -17,24 +17,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for built-in Box mesh
+/** Implementation file for built-in Box batch
  *
  * @file Box.cpp
  * @author Andrew Keating
  */
 
 
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 	
-/** Build a box mesh
+/** Build a box batch
  * @param width the width of the box
  * @param height the height of the box
  * @param depth the depth of the box
  */
-void MeshBuilder::buildBox(Mesh* mesh, float width, float height, float depth )
+void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth )
 {
 	// we always work with half lengths
 	width = width/2;
@@ -48,7 +48,7 @@ void MeshBuilder::buildBox(Mesh* mesh, float width, float height, float depth )
 	// becuase some points require normals in two different directions
 	
 	// 6 points per side, 6 sides
-	this->begin(6*6, mesh);
+	this->begin(6*6, 3, batch);
 	
 	// top  and bottom 6 points
 	for (int i=0; i < 2; i++)

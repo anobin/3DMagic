@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for buillt-in Sphere mesh
+/** Implementation file for buillt-in Sphere batch
  *
  * @file Sphere.cpp
  * @author Andrew Keating
@@ -25,17 +25,17 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 	
-/** Build sphere
+/** Build sphere batch
  * @param radius the radius of the sphere
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-void MeshBuilder::buildSphere(Mesh* mesh, float radius, int slices, int stacks)
+void BatchBuilder::buildSphere(Batch* batch, float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
     GLfloat dtheta = 2.0f * (GLfloat)(M_PI) / (GLfloat) slices;
@@ -45,7 +45,7 @@ void MeshBuilder::buildSphere(Mesh* mesh, float radius, int slices, int stacks)
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    this->begin(slices * stacks * 6, mesh);
+    this->begin(slices * stacks * 6, 3, batch);
     
 	for (i = 0; i < stacks; i++) 
 	{

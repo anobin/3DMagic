@@ -37,7 +37,7 @@ namespace Magic3D
 {
     
 class Mesh;
-class MeshBuilder;
+class Batch;
 
 /** Contains the attribute data for a batch of vertices as well as properties,
  * such as texture, that are used to setup the shader to render the vertices.
@@ -87,16 +87,13 @@ public:
 	
 	protected:
 	    friend class Mesh;
-	    friend class MeshBuilder;
 	    
 	    Buffer _buffer;
 	    AttributeType _type;
 		inline AttributeData(): buffer(_buffer), type(_type) {}
 	};
 
-private:	
-    friend class MeshBuilder;
-  
+private:	  
 	/// list of attribute data
 	AttributeData* attributeData;
 	
@@ -139,6 +136,8 @@ public:
 	{
 	    return vertexCount;
 	}
+	
+	void copyBatchIn(const Batch& batch);
 	
 };
 

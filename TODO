@@ -26,9 +26,9 @@
 - add Image class
     - system memory equal of texture
     - all image custom modification happens in Images and not textures
-- add Batch class
-    - system memory equal of mesh
-    - all building and modification happend in batches and not meshes
+- add the ability to modify and resize an existing batch
+- add ability to get and set partial batches
+- move attribute types and type info to batch from mesh
 
 ## Secondary
 - add truetype and text rendering support

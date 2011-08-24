@@ -17,18 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for MeshBuilder class
+/** Header file for BatchBuilder class
  *
- * @file MeshBuilder.h
+ * @file BatchBuilder.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_MESH_BUILDER_H
-#define MAGIC3D_MESH_BUILDER_H
+#ifndef MAGIC3D_BATCH_BUILDER_H
+#define MAGIC3D_BATCH_BUILDER_H
 
 #include "../Exceptions/MagicException.h"
 #include "../Shaders/Shader.h"
 #include "VertexArray.h"
-#include "Mesh.h"
+#include "Batch.h"
 #include "../Util/Color.h"
 #include "../Math/Math.h"
 #include "../Util/magic_throw.h"
@@ -42,30 +42,21 @@ namespace Magic3D
 /** Helps to manage vertex attributes when
  * building and drawing objects.
  */
-class MeshBuilder
+class BatchBuilder
 {
 private:	
     /// datatype used when building model by hand, before end() call
 	struct BuildData
 	{
-		float* temp;
-		int tempLength;
+		float* data;
 		int currentIndex;
 		int currentVertex;
 		
-		inline BuildData(Mesh::AttributeType type, int vertexCount )
+		inline BuildData(Batch::AttributeData* data)
 		{
-		    // type for auto-bound attribute is always float
-		    int components = Mesh::attributeTypeCompCount[(int)type];
-		    this->tempLength = vertexCount * components * sizeof(float);
-		    this->temp = new float[ vertexCount * components ];
+		    this->data = data->data; // data indeed!
 		    this->currentIndex = 0;
 		    this->currentVertex = 0;
-		}
-		
-		inline ~BuildData()
-		{
-		    delete[] temp;
 		}
 		    
 	};
@@ -74,11 +65,14 @@ private:
 	 */
 	BuildData* buildData[ Mesh::MAX_ATTRIBUTE_TYPES ];
 	
-	/// the mesh currently being built
-	Mesh* batch;
+	/// the batch currently being built
+	Batch* batch;
 	
 	/// number of verticies being managed
 	int vertexCount;
+	
+	/// number of current attributes
+	int curAttributeCount;
 	
 	inline BuildData* setupBuildData( Mesh::AttributeType type )
 	{
@@ -86,7 +80,28 @@ private:
 	    if (b != NULL)
 	        return b; // already setup
 	    
-	    this->buildData[(int)type] = new BuildData(type, this->vertexCount);
+	    // make sure we haven't exceeded attribute limit
+	    MAGIC_THROW(curAttributeCount >= batch->attributeCount, 
+	        "Exceeded specified attribute limit on batch." );
+	    
+	    // get next unallocate attribute data instance
+	    Batch::AttributeData* data = NULL;
+	    for (int i=0; i < batch->attributeCount; i++)
+	    {
+	        if (batch->data[i].data == NULL)
+	        {
+	            data = &batch->data[i];
+	            break;
+	        }
+	    }
+	    MAGIC_ASSERT(data != NULL);
+	    
+	    // allocate new attribute data
+	    data->allocate(this->vertexCount, type);
+	    curAttributeCount++;
+	    
+	    // create build data and return it
+	    this->buildData[(int)type] = new BuildData(data);
 	    return this->buildData[(int)type];
 	}
 	
@@ -94,10 +109,10 @@ private:
 	{
 	    MAGIC_THROW(data->currentVertex >= this->vertexCount, "Went over specified "
 	        "vertex count when building a mesh.");
-		data->temp[ data->currentIndex   ] = c1;
-		data->temp[ data->currentIndex+1 ] = c2;
-		data->temp[ data->currentIndex+2 ] = c3;
-		data->temp[ data->currentIndex+3 ] = c4;
+		data->data[ data->currentIndex   ] = c1;
+		data->data[ data->currentIndex+1 ] = c2;
+		data->data[ data->currentIndex+2 ] = c3;
+		data->data[ data->currentIndex+3 ] = c4;
 		data->currentIndex += 4;
 		data->currentVertex++;
 	}
@@ -106,9 +121,9 @@ private:
 	{		
 	    MAGIC_THROW(data->currentVertex >= this->vertexCount, "Went over specified "
 	        "vertex count when building a mesh.");
-		data->temp[ data->currentIndex   ] = c1;
-		data->temp[ data->currentIndex+1 ] = c2;
-		data->temp[ data->currentIndex+2 ] = c3;
+		data->data[ data->currentIndex   ] = c1;
+		data->data[ data->currentIndex+1 ] = c2;
+		data->data[ data->currentIndex+2 ] = c3;
 		data->currentIndex += 3;
 		data->currentVertex++;
 	}
@@ -117,8 +132,8 @@ private:
 	{
 	    MAGIC_THROW(data->currentVertex >= this->vertexCount, "Went over specified "
 	        "vertex count when building a mesh.");
-		data->temp[ data->currentIndex   ] = c1;
-		data->temp[ data->currentIndex+1 ] = c2;
+		data->data[ data->currentIndex   ] = c1;
+		data->data[ data->currentIndex+1 ] = c2;
 		data->currentIndex += 2;
 		data->currentVertex++;
 	}
@@ -127,15 +142,15 @@ private:
 public:
 	/** Standard Constructor
 	 */
-	MeshBuilder();
+	BatchBuilder();
 	
 	/// destructor
-	~MeshBuilder();
+	~BatchBuilder();
 	
 	/** Starts a vertex building sequence
 	 * @param vertexCount the number of verticies to be handled
 	 */
-	void begin(int vertexCount, Mesh* batch);
+	void begin(int vertexCount, int attributeCount, Batch* batch);
 	
 	inline void vertex4f(float v1, float v2, float v3, float v4)
 	{
@@ -242,7 +257,7 @@ public:
      * @param height the height of the box
      * @param depth the depth of the box
      */
-	void buildBox(Mesh* mesh, float width, float height, float depth );
+	void buildBox(Batch* mesh, float width, float height, float depth );
 	
 	/** Build a 2D circle mesh
      * @param x the x coordinate of the center
@@ -251,7 +266,7 @@ public:
      * @param precisionAngle the angle between any two points on the edge of the
                             circle, the lower angle, the better looking
      */
-	void build2DCircle(Mesh* mesh, int x, int y, int radius, float precisionAngle );
+	void build2DCircle(Batch* mesh, int x, int y, int radius, float precisionAngle );
 	
 	/** Build a flat surface
      * @param width the width of the surface
@@ -259,7 +274,7 @@ public:
      * @param slices the number of squares on width
      * @param stacks the number of squares on height
      */
-    void buildFlatSurface(Mesh* mesh, float width, float height, int slices, 
+    void buildFlatSurface(Batch* mesh, float width, float height, int slices, 
         int stacks, bool texRepeat, float texPerX, float texPerY);
 
     /** Build 2D rectangle
@@ -268,14 +283,14 @@ public:
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      */
-    void build2DRectangle(Mesh* mesh, int x, int y, int width, int height);
+    void build2DRectangle(Batch* mesh, int x, int y, int width, int height);
     
     /** Build sphere
      * @param radius the radius of the sphere
      * @param slices the number of squares on width
      * @param stacks the number of squares on height
      */
-    void buildSphere(Mesh* mesh, float radius, int slices, int stacks);
+    void buildSphere(Batch* mesh, float radius, int slices, int stacks);
     
 };
 

@@ -19,20 +19,37 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 */
 /** Implementation file for Mesh class
  * 
- * @file VertexHandler.cpp
+ * @file Mesh.cpp
  * @author Andrew Keating
  */
 
 #include <Graphics/Mesh.h>
+#include <Graphics/Batch.h>
 
 namespace Magic3D
 {
-	
 /// destructor
 Mesh::~Mesh()
 {
 	delete[] attributeData;
 }
+
+void Mesh::copyBatchIn(const Batch& batch)
+{
+    // allocate mesh attributes, also clears any previous data
+    this->allocate(batch.vertexCount, batch.attributeCount);
+    
+    // go through all attributes in batch and copy data into video
+    // memory buffer
+    for (int i=0; i < this->attributeCount; i++)
+    {
+        Mesh::AttributeData& d = this->attributeData[i];
+        const Batch::AttributeData& b = batch.data[i];
+        d._type = b.type;
+        d._buffer.allocate( b.dataLen, b.data, Buffer::STATIC_DRAW );
+    }
+}
+
 
 /// names of shader variables for each of the auto-bound attribute types
 const char* Mesh::attributeTypeNames[ MAX_ATTRIBUTE_TYPES ] = {

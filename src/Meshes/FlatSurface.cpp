@@ -17,27 +17,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for built-in FlatSurface mesh
+/** Implementation file for built-in FlatSurface batch
  *
  * @file FlatSurface.cpp
  * @author Andrew Keating
  */
 
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 	
-/** Build a flat surface
+/** Build a flat surface batch
  * @param width the width of the surface
  * @param height the height of the surface
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
- void MeshBuilder::buildFlatSurface(Mesh* mesh, float width, float height, int slices, 
+ void BatchBuilder::buildFlatSurface(Batch* batch, float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-    this->begin(slices*stacks*6, mesh);
+    this->begin(slices*stacks*6, 3, batch);
 	
 	float x = -width/2;
 	float z = -height/2;

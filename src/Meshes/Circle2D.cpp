@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for built-in Circle2D mesh
+/** Implementation file for built-in Circle2D batch
  * 
  * @file Circle2D.cpp
  * @author Andrew Keating
@@ -26,26 +26,26 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <Graphics/MeshBuilder.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
 
-/** Build a 2D circle mesh
+/** Build a 2D circle batch
  * @param x the x coordinate of the center
  * @param y the y coordinate of the center
  * @param radius the radius of the circle
  * @param precisionAngle the angle between any two points on the edge of the
                         circle, the lower angle, the better looking
  */
-void MeshBuilder::build2DCircle(Mesh* mesh, int x, int y, int radius, float precisionAngle )
+void BatchBuilder::build2DCircle(Batch* batch, int x, int y, int radius, float precisionAngle )
 {
 	
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// points using a TRIANGLE FAN
 	int edges = int(360.0f/precisionAngle);
-	this->begin(1 + edges, mesh);
+	this->begin(1 + edges, 3, batch);
 	
 	// center
 	texCoord2f(0.5f, 0.5f);
