@@ -23,6 +23,12 @@
     - one decently fast and collision-resistant one
 - add more physics collision shapes
 - add physics options parameter passed on object creation
+- add Image class
+    - system memory equal of texture
+    - all image custom modification happens in Images and not textures
+- add Batch class
+    - system memory equal of mesh
+    - all building and modification happend in batches and not meshes
 
 ## Secondary
 - add truetype and text rendering support
