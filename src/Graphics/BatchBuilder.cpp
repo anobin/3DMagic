@@ -73,12 +73,18 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
  */
 void BatchBuilder::end()
 {
+    // check to make sure all attributes were specified
     MAGIC_THROW(this->curAttributeCount != batch->attributeCount, 
         "Failed to use the full number of specified attributes." );
-    
-	// free all temporary build data
+   
+    // go through all build data
 	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
 	{
+	    // make sure the full vertex count for each attribute was specified
+	    MAGIC_THROW( buildData[i] != NULL && buildData[i]->currentVertex != this->vertexCount,
+	        "Did not specify the full specified vertex count for a attribute" );
+	    
+	    // free all temporary build data
         delete buildData[i];
         buildData[i] = NULL;
     }
