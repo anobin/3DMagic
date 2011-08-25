@@ -28,6 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "VertexArray.h"
 #include "../Shaders/Shader.h"
 #include "Texture.h"
+#include <string.h>
 
 namespace Magic3D
 {
