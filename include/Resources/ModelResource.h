@@ -8,6 +8,7 @@
 
 #include "./Resource.h"
 #include "../Graphics/Batch.h"
+#include "../Math/Matrix4.h"
 
 namespace Magic3D
 {
@@ -32,7 +33,7 @@ public:
 	/** Get all the batches for this model resource
 	 * @param batches array of batches, enough to accomidate batch count
 	 */
-	virtual void getAllBatches(Batch* batches, float scale=1.0f) const = 0; 
+	virtual void getAllBatches(Batch* batches, const Matrix4& transform = Matrix4()) const = 0; 
 	
 	/** Get the number of batches in this model
 	 * @return the number of batches in this model

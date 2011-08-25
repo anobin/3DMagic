@@ -8,6 +8,7 @@
 #include <string.h>
 #include <lib3ds/mesh.h>
 #include <Graphics/BatchBuilder.h>
+#include <Math/Point3.h>
 
 namespace Magic3D
 {
@@ -40,12 +41,13 @@ Model3DSResource::~Model3DSResource()
 /** Get all the batches for this model resource
  * @param batches array of batches, enough to accomidate batch count
  */
-void Model3DSResource::getAllBatches(Batch* batches, float scale) const
+void Model3DSResource::getAllBatches(Batch* batches, const Matrix4& transform) const
 {	
 	// Loop through all the meshes
 	BatchBuilder bb;
 	int i;
 	Lib3dsMesh * mesh;
+	Point3 p;
 	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
 	{
 	    // start the batch
@@ -63,10 +65,11 @@ void Model3DSResource::getAllBatches(Batch* batches, float scale) const
             for(unsigned int j = 0;j < 3;j++)
             {   
                 float* normal = &normals[cur_face*3*3 + j*3];
-                bb.vertex3f( mesh->pointL[face->points[ j ]].pos[0] * scale, 
-                    mesh->pointL[face->points[ j ]].pos[1] * scale, 
-                    mesh->pointL[face->points[ j ]].pos[2] * scale 
-                );
+                p.setX(mesh->pointL[face->points[ j ]].pos[0]);
+                p.setY(mesh->pointL[face->points[ j ]].pos[1]);
+                p.setZ(mesh->pointL[face->points[ j ]].pos[2]);
+                p.transform(transform);
+                bb.vertex3f( p.getX(), p.getY(), p.getZ() );
                 bb.normal3f( normal[0], normal[1], normal[2] );
                 bb.texCoord2f( 0.0f, 0.0f );
             }
