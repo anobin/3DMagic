@@ -1,6 +1,6 @@
 ## Primary
 - add support for custom named vertex attributes
-- add support to mesh builder to add an array of attribute data in one call
+- add support to batch builder to add an array of attribute data in one call
     - instead of piecemeal
 - add more advanced lights interface to World
 - add support to material builder to expand upon existing material
@@ -11,13 +11,13 @@
 - add special handling for transparent meshes to piepline
 - add support for multiple passes to materials
 - add support for multiple 'techniques' to materials
-- add ability to mesh builder to modify existing mesh
-- add ability to material builder to modify existing material
 - need to decide what resources can't be modified without notifying the object and/or world
     - meshes and materials can be modified outside, but may cause issues with optimiziations
       in graphics pipeline
     - changes in physical properties or collision shape require rebuilding a rigid body, thus
       needs to notify body and world
+    - may be able to easily solve by using some publisher/listener patterns
+        - so cached resources can be rebuilt when a change occurs
 - add hashing algorithms
     - one super-fast collision-happy one
     - one decently fast and collision-resistant one
@@ -31,6 +31,13 @@
 - move attribute types and type info to batch from mesh
 - add scale matrix option to render somehow
     - also add scale matrix option to physics shapes
+- expand 3DS model resource to load texture coordinates and provide linked texture names
+- add sorting to pipeline
+    - opaque are sorted from front to back
+    - transparent are sorted from back to front
+- add viewing culling to pipeline
+    - need algorithm to calculate bounding box/sphere
+    - need collision algorithm between frustrum and bounding box/sphere
 
 ## Secondary
 - add truetype and text rendering support
