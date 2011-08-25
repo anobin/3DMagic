@@ -29,6 +29,8 @@
 - add the ability to modify and resize an existing batch
 - add ability to get and set partial batches
 - move attribute types and type info to batch from mesh
+- add scale matrix option to render somehow
+    - also add scale matrix option to physics shapes
 
 ## Secondary
 - add truetype and text rendering support

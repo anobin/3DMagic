@@ -67,13 +67,6 @@ public:
 	
 	/// destructor
 	virtual ~Resource();
-
-	/** Clone this resource to get a copy allocated on the heap
-	 * @return copy of this resource allocated on the heap
-	 * @warning don't use this function unless you need to modify a
-	 * resource
-	 */
-	virtual Resource* clone() const = 0;
 	
 	/** get the name of this resource
 	 * @return const reference to the name of thisa resource.

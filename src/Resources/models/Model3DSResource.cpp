@@ -6,8 +6,8 @@
 
 #include <Resources/models/Model3DSResource.h>
 #include <string.h>
-#include <lib3ds/file.h>
 #include <lib3ds/mesh.h>
+#include <Graphics/BatchBuilder.h>
 
 namespace Magic3D
 {
@@ -18,103 +18,74 @@ namespace Magic3D
  * @param manager the manager for the resource
  */
 Model3DSResource::Model3DSResource(const char* path, const std::string& name, ResourceManager& manager):
-	ModelResource(name, manager)
+	ModelResource(name, manager), file(NULL), batchCount(0)
 {
-	Lib3dsFile* file = lib3ds_file_load(path);
+	file = lib3ds_file_load(path);
 	if (!file)
 		throw_MagicException("Could not load model file");
 	
-	// count all the vertices
-	vertexCount = 0;
+	// count the number of meshes
 	Lib3dsMesh * mesh;
-	for(mesh = file->meshes;mesh != NULL;mesh = mesh->next)
-		vertexCount += mesh->faces;
-	vertexCount *= 3;
-	
-	// allocate data arrays
-	vertices.components = 3;
-	vertices.dataType = VertexArray::FLOAT;
-	vertices.data = new float[vertexCount*3];
-	normals.components = 3;
-	normals.dataType = VertexArray::FLOAT;
-	normals.data = new float[vertexCount*3];
-	texels.components = 2;
-	texels.dataType = VertexArray::FLOAT;
-	texels.data = new float[vertexCount*2];
-	
-	// load vertex attributes into data arrays
-	int doneFaces = 0;
-	// Loop through all the meshes
-	for(mesh = file->meshes;mesh != NULL;mesh = mesh->next)
-	{
-			lib3ds_mesh_calculate_normals(mesh, (float(*)[3])&normals.data[doneFaces*3*3]);
-		
-			// Loop through every face
-			for(unsigned int cur_face = 0; cur_face < mesh->faces;cur_face++)
-			{
-					Lib3dsFace * face = &mesh->faceL[cur_face];
-					for(unsigned int i = 0;i < 3;i++)
-					{
-							memcpy(&vertices.data[doneFaces*3*3 + i*3], mesh->pointL[face->points[ i ]].pos, sizeof(float)*3);
-							//texels.data[FinishedFaces*3*2 + i*2] = 0.0f;
-							//texels.data[FinishedFaces*3*2 + i*2 + 1] = 0.0f;
-					}
-					doneFaces++;
-			}
-	}
-	
-	
-	lib3ds_file_free(file);
+	for(mesh = file->meshes, batchCount=0;
+	    mesh != NULL;
+	    mesh = mesh->next, batchCount++);
 }
 
 /// destructor
 Model3DSResource::~Model3DSResource()
 {
-	delete[] vertices.data;
-	delete[] normals.data;
-	delete[] texels.data;
+	lib3ds_file_free(file);
 }
 	
-/** Get data array for verticies of model
- * @return the verticies of the model
+/** Get all the batches for this model resource
+ * @param batches array of batches, enough to accomidate batch count
  */
-const ModelResource::DataArray& Model3DSResource::getVertices() const
-{
-	return this->vertices;
-}
-	
-/** Get data array for normals of model
- * @return the normal vectors for the model
- */
-const ModelResource::DataArray& Model3DSResource::getNormals() const
-{
-	return this->normals;
-}
-	
-/** Get the texture coords for the model
- * @return the texture coordinates of the model
- */
-const ModelResource::DataArray& Model3DSResource::getTextureCoords() const
-{
-	return this->texels;
-}
-	
-/** Get the number of vertices in this model
- * @return the number of vertices in this model
- */
-int Model3DSResource::getVertexCount() const
-{
-	return this->vertexCount;
+void Model3DSResource::getAllBatches(Batch* batches, float scale) const
+{	
+	// Loop through all the meshes
+	BatchBuilder bb;
+	int i;
+	Lib3dsMesh * mesh;
+	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
+	{
+	    // start the batch
+	    Batch* batch = &batches[i];
+	    bb.begin((int)mesh->faces*3, 3, batch);
+	    
+	    // set normals
+	    float* normals = new float[mesh->faces*3*3];
+        lib3ds_mesh_calculate_normals(mesh, (float(*)[3])normals);
+    
+        // Loop through every face, setting the three vertices
+        for(unsigned int cur_face = 0; cur_face < mesh->faces;cur_face++)
+        {
+            Lib3dsFace * face = &mesh->faceL[cur_face];
+            for(unsigned int j = 0;j < 3;j++)
+            {   
+                float* normal = &normals[cur_face*3*3 + j*3];
+                bb.vertex3f( mesh->pointL[face->points[ j ]].pos[0] * scale, 
+                    mesh->pointL[face->points[ j ]].pos[1] * scale, 
+                    mesh->pointL[face->points[ j ]].pos[2] * scale 
+                );
+                bb.normal3f( normal[0], normal[1], normal[2] );
+                bb.texCoord2f( 0.0f, 0.0f );
+            }
+        }
+        
+        // delete normals temporary storage
+        delete normals;
+        
+        // end current batch
+        bb.end();
+	}
 }
 
-/** Clone this resource to get a copy allocated on the heap
- * @return copy of this resource allocated on the heap
- * @warning don't use this function unless you need to modify a
- * resource
+/** Get the number of batches in this model
+ * @return the number of batches in this model
  */
-Resource* Model3DSResource::clone() const
+int Model3DSResource::getBatchCount() const
 {
-	return new Model3DSResource(*this);
+    return batchCount;
 }
 	
 	

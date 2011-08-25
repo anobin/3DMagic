@@ -134,6 +134,14 @@ BatchBuilder batchBuilder;
 MaterialBuilder materialBuilder;
 ModelBuilder modelBuilder;
 
+// 3ds stuff
+Batch* chainBatches;
+Mesh* chainMeshes;
+Model chainModel;
+Material chainMaterial;
+Texture* chainTex;
+Object* chainObject;
+
 /** Called when the window size changes
  * @param w width of the new window
  * @param h hieght of the new window
@@ -301,6 +309,25 @@ void setup()
 			world->addObject(btBox);
 		}
 	}
+	
+	// 3ds model
+	Handle<Model3DSResource> chainResource = resourceManager.get
+	    <Model3DSResource>("models/chainLink.3ds");
+	chainBatches = new Batch[chainResource()->getBatchCount()];
+	chainMeshes = new Mesh[chainResource()->getBatchCount()];
+	chainResource()->getAllBatches(chainBatches, 0.08f);
+	for (int i=0; i < chainResource()->getBatchCount(); i++)
+	    chainMeshes[i].copyBatchIn(chainBatches[i]);
+	materialBuilder.expand(&chainMaterial, sphereMaterial);
+	materialBuilder.setTexture(blueTex);
+	materialBuilder.end();
+	modelBuilder.begin(&chainModel, chainResource()->getBatchCount());
+	for(int i=0; i < chainResource()->getBatchCount(); i++)
+	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
+	modelBuilder.end();
+	chainObject = new Object(&chainModel, &sphereShape);
+	world->addObject(chainObject);
+	
         
     // set eye level
     camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
