@@ -325,7 +325,9 @@ void setup()
 	for(int i=0; i < chainResource()->getBatchCount(); i++)
 	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
 	modelBuilder.end();
-	chainObject = new Object(&chainModel, &sphereShape);
+    TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
+        ( chainBatches, chainResource()->getBatchCount() );
+	chainObject = new Object(&chainModel, chainShape, 0);
 	world->addObject(chainObject);
 	
         

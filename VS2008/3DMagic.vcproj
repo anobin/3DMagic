@@ -344,6 +344,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\CollisionShapes\TriangleMeshCollisionShape.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Math\Vector3.cpp"
 				>
 			</File>
@@ -362,11 +366,27 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\include\3DMagic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Graphics\Batch.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Graphics\BatchBuilder.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\Graphics\Material.h"
 				>
 			</File>
 			<File
 				RelativePath="..\include\Resources\ModelResource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\CollisionShapes\TriangleMeshCollisionShape.h"
 				>
 			</File>
 		</Filter>

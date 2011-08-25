@@ -87,6 +87,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "CollisionShapes/BoxCollisionShape.h"
 #include "CollisionShapes/SphereCollisionShape.h"
 #include "CollisionShapes/PlaneCollisionShape.h"
+#include "CollisionShapes/TriangleMeshCollisionShape.h"
 
 
 

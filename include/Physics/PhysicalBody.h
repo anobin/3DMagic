@@ -55,7 +55,8 @@ protected:
 	{   
 		// calc inertia
 		btVector3 fallInertia(0,0,0);
-		shape->calculateLocalInertia(mass,fallInertia);
+        if (mass != 0.0f)
+		    shape->calculateLocalInertia(mass,fallInertia);
 		
 		// construct rigid body
 		btRigidBody::btRigidBodyConstructionInfo 
