@@ -315,7 +315,7 @@ void setup()
 	    <Model3DSResource>("models/chainLink.3ds");
 	chainBatches = new Batch[chainResource()->getBatchCount()];
 	chainMeshes = new Mesh[chainResource()->getBatchCount()];
-	chainResource()->getAllBatches(chainBatches, 0.08f);
+	chainResource()->getAllBatches(chainBatches);
 	for (int i=0; i < chainResource()->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
 	materialBuilder.expand(&chainMaterial, sphereMaterial);
