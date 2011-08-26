@@ -283,10 +283,13 @@ void setup()
 	modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
 	
 	// init objects
-	btBall = new Object(&sphereModel, &sphereShape, Point3(0.0f, 150*FOOT, 0.0f));
+	PhysicalBody::Properties prop;
+	prop.mass = 1;
+	btBall = new Object(&sphereModel, &sphereShape, prop);
+	btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 	world->addObject(btBall);
 	
-	floorObject = new Object(&floorModel, &floorShape, 0); // static object
+	floorObject = new Object(&floorModel, &floorShape); // static object
 	world->addObject(floorObject);
 	
 	float wallWidth =40;
@@ -296,6 +299,7 @@ void setup()
 	float h = brickHeight/2;
 	float xOffset = -(brickWidth*wallWidth)/2;
 	float zOffset = -100*FOOT;
+	prop.friction = 0.8f;
 	for (int i=0; i < wallHeight; i++, h+=brickHeight)
 	{
 		float w = xOffset;
@@ -305,7 +309,8 @@ void setup()
 		{
 			if (i == wallHeight-1 && j == wallWidth-1)
 				continue;
-			btBox = new Object(&boxModel, &boxShape, Point3(w, h, zOffset) );
+			btBox = new Object(&boxModel, &boxShape, prop );
+			btBox->setLocation( Point3(w, h, zOffset) );
 			world->addObject(btBox);
 		}
 	}
@@ -315,7 +320,9 @@ void setup()
 	    <Model3DSResource>("models/chainLink.3ds");
 	chainBatches = new Batch[chainResource()->getBatchCount()];
 	chainMeshes = new Mesh[chainResource()->getBatchCount()];
-	chainResource()->getAllBatches(chainBatches);
+	Matrix4 m;
+	m.createScaleMatrix(1.5, 1.5, 1.5);
+	chainResource()->getAllBatches(chainBatches, m);
 	for (int i=0; i < chainResource()->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
 	materialBuilder.expand(&chainMaterial, sphereMaterial);
@@ -327,7 +334,8 @@ void setup()
 	modelBuilder.end();
     TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
         ( chainBatches, chainResource()->getBatchCount() );
-	chainObject = new Object(&chainModel, chainShape, 0);
+	chainObject = new Object(&chainModel, chainShape);
+	chainObject->setLocation(Point3(0.0f, 10.0f, 0.0f));
 	world->addObject(chainObject);
 	
         
@@ -366,7 +374,10 @@ void renderScene(void)
 	{
 	    for (int i = 0; i < 20; i++)
         {
-            Object* t = new Object(&tinySphereModel, &tinySphereShape, Point3(0, 10.0f, 0) );
+            PhysicalBody::Properties prop;
+            prop.mass = 0.1f;
+            Object* t = new Object(&tinySphereModel, &tinySphereShape, prop);
+            t->setLocation(Point3(0, 10.0f, 0));
             world->addObject(t);
             
             //t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
@@ -427,6 +438,8 @@ void keyPressed(int key)
 	Object* t;
     std::vector<Object*>::iterator it;
     //int i;
+    PhysicalBody::Properties prop;
+    
 	
 	
 	
@@ -487,7 +500,9 @@ void keyPressed(int key)
 			break;
 			
 		case 'g':
-			t = new Object(&bigSphereModel, &bigSphereShape, Point3(0.0f, 5.0f, 0.0f) );
+		    prop.mass = 1;
+			t = new Object(&bigSphereModel, &bigSphereShape, prop );
+			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world->addObject(t);
 			
 			camera.lookat( Point3(0, 30, 0) );
@@ -541,6 +556,16 @@ void keyPressed(int key)
 		case 'x':
 		    fun = !fun;
 		    break;
+		    
+		case 't':
+		    if (chainObject)
+		    {
+		        world->removeObject(chainObject);
+		        delete chainObject;
+		        chainObject = NULL;
+		    }
+		    break;
+		    
 
         default:
             break;
@@ -619,7 +644,8 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 	
 	Position p;
 	Object* t;
-	static float speed = 10 * 300;
+	static float speed = 1000 * 300;
+	PhysicalBody::Properties prop;
 	
 	switch(button)
 	{
@@ -627,7 +653,9 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			p.set(camera.getPosition());
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
-			t = new Object(&sphereModel, &sphereShape, p );
+			prop.mass = 100;
+			t = new Object(&sphereModel, &sphereShape, prop);
+			t->setPosition(p);
 			world->addObject(t);
 			t->getPhysical()->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
 										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 

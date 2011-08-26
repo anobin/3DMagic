@@ -37,47 +37,51 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+class Object;
 
 /** Physical body for an object, contains the physics properties 
  * of the object (collision shape, physics position, mass, friction, etc.).
  */
 class PhysicalBody
 {
+public:
+    /// properties of physical body
+    struct Properties
+    {
+        /// mass of object, 0 means static object, defaults to 0
+        Scalar mass;
+        /// friction of object's surface, defaults to 0.5
+        Scalar friction;
+        /// bouncyness of object, defaults to 0
+        Scalar bouncyness;
+        
+        inline Properties(): mass(0.0f), friction(0.5f), bouncyness(0) {}
+    };
+    
 protected:
+    friend class Object;
+    
 	/// MotionState for physical body
 	MotionState motionState;
 	
 	/// physical body for object
 	btRigidBody* body;
 	
-	inline void build(float mass, btCollisionShape* shape, float friction = 0.5f, 
-	    float restitution = 0.0f, float linearDamping = 0.0f)
+	inline void build(btCollisionShape* shape, const Properties& prop)
 	{   
 		// calc inertia
 		btVector3 fallInertia(0,0,0);
-        if (mass != 0.0f)
-		    shape->calculateLocalInertia(mass,fallInertia);
+        if (prop.mass != 0.0f)
+		    shape->calculateLocalInertia(prop.mass,fallInertia);
 		
 		// construct rigid body
 		btRigidBody::btRigidBodyConstructionInfo 
-			fallRigidBodyCI(mass, &motionState, shape, fallInertia);
-		fallRigidBodyCI.m_friction = friction;
-		fallRigidBodyCI.m_restitution = restitution;
-		fallRigidBodyCI.m_linearDamping = linearDamping;
+			fallRigidBodyCI(prop.mass, &motionState, shape, fallInertia);
+		fallRigidBodyCI.m_friction = prop.friction;
+		fallRigidBodyCI.m_restitution = prop.bouncyness;
 		body = new btRigidBody(fallRigidBodyCI);
 	}
 	
-public:
-	/// standard constructor
-	inline PhysicalBody(Position& position, CollisionShape& shape, float mass): 
-	    motionState(position), body(NULL) 
-	{ 
-	    build(mass, shape.getShape()); 
-	}
-	
-	/// destructor
-	virtual ~PhysicalBody();
-
 	/** sync the graphical position with the physical
 	 * position.
 	 * @note call this after manually setting the position,
@@ -101,6 +105,18 @@ public:
 		// tell bullet that the rigid body needs some attention
 		body->activate();
 	}
+	
+public:
+	/// standard constructor
+	inline PhysicalBody(Position& position, CollisionShape& shape, 
+	    const Properties& prop = Properties()): 
+	    motionState(position), body(NULL) 
+	{ 
+	    build(shape.getShape(), prop); 
+	}
+	
+	/// destructor
+	virtual ~PhysicalBody();
 	
 	/// get the rigid body for this object
 	inline btRigidBody* getRigidBody()

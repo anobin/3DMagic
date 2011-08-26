@@ -45,50 +45,113 @@ protected:
 	
 	/// graphical body for object
 	GraphicalEntity* graphical;
+	bool graphicalAlloc;
 	
 	/// physical body for object
 	PhysicalBody* physical;
-	
-	inline void build(Model* model, CollisionShape* shape, float mass)
-	{
-	    if (model)
-	        graphical = new GraphicalEntity(model);
-	    if (shape)
-	        physical = new PhysicalBody(position, *shape, mass); // mass of 1 is temporary
-	    MAGIC_THROW(!model && !shape, "Cannot build a object with neither a graphical "
-	        "nor physical entity.");
-	}
+	bool physicalAlloc;
 	
 public:
 	/// standard constructor
-	inline Object(Model* model, CollisionShape* shape, float mass=1): 
-	    graphical(NULL), physical(NULL)
+	inline Object(): graphical(NULL), graphicalAlloc(false), 
+	    physical(NULL), physicalAlloc(false) {}
+	
+	/// standard constructor for graphical-only objects
+	inline Object(Model* model): graphical(NULL), graphicalAlloc(false), 
+	    physical(NULL), physicalAlloc(false) 
 	{
-	    this->build(model, shape, mass);       
-	}
-	    
-	inline Object(Model* model, CollisionShape* shape, Position& p): position(p), 
-	    graphical(NULL), physical(NULL) 
-	{
-	    this->build(model, shape, 1);
-	}
-	    
-	inline Object(Model* model, CollisionShape* shape, Point3 location): 
-	    graphical(NULL), physical(NULL) 
-	{
-	    position.getLocation().set(location);
-	    this->build(model, shape, 1);
+	    this->createGraphical(model);
 	}
 	
+	/// standard constructor for physical-only objects
+	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): graphical(NULL), graphicalAlloc(false), 
+	    physical(NULL), physicalAlloc(false) 
+	{
+	    this->createPhysical(shape, prop);
+	}
+	
+	/// standard constructor for objects
+	inline Object(Model* model, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): graphical(NULL), graphicalAlloc(false), 
+	    physical(NULL), physicalAlloc(false) 
+	{
+	    this->createGraphical(model);
+	    this->createPhysical(shape, prop);
+	}
+	    
 	/// destructor
 	virtual ~Object();
+	
+	/// set the physical component directly
+	inline void setPhysical(PhysicalBody* pbody)
+	{
+	    if (physicalAlloc)
+	        delete this->physical;
+	    this->physical = pbody;
+	    this->physicalAlloc = false;
+	}
+	
+	/// create the physical component
+	inline void createPhysical(CollisionShape* shape, 
+	    const PhysicalBody::Properties& prop = PhysicalBody::Properties() )
+	{
+	    if (physicalAlloc)
+	        delete this->physical;
+	    this->physical = new PhysicalBody(this->position, *shape, prop);
+	    this->physicalAlloc = true;
+	}
+	
+	/// set the graphicsl component directly
+	inline void setGraphical(GraphicalEntity* e)
+	{
+	    if (graphicalAlloc)
+	        delete this->graphical;
+	    this->graphical = e;
+	    this->graphicalAlloc = false;
+	}
+	
+	/// create the graphical component
+	inline void createGraphical(Model* model)
+	{
+	    if (graphicalAlloc)
+	        delete this->graphical;
+	    this->graphical = new GraphicalEntity(model);
+	    this->graphicalAlloc = true;
+	}
+	
+	/// remove the graphical component
+	inline void removeGraphical()
+	{
+	    if (graphicalAlloc)
+	        delete this->graphical;
+	    this->graphical = NULL;
+	    this->graphicalAlloc = false;
+	}
+	
+	/// remove the physical component
+	inline void removePhysical()
+	{
+	    if (physicalAlloc)
+	        delete this->physical;
+	    this->physical = NULL;
+	    this->physicalAlloc = false;
+	}
+	
+	/// shortcut for setting just the location
+	inline void setLocation(const Point3& location)
+	{
+	    this->position.getLocation().set(location);
+	    if (physical)
+	        physical->syncPositionToPhysics();
+	}
 
 	/// set the Position
 	inline void setPosition(const Position& position)
 	{
+	    this->position.set(position);
 	    if (physical)
 	        physical->syncPositionToPhysics();
-		this->position.set(position);
 	}
 	
 	/// get the position for modification
