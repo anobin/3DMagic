@@ -135,6 +135,15 @@ private:
 		data->currentVertex++;
 	}
 	
+	inline void setAttributeNv(BuildData* data, int count, int comps, float* cv)
+	{
+	    MAGIC_THROW((data->currentVertex + count) > this->vertexCount, "Went over specified "
+	        "vertex count when building a mesh.");
+	    memcpy(&data->data[data->currentIndex], cv, count*comps*sizeof(float));
+	    data->currentIndex += count*comps;
+	    data->currentVertex += count;
+	}
+	
 	inline void setAttribute3(BuildData* data, float c1, float c2, float c3)
 	{		
 	    MAGIC_THROW(data->currentVertex >= this->vertexCount, "Went over specified "
@@ -203,7 +212,6 @@ public:
 	 * @param currentVertex the vertex to set
 	 */
 	void setCurrentVertex( int currentVertex );
-	 
 	
 	inline void vertex4f(float v1, float v2, float v3, float v4)
 	{
@@ -211,10 +219,25 @@ public:
 	        v1, v2, v3, v4 );
 	}
 	
+	inline void vertex4fv(float* data, int count)
+	{
+	    this->setAttributeNv(this->setupBuildData( Mesh::VERTEX ), count, 4, data);
+	}
+	
 	inline void vertex3f(float v1, float v2, float v3)
 	{
 	    this->setAttribute4( this->setupBuildData( Mesh::VERTEX ), 
 	        v1, v2, v3, 1.0f );
+	}
+	
+	inline void vertex3fv(float* data, int count)
+	{
+	    // since vertex is actually 4 comps, we can't just memcpy
+	    BuildData* b = this->setupBuildData( Mesh::VERTEX );
+	    for (int i=0; i < count; i++)
+	    {
+	        this->setAttribute4( b, data[i*3], data[i*3+1], data[i*3+2], 1.0f );
+	    }
 	}
 	
 	inline void getVertex3f(float* v1, float* v2, float* v3)
@@ -230,10 +253,22 @@ public:
 	        v1, v2, v3);
 	}
 	
+	inline void normal3fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::NORMAL ), 
+	        count, 3, data);
+	}
+	
 	inline void color3f(float v1, float v2, float v3)
 	{
 	    this->setAttribute3( this->setupBuildData( Mesh::COLOR ), 
 	        v1, v2, v3);
+	}
+	
+	inline void color3fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::COLOR ), 
+	        count, 3, data);
 	}
 	
 	inline void color2_3f(float v1, float v2, float v3)
@@ -242,10 +277,22 @@ public:
 	        v1, v2, v3);
 	}
 	
+	inline void color2_3fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::COLOR2 ), 
+	        count, 3, data);
+	}
+	
 	inline void texCoord0_2f(float v1, float v2)
 	{
 	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_0 ), 
 	        v1, v2);
+	}
+	
+	inline void texCoord0_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	        count, 2, data);
 	}
 	
 	inline void texCoord2f(float v1, float v2)
@@ -254,10 +301,22 @@ public:
 	        v1, v2);
 	}
 	
+	inline void texCoord2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	        count, 2, data);
+	}
+	
 	inline void texCoord1_2f(float v1, float v2)
 	{
 	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_1 ), 
 	        v1, v2);
+	}
+	
+	inline void texCoord1_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_1 ), 
+	        count, 2, data);
 	}
 	
 	inline void texCoord2_2f(float v1, float v2)
@@ -266,10 +325,22 @@ public:
 	        v1, v2);
 	}
 	
+	inline void texCoord2_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_2 ), 
+	        count, 2, data);
+	}
+	
 	inline void texCoord3_2f(float v1, float v2)
 	{
 	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_3 ), 
 	        v1, v2);
+	}
+	
+	inline void texCoord3_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_3 ), 
+	        count, 2, data);
 	}
 	
 	inline void texCoord4_2f(float v1, float v2)
@@ -278,10 +349,22 @@ public:
 	        v1, v2);
 	}
 	
+	inline void texCoord4_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_4 ), 
+	        count, 2, data);
+	}
+	
 	inline void texCoord5_2f(float v1, float v2)
 	{
 	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_5 ), 
 	        v1, v2);
+	}
+	
+	inline void texCoord5_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_5 ), 
+	        count, 2, data);
 	}
 	
 	inline void texCoord6_2f(float v1, float v2)
@@ -290,10 +373,22 @@ public:
 	        v1, v2);
 	}
 	
+	inline void texCoord6_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_6 ), 
+	        count, 2, data);
+	}
+	
 	inline void texCoord7_2f(float v1, float v2)
 	{
 	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_7 ), 
 	        v1, v2);
+	}
+	
+	inline void texCoord7_2fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_7 ), 
+	        count, 2, data);
 	}
 	
 	inline void tangent3f(float v1, float v2, float v3)
@@ -302,10 +397,22 @@ public:
 	        v1, v2, v3);
 	}
 	
+	inline void tangent3fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::TANGENT ), 
+	        count, 3, data);
+	}
+	
 	inline void binormal3f(float v1, float v2, float v3)
 	{
 	    this->setAttribute3( this->setupBuildData( Mesh::BINORMAL ), 
 	        v1, v2, v3);
+	}
+	
+	inline void binormal3fv(float* data, int count)
+	{
+	    this->setAttributeNv( this->setupBuildData( Mesh::BINORMAL ), 
+	        count, 3, data);
 	}
 	
 	/** end a vertex building sequence

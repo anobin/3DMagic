@@ -1,9 +1,6 @@
 ## Primary
 - add support for custom named vertex attributes
-- add support to batch builder to add an array of attribute data in one call
-    - instead of piecemeal
 - add more advanced lights interface to World
-- add support to material builder to expand upon existing material
 - standardize modelresource
     - add ability to create a model from a model resource, meshes and optional materials
 - start optimizing graphics pipeline

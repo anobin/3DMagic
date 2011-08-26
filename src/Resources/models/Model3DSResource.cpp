@@ -57,6 +57,8 @@ void Model3DSResource::getAllBatches(Batch* batches, const Matrix4& transform) c
 	    // set normals
 	    float* normals = new float[mesh->faces*3*3];
         lib3ds_mesh_calculate_normals(mesh, (float(*)[3])normals);
+        bb.normal3fv(normals, mesh->faces*3);
+        delete normals;
     
         // Loop through every face, setting the three vertices
         for(unsigned int cur_face = 0; cur_face < mesh->faces;cur_face++)
@@ -64,19 +66,14 @@ void Model3DSResource::getAllBatches(Batch* batches, const Matrix4& transform) c
             Lib3dsFace * face = &mesh->faceL[cur_face];
             for(unsigned int j = 0;j < 3;j++)
             {   
-                float* normal = &normals[cur_face*3*3 + j*3];
                 p.setX(mesh->pointL[face->points[ j ]].pos[0]);
                 p.setY(mesh->pointL[face->points[ j ]].pos[1]);
                 p.setZ(mesh->pointL[face->points[ j ]].pos[2]);
                 p.transform(transform);
                 bb.vertex3f( p.getX(), p.getY(), p.getZ() );
-                bb.normal3f( normal[0], normal[1], normal[2] );
                 bb.texCoord2f( 0.0f, 0.0f );
             }
         }
-        
-        // delete normals temporary storage
-        delete normals;
         
         // end current batch
         bb.end();

@@ -67,11 +67,13 @@ private:
     
     Position* light;
     
+    bool wireframeEnabled;
+    
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL),
-        light(NULL) {} 
+        light(NULL), wireframeEnabled(false) {} 
     
    inline void addObject(Object* object)
    {
@@ -136,6 +138,11 @@ public:
                "step is aligned to FPS." );
        }
        this->physicsStepsPerFrame = steps;
+   }
+   
+   inline void setWireFrame(bool t)
+   {
+       this->wireframeEnabled = t;
    }
    
    inline void startFrame()

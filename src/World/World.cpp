@@ -55,6 +55,14 @@ void World::processFrame()
     Matrix4 view;
     camera->getPosition().getCameraMatrix(view);
     const Matrix4& projection = camera->getProjectionMatrix();
+    
+    // setup wireframe if set to
+    if (wireframeEnabled)
+    {
+        glEnable(GL_BLEND);
+        glEnable(GL_LINE_SMOOTH);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
 
 	// render all objects
 	std::set<Object*>::iterator it = objects.begin();
@@ -251,6 +259,13 @@ void World::processFrame()
 	        delete array;
 	    }   
 	}
+	
+	// restore after wireframe
+    if (wireframeEnabled)
+    {
+        glDisable(GL_LINE_SMOOTH);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 	
 	// Do the buffer Swap
     graphics.swapBuffers();

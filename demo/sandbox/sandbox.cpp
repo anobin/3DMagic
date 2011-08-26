@@ -422,6 +422,7 @@ void renderScene(void)
     
 }
 
+
 /** Called when a normal key is pressed on the keyboard
  * @param key the key pressed
  * @param x the x-coord of the mouse at the time of the press
@@ -566,6 +567,9 @@ void keyPressed(int key)
 		    }
 		    break;
 		    
+		case 'k':
+		    wireframe = !wireframe;
+		    world->setWireFrame(wireframe);
 
         default:
             break;
