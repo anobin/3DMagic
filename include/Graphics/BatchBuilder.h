@@ -69,7 +69,7 @@ private:
     
 	/** mapping of attribute build index to build data
 	 */
-	BuildData* buildData[ Mesh::MAX_ATTRIBUTE_TYPES ];
+	BuildData* buildData[ Batch::MAX_ATTRIBUTE_TYPES ];
 	
 	/// the batch currently being built
 	Batch* batch;
@@ -80,7 +80,7 @@ private:
 	/// number of current attributes
 	int curAttributeCount;
 	
-	inline BuildData* setupBuildData( Mesh::AttributeType type )
+	inline BuildData* setupBuildData( Batch::AttributeType type )
 	{
 	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
 	    
@@ -113,7 +113,7 @@ private:
 	    return this->buildData[(int)type];
 	}
 	
-	inline BuildData* getBuildData( Mesh::AttributeType type )
+	inline BuildData* getBuildData( Batch::AttributeType type )
 	{
 	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
 	    
@@ -215,25 +215,25 @@ public:
 	
 	inline void vertex4f(float v1, float v2, float v3, float v4)
 	{
-	    this->setAttribute4( this->setupBuildData( Mesh::VERTEX ), 
+	    this->setAttribute4( this->setupBuildData( Batch::VERTEX ), 
 	        v1, v2, v3, v4 );
 	}
 	
 	inline void vertex4fv(float* data, int count)
 	{
-	    this->setAttributeNv(this->setupBuildData( Mesh::VERTEX ), count, 4, data);
+	    this->setAttributeNv(this->setupBuildData( Batch::VERTEX ), count, 4, data);
 	}
 	
 	inline void vertex3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute4( this->setupBuildData( Mesh::VERTEX ), 
+	    this->setAttribute4( this->setupBuildData( Batch::VERTEX ), 
 	        v1, v2, v3, 1.0f );
 	}
 	
 	inline void vertex3fv(float* data, int count)
 	{
 	    // since vertex is actually 4 comps, we can't just memcpy
-	    BuildData* b = this->setupBuildData( Mesh::VERTEX );
+	    BuildData* b = this->setupBuildData( Batch::VERTEX );
 	    for (int i=0; i < count; i++)
 	    {
 	        this->setAttribute4( b, data[i*3], data[i*3+1], data[i*3+2], 1.0f );
@@ -243,175 +243,175 @@ public:
 	inline void getVertex3f(float* v1, float* v2, float* v3)
 	{
 	    float dummy;
-	    this->getAttribute4( this->getBuildData( Mesh::VERTEX ), 
+	    this->getAttribute4( this->getBuildData( Batch::VERTEX ), 
 	        v1, v2, v3, &dummy );
 	}
 	
 	inline void normal3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute3( this->setupBuildData( Mesh::NORMAL ), 
+	    this->setAttribute3( this->setupBuildData( Batch::NORMAL ), 
 	        v1, v2, v3);
 	}
 	
 	inline void normal3fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::NORMAL ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::NORMAL ), 
 	        count, 3, data);
 	}
 	
 	inline void color3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute3( this->setupBuildData( Mesh::COLOR ), 
+	    this->setAttribute3( this->setupBuildData( Batch::COLOR ), 
 	        v1, v2, v3);
 	}
 	
 	inline void color3fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::COLOR ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::COLOR ), 
 	        count, 3, data);
 	}
 	
 	inline void color2_3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute3( this->setupBuildData( Mesh::COLOR2 ), 
+	    this->setAttribute3( this->setupBuildData( Batch::COLOR2 ), 
 	        v1, v2, v3);
 	}
 	
 	inline void color2_3fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::COLOR2 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::COLOR2 ), 
 	        count, 3, data);
 	}
 	
 	inline void texCoord0_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_0 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord0_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_0 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_0 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_0 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_0 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord1_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_1 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_1 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord1_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_1 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_1 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord2_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_2 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_2 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord2_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_2 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_2 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord3_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_3 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_3 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord3_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_3 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_3 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord4_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_4 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_4 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord4_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_4 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_4 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord5_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_5 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_5 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord5_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_5 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_5 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord6_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_6 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_6 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord6_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_6 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_6 ), 
 	        count, 2, data);
 	}
 	
 	inline void texCoord7_2f(float v1, float v2)
 	{
-	    this->setAttribute2( this->setupBuildData( Mesh::TEX_COORD_7 ), 
+	    this->setAttribute2( this->setupBuildData( Batch::TEX_COORD_7 ), 
 	        v1, v2);
 	}
 	
 	inline void texCoord7_2fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TEX_COORD_7 ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TEX_COORD_7 ), 
 	        count, 2, data);
 	}
 	
 	inline void tangent3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute3( this->setupBuildData( Mesh::TANGENT ), 
+	    this->setAttribute3( this->setupBuildData( Batch::TANGENT ), 
 	        v1, v2, v3);
 	}
 	
 	inline void tangent3fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::TANGENT ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::TANGENT ), 
 	        count, 3, data);
 	}
 	
 	inline void binormal3f(float v1, float v2, float v3)
 	{
-	    this->setAttribute3( this->setupBuildData( Mesh::BINORMAL ), 
+	    this->setAttribute3( this->setupBuildData( Batch::BINORMAL ), 
 	        v1, v2, v3);
 	}
 	
 	inline void binormal3fv(float* data, int count)
 	{
-	    this->setAttributeNv( this->setupBuildData( Mesh::BINORMAL ), 
+	    this->setAttributeNv( this->setupBuildData( Batch::BINORMAL ), 
 	        count, 3, data);
 	}
 	

@@ -32,14 +32,14 @@ namespace Magic3D
  */
 BatchBuilder::BatchBuilder(): batch(NULL), vertexCount(0), curAttributeCount(0)
 {
-    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
         buildData[i] = NULL;
 }
 	
 /// destructor
 BatchBuilder::~BatchBuilder()
 {
-	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+	for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
         delete buildData[i];
 }
 	
@@ -50,11 +50,11 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
 {
     MAGIC_THROW( this->batch != NULL, "Called begin() before end() of previous build sequence." );
 	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");
-	MAGIC_THROW( attributeCount <= 0 || attributeCount >= Mesh::MAX_ATTRIBUTE_TYPES, 
+	MAGIC_THROW( attributeCount <= 0 || attributeCount >= Batch::MAX_ATTRIBUTE_TYPES, 
 	    "Invalid attribute count given to begin()");
 	
 	// clear any build data
-    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
     {
         delete buildData[i];
         buildData[i] = NULL;
@@ -78,7 +78,7 @@ void BatchBuilder::modify(Batch* batch)
     MAGIC_THROW( this->batch != NULL, "Called modify() before end() of previous build sequence." );
     
     // clear any current build data
-    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
     {
         delete buildData[i];
         buildData[i] = NULL;
@@ -106,7 +106,7 @@ void BatchBuilder::end()
         "Failed to use the full number of specified attributes." );
    
     // go through all build data
-	for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+	for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
 	{   
 	    // free all temporary build data
         delete buildData[i];
@@ -132,13 +132,13 @@ void BatchBuilder::setCurrentVertex( int currentVertex )
         "Invalid current vertex to set." );
     
     // go through all build data
-    for (int i=0; i < Mesh::MAX_ATTRIBUTE_TYPES; i++)
+    for (int i=0; i < Batch::MAX_ATTRIBUTE_TYPES; i++)
     {
         // set the current index for each valid attribute
         if (buildData[i] != NULL)
         {
             buildData[i]->setCurrentVertex(currentVertex,    
-                Mesh::attributeTypeCompCount[i] );
+                Batch::attributeTypeCompCount[i] );
         }
     }
 }

@@ -49,42 +49,6 @@ void Mesh::copyBatchIn(const Batch& batch)
         d._buffer.allocate( b.dataLen, b.data, Buffer::STATIC_DRAW );
     }
 }
-
-
-/// names of shader variables for each of the auto-bound attribute types
-const char* Mesh::attributeTypeNames[ MAX_ATTRIBUTE_TYPES ] = {
-    "vertex",
-    "normal",
-    "color",
-    "color2",
-    "texcoord0",
-    "texcoord1",
-    "texcoord2",
-    "texcoord3",
-    "texcoord4",
-    "texcoord5",
-    "texcoord6",
-    "texcoord7",
-    "tangent",
-    "binormal"
-};
-    
-const int Mesh::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
-    4, // vertex
-    3, // normal
-    4, // color
-    4, // color2
-    2, // texcoord0
-    2, // texcoord1
-    2, // texcoord2
-    2, // texcoord3
-    2, // texcoord4
-    2, // texcoord5
-    2, // texcoord6
-    2, // texcoord7
-    3, // tangent
-    3  // binormal
-};
 	
 	
 	

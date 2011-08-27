@@ -245,10 +245,10 @@ void World::processFrame()
 	        for(int j=0; j < attributeCount; j++)
 	        {
 	            int bind = shader->getAttribBinding( 
-	                Mesh::attributeTypeNames[(int)adata[j].type] );
+	                Batch::attributeTypeNames[(int)adata[j].type] );
 	            if (bind < 0) // shader does not have attribute
 	                continue; 
-	            array->setAttributeArray(bind, Mesh::attributeTypeCompCount[(int)adata[j].type],
+	            array->setAttributeArray(bind, Batch::attributeTypeCompCount[(int)adata[j].type],
 	                VertexArray::FLOAT, adata[j].buffer);
 	        }
 	        
