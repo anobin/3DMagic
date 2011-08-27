@@ -2,8 +2,6 @@
 - add support for custom named vertex attributes
 - add more advanced lights interface to World
 - add object attachments for local world-space
-- add depth buffer lie offset
-    - allow for decals (depth lie and attachment)
 - move wireframe mode to Graphics System
 - add single color mode to world
 - standardize modelresource

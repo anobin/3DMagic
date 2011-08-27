@@ -31,6 +31,7 @@ namespace Magic3D
 
 void MaterialBuilder::addAutoUniform(const char* varName, Material::AutoUniformType type)
 {
+    MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
     MAGIC_THROW(curAutoUniform >= material->autoUniformCount, "Attempted to add more "
         "auto uniforms than specified." );
     
@@ -45,6 +46,7 @@ void MaterialBuilder::addAutoUniform(const char* varName, Material::AutoUniformT
 void MaterialBuilder::addNamedUniform(const char* varName, VertexArray::DataTypes datatype,
     int comp_count, const void* data)
 {
+    MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
     MAGIC_THROW(curNamedUniform >= material->namedUniformCount, "Attempted to add more "
         "named uniforms than specified." );
     

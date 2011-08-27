@@ -146,6 +146,8 @@ protected:
     
     Texture* textures[8];
     
+    float depthBufferLie;
+    
     inline void allocate(int autoUniformCount, int namedUniformCount)
     {
         delete[] this->uniforms;
@@ -160,12 +162,14 @@ protected:
         this->namedUniforms = new NamedUniform[autoUniformCount];
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
+        this->depthBufferLie = 0;
     }
     
     
 public:
     inline Material(): shader(NULL), primitive(VertexArray::TRIANGLES), transparent(false),
-        uniforms(NULL), autoUniformCount(0), namedUniforms(NULL), namedUniformCount(0)
+        uniforms(NULL), autoUniformCount(0), namedUniforms(NULL), namedUniformCount(0),
+        depthBufferLie(0)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
@@ -173,7 +177,7 @@ public:
 
     inline Material(const Material& m): shader(m.shader), primitive(m.primitive),
         transparent(m.transparent), autoUniformCount(m.autoUniformCount), 
-        namedUniformCount(m.namedUniformCount)
+        namedUniformCount(m.namedUniformCount), depthBufferLie(m.depthBufferLie)
     {
         this->uniforms = new AutoUniform[autoUniformCount];
         this->namedUniforms = new NamedUniform[autoUniformCount];
@@ -204,6 +208,7 @@ public:
             this->namedUniforms[i].set(m.namedUniforms[i]);
         for(int i=0; i < 8; i++)
             this->textures[i] = m.textures[i];
+        this->depthBufferLie = m.depthBufferLie;
     }
     
     inline ~Material()

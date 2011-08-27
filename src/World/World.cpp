@@ -252,8 +252,19 @@ void World::processFrame()
 	                VertexArray::FLOAT, adata[j].buffer);
 	        }
 	        
+	        // check for a depth lie
+	        if (material->depthBufferLie)
+	        {
+	            glPolygonOffset( material->depthBufferLie, 1.0f );
+	            glEnable(GL_POLYGON_OFFSET_FILL);
+	        }
+	        
 	        // draw mesh
 	        array->draw(material->primitive, vertexCount);
+	        
+	        // disable depth lie if it was enabled
+	        if (material->depthBufferLie)
+	            glDisable(GL_POLYGON_OFFSET_FILL);
 	        
 	        // delete bound array
 	        delete array;

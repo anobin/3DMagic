@@ -72,16 +72,19 @@ public:
     
     inline void setShader(Shader* shader)
     {
+        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->shader = shader;
     }
     
     inline void setRenderPrimitive(VertexArray::Primitives primitive)
     {
+        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->primitive = primitive;
     }
     
     inline void setTransparentFlag(bool transparent)
     {
+        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->transparent = transparent;
     }
     
@@ -92,8 +95,16 @@ public:
     
     inline void setTexture(Texture* t, int number = 0)
     {
+        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         MAGIC_THROW(number < 0 || number > 7, "Tried to set out-of-range texture." );
         material->textures[number] = t;
+    }
+    
+    /// the ammount to lie to the depth buffer when rendering object
+    inline void setDepthBufferLie(float lie)
+    {
+        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
+        material->depthBufferLie = lie;
     }
     
     void end();
