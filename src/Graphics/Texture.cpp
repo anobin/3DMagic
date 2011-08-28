@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Graphics/Texture.h>
+#include <Util/magic_assert.h>
 
 namespace Magic3D
 {
@@ -91,6 +92,76 @@ Texture::Texture(const Image2DResource* image, bool generateMipmaps)
 		this->setMinFilter(Texture::MIN_LINEAR);
 	}
 	
+}
+
+/** Standard constructor
+ * @param image the image to build this texture around.
+ * @param generateMipmaps whether to generate mipmaps or not
+ */
+Texture::Texture(const Image& image, bool generateMipmaps)
+{
+    // generate texture id
+	glGenTextures(1, &tid);
+	
+	// bind to our state
+	glBindTexture(GL_TEXTURE_2D, tid);
+	
+	// set data alignment before unpacking, always 4 bytes for Image class
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	
+	// figure out the internal format we want to use, we perfer compression
+	GLint internalFormat = 0;
+	GLint format = 0;
+	switch(image.channels)
+	{
+	    case 1:
+	        format = GL_RED;
+			internalFormat = GL_COMPRESSED_RED;
+			break;
+			
+		case 2:
+		    format = GL_RG;
+			internalFormat = GL_COMPRESSED_RG;
+			break;
+			
+		case 3:
+		    format = GL_RGB;
+			internalFormat = GL_COMPRESSED_RGB;
+			break;
+			
+		case 4:
+		    format = GL_RGBA;
+			internalFormat = GL_COMPRESSED_RGBA;
+			break;
+			
+		default:
+		    MAGIC_ASSERT(false);
+	}
+	
+	// unpack data into graphics memory
+	glTexImage2D(GL_TEXTURE_2D,			// 2D image data 
+				 0, 					// base mipmap level
+#ifdef MAGIC3D_USE_UNCOMPRESSED_TEXTURES
+                 format,
+#else
+				 internalFormat,	    // the graphics memory format we want it in
+#endif
+				 image.width,			// width of image
+				 image.height,		    // height of image
+				 0,					    // this parameter is always 0. :?
+				 format,		        // format of image (layout of channels) 
+				 GL_UNSIGNED_BYTE,      // image data type (size per channel)
+				 image.data);           // actual data
+				 
+	// generate mipmaps if instructed to
+	if (generateMipmaps)
+		 glGenerateMipmap(GL_TEXTURE_2D);
+	else
+	{
+		// if there is no mipmap, then set the min filter to something that
+		// will work without a mipmap
+		this->setMinFilter(Texture::MIN_LINEAR);
+	}
 }
 	
 /// destructor

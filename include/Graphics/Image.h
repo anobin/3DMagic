@@ -30,6 +30,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Magic3D
 {
+    
+class Texture;
 
 /** Represent image data on system memory. Can come from image resources or be
  * created manually. Can be moved to video memory by creating a Texture based
@@ -42,6 +44,8 @@ namespace Magic3D
 class Image
 {
 protected:
+    friend class Texture;
+    
     /// width of image data
     int width;
     
@@ -109,6 +113,21 @@ public:
             delete this->data;
             this->data = new unsigned char[width*height*channels];
         }
+    }
+    
+    inline int getWidth()
+    {
+        return this->width;
+    }
+    
+    inline int getHeight()
+    {
+        return this->height;
+    }
+    
+    inline int getChannelCount()
+    {
+        return this->channels;
     }
 
     inline void getPixel(Color* p, int x, int y) const 

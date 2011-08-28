@@ -182,9 +182,8 @@ void setup()
 	}
 	else
 	{
-		Handle<SingleColor2DResource> stoneImage = resourceManager.injectSingleColor2D(
-				"images/bareConcrete.tga", Color::WHITE);
-		stoneTex = new Texture(stoneImage());
+		Image stoneImage( 1, 1, 4, Color::WHITE);
+		stoneTex = new Texture(stoneImage);
 	}
 	if (resourceManager.doesResourceExist("images/marble.png"))
 	{
@@ -194,9 +193,8 @@ void setup()
 	}
 	else
 	{
-		Handle<SingleColor2DResource> marbleImage = resourceManager.injectSingleColor2D(
-				"images/marble.tga", Color::RED);
-		marbleTex= new Texture(marbleImage());
+		Image marbleImage( 1, 1, 4, Color::RED);
+		marbleTex= new Texture(marbleImage);
 		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
 	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
@@ -212,14 +210,12 @@ void setup()
 	}
 	else
 	{
-		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
-					"images/singleBrick.tga", Color(255, 118, 27, 255));
-		brickTex = new Texture(brickImage());
+		Image brickImage( 1, 1, 4, Color(255, 118, 27, 255));
+		brickTex = new Texture(brickImage);
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
-	Handle<SingleColor2DResource> blueImage = resourceManager.injectSingleColor2D(
-					"images/blue.tga", Color(31, 97, 240, 255));
-	blueTex = new Texture(blueImage());
+	Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
+	blueTex = new Texture(blueImage);
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
 	// init shader

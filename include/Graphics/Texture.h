@@ -36,6 +36,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 
 #include "../Resources/Image2DResource.h"
+#include "Image.h"
 
 
 namespace Magic3D
@@ -85,6 +86,12 @@ public:
 	 * @param generateMipmaps whether to generate mipmaps or not
 	 */
 	Texture(const Image2DResource* image, bool generateMipmaps = false);
+	
+	/** Standard constructor
+	 * @param image the image to build this texture around.
+	 * @param generateMipmaps whether to generate mipmaps or not
+	 */
+	Texture(const Image& image, bool generateMipmaps = false);
 	
 	/// copy constructor
 	inline Texture(const Texture& copy)
