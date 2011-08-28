@@ -99,7 +99,9 @@ Object* wallObject;
 // shader uniforms
 Position lightPos(0.0f, 1000.0f, 0.0f);
 Color groundColor(25,25,25);
+float groundColorf[3];
 Color skyColor(255,255,255);
+float skyColorf[3];
 
 // shaders
 Shader* shader;
@@ -169,7 +171,7 @@ void setup()
 	
 	graphics.enableDepthTest();
 	
-    static Color lightBlue(5, 230, 255, Color::RGB_BYTE);
+    static Color lightBlue(5, 230, 255);
 	graphics.setClearColor(lightBlue );
 	
 	// init textures
@@ -211,12 +213,12 @@ void setup()
 	else
 	{
 		Handle<SingleColor2DResource> brickImage = resourceManager.injectSingleColor2D(
-					"images/singleBrick.tga", Color(255, 118, 27, 255, Color::RGBA_BYTE));
+					"images/singleBrick.tga", Color(255, 118, 27, 255));
 		brickTex = new Texture(brickImage());
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
 	Handle<SingleColor2DResource> blueImage = resourceManager.injectSingleColor2D(
-					"images/blue.tga", Color(31, 97, 240, 255, Color::RGBA_BYTE));
+					"images/blue.tga", Color(31, 97, 240, 255));
 	blueTex = new Texture(blueImage());
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
@@ -254,8 +256,10 @@ void setup()
 	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
 	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
 	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColor.getInternal());
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColor.getInternal());
+	skyColor.getColor(skyColorf, 3);
+	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
+	groundColor.getColor(groundColorf, 3);
+	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
 	materialBuilder.setTexture(marbleTex);
 	materialBuilder.end();
 
@@ -321,7 +325,10 @@ void setup()
 	chainBatches = new Batch[chainResource()->getBatchCount()];
 	chainMeshes = new Mesh[chainResource()->getBatchCount()];
 	Matrix4 m;
-	m.createScaleMatrix(1.5, 1.5, 1.5);
+	Matrix4 temp;
+	m.createScaleMatrix(0.1, 0.1, 0.1);
+	temp.createRotationMatrix(-90.0f/180.0f*M_PI, 1,0,0 );
+	m.multiply(temp);
 	chainResource()->getAllBatches(chainBatches, m);
 	for (int i=0; i < chainResource()->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
@@ -335,7 +342,7 @@ void setup()
     TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
         ( chainBatches, chainResource()->getBatchCount() );
 	chainObject = new Object(&chainModel, chainShape);
-	chainObject->setLocation(Point3(0.0f, 10.0f, 0.0f));
+	chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
 	world->addObject(chainObject);
 	
         
@@ -774,7 +781,9 @@ int main(int argc, char* argv[])
 	        
 	    renderScene();
 	    
-	    world->processFrame();
+	    world->stepPhysics();
+	    
+	    world->renderObjects();
 	    
 	    world->endFrame();
 	}

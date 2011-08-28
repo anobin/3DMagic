@@ -143,8 +143,9 @@ public:
     
     inline void setClearColor( const Color& color )
     {
-        const GLfloat* c = color.getInternal();
-        glClearColor(c[0], c[1], c[2], c[3]);
+        float f[4];
+        color.getColor(f, 4);
+        glClearColor(f[0], f[1], f[2], f[3]);
     }
 
 };

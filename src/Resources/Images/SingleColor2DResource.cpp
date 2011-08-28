@@ -56,7 +56,8 @@ SingleColor2DResource::SingleColor2DResource(const Color& color,
     imageData = new GLbyte[length];
 	
 	// set every four bytes to the color selected
-	const GLfloat* internal = color.getInternal();
+	float internal[4];
+	color.getColor(internal, 4);
 	GLfloat* f = (GLfloat*)imageData;
 	for(unsigned int i=0; i < (length/sizeof(GLfloat)); i += 4)
 	{
