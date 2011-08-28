@@ -32,14 +32,20 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Physics/PhysicalBody.h"
 #include "../Graphics/GraphicalEntity.h"
 
+#include <set>
+
 namespace Magic3D
 {
 
+class World;
+    
 /** Base class for all objects 
  */
 class Object
 {
 protected:
+    friend class World;
+    
 	/// 3D position of object
 	Position position;
 	
@@ -50,6 +56,9 @@ protected:
 	/// physical body for object
 	PhysicalBody* physical;
 	bool physicalAlloc;
+	
+	/// purely graphical attachments to this object, used mainly for decals
+	std::set<Object*> attachments;
 	
 public:
 	/// standard constructor
@@ -158,6 +167,20 @@ public:
 	inline const Position& getPosition()
 	{
 		return this->position;
+	}
+	
+	inline void addAttachment(Object* ob)
+	{
+	    attachments.insert(ob);
+	}
+	
+	inline void removeAttachment(Object* ob)
+	{
+	    std::set<Object*>::iterator it;
+	    it = attachments.find(ob);
+	    MAGIC_THROW(it == attachments.end(), "Attempted to remove an attachment that "
+	        "was never attached.");
+	    attachments.erase(ob);
 	}
 	
 	/// get physical body for this model

@@ -150,7 +150,9 @@ public:
        frameTimer.reset();
    }
    
-   virtual void processFrame();
+   virtual void stepPhysics();
+   
+   virtual void renderObjects();
    
    inline void endFrame()
    {
