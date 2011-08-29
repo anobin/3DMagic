@@ -77,15 +77,6 @@ private:
 	inline Texture(): tid(0) {}
 	
 public:
-	/** Standard constructor
-	 * @param image the image to build this texture around. We don't
-	 * accept (and hold) a resource handle becuase we only care about memory
-	 * on the graphics processor, not the main memory. If textures are loaded on
-	 * and off graphics memory, then hold onto the handles and create a new texture
-	 * when you want it back on graphics memory.
-	 * @param generateMipmaps whether to generate mipmaps or not
-	 */
-	Texture(const Image2DResource* image, bool generateMipmaps = false);
 	
 	/** Standard constructor
 	 * @param image the image to build this texture around.

@@ -32,6 +32,7 @@ namespace Magic3D
 {
     
 class Texture;
+class Image2DResource;
 
 /** Represent image data on system memory. Can come from image resources or be
  * created manually. Can be moved to video memory by creating a Texture based
@@ -45,6 +46,7 @@ class Image
 {
 protected:
     friend class Texture;
+    friend class Image2DResource;
     
     /// width of image data
     int width;

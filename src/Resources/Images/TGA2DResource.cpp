@@ -26,6 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Resources/Images/TGA2DResource.h>
 #include <Exceptions/ResourceNotFoundException.h>
 #include <Exceptions/MagicException.h>
+#include <Util/magic_assert.h>
 
 #ifdef _WIN32
 #pragma pack(push, 1)
@@ -70,130 +71,72 @@ typedef struct
 TGA2DResource::TGA2DResource(const char* path, const std::string& name, ResourceManager& manager):
 	Image2DResource(name, manager)
 {
-	// needed vars
-	FILE *pFile;			// File pointer
-    TGAHEADER tgaHeader;		// TGA file header
-    short imageDepth;				// Pixel depth;
-    
     // Attempt to open the file
     pFile = fopen(path, "rb");
     if(pFile == NULL)
         throw_ResourceNotFoundException("Could not find TGA image file");
-	
-    // read in header
-    fread(&tgaHeader, sizeof(TGAHEADER), 1, pFile);
-	
-    // extract width, height, and depth of image
-    width = tgaHeader.width;
-    height = tgaHeader.height;
-    imageDepth = tgaHeader.bits / 8;
-    
-    // we can only handle 8, 24, or 32 bits per pixel
-    if(tgaHeader.bits != 8 && tgaHeader.bits != 24 && tgaHeader.bits != 32)
-        throw_MagicException("Can not handle TGA image with other than 8,24, or 32 bits per pixel");
-	
-    // Calculate size of image buffer
-    length = tgaHeader.width * tgaHeader.height * imageDepth;
-    
-    // allocate memory for raw image
-    imageData = new GLbyte[length];
-    
-    // read in raw image data
-    if(fread(imageData, length, 1, pFile) != 1)
-	{
-        delete[] imageData;
-		throw_MagicException("Could not read TGA image data");
-	}
-    
-    // Set OpenGL format expected and figure out length
-    switch(imageDepth)
-	{
-        case 3:     // Most likely case
-            format = GL_BGR;
-            break;
-        case 4:
-            format = GL_BGRA;
-            break;
-        case 1:
-            format = GL_LUMINANCE;
-            break;
-	}
-	
-	// close image file
-	fclose(pFile);
-	
-	// type is always unsigned byte for TGA
-	type = GL_UNSIGNED_BYTE;
 }
 	
 	
 /// destructor
 TGA2DResource::~TGA2DResource()
 {
-	delete[] imageData;
+	// close image file
+	fclose(pFile);
 }
 
-/** Clone this resource to get a copy allocated on the heap
- * @return copy of this resource allocated on the heap
- * @warning don't use this function unless you need to modify a
- * resource
+/** Get a image represented by this resource
+ * @param image image to place resource data into
  */
-Resource* TGA2DResource::clone() const
+void TGA2DResource::getImage(Image* image) const
 {
-	return new TGA2DResource(*this);
-}
+    TGAHEADER tgaHeader;		// TGA file header
+    
+    // read in header
+    fread(&tgaHeader, sizeof(TGAHEADER), 1, pFile);
+	
+    // extract width, height, and channel count
+    int width = tgaHeader.width;
+    int height = tgaHeader.height;
+    int channels = tgaHeader.bits / 8; // number of channels / bytes per pixel
+    
+    // we can only handle 8, 24, or 32 bits per pixel
+    if(tgaHeader.bits != 8 && tgaHeader.bits != 24 && tgaHeader.bits != 32)
+        throw_MagicException("Can not handle TGA image with other than 8,24, or 32 bits per pixel");
+	
+    // Calculate size of image buffer
+    int length = width * height * channels;
+    unsigned char* tempData = new unsigned char[length];
+    
+    // allocate memory in image
+    image->allocate(width, height, channels );
+    
+    // read in raw image data
+    if(fread(tempData, length, 1, pFile) != 1)
+		throw_MagicException("Could not read TGA image data");
+	
+	// change format of pixels in temporary buffer
+	// TGA format pixels are BGRA instead of RGBA
+	if (channels != 1) // no reformat at all for single channel
+	{
+        unsigned char t;
+        for(int i=0; i < width*height*channels; i += channels)
+        {
+            t = tempData[i];
+            tempData[i]   = tempData[i+2]; // RED
+            // GREEN is in right place
+            tempData[i+2] = t;   // BLUE
+            // ALPHA is in right place
+        }
+    }
+	
+	// copy temp raw data into image raw data
+	unsigned char* data = this->Image2DResource::getImageRawData(image);
+	memcpy(data, tempData, width*height*channels);
+	
+	// delete temporary image data
+	delete[] tempData;
 
-
-/** get the width of the image data
- * @return width of image data
- */
-int TGA2DResource::getWidth() const
-{
-	return width;
-}
-	
-/** get the height of the image data
- * @return height of image data
- */
-int TGA2DResource::getHeight() const
-{
-	return height;
-}
-	
-/** get the format of the image data
- * @return the format of the image data
- */
-GLenum TGA2DResource::getFormat() const
-{
-	return format;
-}
-	
-/** get the type of the image data
- * @return the type of the image data
- */
-GLenum TGA2DResource::getType() const
-{
-	return type;
-}
-
-/** get the raw image data
- * @param len place to put the length of the image data into, may be NULL
- * @return const pointer to raw image data
- */
-const GLbyte* TGA2DResource::getImageData(int* len) const
-{
-	if (len != NULL)
-		(*len) = length;
-	return imageData;
-}
-	
-/** Get the alignment of the image data (how many bytes are used for each channel)
- * @return the number of bytes used per channel, used o give openGL the GL_UNPACK_ALIGNMENT
- */
-int TGA2DResource::getDataAlignment() const
-{
-	// TGA alignment never has padding
-	return 1;
 }
 	
 	

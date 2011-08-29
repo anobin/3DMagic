@@ -47,26 +47,8 @@ namespace Magic3D
 class TGA2DResource : public Image2DResource
 {
 protected:
-	/// default constructor
-	//inline TGA2DResource(): Image2DResource() {}
-	
-	/// width of the image data
-	int width;
-	
-	/// height of the image data
-	int height;
-	
-	/// format of the image data
-	GLenum format;
-	
-	/// type of the image data
-	GLenum type;
-	
-	/// raw image data 
-	GLbyte* imageData;
-	
-	/// length of image data
-	int length;
+	/// file pointer to image file
+	FILE *pFile;
 	
 public:
 	/** Standard constructor
@@ -76,59 +58,14 @@ public:
 	 */
 	TGA2DResource(const char* path, const std::string& name, ResourceManager& manager);
 	
-	/// copy constructor
-	inline TGA2DResource(const TGA2DResource& copy): Image2DResource(copy.name, *copy.manager)
-	{
-		width = copy.width;
-		height = copy.height;
-		format = copy.format;
-		type = copy.type;
-		imageData = (GLbyte*)malloc(copy.length);
-		memcpy(imageData, copy.imageData, copy.length);
-		length = copy.length;
-	}
-	
 	/// destructor
 	virtual ~TGA2DResource();
 
-	/** Clone this resource to get a copy allocated on the heap
-	 * @return copy of this resource allocated on the heap
-	 * @warning don't use this function unless you need to modify a
-	 * resource
-	 */
-	virtual Resource* clone() const;
 
-
-	/** get the width of the image data
-	 * @return width of image data
+	/** Get a image represented by this resource
+	 * @param image image to place resource data into
 	 */
-	virtual int getWidth() const;
-	
-	/** get the height of the image data
-	 * @return height of image data
-	 */
-	virtual int getHeight() const;
-	
-	/** get the format of the image data
-	* @return the format of the image data
-	*/
-	virtual GLenum getFormat() const;
-	
-	/** get the type of the image data
-	 * @return the type of the image data
-	 */
-	virtual GLenum getType() const;
-	
-	/** get the raw image data
-	 * @param len place to put the length of the image data into, may be NULL
-	 * @return const pointer to raw image data
-	 */
-	virtual const GLbyte* getImageData(int* len) const;
-	
-	/** Get the alignment of the image data (how many bytes are used for each channel)
-	 * @return the number of bytes used per channel, used o give openGL the GL_UNPACK_ALIGNMENT
-	 */
-	virtual int getDataAlignment() const;
+	virtual void getImage(Image* image) const;
 
 
 };

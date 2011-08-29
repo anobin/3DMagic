@@ -1,7 +1,6 @@
 ## Primary
 - add support for custom named vertex attributes
 - add more advanced lights interface to World
-- add object attachments for local world-space
 - move wireframe mode to Graphics System
 - add single color mode to world
 - standardize modelresource
@@ -39,6 +38,10 @@
 - add viewing culling to pipeline
     - need algorithm to calculate bounding box/sphere
     - need collision algorithm between frustrum and bounding box/sphere
+- modify image resources to allow for multiple image retievals
+    - need to reset some variables at end of read
+- add shortcuts from resources to video memory for meshes and textures
+    - simplier interface for when manipulating that data on system memory is not needed
 
 ## Secondary
 - add truetype and text rendering support

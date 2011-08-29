@@ -175,10 +175,12 @@ void setup()
 	graphics.setClearColor(lightBlue );
 	
 	// init textures
+	Image tempImage;
 	if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
 	{
 		Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
-		stoneTex = new Texture(stoneImage());
+		stoneImage()->getImage(&tempImage);
+		stoneTex = new Texture(tempImage);
 	}
 	else
 	{
@@ -188,7 +190,8 @@ void setup()
 	if (resourceManager.doesResourceExist("images/marble.png"))
 	{
 		Handle<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
-		marbleTex= new Texture(marbleImage());
+		marbleImage()->getImage(&tempImage);
+		marbleTex= new Texture(tempImage);
 		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
 	else
@@ -200,12 +203,14 @@ void setup()
 	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
 	{
 		Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-		bunkerTex = new Texture(bunkerImage());
+		bunkerImage()->getImage(&tempImage);
+		bunkerTex = new Texture(tempImage);
 	}
 	if (resourceManager.doesResourceExist("images/singleBrick.tga"))
 	{
 		Handle<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
-		brickTex = new Texture(brickImage());
+		brickImage()->getImage(&tempImage);
+		brickTex = new Texture(tempImage);
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
 	else
