@@ -60,14 +60,14 @@ protected:
     
     inline void addBody( PhysicalBody& body )
     {
-        if (body.getRigidBody())
-            dynamicsWorld->addRigidBody(body.getRigidBody());
+        if (body.body)
+            dynamicsWorld->addRigidBody(body.body);
     }
     
     inline void removeBody( PhysicalBody& body )
     {
-        if (body.getRigidBody())
-            dynamicsWorld->removeRigidBody(body.getRigidBody());
+        if (body.body)
+            dynamicsWorld->removeRigidBody(body.body);
     }
 
     inline void stepSimulation( float secs, int substeps )

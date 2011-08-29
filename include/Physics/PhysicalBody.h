@@ -38,6 +38,7 @@ namespace Magic3D
 {
 
 class Object;
+class PhysicsSystem;
 
 /** Physical body for an object, contains the physics properties 
  * of the object (collision shape, physics position, mass, friction, etc.).
@@ -60,6 +61,7 @@ public:
     
 protected:
     friend class Object;
+    friend class PhysicsSystem;
     
 	/// MotionState for physical body
 	MotionState motionState;
@@ -118,11 +120,13 @@ public:
 	/// destructor
 	virtual ~PhysicalBody();
 	
-	/// get the rigid body for this object
-	inline btRigidBody* getRigidBody()
-	{
-		return body;
-	}
+	inline void applyForce(Vector3 force, Vector3 origin = Vector3(0.0f,0.0f,0.0f))
+    {
+        body->applyForce(
+            btVector3(force.getX(), force.getY(), force.getZ()), 
+            btVector3(origin.getX(), origin.getY(), origin.getZ())
+        );
+    }
 	
 
 };

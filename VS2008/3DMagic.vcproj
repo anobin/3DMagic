@@ -212,6 +212,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Graphics\Image.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Resources\Image2DResource.cpp"
 				>
 			</File>
@@ -288,10 +292,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\GUI\RectTexture.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Resources\Resource.cpp"
 				>
 			</File>
@@ -317,10 +317,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Exceptions\ShaderVertexInterfaceException.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Resources\Images\SingleColor2DResource.cpp"
 				>
 			</File>
 			<File

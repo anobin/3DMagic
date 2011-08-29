@@ -388,8 +388,8 @@ void renderScene(void)
             t->setLocation(Point3(0, 10.0f, 0));
             world->addObject(t);
             
-            //t->getPhysical().getRigidBody()->applyForce(btVector3(((float)(rand()%100))*0.01f, 0.0f, ((float)(rand()%100))*0.01f), 
-            //                              btVector3(0.0f, 0.0f, 0.0f));
+            t->getPhysical()->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
+                ((float)(rand()%100))*0.01f) );
         }
     }
     
@@ -669,9 +669,8 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			t = new Object(&sphereModel, &sphereShape, prop);
 			t->setPosition(p);
 			world->addObject(t);
-			t->getPhysical()->getRigidBody()->applyForce(btVector3(p.getForwardVector().getX()*speed, 
-										p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed), 
-										  btVector3(0.0f, 0.0f, 0.0f));
+			t->getPhysical()->applyForce(Vector3(p.getForwardVector().getX()*speed, 
+		        p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed) );
 			break;
 			
 		case Event::MIDDLE: 
