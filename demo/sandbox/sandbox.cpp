@@ -91,7 +91,7 @@ Material boxMaterial;
 PlaneCollisionShape floorShape( Vector3(0,1,0) );
 SphereCollisionShape sphereShape( 2*FOOT );
 SphereCollisionShape tinySphereShape( 1*FOOT );
-BoxCollisionShape bigSphereShape( 2, 4, 3 );
+BoxCollisionShape bigSphereShape( 3, 3, 3 );
 BoxCollisionShape boxShape( 6*INCH*5.0f, 3*INCH*5.0f, 3*INCH*5.0f );
 
 // objects
@@ -235,7 +235,8 @@ void setup()
 	    throw_MagicException("Failed to initalize freetype library.");
 	
 	static FT_Face face; 
-	error = FT_New_Face(library, "/usr/share/fonts/dejavu/DejaVuSans.ttf", 
+	//error = FT_New_Face(library, "/usr/share/fonts/corefonts/arial.ttf",
+	error = FT_New_Face(library, "/usr/share/fonts/dejavu/DejaVuSansMono.ttf",
 	    0, // only want face index 0, some fonts have more than 1 index 
 	    &face );
 	if ( error == FT_Err_Unknown_File_Format ) 
@@ -251,11 +252,12 @@ void setup()
 	    cout << "font is not scalable :(" << endl;
 	cout << face->num_fixed_sizes << " fixed sizes!" << endl;
 	
-	error = FT_Set_Pixel_Sizes(face, 1200, 1200 );
+	//error = FT_Set_Pixel_Sizes(face, 1200, 1200 );
+	error = FT_Set_Char_Size( face, 1200 << 6, 1200 << 6, 96, 96);
 	if (error)
 	    throw_MagicException( "Failed to set character size for font.");
 	
-	int glyph_index = FT_Get_Char_Index( face, 'A' ); // even if char does not exist, a box will be rendered
+	int glyph_index = FT_Get_Char_Index( face, 'Q' ); // even if char does not exist, a box will be rendered
 	
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
 	if (error)
@@ -279,15 +281,16 @@ void setup()
 	{
 	    for (int x=0; x < bitmap.width; x++)
 	    {
-	        charData[y*bitmap.width*3 + x*3 + 0] = b[x]; // RED
-	        charData[y*bitmap.width*3 + x*3 + 1] = b[x]; // GREEN
-	        charData[y*bitmap.width*3 + x*3 + 2] = b[x]; // BLUE
+	        charData[(y*bitmap.width+x)*3 + 0] = b[y*bitmap.pitch + x]; // RED
+	        charData[(y*bitmap.width+x)*3 + 1] = b[y*bitmap.pitch + x]; // GREEN
+	        charData[(y*bitmap.width+x)*3 + 2] = b[y*bitmap.pitch + x]; // BLUE
 	    }
-	    b += bitmap.pitch;
 	}
 	charTex = new Texture(charImage);
         
 	FT_Done_Face(face); // deallocate face
+	
+	FT_Done_FreeType(library); // deallocate freetype
 	
 	// init shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
@@ -302,7 +305,7 @@ void setup()
 	// init batches
 	batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
 	batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
-	batchBuilder.buildBox(&bigSphereBatch, 2, 4, 3);
+	batchBuilder.buildBox(&bigSphereBatch, 3, 3, 3);
 	batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 	    true, 15*FOOT, 12*FOOT );
 	float scale = 5.0f;
@@ -327,7 +330,7 @@ void setup()
 	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
 	groundColor.getColor(groundColorf, 3);
 	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
-	materialBuilder.setTexture(marbleTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 
 	materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
@@ -343,7 +346,7 @@ void setup()
 	materialBuilder.end();
 
 	materialBuilder.expand(&boxMaterial, sphereMaterial);
-	materialBuilder.setTexture(brickTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 	
     // init models

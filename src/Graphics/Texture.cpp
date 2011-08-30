@@ -42,8 +42,8 @@ Texture::Texture(const Image& image, bool generateMipmaps)
 	// bind to our state
 	glBindTexture(GL_TEXTURE_2D, tid);
 	
-	// set data alignment before unpacking, always 4 bytes for Image class
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	// no row alignment in Image class
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	
 	// figure out the internal format we want to use, we perfer compression
 	GLint internalFormat = 0;
