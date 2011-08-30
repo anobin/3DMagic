@@ -340,11 +340,13 @@ void setup()
 	for(int i=0; i < chainResource()->getBatchCount(); i++)
 	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
 	modelBuilder.end();
-    TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
-        ( chainBatches, chainResource()->getBatchCount() );
-	chainObject = new Object(&chainModel, chainShape);
+    //TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
+    //    ( chainBatches, chainResource()->getBatchCount() );
+	chainObject = new Object(&chainModel/*, chainShape*/);
 	chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
 	world->addObject(chainObject);
+	
+	// freetype stuff
 	
         
     // set eye level
