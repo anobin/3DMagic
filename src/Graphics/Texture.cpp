@@ -48,7 +48,7 @@ Texture::Texture(const Image& image, bool generateMipmaps)
 	// figure out the internal format we want to use, we perfer compression
 	GLint internalFormat = 0;
 	GLint format = 0;
-	switch(image.channels)
+	switch(image.getChannelCount())
 	{
 	    case 1:
 	        format = GL_RED;
@@ -82,12 +82,12 @@ Texture::Texture(const Image& image, bool generateMipmaps)
 #else
 				 internalFormat,	    // the graphics memory format we want it in
 #endif
-				 image.width,			// width of image
-				 image.height,		    // height of image
+				 image.getWidth(),			// width of image
+				 image.getHeight(),		    // height of image
 				 0,					    // this parameter is always 0. :?
 				 format,		        // format of image (layout of channels) 
 				 GL_UNSIGNED_BYTE,      // image data type (size per channel)
-				 image.data);           // actual data
+				 image.getRawData());           // actual data
 				 
 	// generate mipmaps if instructed to
 	if (generateMipmaps)

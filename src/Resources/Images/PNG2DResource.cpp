@@ -174,7 +174,7 @@ void PNG2DResource::getImage(Image* image) const
     
     // copy temporary buffer into image buffer, this step is needed becuase
     // there may be row padding in the temporary buffer
-    unsigned char* data = this->Image2DResource::getImageRawData(image);
+    unsigned char* data = image->getMutableRawData();
     for(int i=0; i < height; i++)
         memcpy(&data[i*width*channels], &imageData[i*row_width], width*channels);
             

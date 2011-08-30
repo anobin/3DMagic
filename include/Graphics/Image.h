@@ -31,8 +31,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
     
-class Texture;
-class Image2DResource;
 
 /** Represent image data on system memory. Can come from image resources or be
  * created manually. Can be moved to video memory by creating a Texture based
@@ -45,9 +43,6 @@ class Image2DResource;
 class Image
 {
 protected:
-    friend class Texture;
-    friend class Image2DResource;
-    
     /// width of image data
     int width;
     
@@ -117,19 +112,39 @@ public:
         }
     }
     
-    inline int getWidth()
+    inline int getWidth() const
     {
         return this->width;
     }
     
-    inline int getHeight()
+    inline int getHeight() const
     {
         return this->height;
     }
     
-    inline int getChannelCount()
+    inline int getChannelCount() const
     {
         return this->channels;
+    }
+    
+    // don't mess with the raw data unless you are doing major operations
+    inline unsigned char* getMutableRawData(int* length = NULL)
+    {
+        if (length)
+            (*length) = width*height*channels;
+        return this->data;
+    }
+    
+    /** Get the raw data for this image in a read-only fashion
+     * @param length optional length parameter to retrieve length of data,
+     * the length of the data is always width*height*channels.
+     * @return pointer to raw data
+     */
+    inline const unsigned char* getRawData(int* length = NULL) const
+    {
+        if (length)
+            (*length) = width*height*channels;
+        return this->data;
     }
 
     inline void getPixel(Color* p, int x, int y) const 

@@ -131,8 +131,7 @@ void TGA2DResource::getImage(Image* image) const
     }
 	
 	// copy temp raw data into image raw data
-	unsigned char* data = this->Image2DResource::getImageRawData(image);
-	memcpy(data, tempData, width*height*channels);
+	memcpy(image->getMutableRawData(), tempData, width*height*channels);
 	
 	// delete temporary image data
 	delete[] tempData;

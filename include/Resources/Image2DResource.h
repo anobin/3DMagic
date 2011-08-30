@@ -49,11 +49,6 @@ protected:
 	inline Image2DResource(const std::string& name, ResourceManager& manager):
 		Resource(name, manager) {}
 		
-	inline unsigned char* getImageRawData(Image* image) const
-	{
-	    return image->data;
-	}
-		
 public:
 	/// destructor
 	virtual ~Image2DResource();
