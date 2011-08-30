@@ -39,6 +39,10 @@ using namespace Magic3D;
 using std::cout;
 using std::endl;
 
+// include freetype
+#include <ft2build.h>
+#include FT_FREETYPE_H // yes it's a macro include and yes it's the standard way
+
 #define ROOM_SIZE (20.0f * FOOT)
 
 
@@ -53,6 +57,7 @@ Texture* marbleTex = NULL;
 Texture* bunkerTex = NULL;
 Texture* brickTex = NULL;
 Texture* blueTex = NULL;
+Texture* charTex = NULL;
 
 // models
 Model floorModel;
@@ -223,6 +228,67 @@ void setup()
 	blueTex = new Texture(blueImage);
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
+	// freetype stuff
+	static FT_Library library;
+	int error = FT_Init_FreeType(&library);
+	if (error)
+	    throw_MagicException("Failed to initalize freetype library.");
+	
+	static FT_Face face; 
+	error = FT_New_Face(library, "/usr/share/fonts/dejavu/DejaVuSans.ttf", 
+	    0, // only want face index 0, some fonts have more than 1 index 
+	    &face );
+	if ( error == FT_Err_Unknown_File_Format ) 
+	    throw_MagicException("Font format unsupported.");
+	else if (error)
+	    throw_MagicException("Failed to open font file." );
+	
+	cout << "font file has " << face->num_faces << " faces!" << endl;
+	cout << face->num_glyphs << " glyphs!" << endl;
+	if (face->face_flags & FT_FACE_FLAG_SCALABLE)
+	    cout << "font is scalable :)" << endl;
+	else
+	    cout << "font is not scalable :(" << endl;
+	cout << face->num_fixed_sizes << " fixed sizes!" << endl;
+	
+	error = FT_Set_Pixel_Sizes(face, 1200, 1200 );
+	if (error)
+	    throw_MagicException( "Failed to set character size for font.");
+	
+	int glyph_index = FT_Get_Char_Index( face, 'A' ); // even if char does not exist, a box will be rendered
+	
+	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
+	if (error)
+	    throw_MagicException("Failed to load character glyph.");
+	
+	// if the glyph was a scalable format and not a bitmap, convert to bitmap
+	if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
+	{
+	    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+	    if (error)
+	        throw_MagicException("Failed to convert glyph to bitmap.");
+	}
+	
+	FT_Bitmap& bitmap = face->glyph->bitmap;
+	Image charImage(bitmap.width, bitmap.rows, 3);
+	unsigned char* charData = charImage.getMutableRawData();
+	unsigned char* b = bitmap.buffer;
+	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
+	    throw_MagicException("font glyph bitmap is in wrong format." );
+	for (int y=0; y < bitmap.rows; y++)
+	{
+	    for (int x=0; x < bitmap.width; x++)
+	    {
+	        charData[y*bitmap.width*3 + x*3 + 0] = b[x]; // RED
+	        charData[y*bitmap.width*3 + x*3 + 1] = b[x]; // GREEN
+	        charData[y*bitmap.width*3 + x*3 + 2] = b[x]; // BLUE
+	    }
+	    b += bitmap.pitch;
+	}
+	charTex = new Texture(charImage);
+        
+	FT_Done_Face(face); // deallocate face
+	
 	// init shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
@@ -269,7 +335,7 @@ void setup()
 	materialBuilder.end();
 
 	materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
-	materialBuilder.setTexture(blueTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 
 	materialBuilder.expand(&floorMaterial, sphereMaterial);
@@ -346,9 +412,8 @@ void setup()
 	chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
 	world->addObject(chainObject);
 	
-	// freetype stuff
 	
-        
+	
     // set eye level
     camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
 	camera.setStepSpeed( FOOT );
