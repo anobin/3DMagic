@@ -234,9 +234,9 @@ void setup()
 	if (error)
 	    throw_MagicException("Failed to initalize freetype library.");
 	
-	static FT_Face face; 
-	//error = FT_New_Face(library, "/usr/share/fonts/corefonts/arial.ttf",
-	error = FT_New_Face(library, "/usr/share/fonts/dejavu/DejaVuSansMono.ttf",
+	static FT_Face face;
+	error = FT_New_Face(library, 
+        "../../fonts/dejavu/DejaVuSansMono.ttf",
 	    0, // only want face index 0, some fonts have more than 1 index 
 	    &face );
 	if ( error == FT_Err_Unknown_File_Format ) 
