@@ -39,7 +39,12 @@ Texture::Texture(const Image& image, bool generateMipmaps)
     // generate texture id
 	glGenTextures(1, &tid);
 	
-	// bind to our state
+    this->set(image, generateMipmaps);
+}
+
+void Texture::set(const Image& image, bool generateMipmaps)
+{
+    // bind to our state
 	glBindTexture(GL_TEXTURE_2D, tid);
 	
 	// no row alignment in Image class

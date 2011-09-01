@@ -93,6 +93,8 @@ public:
 	
 	/// destructor
 	virtual ~Texture();
+
+    void set(const Image& image, bool generateMipmaps = false);
 	
 	/// bind this texture to be the current texture state
 	inline void bind()

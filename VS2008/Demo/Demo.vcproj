@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\external\include\freetype2&quot;;&quot;$(ProjectDir)\..\..\external\include&quot;;&quot;$(ProjectDir)\..\..\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="2"

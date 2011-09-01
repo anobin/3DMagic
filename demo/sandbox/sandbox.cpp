@@ -149,6 +149,8 @@ Material chainMaterial;
 Texture* chainTex;
 Object* chainObject;
 
+FT_Face face;
+
 /** Called when the window size changes
  * @param w width of the new window
  * @param h hieght of the new window
@@ -234,7 +236,6 @@ void setup()
 	if (error)
 	    throw_MagicException("Failed to initalize freetype library.");
 	
-	static FT_Face face;
 	error = FT_New_Face(library, 
         "../../fonts/dejavu/DejaVuSansMono.ttf",
 	    0, // only want face index 0, some fonts have more than 1 index 
@@ -288,9 +289,9 @@ void setup()
 	}
 	charTex = new Texture(charImage);
         
-	FT_Done_Face(face); // deallocate face
+	//FT_Done_Face(face); // deallocate face
 	
-	FT_Done_FreeType(library); // deallocate freetype
+	//FT_Done_FreeType(library); // deallocate freetype
 	
 	// init shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
@@ -497,6 +498,47 @@ void renderScene(void)
         batchBuilder.end();
         boxMesh.copyBatchIn(boxBatch);
     }
+
+
+    // text test
+    int error;
+    static char ch = 'A';
+    if (ch == 'Z')
+        ch = 'A';
+    else
+        ch++;
+    int glyph_index = FT_Get_Char_Index( face, ch ); // even if char does not exist, a box will be rendered
+	
+	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
+	if (error)
+	    throw_MagicException("Failed to load character glyph.");
+	
+	// if the glyph was a scalable format and not a bitmap, convert to bitmap
+	if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
+	{
+	    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+	    if (error)
+	        throw_MagicException("Failed to convert glyph to bitmap.");
+	}
+	
+	FT_Bitmap& bitmap = face->glyph->bitmap;
+	Image charImage(bitmap.width, bitmap.rows, 3);
+	unsigned char* charData = charImage.getMutableRawData();
+	unsigned char* b = bitmap.buffer;
+	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
+	    throw_MagicException("font glyph bitmap is in wrong format." );
+	for (int y=0; y < bitmap.rows; y++)
+	{
+	    for (int x=0; x < bitmap.width; x++)
+	    {
+	        charData[(y*bitmap.width+x)*3 + 0] = b[y*bitmap.pitch + x]; // RED
+	        charData[(y*bitmap.width+x)*3 + 1] = b[y*bitmap.pitch + x]; // GREEN
+	        charData[(y*bitmap.width+x)*3 + 2] = b[y*bitmap.pitch + x]; // BLUE
+	    }
+	}
+    // shouldn't ever do this in real code, should copy all textures to memory and
+    // then just switch reference in material
+	charTex->set(charImage);
     
 }
 
