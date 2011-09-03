@@ -42,6 +42,8 @@
     - need to reset some variables at end of read
 - add shortcuts from resources to video memory for meshes and textures
     - simplier interface for when manipulating that data on system memory is not needed
+- add support for google sketup models
+- remove builder architecture from materials?
 
 ## Secondary
 - add truetype and text rendering support
