@@ -26,10 +26,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_IMAGE_H
 
 #include "../Util/Color.h"
+#include "../Util/magic_assert.h"
 #include <string.h>
 
 namespace Magic3D
 {
+    
+class StaticFont;
     
 
 /** Represent image data on system memory. Can come from image resources or be
@@ -175,6 +178,11 @@ public:
         for(int i = x*y*channels; i < end; i += channels)
             memcpy(&data[i], c, channels);
     }
+    
+    inline void clear(const Color& p)
+    {
+        this->rectFill(p, 0,0, this->width, this->height);
+    }
 
     inline void copyIn(const Image& source, int destX = 0, int destY = 0,
         int sourceX = 0, int sourceY = 0, int width = -1, 
@@ -194,6 +202,8 @@ public:
         int destY = 0, int sourceX = 0, int sourceY = 0, int width = -1, 
         int height = -1 );
 
+    void drawAsciiText(const StaticFont& font, const char* str, int x, int y);
+    
 };
 
 

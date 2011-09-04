@@ -118,8 +118,8 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	b.bitmap_left = face->glyph->bitmap_left;
 	b.bitmap_top = face->glyph->bitmap_top;
 	
-	// copy bitmap data, expanding out to RGB
-	b.bitmap.allocate(bitmap.width, bitmap.rows, 3); // 3 channel RGB
+	// copy bitmap data, expanding out to RGBA
+	b.bitmap.allocate(bitmap.width, bitmap.rows, 4); // 3 channel RGBA
 	unsigned char* charData = b.bitmap.getMutableRawData();
 	unsigned char* bt = bitmap.buffer;
 	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
@@ -128,9 +128,13 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	{
 	    for (int x=0; x < bitmap.width; x++)
 	    {
-	        charData[(y*bitmap.width+x)*3 + 0] = bt[y*bitmap.pitch + x]; // RED
-	        charData[(y*bitmap.width+x)*3 + 1] = bt[y*bitmap.pitch + x]; // GREEN
-	        charData[(y*bitmap.width+x)*3 + 2] = bt[y*bitmap.pitch + x]; // BLUE
+	        charData[(y*bitmap.width+x)*4 + 0] = bt[y*bitmap.pitch + x]; // RED
+	        charData[(y*bitmap.width+x)*4 + 1] = bt[y*bitmap.pitch + x]; // GREEN
+	        charData[(y*bitmap.width+x)*4 + 2] = bt[y*bitmap.pitch + x]; // BLUE
+	        if (bt[y*bitmap.pitch + x] == 0)
+	            charData[(y*bitmap.width+x)*4 + 3] = 0;
+	        else
+	            charData[(y*bitmap.width+x)*4 + 3] = 255;
 	    }
 	}
 }

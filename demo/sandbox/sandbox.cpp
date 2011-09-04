@@ -150,6 +150,7 @@ Texture* chainTex;
 Object* chainObject;
 
 //FT_Face face;
+StaticFont* font;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -295,11 +296,19 @@ void setup()
 	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
 	    ( "fonts/dejavu/DejaVuSansMono.ttf" );
 	Character q_char;
-	dejavuResource()->getMissingChar(&q_char, 1600, 1600);
-	StaticFont font(q_char);
-	dejavuResource()->getChar(&q_char, 'Q', 1600, 1600);
-	font.setChar(q_char);
-	charTex = new Texture(font.getChar('G').getBitmap().bitmap);
+	dejavuResource()->getMissingChar(&q_char, 200, 200);
+	font = new StaticFont(q_char);
+	for(unsigned int i=0; i < 128; i++)
+	{
+	    Character* c = new Character();
+	    dejavuResource()->getChar(c, i, 200, 200);
+	    font->setChar(c);
+	}
+	Image charImage(1600, 1600, 4);
+	charImage.clear(Color::PINK);
+	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+	charImage.drawAsciiText(*font, "Hola!", 0, 1000);
+	charTex = new Texture(charImage);
 	
 	
 	// init shader
@@ -507,47 +516,6 @@ void renderScene(void)
         batchBuilder.end();
         boxMesh.copyBatchIn(boxBatch);
     }
-
-
-    // text test
-    /*int error;
-    static char ch = 'A';
-    if (ch == 'Z')
-        ch = 'A';
-    else
-        ch++;
-    int glyph_index = FT_Get_Char_Index( face, ch ); // even if char does not exist, a box will be rendered
-	
-	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
-	if (error)
-	    throw_MagicException("Failed to load character glyph.");
-	
-	// if the glyph was a scalable format and not a bitmap, convert to bitmap
-	if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
-	{
-	    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-	    if (error)
-	        throw_MagicException("Failed to convert glyph to bitmap.");
-	}
-	
-	FT_Bitmap& bitmap = face->glyph->bitmap;
-	Image charImage(bitmap.width, bitmap.rows, 3);
-	unsigned char* charData = charImage.getMutableRawData();
-	unsigned char* b = bitmap.buffer;
-	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
-	    throw_MagicException("font glyph bitmap is in wrong format." );
-	for (int y=0; y < bitmap.rows; y++)
-	{
-	    for (int x=0; x < bitmap.width; x++)
-	    {
-	        charData[(y*bitmap.width+x)*3 + 0] = b[y*bitmap.pitch + x]; // RED
-	        charData[(y*bitmap.width+x)*3 + 1] = b[y*bitmap.pitch + x]; // GREEN
-	        charData[(y*bitmap.width+x)*3 + 2] = b[y*bitmap.pitch + x]; // BLUE
-	    }
-	}
-    // shouldn't ever do this in real code, should copy all textures to memory and
-    // then just switch reference in material
-	charTex->set(charImage);*/
     
 }
 

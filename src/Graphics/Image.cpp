@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 #include <Graphics/Image.h>
+#include <Util/StaticFont.h>
 
 
 namespace Magic3D
@@ -56,15 +57,23 @@ void Image::copyImage(Image* dest, const Image& source, int destX,
     // have to copy row by row
     for(int row = 0; row < height; row++)
     {
-        memcpy(&dest->data[destX*destY*dest->channels + (row*dest->width)],
-               &source.data[sourceX*sourceY*source.channels + (row*source.width)],
+        memcpy(&dest->data[destX*dest->channels + destY*dest->width*dest->channels + row*dest->width*dest->channels],
+               &source.data[sourceX*source.channels + sourceY*source.width*source.channels + row*source.width*source.channels],
                width*dest->channels
                );
     }
 }
    
     
-    
+void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y)
+{
+    for(int i=0; str[i]; i++)
+    {
+        const Character& c = font.getChar(str[i]);
+        Image::copyImage(this, c.getBitmap().bitmap, x, y);
+        x += c.getBitmap().bitmap.getWidth();
+    }
+}
     
     
     

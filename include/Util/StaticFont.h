@@ -62,14 +62,14 @@ public:
 	    return chars.size();
 	}
 	
-	inline bool isCharIncluded(unsigned int charcode)
+	inline bool isCharIncluded(unsigned int charcode) const
 	{
 	    return (chars.find(charcode) != chars.end());
 	}
 	
-	inline const Character& getChar(unsigned int charcode)
+	inline const Character& getChar(unsigned int charcode) const
 	{
-	    std::map<unsigned int, Character*>::iterator it;
+	    std::map<unsigned int, Character*>::const_iterator it;
 	    it = chars.find(charcode);
 	    if (it == chars.end())
 	        return missingChar;
