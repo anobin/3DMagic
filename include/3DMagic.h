@@ -58,6 +58,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Resources/Images/PNG2DResource.h"
 #include "Resources/ModelResource.h"
 #include "Resources/models/Model3DSResource.h"
+#include "Resources/fonts/TTFontResource.h"
 
 // shaders
 #include "Shaders/Shader.h"

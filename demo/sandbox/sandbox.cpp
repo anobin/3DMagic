@@ -149,7 +149,7 @@ Material chainMaterial;
 Texture* chainTex;
 Object* chainObject;
 
-FT_Face face;
+//FT_Face face;
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -231,7 +231,7 @@ void setup()
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
 	// freetype stuff
-	static FT_Library library;
+	/*static FT_Library library;
 	int error = FT_Init_FreeType(&library);
 	if (error)
 	    throw_MagicException("Failed to initalize freetype library.");
@@ -291,7 +291,13 @@ void setup()
         
 	//FT_Done_Face(face); // deallocate face
 	
-	//FT_Done_FreeType(library); // deallocate freetype
+	//FT_Done_FreeType(library); // deallocate freetype*/
+	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
+	    ( "fonts/dejavu/DejaVuSansMono.ttf" );
+	Character q_char;
+	dejavuResource()->getChar(&q_char, 'Q', 1600, 1600);
+	charTex = new Texture(q_char.getBitmap().bitmap);
+	
 	
 	// init shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
@@ -501,7 +507,7 @@ void renderScene(void)
 
 
     // text test
-    int error;
+    /*int error;
     static char ch = 'A';
     if (ch == 'Z')
         ch = 'A';
@@ -538,7 +544,7 @@ void renderScene(void)
 	}
     // shouldn't ever do this in real code, should copy all textures to memory and
     // then just switch reference in material
-	charTex->set(charImage);
+	charTex->set(charImage);*/
     
 }
 

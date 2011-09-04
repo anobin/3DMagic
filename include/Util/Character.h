@@ -41,12 +41,12 @@ class Character
 public:
     struct Metrics
     {
-        float width;
-        float height;
+        float width;    // same as bitmap.width
+        float height;   // same as bitmap.height
         
-        float horiBearingX;
-        float horiBearingY;
-        float horiAdvance;
+        float horiBearingX; // x bearing of horizontal char in flaot px
+        float horiBearingY; // y bearing of horizontal char in float px
+        float horiAdvance;  // advance of horizontal char in float px
         
         float vertBearingX;
         float vertBearingY;
@@ -61,9 +61,9 @@ public:
         Image bitmap;
 	
         int bitmap_left;
-        int bitmap_right;
+        int bitmap_top;
         
-        inline Bitmap(): bitmap_left(0), bitmap_right(0) {}
+        inline Bitmap(): bitmap_left(0), bitmap_top(0) {}
     };
     
 private:

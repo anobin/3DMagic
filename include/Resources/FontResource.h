@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_FONT_RESOURCE_H
 
 #include "Resource.h"
-#include "../Util/Font.h"
+#include "../Util/Character.h"
 
 namespace Magic3D
 {
@@ -46,7 +46,7 @@ public:
 	virtual ~FontResource();
 	
 	
-	virtual void getFont(Font* font);
+	virtual void getChar(Character* c, unsigned int charcode, int width, int height) const = 0;
 
 };
 

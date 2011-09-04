@@ -31,7 +31,7 @@ SET(LINK_FLAGS  "" )
 # set the include directories
 INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE_DIR} ${BULLET_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIR} ${LIB3DS_INCLUDE_DIR} ${PNG_INCLUDE_DIR} 
-    ${FREETYPE_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS}
     )
 
 # allow for user to select if source should be compiled for profiling with gprof

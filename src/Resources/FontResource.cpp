@@ -27,18 +27,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 namespace Magic3D
-{
+{   
     
-    
-    
-void FontResource::getFont(Font* font)
+/// destructor
+FontResource::~FontResource()
 {
     // intentionally left blank
-} 
-    
-    
-    
-    
+}
     
 };
 
