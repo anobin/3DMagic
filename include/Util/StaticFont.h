@@ -17,13 +17,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Font class
+/** Header file for StaticFont class
  *
- * @file Font.h
+ * @file StaticFont.h
  * @author Andrew Keating
  */
-#ifndef MAGIC3D_FONT_H
-#define MAGIC3D_FONT_H
+#ifndef MAGIC3D_STATIC_FONT_H
+#define MAGIC3D_STATIC_FONT_H
 
 #include "../Exceptions/MagicException.h"
 #include "Character.h"
@@ -37,19 +37,25 @@ namespace Magic3D
     
 	
 /** Represents a single text font that can be used by images to write text.
+ * Static in the sense that all the characters contained are already rasterized
+ * to a certain size bitmap and that only the characters explicitly added to
+ * the font are contained within it. This font is not as easy to use as a 
+ * dynamic font, but is much more efficient.
  */
-class Font
+class StaticFont
 {
 private:
 	/// collection of characters
 	std::map<unsigned int, Character*> chars;
 	
+	/// missing character
+	Character missingChar;
 	
 public:	
 	/// standard constructor for empty font
-	inline Font() {}
+	inline StaticFont(const Character& missingChar): missingChar(missingChar) {}
 	
-	virtual ~Font();
+	virtual ~StaticFont();
 	
 	inline int getCharCount()
 	{
@@ -61,13 +67,13 @@ public:
 	    return (chars.find(charcode) != chars.end());
 	}
 	
-	inline const Character* getChar(unsigned int charcode)
+	inline const Character& getChar(unsigned int charcode)
 	{
 	    std::map<unsigned int, Character*>::iterator it;
 	    it = chars.find(charcode);
 	    if (it == chars.end())
-	        return NULL;
-	    return it->second;
+	        return missingChar;
+	    return *it->second;
 	}
 	
 	inline void setChar(const Character& character)
@@ -81,7 +87,7 @@ public:
 	}
 	
 	// this method assumes the parameter is allocated on the heap and takes
-	// over management of the memory
+	// over management of the memory, avoids a memory copy
 	inline void setChar(Character* character)
 	{
 	    std::map<unsigned int, Character*>::iterator it;
@@ -91,6 +97,8 @@ public:
 	    chars.insert( std::pair<unsigned int, Character*>(character->getCharCode(), 
 	        character) );
 	}
+	
+	
 	
 	
 };

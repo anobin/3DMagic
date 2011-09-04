@@ -29,6 +29,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // util
 #include "Util/Color.h"
 #include "Util/Units.h"
+#include "Util/Character.h"
+#include "Util/StaticFont.h"
 
 // math
 #include "Math/Math.h"

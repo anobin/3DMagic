@@ -47,6 +47,10 @@ public:
 	
 	
 	virtual void getChar(Character* c, unsigned int charcode, int width, int height) const = 0;
+	
+	virtual bool hasChar(unsigned int charcode) const = 0;
+	
+	virtual void getMissingChar(Character* c, int width, int height) const  = 0;
 
 };
 

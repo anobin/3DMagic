@@ -295,8 +295,11 @@ void setup()
 	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
 	    ( "fonts/dejavu/DejaVuSansMono.ttf" );
 	Character q_char;
+	dejavuResource()->getMissingChar(&q_char, 1600, 1600);
+	StaticFont font(q_char);
 	dejavuResource()->getChar(&q_char, 'Q', 1600, 1600);
-	charTex = new Texture(q_char.getBitmap().bitmap);
+	font.setChar(q_char);
+	charTex = new Texture(font.getChar('G').getBitmap().bitmap);
 	
 	
 	// init shader

@@ -41,6 +41,8 @@ class TTFontResource : public FontResource
 {
 protected:
     FT_Face face;
+    
+    void getGlyph(Character* c, int glyphIndex, int width, int height) const;
 		
 public:
     /// standard constructor
@@ -53,10 +55,9 @@ public:
 	
 	virtual void getChar(Character* c, unsigned int charcode, int width, int height) const;
 	
-	inline bool hasChar(unsigned int charcode) const
-	{
-	    return ( FT_Get_Char_Index( face, charcode ) != 0 );
-	}
+	virtual bool hasChar(unsigned int charcode) const;
+	
+	virtual void getMissingChar(Character* c, int width, int height) const;
 	
 	inline int getCharCount() const
 	{

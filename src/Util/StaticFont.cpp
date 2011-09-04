@@ -17,18 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Font class
+/** Implementation file for StaticFont class
  *
- * @file Font.cpp
+ * @file StaticFont.cpp
  * @author Andrew Keating
  */
  
-#include <Util/Font.h>
+#include <Util/StaticFont.h>
 
 namespace Magic3D
 {
     
-Font::~Font()
+StaticFont::~StaticFont()
 {
     // free all characters
     std::map<unsigned int, Character*>::iterator it = chars.begin();

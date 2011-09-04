@@ -66,20 +66,20 @@ TTFontResource::~TTFontResource()
     // we're done with freetype library
     quit_Freetype();
 }
-    
-    
-void TTFontResource::getChar(Character* c, unsigned int charcode, int width,
-    int height ) const
+
+bool TTFontResource::hasChar(unsigned int charcode) const
+{
+    return ( FT_Get_Char_Index( face, charcode ) != 0 );
+}
+
+void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int height) const
 {
     // set width and height, if they have changed
     int error = FT_Set_Pixel_Sizes(this->face, width, height );
 	if (error)
 	    throw_MagicException( "Failed to set character size for font.");
-    
-    // even if char does not exist, a box will be rendered
-    int glyph_index = FT_Get_Char_Index( face, charcode ); 
 	
-	error = FT_Load_Glyph( this->face, glyph_index, FT_LOAD_DEFAULT);
+	error = FT_Load_Glyph( this->face, glyphIndex, FT_LOAD_DEFAULT);
 	if (error)
 	    throw_MagicException("Failed to load character glyph.");
 	
@@ -90,9 +90,6 @@ void TTFontResource::getChar(Character* c, unsigned int charcode, int width,
 	    if (error)
 	        throw_MagicException("Failed to convert glyph to bitmap.");
 	}
-	
-	// set charcode for character
-	c->setCharCode(charcode);
 	
 	// set metrics for character, freetype metrics are stored as 1/64th of a pixel
 	FT_Glyph_Metrics&  metrics = face->glyph->metrics;
@@ -136,9 +133,23 @@ void TTFontResource::getChar(Character* c, unsigned int charcode, int width,
 	        charData[(y*bitmap.width+x)*3 + 2] = bt[y*bitmap.pitch + x]; // BLUE
 	    }
 	}
+}
     
+    
+void TTFontResource::getChar(Character* c, unsigned int charcode, int width,
+    int height ) const
+{
+    this->getGlyph(c, FT_Get_Char_Index( face, charcode ), width, height); 
+    // set charcode for character
+	c->setCharCode(charcode);
 }   
     
+void TTFontResource::getMissingChar(Character* c, int width, int height) const
+{
+    this->getGlyph(c, 0, width, height); // glyph index 0 is for missing char
+    // set charcode for character
+	c->setCharCode(0); // really shouldn't matter for missing char
+}
     
     
     
