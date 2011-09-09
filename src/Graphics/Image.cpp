@@ -75,12 +75,15 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
         width = source.width;
     if (height < 0)
         height = source.height;
-    
+
     MAGIC_THROW( (sourceX+width) > source.width, "Width of rect too large.");
     MAGIC_THROW( (sourceY+height) > source.height, "Height of rect too large.");
     
-    MAGIC_THROW( (destX+width) > dest->width, "Width of rect too large.");
-    MAGIC_THROW( (destY+height) > dest->height, "Height of rect too large.");
+    // clamp dest area if needed
+    if ( (destX+width) > dest->width )
+        width = dest->width - destX;
+    if ( (destY+height) > dest->height )
+        height = dest->height - destY; 
     
     // don't let unsigned char overflow, if we go over max, we can clamp to max
 #define prevent_overflow(x) ( (x) > 255.0f ? 255 : (x) ) 
