@@ -110,7 +110,7 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
             d[0] = prevent_overflow( s[0]*sa + d[0]*da );
             d[1] = prevent_overflow( s[1]*sa + d[1]*da );
             d[2] = prevent_overflow( s[2]*sa + d[2]*da );
-            d[3] = prevent_overflow( s[3]*sa + d[3]*da );
+            d[3] = prevent_overflow( s[3] + d[3]*da );
             
             // move to next pixel in row
             d += dest->channels;
