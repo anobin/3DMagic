@@ -64,8 +64,6 @@ void Image::copyImage(Image* dest, const Image& source, int destX,
     }
 }
 
-#define float_trunc(x) ( (x) > 1.0f ? 1.0f : (x) )
-
 void Image::blendImage(Image* dest, const Image& source, int destX,
     int destY, int sourceX, int sourceY, int width, int height )
 {
@@ -83,6 +81,9 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
     
     MAGIC_THROW( (destX+width) > dest->width, "Width of rect too large.");
     MAGIC_THROW( (destY+height) > dest->height, "Height of rect too large.");
+    
+    // don't let unsigned char overflow
+#define prevent_overflow(x) ( (x) > 255.0f ? 255 : (x) ) 
     
     // have to blend pixel by pixel
     // this whole algorithm can and should be optimized, this is the simple readable implementation
@@ -103,16 +104,19 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
             da = 1.0f - sa;
             
             // blend pixel
-            d[0] = s[0]*sa + d[0]*da;
-            d[1] = s[1]*sa + d[1]*da;
-            d[2] = s[2]*sa + d[2]*da;
-            d[3] = s[3]*sa + d[3]*da;
+            d[0] = prevent_overflow( s[0]*sa + d[0]*da );
+            d[1] = prevent_overflow( s[1]*sa + d[1]*da );
+            d[2] = prevent_overflow( s[2]*sa + d[2]*da );
+            d[3] = prevent_overflow( s[3]*sa + d[3]*da );
             
             // move to next pixel in row
             d += dest->channels;
             s += source.channels;
         }
     }
+    
+#undef prevent_overflow
+
 }
    
     

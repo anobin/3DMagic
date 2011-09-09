@@ -128,13 +128,12 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	{
 	    for (int x=0; x < bitmap.width; x++)
 	    {
-	        charData[(y*bitmap.width+x)*4 + 0] = bt[y*bitmap.pitch + x]; // RED
-	        charData[(y*bitmap.width+x)*4 + 1] = bt[y*bitmap.pitch + x]; // GREEN
-	        charData[(y*bitmap.width+x)*4 + 2] = bt[y*bitmap.pitch + x]; // BLUE
-	        if (bt[y*bitmap.pitch + x] == 0) // make black spots transparent
-	            charData[(y*bitmap.width+x)*4 + 3] = 0;
-	        else
-	            charData[(y*bitmap.width+x)*4 + 3] = bt[y*bitmap.pitch + x];
+	        // text is always white, what we actually are getting from the font
+	        // is the alpha value
+	        charData[(y*bitmap.width+x)*4 + 0] = 255; // RED
+	        charData[(y*bitmap.width+x)*4 + 1] = 255; // GREEN
+	        charData[(y*bitmap.width+x)*4 + 2] = 255; // BLUE
+	        charData[(y*bitmap.width+x)*4 + 3] = bt[y*bitmap.pitch + x]; // ALPHA
 	    }
 	}
 }
