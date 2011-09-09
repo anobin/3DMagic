@@ -63,6 +63,57 @@ void Image::copyImage(Image* dest, const Image& source, int destX,
                );
     }
 }
+
+#define float_trunc(x) ( (x) > 1.0f ? 1.0f : (x) )
+
+void Image::blendImage(Image* dest, const Image& source, int destX,
+    int destY, int sourceX, int sourceY, int width, int height )
+{
+    // ensure each image is RGBA
+    MAGIC_THROW(dest->channels != 4, "Destination image for blend must be RGBA." );
+    MAGIC_THROW(source.channels != 4, "Source image for blend must be RGBA." );
+    
+    if (width < 0)
+        width = source.width;
+    if (height < 0)
+        height = source.height;
+    
+    MAGIC_THROW( (sourceX+width) > source.width, "Width of rect too large.");
+    MAGIC_THROW( (sourceY+height) > source.height, "Height of rect too large.");
+    
+    MAGIC_THROW( (destX+width) > dest->width, "Width of rect too large.");
+    MAGIC_THROW( (destY+height) > dest->height, "Height of rect too large.");
+    
+    // have to blend pixel by pixel
+    // this whole algorithm can and should be optimized, this is the simple readable implementation
+    // should probably also expand this function to be able to do different blend modes,
+    //     right now we are replicaiting glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    unsigned char* d_row = &dest->data[destX*dest->channels + destY*dest->width*dest->channels];
+    const unsigned char* s_row = &source.data[sourceX*source.channels + sourceY*source.width*source.channels];
+    float sa;
+    float da;
+    for(int row = 0; row < height; row++)
+    {
+        unsigned char* d = d_row + (row*dest->width*dest->channels);
+        const unsigned char* s = s_row + (row*source.width*source.channels);
+        for(int col=0; col < width; col++)
+        {
+            // get scale factors for pixel
+            sa = RGB_byte2float(s[3]);
+            da = 1.0f - sa;
+            
+            // blend pixel
+            d[0] = s[0]*sa + d[0]*da;
+            d[1] = s[1]*sa + d[1]*da;
+            d[2] = s[2]*sa + d[2]*da;
+            d[3] = s[3]*sa + d[3]*da;
+            
+            // move to next pixel in row
+            d += dest->channels;
+            s += source.channels;
+        }
+    }
+}
    
     
 void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y)
@@ -70,7 +121,7 @@ void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y)
     for(int i=0; str[i]; i++)
     {
         const Character& c = font.getChar(str[i]);
-        Image::copyImage(this, c.getBitmap().bitmap, x, y);
+        Image::blendImage(this, c.getBitmap().bitmap, x, y);
         x += c.getBitmap().bitmap.getWidth();
     }
 }

@@ -201,7 +201,17 @@ public:
     static void copyImage(Image* dest, const Image& source, int destX = 0, 
         int destY = 0, int sourceX = 0, int sourceY = 0, int width = -1, 
         int height = -1 );
+    
+    inline void blend(const Image& source, int destX = 0, int destY = 0, 
+        int sourceX = 0, int sourceY = 0, int width = -1, int height = -1 )
+    {
+        Image::blendImage(this, source, destX, destY, sourceX, sourceY, width, height );
+    }
 
+    static void blendImage(Image* dest, const Image& source, int destX = 0,
+        int destY = 0, int sourceX = 0, int sourceY = 0, int width = -1,
+        int height = -1 );
+    
     void drawAsciiText(const StaticFont& font, const char* str, int x, int y);
     
 };

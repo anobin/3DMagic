@@ -131,10 +131,10 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	        charData[(y*bitmap.width+x)*4 + 0] = bt[y*bitmap.pitch + x]; // RED
 	        charData[(y*bitmap.width+x)*4 + 1] = bt[y*bitmap.pitch + x]; // GREEN
 	        charData[(y*bitmap.width+x)*4 + 2] = bt[y*bitmap.pitch + x]; // BLUE
-	        if (bt[y*bitmap.pitch + x] == 0)
+	        if (bt[y*bitmap.pitch + x] == 0) // make black spots transparent
 	            charData[(y*bitmap.width+x)*4 + 3] = 0;
 	        else
-	            charData[(y*bitmap.width+x)*4 + 3] = 255;
+	            charData[(y*bitmap.width+x)*4 + 3] = bt[y*bitmap.pitch + x];
 	    }
 	}
 }
