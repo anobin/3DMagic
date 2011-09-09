@@ -82,7 +82,7 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
     MAGIC_THROW( (destX+width) > dest->width, "Width of rect too large.");
     MAGIC_THROW( (destY+height) > dest->height, "Height of rect too large.");
     
-    // don't let unsigned char overflow
+    // don't let unsigned char overflow, if we go over max, we can clamp to max
 #define prevent_overflow(x) ( (x) > 255.0f ? 255 : (x) ) 
     
     // have to blend pixel by pixel
@@ -120,12 +120,20 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
 }
    
     
-void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y)
+void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y, const Color& color)
 {
+    // TODO: add support for adding text to any channel size
     for(int i=0; str[i]; i++)
     {
+        // create image with color parameter and alpha channel from character
         const Character& c = font.getChar(str[i]);
-        Image::blendImage(this, c.getBitmap().bitmap, x, y);
+        MAGIC_ASSERT(c.getBitmap().bitmap.channels == 1); // character bitmap should just be alpha
+        Image m(c.getBitmap().bitmap.width, c.getBitmap().bitmap.height, 4);
+        m.clear(color); 
+        // TODO: add method to copy a one channel image into a channel in a multi-channel image
+        for(int i=0; i < c.getBitmap().bitmap.width*c.getBitmap().bitmap.height; i++)
+            m.data[i*4+3] = c.getBitmap().bitmap.data[i];
+        Image::blendImage(this, m, x, y);
         x += c.getBitmap().bitmap.getWidth();
     }
 }

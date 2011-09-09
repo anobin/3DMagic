@@ -119,7 +119,7 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	b.bitmap_top = face->glyph->bitmap_top;
 	
 	// copy bitmap data, expanding out to RGBA
-	b.bitmap.allocate(bitmap.width, bitmap.rows, 4); // 3 channel RGBA
+	b.bitmap.allocate(bitmap.width, bitmap.rows, 1); // 1 channel, alpha only
 	unsigned char* charData = b.bitmap.getMutableRawData();
 	unsigned char* bt = bitmap.buffer;
 	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
@@ -128,12 +128,9 @@ void TTFontResource::getGlyph(Character* c, int glyphIndex, int width, int heigh
 	{
 	    for (int x=0; x < bitmap.width; x++)
 	    {
-	        // text is always white, what we actually are getting from the font
-	        // is the alpha value
-	        charData[(y*bitmap.width+x)*4 + 0] = 255; // RED
-	        charData[(y*bitmap.width+x)*4 + 1] = 255; // GREEN
-	        charData[(y*bitmap.width+x)*4 + 2] = 255; // BLUE
-	        charData[(y*bitmap.width+x)*4 + 3] = bt[y*bitmap.pitch + x]; // ALPHA
+	        // text is determined at draw time, what we actually are getting 
+	        // from the font is the alpha value
+	        charData[y*bitmap.width+x] = bt[y*bitmap.pitch + x]; // ALPHA
 	    }
 	}
 }

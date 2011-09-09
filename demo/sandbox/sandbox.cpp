@@ -307,7 +307,7 @@ void setup()
 	Image charImage(1600, 1600, 4);
 	charImage.clear(Color::PINK);
 	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-	charImage.drawAsciiText(*font, "Hola!", 0, 1000);
+	charImage.drawAsciiText(*font, "Hola!", 0, 1000, Color::WHITE);
 	charTex = new Texture(charImage);
 	
 	

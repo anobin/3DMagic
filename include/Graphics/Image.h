@@ -212,7 +212,7 @@ public:
         int destY = 0, int sourceX = 0, int sourceY = 0, int width = -1,
         int height = -1 );
     
-    void drawAsciiText(const StaticFont& font, const char* str, int x, int y);
+    void drawAsciiText(const StaticFont& font, const char* str, int x, int y, const Color& color);
     
 };
 
