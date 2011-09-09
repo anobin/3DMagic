@@ -151,6 +151,7 @@ Object* chainObject;
 
 //FT_Face face;
 StaticFont* font;
+Image charImage(120, 120, 4);
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -296,18 +297,18 @@ void setup()
 	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
 	    ( "fonts/dejavu/DejaVuSansMono.ttf" );
 	Character q_char;
-	dejavuResource()->getMissingChar(&q_char, 200, 200);
+	dejavuResource()->getMissingChar(&q_char, 50, 50);
 	font = new StaticFont(q_char);
 	for(unsigned int i=0; i < 128; i++)
 	{
 	    Character* c = new Character();
-	    dejavuResource()->getChar(c, i, 200, 200);
+	    dejavuResource()->getChar(c, i, 50, 50);
 	    font->setChar(c);
 	}
-	Image charImage(1600, 1600, 4);
+	
 	charImage.clear(Color::PINK);
 	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-	charImage.drawAsciiText(*font, "Hola!", 0, 1000, Color::WHITE);
+	charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
 	charTex = new Texture(charImage);
 	
 	
@@ -516,6 +517,13 @@ void renderScene(void)
         batchBuilder.end();
         boxMesh.copyBatchIn(boxBatch);
     }
+    
+    char fps[20];
+	charImage.clear(Color::BLUE);
+	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+	sprintf(fps, "%d", world->getActualFPS() );
+	charImage.drawAsciiText(*font, fps, 0, 10, Color::WHITE);
+	charTex->set(charImage);
     
 }
 
