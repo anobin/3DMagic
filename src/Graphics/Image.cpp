@@ -75,15 +75,27 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
         width = source.width;
     if (height < 0)
         height = source.height;
-
-    MAGIC_THROW( (sourceX+width) > source.width, "Width of rect too large.");
-    MAGIC_THROW( (sourceY+height) > source.height, "Height of rect too large.");
     
     // clamp dest area if needed
+    if ( destX < 0)
+    {
+        sourceX += -destX;
+        width += destX;
+        destX = 0;
+    }
+    if (destY < 0 )
+    {
+        sourceY += -destY;
+        height += destY;
+        destY = 0;
+    }
     if ( (destX+width) > dest->width )
         width = dest->width - destX;
     if ( (destY+height) > dest->height )
-        height = dest->height - destY; 
+        height = dest->height - destY;
+
+    MAGIC_THROW( (sourceX+width) > source.width, "Width of rect too large.");
+    MAGIC_THROW( (sourceY+height) > source.height, "Height of rect too large.");
     
     // don't let unsigned char overflow, if we go over max, we can clamp to max
 #define prevent_overflow(x) ( (x) > 255.0f ? 255 : (x) ) 
@@ -136,8 +148,9 @@ void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y,
         // TODO: add method to copy a one channel image into a channel in a multi-channel image
         for(int i=0; i < c.getBitmap().bitmap.width*c.getBitmap().bitmap.height; i++)
             m.data[i*4+3] = c.getBitmap().bitmap.data[i];
-        Image::blendImage(this, m, x, y);
-        x += c.getBitmap().bitmap.getWidth();
+        const Character::Metrics& t = c.getMetrics();
+        Image::blendImage(this, m, x + t.horiBearingX, y - t.horiBearingY);
+        x += t.horiAdvance;
     }
 }
     

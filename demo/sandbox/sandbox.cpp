@@ -295,14 +295,14 @@ void setup()
 	
 	//FT_Done_FreeType(library); // deallocate freetype*/
 	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
-	    ( "fonts/dejavu/DejaVuSansMono.ttf" );
+	    ( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
 	Character q_char;
-	dejavuResource()->getMissingChar(&q_char, 50, 50);
+	dejavuResource()->getMissingChar(&q_char, 20, 20);
 	font = new StaticFont(q_char);
 	for(unsigned int i=0; i < 128; i++)
 	{
 	    Character* c = new Character();
-	    dejavuResource()->getChar(c, i, 50, 50);
+	    dejavuResource()->getChar(c, i, 20, 20);
 	    font->setChar(c);
 	}
 	
@@ -423,7 +423,7 @@ void setup()
 	for (int i=0; i < chainResource()->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
 	materialBuilder.expand(&chainMaterial, sphereMaterial);
-	materialBuilder.setTexture(blueTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 	modelBuilder.begin(&chainModel, chainResource()->getBatchCount());
 	for(int i=0; i < chainResource()->getBatchCount(); i++)
@@ -518,11 +518,11 @@ void renderScene(void)
         boxMesh.copyBatchIn(boxBatch);
     }
     
-    char fps[20];
+    char fps[40];
 	charImage.clear(Color::BLUE);
 	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-	sprintf(fps, "%d", world->getActualFPS() );
-	charImage.drawAsciiText(*font, fps, 0, 10, Color::WHITE);
+	sprintf(fps, "Figure: %d", world->getActualFPS() );
+	charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
 	charTex->set(charImage);
     
 }
