@@ -39,6 +39,10 @@ using namespace Magic3D;
 using std::cout;
 using std::endl;
 
+// include freetype
+#include <ft2build.h>
+#include FT_FREETYPE_H // yes it's a macro include and yes it's the standard way
+
 #define ROOM_SIZE (20.0f * FOOT)
 
 
@@ -53,6 +57,7 @@ Texture* marbleTex = NULL;
 Texture* bunkerTex = NULL;
 Texture* brickTex = NULL;
 Texture* blueTex = NULL;
+Texture* charTex = NULL;
 
 // models
 Model floorModel;
@@ -86,7 +91,7 @@ Material boxMaterial;
 PlaneCollisionShape floorShape( Vector3(0,1,0) );
 SphereCollisionShape sphereShape( 2*FOOT );
 SphereCollisionShape tinySphereShape( 1*FOOT );
-BoxCollisionShape bigSphereShape( 2, 4, 3 );
+BoxCollisionShape bigSphereShape( 3, 3, 3 );
 BoxCollisionShape boxShape( 6*INCH*5.0f, 3*INCH*5.0f, 3*INCH*5.0f );
 
 // objects
@@ -143,6 +148,10 @@ Model chainModel;
 Material chainMaterial;
 Texture* chainTex;
 Object* chainObject;
+
+//FT_Face face;
+StaticFont* font;
+Image charImage(120, 120, 4);
 
 /** Called when the window size changes
  * @param w width of the new window
@@ -223,6 +232,86 @@ void setup()
 	blueTex = new Texture(blueImage);
 	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	
+	// freetype stuff
+	/*static FT_Library library;
+	int error = FT_Init_FreeType(&library);
+	if (error)
+	    throw_MagicException("Failed to initalize freetype library.");
+	
+	error = FT_New_Face(library, 
+        "../../fonts/dejavu/DejaVuSansMono.ttf",
+	    0, // only want face index 0, some fonts have more than 1 index 
+	    &face );
+	if ( error == FT_Err_Unknown_File_Format ) 
+	    throw_MagicException("Font format unsupported.");
+	else if (error)
+	    throw_MagicException("Failed to open font file." );
+	
+	cout << "font file has " << face->num_faces << " faces!" << endl;
+	cout << face->num_glyphs << " glyphs!" << endl;
+	if (face->face_flags & FT_FACE_FLAG_SCALABLE)
+	    cout << "font is scalable :)" << endl;
+	else
+	    cout << "font is not scalable :(" << endl;
+	cout << face->num_fixed_sizes << " fixed sizes!" << endl;
+	
+	//error = FT_Set_Pixel_Sizes(face, 1200, 1200 );
+	error = FT_Set_Char_Size( face, 1200 << 6, 1200 << 6, 96, 96);
+	if (error)
+	    throw_MagicException( "Failed to set character size for font.");
+	
+	int glyph_index = FT_Get_Char_Index( face, 'Q' ); // even if char does not exist, a box will be rendered
+	
+	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
+	if (error)
+	    throw_MagicException("Failed to load character glyph.");
+	
+	// if the glyph was a scalable format and not a bitmap, convert to bitmap
+	if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
+	{
+	    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
+	    if (error)
+	        throw_MagicException("Failed to convert glyph to bitmap.");
+	}
+	
+	FT_Bitmap& bitmap = face->glyph->bitmap;
+	Image charImage(bitmap.width, bitmap.rows, 3);
+	unsigned char* charData = charImage.getMutableRawData();
+	unsigned char* b = bitmap.buffer;
+	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
+	    throw_MagicException("font glyph bitmap is in wrong format." );
+	for (int y=0; y < bitmap.rows; y++)
+	{
+	    for (int x=0; x < bitmap.width; x++)
+	    {
+	        charData[(y*bitmap.width+x)*3 + 0] = b[y*bitmap.pitch + x]; // RED
+	        charData[(y*bitmap.width+x)*3 + 1] = b[y*bitmap.pitch + x]; // GREEN
+	        charData[(y*bitmap.width+x)*3 + 2] = b[y*bitmap.pitch + x]; // BLUE
+	    }
+	}
+	charTex = new Texture(charImage);
+        
+	//FT_Done_Face(face); // deallocate face
+	
+	//FT_Done_FreeType(library); // deallocate freetype*/
+	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
+	    ( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
+	Character q_char;
+	dejavuResource()->getMissingChar(&q_char, 20, 20);
+	font = new StaticFont(q_char);
+	for(unsigned int i=0; i < 128; i++)
+	{
+	    Character* c = new Character();
+	    dejavuResource()->getChar(c, i, 20, 20);
+	    font->setChar(c);
+	}
+	
+	charImage.clear(Color::PINK);
+	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+	charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
+	charTex = new Texture(charImage);
+	
+	
 	// init shader
 	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
     Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
@@ -236,7 +325,7 @@ void setup()
 	// init batches
 	batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
 	batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
-	batchBuilder.buildBox(&bigSphereBatch, 2, 4, 3);
+	batchBuilder.buildBox(&bigSphereBatch, 3, 3, 3);
 	batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 	    true, 15*FOOT, 12*FOOT );
 	float scale = 5.0f;
@@ -261,7 +350,7 @@ void setup()
 	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
 	groundColor.getColor(groundColorf, 3);
 	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
-	materialBuilder.setTexture(marbleTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 
 	materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
@@ -269,7 +358,7 @@ void setup()
 	materialBuilder.end();
 
 	materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
-	materialBuilder.setTexture(blueTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 
 	materialBuilder.expand(&floorMaterial, sphereMaterial);
@@ -277,7 +366,7 @@ void setup()
 	materialBuilder.end();
 
 	materialBuilder.expand(&boxMaterial, sphereMaterial);
-	materialBuilder.setTexture(brickTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 	
     // init models
@@ -334,19 +423,20 @@ void setup()
 	for (int i=0; i < chainResource()->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
 	materialBuilder.expand(&chainMaterial, sphereMaterial);
-	materialBuilder.setTexture(blueTex);
+	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
 	modelBuilder.begin(&chainModel, chainResource()->getBatchCount());
 	for(int i=0; i < chainResource()->getBatchCount(); i++)
 	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
 	modelBuilder.end();
-    TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
-        ( chainBatches, chainResource()->getBatchCount() );
-	chainObject = new Object(&chainModel, chainShape);
+    //TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
+    //    ( chainBatches, chainResource()->getBatchCount() );
+	chainObject = new Object(&chainModel/*, chainShape*/);
 	chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
 	world->addObject(chainObject);
 	
-        
+	
+	
     // set eye level
     camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
 	camera.setStepSpeed( FOOT );
@@ -427,6 +517,13 @@ void renderScene(void)
         batchBuilder.end();
         boxMesh.copyBatchIn(boxBatch);
     }
+    
+    char fps[40];
+	charImage.clear(Color::BLUE);
+	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+	sprintf(fps, "Figure: %d", world->getActualFPS() );
+	charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
+	charTex->set(charImage);
     
 }
 

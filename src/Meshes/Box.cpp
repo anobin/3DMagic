@@ -49,99 +49,127 @@ void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth
 	
 	// 6 points per side, 6 sides
 	this->begin(6*6, 3, batch);
-	
-	// top  and bottom 6 points
-	for (int i=0; i < 2; i++)
-	{   
-		float h = height;
-		float n = 1.0f;
-		if (i == 1)
-		{
-		    h = -height;
-		    n = -1.0f;
-		}
 		
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(0.0f, 0.0f);
-		vertex3f	(-width, h, -depth); // top left
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(-width, h, depth); // bottom left
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(width, h, -depth); // top right
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(-width, h, depth); // bottom left
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(width, h, -depth); // top right
-		normal3f	(0.0f, n, 0.0f);
-		texCoord2f	(1.0f, 1.0f);
-		vertex3f	(width, h, depth); // bottom right
-	}
+	// top, 6 points
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(-width, height, -depth); // top left
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, height, depth); // bottom left
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, height, depth); // bottom left
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
+    normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, height, depth); // bottom right
+    
+    // bottom, 6 points
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(-width, -height, -depth); // top left
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom left
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, -height, -depth); // top right
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom left
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, -height, -depth); // top right
+    normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(width, -height, depth); // bottom right
+
+
+    // left side, 6 points
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(-width, height, -depth); // top left
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, -height, -depth); // bottom left
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(-width, height, depth); // top right
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, -height, -depth); // bottom left
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(-width, height, depth); // top right
+    normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom right
+    
+    // right side, 6 points
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top left
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, -height, -depth); // bottom left
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, height, depth); // top right
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, -height, -depth); // bottom left
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, height, depth); // top right
+    normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(width, -height, depth); // bottom right
 	
-	// 2 sides, 6 points each
-	for (int i=0; i < 2; i++)
-	{
-		float w = -width;
-		float n = -1.0f;
-		if (i==1)
-		{
-		    w = width;
-		    n = 1.0f;
-        }
-		
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(0.0f, 0.0f);
-		vertex3f	(w, height, -depth); // top left
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(w, -height, -depth); // bottom left
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(w, height, depth); // top right
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(w, -height, -depth); // bottom left
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(w, height, depth); // top right
-		normal3f	(n, 0.0f, 0.0f);
-		texCoord2f	(1.0f, 1.0f);
-		vertex3f	(w, -height, depth); // bottom right
-	}
+	// front, 6 points
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(-width, height, -depth); // top left
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, -depth); // bottom left
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, -depth); // bottom left
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
+    normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(width, -height, -depth); // bottom right
 	
-	// front and back, 6 points each
-	for (int i=0; i < 2; i++)
-	{
-		float d = -depth;
-		float n = -1.0f;
-		if (i==1)
-		{
-		    d = depth;
-		    n = 1.0f;
-		}
-		
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(0.0f, 0.0f);
-		vertex3f	(-width, height, d); // top left
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(-width, -height, d); // bottom left
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(width, height, d); // top right
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(0.0f, 1.0f);
-		vertex3f	(-width, -height, d); // bottom left
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(1.0f, 0.0f);
-		vertex3f	(width, height, d); // top right
-		normal3f	(0.0f, 0.0f, n);
-		texCoord2f	(1.0f, 1.0f);
-		vertex3f	(width, -height, d); // bottom right
-	}
+    // back, 6 points
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(-width, height, depth); // top left
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom left
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, depth); // top right
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(0.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom left
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, depth); // top right
+    normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, -height, depth); // bottom right
 	
 	this->end();
 }

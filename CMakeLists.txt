@@ -22,6 +22,7 @@ FIND_PACKAGE(Bullet REQUIRED)
 FIND_PACKAGE(GLEW REQUIRED)
 FIND_PACKAGE(Lib3ds REQUIRED)
 FIND_PACKAGE(PNG REQUIRED)
+FIND_PACKAGE(Freetype REQUIRED)
 
 # set the global compile flags
 SET(COMPILE_FLAGS "-g -Wall") # debugging and all warnings
@@ -29,7 +30,9 @@ SET(LINK_FLAGS  "" )
 
 # set the include directories
 INCLUDE_DIRECTORIES(include ${OPENGL_INCLUDE_DIR} ${BULLET_INCLUDE_DIRS}
-    ${GLEW_INCLUDE_DIR} ${LIB3DS_INCLUDE_DIR} ${PNG_INCLUDE_DIR})
+    ${GLEW_INCLUDE_DIR} ${LIB3DS_INCLUDE_DIR} ${PNG_INCLUDE_DIR} 
+    ${FREETYPE_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS}
+    )
 
 # allow for user to select if source should be compiled for profiling with gprof
 OPTION(GPROF_COMPILE "Whether to compile for profiling using gprof" OFF)

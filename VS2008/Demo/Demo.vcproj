@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\external\include&quot;;&quot;$(ProjectDir)\..\..\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\..\external\include\freetype2&quot;;&quot;$(ProjectDir)\..\..\external\include&quot;;&quot;$(ProjectDir)\..\..\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;M3D_MATH_USE_GENERIC;NO_VERTEX_ARRAYS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="2"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib libpng15d.lib SDL.lib Opengl32.lib zdll.lib SDLmain.lib"
+				AdditionalDependencies="glew32.lib lib3ds-1_3d.lib BulletDynamics.lib BulletCollision.lib LinearMath.lib libpng15d.lib SDL.lib Opengl32.lib zdll.lib SDLmain.lib freetype.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\..\external\lib&quot;"
 				GenerateDebugInformation="true"

@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Util\Character.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Meshes\Circle2D.cpp"
 				>
 			</File>
@@ -197,6 +201,14 @@
 			</File>
 			<File
 				RelativePath="..\src\Meshes\FlatSurface.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Util\Font.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Resources\FontResource.cpp"
 				>
 			</File>
 			<File
@@ -379,6 +391,10 @@
 			</File>
 			<File
 				RelativePath="..\include\Resources\ModelResource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\Graphics\Texture.h"
 				>
 			</File>
 			<File

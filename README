@@ -39,14 +39,15 @@ shaders. 3DMagic also includes a full resource model with built-in resource
 loaders for popular model, image, and audio file formats.
 
 ## License
-All of the source code in 3DMagic is covered by the GNU Lesser General Public
-License as should be indicated by a copyright notice at the top of each source
-file. A copy of the GNU GPL is provided in the COPYING file and a copy of the 
-GNU LGPL is provided in the COPYING.LESSER file.
+All of the source code (*.h,*.cpp,*.cc files) in 3DMagic is covered by the GNU 
+Lesser General Public License as should be indicated by a copyright notice at 
+the top of each source file. A copy of the GNU General Public License is provided 
+in the COPYING file and a copy of the GNU Lesser General Public License is provided 
+in the COPYING.LESSER file.
 
-Note that although some of the demos and examples require images/textures to
-work correctly, no images/textures are provided with 3DMagic to avoid licensing
-complications.
+The truetype fonts (*.ttf files) found in 'fonts/dejavu' are under the license 
+detailed in the DEJAVU_LICENSE file; a copy of this license is also provided in the
+LICENSE file found in 'fonts/dejavu'.
 
 No license is placed on documentation, build scripts, or configuration files.
 When in doubt, try to find a copyright statement at the top of the file (if it
