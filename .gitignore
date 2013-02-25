@@ -15,3 +15,11 @@ CMakeFiles/
 *~
 /demo/sandbox
 /tags
+/external
+
+# visual studio ignores
+*.vcxproj.user
+*.v11.suo
+*.sdf
+debug/
+release/
