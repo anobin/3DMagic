@@ -21,5 +21,6 @@ CMakeFiles/
 *.vcxproj.user
 *.v11.suo
 *.sdf
+*.opensdf
 debug/
 release/
