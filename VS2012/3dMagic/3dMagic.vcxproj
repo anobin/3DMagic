@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Cameras\Camera.cpp" />
+    <ClCompile Include="..\..\src\Cameras\Camera2D.cpp" />
+    <ClCompile Include="..\..\src\Cameras\FPCamera.cpp" />
+    <ClCompile Include="..\..\src\CollisionShapes\BoxCollisionShape.cpp" />
+    <ClCompile Include="..\..\src\CollisionShapes\CollisionShape.cpp" />
+    <ClCompile Include="..\..\src\CollisionShapes\PlaneCollisionShape.cpp" />
+    <ClCompile Include="..\..\src\CollisionShapes\SphereCollisionShape.cpp" />
+    <ClCompile Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.cpp" />
+    <ClCompile Include="..\..\src\Event\Event.cpp" />
+    <ClCompile Include="..\..\src\Event\EventSystem.cpp" />
+    <ClCompile Include="..\..\src\Exceptions\MagicAssertException.cpp" />
+    <ClCompile Include="..\..\src\Exceptions\MagicException.cpp" />
+    <ClCompile Include="..\..\src\Exceptions\ResourceNotFoundException.cpp" />
+    <ClCompile Include="..\..\src\Exceptions\ShaderCompileException.cpp" />
+    <ClCompile Include="..\..\src\Exceptions\ShaderVertexInterfaceException.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Batch.cpp" />
+    <ClCompile Include="..\..\src\Graphics\BatchBuilder.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Buffer.cpp" />
+    <ClCompile Include="..\..\src\Graphics\GraphicalEntity.cpp" />
+    <ClCompile Include="..\..\src\Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Image.cpp" />
+    <ClCompile Include="..\..\src\Graphics\MaterialBuilder.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Mesh.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Model.cpp" />
+    <ClCompile Include="..\..\src\Graphics\ModelBuilder.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Texture.cpp" />
+    <ClCompile Include="..\..\src\Graphics\VertexArray.cpp" />
+    <ClCompile Include="..\..\src\Math\Generic\Matrix3.cc" />
+    <ClCompile Include="..\..\src\Math\Generic\Matrix4.cc" />
+    <ClCompile Include="..\..\src\Math\Generic\Point3.cc" />
+    <ClCompile Include="..\..\src\Math\Generic\Position.cc" />
+    <ClCompile Include="..\..\src\Math\Generic\Vector3.cc" />
+    <ClCompile Include="..\..\src\Math\IntelSIMD\Matrix3.cc" />
+    <ClCompile Include="..\..\src\Math\IntelSIMD\Matrix4.cc" />
+    <ClCompile Include="..\..\src\Math\IntelSIMD\Point3.cc" />
+    <ClCompile Include="..\..\src\Math\IntelSIMD\Position.cc" />
+    <ClCompile Include="..\..\src\Math\IntelSIMD\Vector3.cc" />
+    <ClCompile Include="..\..\src\Math\Matrix3.cpp" />
+    <ClCompile Include="..\..\src\Math\Matrix4.cpp" />
+    <ClCompile Include="..\..\src\Math\Point3.cpp" />
+    <ClCompile Include="..\..\src\Math\Position.cpp" />
+    <ClCompile Include="..\..\src\Math\Vector3.cpp" />
+    <ClCompile Include="..\..\src\Meshes\Box.cpp" />
+    <ClCompile Include="..\..\src\Meshes\Circle2D.cpp" />
+    <ClCompile Include="..\..\src\Meshes\FlatSurface.cpp" />
+    <ClCompile Include="..\..\src\Meshes\Rectangle2D.cpp" />
+    <ClCompile Include="..\..\src\Meshes\Sphere.cpp" />
+    <ClCompile Include="..\..\src\Objects\Object.cpp" />
+    <ClCompile Include="..\..\src\Physics\MotionState.cpp" />
+    <ClCompile Include="..\..\src\Physics\PhysicalBody.cpp" />
+    <ClCompile Include="..\..\src\Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="..\..\src\Resources\FontResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\fonts\TTFontResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\Image2DResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\Images\PNG2DResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\Images\TGA2DResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\ModelResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\models\Model3DSResource.cpp" />
+    <ClCompile Include="..\..\src\Resources\Resource.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="..\..\src\Resources\TextResource.cpp" />
+    <ClCompile Include="..\..\src\Shaders\Shader.cpp" />
+    <ClCompile Include="..\..\src\Util\Character.cpp" />
+    <ClCompile Include="..\..\src\Util\Color.cpp" />
+    <ClCompile Include="..\..\src\Util\Freetype_Init.cpp" />
+    <ClCompile Include="..\..\src\Util\SDL_Init.cpp" />
+    <ClCompile Include="..\..\src\Util\StaticFont.cpp" />
+    <ClCompile Include="..\..\src\World\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\3DMagic.h" />
+    <ClInclude Include="..\..\include\Cameras\Camera.h" />
+    <ClInclude Include="..\..\include\Cameras\Camera2D.h" />
+    <ClInclude Include="..\..\include\Cameras\FixedCamera.h" />
+    <ClInclude Include="..\..\include\Cameras\FlyCamera.h" />
+    <ClInclude Include="..\..\include\Cameras\FPCamera.h" />
+    <ClInclude Include="..\..\include\CollisionShapes\BoxCollisionShape.h" />
+    <ClInclude Include="..\..\include\CollisionShapes\CollisionShape.h" />
+    <ClInclude Include="..\..\include\CollisionShapes\PlaneCollisionShape.h" />
+    <ClInclude Include="..\..\include\CollisionShapes\SphereCollisionShape.h" />
+    <ClInclude Include="..\..\include\CollisionShapes\TriangleMeshCollisionShape.h" />
+    <ClInclude Include="..\..\include\Event\Event.h" />
+    <ClInclude Include="..\..\include\Event\EventSystem.h" />
+    <ClInclude Include="..\..\include\Exceptions\MagicAssertException.h" />
+    <ClInclude Include="..\..\include\Exceptions\MagicException.h" />
+    <ClInclude Include="..\..\include\Exceptions\ResourceNotFoundException.h" />
+    <ClInclude Include="..\..\include\Exceptions\ShaderCompileException.h" />
+    <ClInclude Include="..\..\include\Exceptions\ShaderVertexInterfaceException.h" />
+    <ClInclude Include="..\..\include\Graphics\Batch.h" />
+    <ClInclude Include="..\..\include\Graphics\BatchBuilder.h" />
+    <ClInclude Include="..\..\include\Graphics\Buffer.h" />
+    <ClInclude Include="..\..\include\Graphics\GraphicalEntity.h" />
+    <ClInclude Include="..\..\include\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="..\..\include\Graphics\Image.h" />
+    <ClInclude Include="..\..\include\Graphics\Material.h" />
+    <ClInclude Include="..\..\include\Graphics\MaterialBuilder.h" />
+    <ClInclude Include="..\..\include\Graphics\Mesh.h" />
+    <ClInclude Include="..\..\include\Graphics\Model.h" />
+    <ClInclude Include="..\..\include\Graphics\ModelBuilder.h" />
+    <ClInclude Include="..\..\include\Graphics\Texture.h" />
+    <ClInclude Include="..\..\include\Graphics\VertexArray.h" />
+    <ClInclude Include="..\..\include\Lights\Light.h" />
+    <ClInclude Include="..\..\include\Math\Generic\MathTypes.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Matrix3.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Matrix4.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Point2.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Point3.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Point4.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Position.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Vector2.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Vector3.h" />
+    <ClInclude Include="..\..\include\Math\Generic\Vector4.h" />
+    <ClInclude Include="..\..\include\Math\Intel\MathTypes.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Matrix3.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Matrix4.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Point2.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Point3.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Point4.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Position.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Vector2.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Vector3.h" />
+    <ClInclude Include="..\..\include\Math\Intel\Vector4.h" />
+    <ClInclude Include="..\..\include\Math\Math.h" />
+    <ClInclude Include="..\..\include\Math\MathTypes.h" />
+    <ClInclude Include="..\..\include\Math\Matrix3.h" />
+    <ClInclude Include="..\..\include\Math\Matrix4.h" />
+    <ClInclude Include="..\..\include\Math\Point2.h" />
+    <ClInclude Include="..\..\include\Math\Point3.h" />
+    <ClInclude Include="..\..\include\Math\Point4.h" />
+    <ClInclude Include="..\..\include\Math\Position.h" />
+    <ClInclude Include="..\..\include\Math\Vector2.h" />
+    <ClInclude Include="..\..\include\Math\Vector3.h" />
+    <ClInclude Include="..\..\include\Math\Vector4.h" />
+    <ClInclude Include="..\..\include\Objects\Object.h" />
+    <ClInclude Include="..\..\include\Physics\MotionState.h" />
+    <ClInclude Include="..\..\include\Physics\PhysicalBody.h" />
+    <ClInclude Include="..\..\include\Physics\PhysicsSystem.h" />
+    <ClInclude Include="..\..\include\Resources\FontResource.h" />
+    <ClInclude Include="..\..\include\Resources\fonts\TTFontResource.h" />
+    <ClInclude Include="..\..\include\Resources\Handle.h" />
+    <ClInclude Include="..\..\include\Resources\Image2DResource.h" />
+    <ClInclude Include="..\..\include\Resources\Images\PNG2DResource.h" />
+    <ClInclude Include="..\..\include\Resources\Images\TGA2DResource.h" />
+    <ClInclude Include="..\..\include\Resources\ModelResource.h" />
+    <ClInclude Include="..\..\include\Resources\models\Model3DSResource.h" />
+    <ClInclude Include="..\..\include\Resources\RawResource.h" />
+    <ClInclude Include="..\..\include\Resources\Resource.h" />
+    <ClInclude Include="..\..\include\Resources\ResourceManager.h" />
+    <ClInclude Include="..\..\include\Resources\TextResource.h" />
+    <ClInclude Include="..\..\include\Shaders\Shader.h" />
+    <ClInclude Include="..\..\include\Time\StopWatch.h" />
+    <ClInclude Include="..\..\include\Util\Character.h" />
+    <ClInclude Include="..\..\include\Util\Color.h" />
+    <ClInclude Include="..\..\include\Util\Helpers.h" />
+    <ClInclude Include="..\..\include\Util\magic_assert.h" />
+    <ClInclude Include="..\..\include\Util\magic_throw.h" />
+    <ClInclude Include="..\..\include\Util\StaticFont.h" />
+    <ClInclude Include="..\..\include\Util\Types.h" />
+    <ClInclude Include="..\..\include\Util\Units.h" />
+    <ClInclude Include="..\..\include\World\World.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D31169BE-CC58-49E5-9F27-9A205BD3C2DD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>My3dMagic</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;M3D_MATH_USE_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\3DMagic\workspace\3DMagic\include;E:\3DMagic\workspace\3DMagic\external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>E:\3DMagic\workspace\3DMagic\external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;M3D_MATH_USE_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\3DMagic\workspace\3DMagic\include;E:\3DMagic\workspace\3DMagic\external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
