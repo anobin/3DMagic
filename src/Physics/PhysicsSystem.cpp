@@ -30,17 +30,14 @@ namespace Magic3D
 {
     
     
-void PhysicsSystem::init(PhysicsSystem::CollisionSolverType collision)
+void PhysicsSystem::init()
 {
      broadphase = new btDbvtBroadphase();
     collisionConfiguration = new btDefaultCollisionConfiguration();
     dispatcher = new btCollisionDispatcher(collisionConfiguration);
     solver = new btSequentialImpulseConstraintSolver;
 
-    if ( collision == PhysicsSystem::CONTINOUS_COLLISIONS )
-        dynamicsWorld = new btContinuousDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-    else
-        dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
+    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
     //dynamicsWorld->getSolverInfo().m_splitImpulse = true;
     //dynamicsWorld->getSolverInfo().m_splitImpulsePenetrationThreshold =0.0f;
     //dynamicsWorld->getSolverInfo().m_restitution = 0.8f;

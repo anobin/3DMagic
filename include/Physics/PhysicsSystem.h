@@ -40,13 +40,6 @@ class World;
  */
 class PhysicsSystem
 {
-public:
-    enum CollisionSolverType
-    {
-        DISCRETE_COLLISIONS,        // collisions can be missed for fast-moving bodies
-        CONTINOUS_COLLISIONS        // collisions aren't missed, but slower
-    };
-    
 private:
     btBroadphaseInterface* broadphase;
 	btDefaultCollisionConfiguration* collisionConfiguration;
@@ -85,7 +78,7 @@ public:
     {   
     }
 
-    void init(CollisionSolverType collision = DISCRETE_COLLISIONS);
+    void init();
     
     void deinit();
     
