@@ -79,6 +79,18 @@ public:
         return w;
     }
 
+	inline Scalar get(int i) const
+	{
+		switch(i)
+		{
+			case 0: return x;
+			case 1: return y;
+			case 2: return z;
+			case 3: return w;
+		}
+		return w;
+	}
+
     /// set the x component
     inline void setX(Scalar value)
     {
@@ -103,6 +115,17 @@ public:
         w = value;
     }
 
+	inline void set(int i, Scalar value)
+	{
+		switch(i)
+		{
+			case 0: x = value; break;
+			case 1: y = value; break;
+			case 2: z = value; break;
+			case 3: w = value; break;
+		}
+	}
+
     /// set the contents, w optional
     inline void set(Scalar x, Scalar y, Scalar z, Scalar w = 1.0)
     {
@@ -120,6 +143,8 @@ public:
         this->z = copy.z;
         this->w = copy.w;
     }
+
+	Point4 transform(const Matrix4 &m) const;
 };
 
 
