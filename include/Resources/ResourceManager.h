@@ -25,13 +25,12 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_RESOURCE_MANAGER_H
 #define MAGIC3D_RESOURCE_MANAGER_H
 
-#include "Handle.h"
 #include "Resource.h"
-#include "TextResource.h"
 #include "../Exceptions/MagicException.h"
 #include "../Exceptions/ResourceNotFoundException.h"
 #include <string>
 #include <map>
+#include <memory>
 
 
 namespace Magic3D
@@ -44,7 +43,7 @@ class ResourceManager
 {
 private:
 	/// mapping of resource names and resources
-	std::map<std::string, Resource*> resources;
+	std::map<std::string, std::weak_ptr<Resource>> resources;
 	
 	/// directory where resources are contained
 	std::string resourceDir;
@@ -52,38 +51,13 @@ private:
 	/// default constructor
 	inline ResourceManager() {}
 	
-	/// increase handle count
-	inline void acquire(const std::string& name)
-	{
-		std::map<std::string, Resource*>::iterator it = 
-			resources.find(name);
-		if (it == resources.end())
-			throw_MagicException("Tried to acquire non-existent resource");
-		it->second->handleCount += 1;
-	}
-	
-	/// decrease handle count
-	inline void release(const std::string& name)
-	{
-		std::map<std::string, Resource*>::iterator it = 
-			resources.find(name);
-		if (it == resources.end())
-			throw_MagicException("Tried to release non-existent resource");
-		it->second->handleCount -= 1;
-		if (it->second->handleCount <= 0)
-		{
-			delete it->second;
-			resources.erase(it);
-		}
-	}
-	
 public:
 	friend class Resource;
 	
 	/** Standard constructor
 	 * @param resourceDir the directory where resources are located
 	 */
-	inline ResourceManager(const char* resourceDir): resourceDir(resourceDir)
+	inline ResourceManager(std::string resourceDir): resourceDir(resourceDir)
 		{ /*intentionally left blank*/ }
 		
 	/// destructor
@@ -93,30 +67,34 @@ public:
 	 * @param name the name of the resource
 	 * @return true for exists, false otherwise
 	 */
-	bool doesResourceExist(const char* name);
+	bool doesResourceExist(std::string name);
 		
 	/** get a resource
 	 * @param name the name of the resource including any extra path info
 	 * @return handle to text resource
 	 */
 	template <class T>
-	inline Handle<T> get(const char* name)
+	inline std::shared_ptr<T> get(std::string name)
 	{
 		// check if resource is already loaded
-		std::map<std::string, Resource*>::iterator it = resources.find(name);
-		if (it != resources.end())
+		auto it = resources.find(name);
+		if (it != resources.end() && !it->second.expired())
 		{
-			// TODO: find a good way to determine if this cast is valid
-			return Handle<T>(*((T*)(*it).second));
+			std::shared_ptr<Resource> ptr = std::shared_ptr<Resource>(it->second);
+			return std::dynamic_pointer_cast<T>(ptr);
 		}
 		
-		// otherwise, create new text resource
+		// otherwise, create new resource
+
+		// make sure file exists
 		if (!this->doesResourceExist(name))
 			throw_ResourceNotFoundException(name);
-		T* r = new T((resourceDir + "/" + name).c_str(), std::string(name), *this);
-		resources.insert(std::pair<std::string, Resource*>(name, r));
-		Handle<T> h(*r);
-		return h;
+
+		// load resource
+		std::shared_ptr<T> r = std::make_shared<T>(resourceDir + "/" + name, name);
+		resources.insert(std::pair<std::string, std::weak_ptr<Resource>>(name, std::weak_ptr<T>(r)));
+
+		return r;
 	}
 	
 };

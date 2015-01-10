@@ -443,9 +443,6 @@
     <ClInclude Include="..\..\include\Resources\FontResource.h">
       <Filter>Header Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\Handle.h">
-      <Filter>Header Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Resources\Image2DResource.h">
       <Filter>Header Files\Resources</Filter>
     </ClInclude>

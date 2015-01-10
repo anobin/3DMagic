@@ -22,7 +22,7 @@ protected:
 	 * @param name the name for this resource
 	 * @param manager the manager for this resource
 	 */
-	inline ModelResource(const std::string& name, ResourceManager& manager): Resource(name, manager) {}
+	inline ModelResource(const std::string& name): Resource(name) {}
 
 
 public:

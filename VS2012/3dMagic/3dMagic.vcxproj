@@ -150,7 +150,6 @@
     <ClInclude Include="..\..\include\Physics\PhysicsSystem.h" />
     <ClInclude Include="..\..\include\Resources\FontResource.h" />
     <ClInclude Include="..\..\include\Resources\fonts\TTFontResource.h" />
-    <ClInclude Include="..\..\include\Resources\Handle.h" />
     <ClInclude Include="..\..\include\Resources\Image2DResource.h" />
     <ClInclude Include="..\..\include\Resources\Images\PNG2DResource.h" />
     <ClInclude Include="..\..\include\Resources\Images\TGA2DResource.h" />

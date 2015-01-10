@@ -38,18 +38,15 @@ class TextResource : public Resource
 protected:
 	/// text data read in from file
 	char* text;
-	
-	/// default constructor
-	//inline TextResource(): Resource() {}
-	
+
 public:
 	/** Standard constructor
 	 * @param path full path for text file to read
 	 */
-	TextResource(const char* path, const std::string& name, ResourceManager& manager);
-	
+	TextResource(const std::string& path, const std::string& name);
+
 	/// copy constructor
-	inline TextResource(const TextResource& copy): Resource(copy.name, *copy.manager), text(copy.text) {}
+	inline TextResource(const TextResource& copy): Resource(copy.name), text(copy.text) {}
 	
 	/// destructor
 	virtual ~TextResource();
@@ -59,11 +56,6 @@ public:
 	 * @return the text data as a const C string
 	 */
 	virtual const char* getText() const;
-
-	/** Clone this resource to get a copy allocated on the heap
-	 * @return copy of this resource allocated on the heap
-	 */
-	virtual Resource* clone() const;
 	
 	
 	

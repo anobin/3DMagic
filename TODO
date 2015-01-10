@@ -4,6 +4,14 @@
 - make basic math classes immutable
 - add operator overloads for basic math classes
 - add framework (base class) for demos
+- rework exception throw macros for C++11
+- change resources to build themselves from steams, not file paths
+- change builders to use cascade pattern and build objects themselves
+- generally try to remove mutation of objects, especially required mutation for basic creation
+- get rid of c strings and c methods for strings and files
+
+## fix
+- fix resource exists method to actually check if file exists
 
 ## Primary
 - integrate lua script support 

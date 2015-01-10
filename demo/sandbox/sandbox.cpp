@@ -36,8 +36,10 @@ using namespace Magic3D;
 #include <vector>
 #include <map>
 #include <list>
+#include <memory>
 using std::cout;
 using std::endl;
+using std::shared_ptr;
 
 // include freetype
 #include <ft2build.h>
@@ -187,8 +189,8 @@ void setup()
 	Image tempImage;
 	if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
 	{
-		Handle<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
-		stoneImage()->getImage(&tempImage);
+		shared_ptr<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
+		stoneImage->getImage(&tempImage);
 		stoneTex = new Texture(tempImage);
 	}
 	else
@@ -198,8 +200,8 @@ void setup()
 	}
 	if (resourceManager.doesResourceExist("images/marble.png"))
 	{
-		Handle<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
-		marbleImage()->getImage(&tempImage);
+		shared_ptr<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
+		marbleImage->getImage(&tempImage);
 		marbleTex= new Texture(tempImage);
 		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -211,14 +213,14 @@ void setup()
 	}
 	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
 	{
-		Handle<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-		bunkerImage()->getImage(&tempImage);
+		shared_ptr<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
+		bunkerImage->getImage(&tempImage);
 		bunkerTex = new Texture(tempImage);
 	}
 	if (resourceManager.doesResourceExist("images/singleBrick.tga"))
 	{
-		Handle<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
-		brickImage()->getImage(&tempImage);
+		shared_ptr<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
+		brickImage->getImage(&tempImage);
 		brickTex = new Texture(tempImage);
 		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 	}
@@ -294,15 +296,15 @@ void setup()
 	//FT_Done_Face(face); // deallocate face
 	
 	//FT_Done_FreeType(library); // deallocate freetype*/
-	Handle<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
+	shared_ptr<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
 	    ( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
 	Character q_char;
-	dejavuResource()->getMissingChar(&q_char, 20, 20);
+	dejavuResource->getMissingChar(&q_char, 20, 20);
 	font = new StaticFont(q_char);
 	for(unsigned int i=0; i < 128; i++)
 	{
 	    Character* c = new Character();
-	    dejavuResource()->getChar(c, i, 20, 20);
+	    dejavuResource->getChar(c, i, 20, 20);
 	    font->setChar(c);
 	}
 	
@@ -313,9 +315,9 @@ void setup()
 	
 	
 	// init shader
-	Handle<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
-    Handle<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
-	shader = new Shader( vp()->getText(), fp()->getText() );
+	shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
+    shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
+	shader = new Shader( vp->getText(), fp->getText() );
 	shader->bindAttrib( "vertex" );
 	shader->bindAttrib( "normal" );
 	shader->bindAttrib( "texcoord0" );
@@ -410,23 +412,23 @@ void setup()
 	}
 	
 	// 3ds model
-	Handle<Model3DSResource> chainResource = resourceManager.get
+	shared_ptr<Model3DSResource> chainResource = resourceManager.get
 	    <Model3DSResource>("models/chainLink.3ds");
-	chainBatches = new Batch[chainResource()->getBatchCount()];
-	chainMeshes = new Mesh[chainResource()->getBatchCount()];
+	chainBatches = new Batch[chainResource->getBatchCount()];
+	chainMeshes = new Mesh[chainResource->getBatchCount()];
 	Matrix4 m;
 	Matrix4 temp;
 	m.createScaleMatrix(0.1, 0.1, 0.1);
 	temp.createRotationMatrix(-90.0f/180.0f*M_PI, 1,0,0 );
 	m.multiply(temp);
-	chainResource()->getAllBatches(chainBatches, m);
-	for (int i=0; i < chainResource()->getBatchCount(); i++)
+	chainResource->getAllBatches(chainBatches, m);
+	for (int i=0; i < chainResource->getBatchCount(); i++)
 	    chainMeshes[i].copyBatchIn(chainBatches[i]);
 	materialBuilder.expand(&chainMaterial, sphereMaterial);
 	materialBuilder.setTexture(charTex);
 	materialBuilder.end();
-	modelBuilder.begin(&chainModel, chainResource()->getBatchCount());
-	for(int i=0; i < chainResource()->getBatchCount(); i++)
+	modelBuilder.begin(&chainModel, chainResource->getBatchCount());
+	for(int i=0; i < chainResource->getBatchCount(); i++)
 	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
 	modelBuilder.end();
     //TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape

@@ -43,13 +43,13 @@ namespace Magic3D
  * @param name name of the resource
  * @param manager the resource manager
  */
-PNG2DResource::PNG2DResource(const char* path, const std::string& name, ResourceManager& manager):
-	Image2DResource(name, manager)
+PNG2DResource::PNG2DResource(const std::string& path, const std::string& name):
+	Image2DResource(name)
 {
 	png_byte signiture [8];
 	
     // open the file given, in binary mode
-    this->fp = fopen(path, "rb");
+	this->fp = fopen(path.c_str(), "rb");
     if (!fp)
         throw_MagicException( "Could not open PNG 2D resource file" );
     

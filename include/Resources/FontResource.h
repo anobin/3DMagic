@@ -38,8 +38,7 @@ class FontResource : public Resource
 protected:
 	
 	/// standard constructor
-	inline FontResource(const std::string& name, ResourceManager& manager):
-		Resource(name, manager) {}
+	inline FontResource(const std::string& name): Resource(name) {}
 		
 public:
 	/// destructor

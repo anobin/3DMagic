@@ -54,10 +54,9 @@ public:
 	/** Standard constructor
 	 * @param path full path to TGA image
 	 * @param name name of the resource
-	 * @param manager the resource manager
 	 */
-	TGA2DResource(const char* path, const std::string& name, ResourceManager& manager);
-	
+	TGA2DResource(const std::string& path, const std::string& name);
+
 	/// destructor
 	virtual ~TGA2DResource();
 

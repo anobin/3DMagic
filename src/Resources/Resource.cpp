@@ -35,36 +35,6 @@ Resource::~Resource()
 }
 	
 	
-/// increase handle count
-void Resource::acquire()
-{
-	manager->acquire(name);
-}
-	
-/// decrease handle count
-void Resource::release()
-{
-	manager->release(name);
-	// this point may be null after the above call
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

@@ -34,7 +34,7 @@ namespace Magic3D
 /** Standard constructor
  * @param path full path for text file to read
  */
-TextResource::TextResource(const char* path, const std::string& name, ResourceManager& manager): Resource(name, manager)
+TextResource::TextResource(const std::string& path, const std::string& name): Resource(name)
 {
 	std::ifstream file;
 	file.open (path, std::ios::binary );
@@ -71,14 +71,6 @@ TextResource::~TextResource()
 const char* TextResource::getText() const
 {
 	return this->text;
-}
-
-/** Clone this resource to get a copy allocated on the heap
- * @return copy of this resource allocated on the heap
- */
-Resource* TextResource::clone() const
-{
-	return new TextResource(*this);
 }
 	
 	

@@ -53,10 +53,9 @@ public:
 	/** Standard constructor
 	 * @param path full path to PNG image
 	 * @param name name of the resource
-	 * @param manager the resource manager
 	 */
-	PNG2DResource(const char* path, const std::string& name, ResourceManager& manager);
-	
+	PNG2DResource(const std::string& path, const std::string& name);
+
 	/// destructor
 	virtual ~PNG2DResource();
 

@@ -45,10 +45,9 @@ protected:
     void getGlyph(Character* c, int glyphIndex, int width, int height) const;
 		
 public:
-    /// standard constructor
-    TTFontResource(const char* path, const std::string& name, ResourceManager& manager);
-    
-    
+	/// standard constructor
+    TTFontResource(const std::string& path, const std::string& name);
+
 	/// destructor
 	virtual ~TTFontResource();
 	

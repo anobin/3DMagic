@@ -32,8 +32,8 @@ extern int init_Freetype(FT_Library* library);
 extern void quit_Freetype();
     
 /// standard constructor
-TTFontResource::TTFontResource(const char* path, const std::string& name, ResourceManager& manager):
-    FontResource(name, manager), face(NULL)
+TTFontResource::TTFontResource(const std::string& path, const std::string& name):
+    FontResource(name), face(NULL)
 {
     // we need freetype library
     FT_Library library;
@@ -42,7 +42,7 @@ TTFontResource::TTFontResource(const char* path, const std::string& name, Resour
         throw_MagicException("Failed to initalize freetype library");
     
     // create face for this font
-    error = FT_New_Face(library, path,
+	error = FT_New_Face(library, path.c_str(),
 	    0, // only want face index 0, some fonts have more than 1 index 
 	    &this->face );
 	if ( error == FT_Err_Unknown_File_Format ) 

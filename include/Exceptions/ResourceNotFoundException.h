@@ -48,7 +48,7 @@ public:
 	 * @param file the file the error occurred in
 	 * @param line the line of the file where the error occurred
 	 */
-	ResourceNotFoundException(const char* resource, const char* file, int line);
+	ResourceNotFoundException(const std::string& resource, const char* file, int line);
 
 	/// destructor
 	virtual ~ResourceNotFoundException() throw();

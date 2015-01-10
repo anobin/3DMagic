@@ -34,17 +34,13 @@ namespace Magic3D
 /// destructor
 ResourceManager::~ResourceManager()
 {
-	// delete all resources
-	std::map<std::string, Resource*>::iterator it = this->resources.begin();
-	for (; it != resources.end(); it++)
-		delete (*it).second;
 }
 	
 /** Check if a resource exists, to be to avoid exceptions for optional resources
  * @param name the name of the resource
  * @return true for exists, false otherwise
  */
-bool ResourceManager::doesResourceExist(const char* name)
+bool ResourceManager::doesResourceExist(std::string name)
 {
 	std::ifstream test;
 	test.open((resourceDir + "/" + name).c_str());

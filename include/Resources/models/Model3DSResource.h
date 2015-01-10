@@ -28,9 +28,8 @@ public:
 	/** Standard constructor
 	 * @param path the full path to the resource
 	 * @param name the name for the resource
-	 * @param manager the manager for the resource
 	 */
-	Model3DSResource(const char* path, const std::string& name, ResourceManager& manager);
+	Model3DSResource(const std::string& path, const std::string& name);
 
 	/// destructor
 	virtual ~Model3DSResource();

@@ -28,43 +28,23 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Magic3D
 {
-
-class ResourceManager;
-template <class T> class Handle;
 	
 /** base class for all resources
  */
 class Resource
 {	
 private:
-	/// default constructor
-	inline Resource(): name(NULL), handleCount(0) {}
+	/// default constructor, can't be used
+	inline Resource(): name(NULL) {}
 
 protected:
 	/// the name of this resource
 	std::string name;
 	
-	/// reference to resource manager
-	ResourceManager* manager;
-	
-	/// handle count, managed by resource manager
-	int handleCount;
-	
 	/// standard constructor
-	inline Resource(const std::string& name, ResourceManager& manager): name(name), manager(&manager), handleCount(0) {}
-	
-	/// increase handle count
-	void acquire();
-	
-	/// decrease handle count
-	void release();
-	
-	
+	inline Resource(const std::string& name): name(name) {}
 
-public:
-	friend class ResourceManager;
-	template <class T> friend class Handle;
-	
+public:	
 	/// destructor
 	virtual ~Resource();
 	

@@ -18,10 +18,10 @@ namespace Magic3D
  * @param name the name for the resource
  * @param manager the manager for the resource
  */
-Model3DSResource::Model3DSResource(const char* path, const std::string& name, ResourceManager& manager):
-	ModelResource(name, manager), file(NULL), batchCount(0)
+Model3DSResource::Model3DSResource(const std::string& path, const std::string& name):
+	ModelResource(name), file(NULL), batchCount(0)
 {
-	file = lib3ds_file_load(path);
+	file = lib3ds_file_load(path.c_str());
 	if (!file)
 		throw_MagicException("Could not load model file");
 	

@@ -35,7 +35,7 @@ namespace Magic3D
  * @param file the file the error occurred in
  * @param line the line of the file where the error occurred
  */
-ResourceNotFoundException::ResourceNotFoundException(const char* resource, const char* file, int line): 
+ResourceNotFoundException::ResourceNotFoundException(const std::string& resource, const char* file, int line): 
 	missingResource(resource)
 {
 	std::ostringstream s;

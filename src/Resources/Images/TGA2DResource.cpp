@@ -68,11 +68,11 @@ typedef struct
  * @param name name of the resource
  * @param manager the resource manager
  */
-TGA2DResource::TGA2DResource(const char* path, const std::string& name, ResourceManager& manager):
-	Image2DResource(name, manager)
+TGA2DResource::TGA2DResource(const std::string& path, const std::string& name):
+	Image2DResource(name)
 {
     // Attempt to open the file
-    pFile = fopen(path, "rb");
+    pFile = fopen(path.c_str(), "rb");
     if(pFile == NULL)
         throw_ResourceNotFoundException("Could not find TGA image file");
 }

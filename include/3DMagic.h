@@ -51,7 +51,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Time/StopWatch.h"
 
 // resources
-#include "Resources/Handle.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceManager.h"
 #include "Resources/TextResource.h"
