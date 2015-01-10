@@ -41,6 +41,7 @@
     <ClCompile Include="..\..\src\Math\Generic\Matrix3.cc" />
     <ClCompile Include="..\..\src\Math\Generic\Matrix4.cc" />
     <ClCompile Include="..\..\src\Math\Generic\Point3.cc" />
+    <ClCompile Include="..\..\src\Math\Generic\Point4.cc" />
     <ClCompile Include="..\..\src\Math\Generic\Position.cc" />
     <ClCompile Include="..\..\src\Math\Generic\Vector3.cc" />
     <ClCompile Include="..\..\src\Math\IntelSIMD\Matrix3.cc" />

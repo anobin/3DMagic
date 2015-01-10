@@ -330,6 +330,9 @@
     <ClCompile Include="..\..\src\Graphics\MaterialBuilder.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Math\Generic\Point4.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\3DMagic.h">
