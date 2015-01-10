@@ -59,6 +59,12 @@ public:
     inline Position(Scalar x, Scalar y, Scalar z): location(x,y,z), 
         forward(0,0,-1), up(0,1,0) {}
 
+	inline Position(const Point3& location, const Vector3& forward): location(location),
+		forward(forward)
+	{
+		this->normalize(); // normalize to set the correct up vector
+	}
+
     /// copy constructor
     inline Position(const Position &copy): location(copy.location),
         forward(copy.forward), up(copy.up) {}
@@ -76,6 +82,11 @@ public:
 
     /// get location
     inline Point3 &getLocation() {return location;}
+
+	inline void setLocation(const Point3& location) 
+	{
+		this->location = location;
+	}
 
     /// get forward vector
     inline const Vector3 &getForwardVector() const {return forward;}
