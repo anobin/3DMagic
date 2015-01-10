@@ -117,6 +117,15 @@ public:
         this->z += z;
     }
 
+	inline Point3 translate(const Vector3& direction, Scalar distance) const
+	{
+		return Point3(
+			this->x + (direction.getX() * distance),
+			this->y + (direction.getY() * distance),
+			this->z + (direction.getZ() * distance)
+		);
+	}
+
     /// get the distance to another point
     inline Scalar getDistance(const Point3 &p) const
     {
@@ -129,6 +138,12 @@ public:
         tmp[2] *= tmp[2];
         return sqrt(tmp[0] + tmp[1] + tmp[2]);
     }
+
+	// get unit vector towards another point
+	inline Vector3 getVectorTowards(const Point3& p) const
+	{
+		return Vector3(p.x-this->x, p.y-this->y, p.z-this->z);
+	}
     
     /// transform this point using a matrix
     void transform(const Matrix4 &m);
