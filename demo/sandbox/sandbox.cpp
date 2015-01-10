@@ -49,7 +49,7 @@ using std::endl;
 Matrix4 projectionMatrix;
 
 // resource manager
-ResourceManager resourceManager("../../");
+ResourceManager resourceManager("../../../../");
 
 // textures
 Texture* stoneTex = NULL;
