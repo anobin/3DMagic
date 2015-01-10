@@ -128,6 +128,14 @@ public:
 
     /// extract the rotational component out of this matrix
     void extractRotation(Matrix3& out);
+
+	Matrix4 inverse() const;
+
+	Scalar determinant() const;
+
+	Matrix4 transpose() const;
+
+	Matrix4 cofactor() const;
 };
 
 

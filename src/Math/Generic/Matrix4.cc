@@ -210,8 +210,123 @@ void Matrix4::extractRotation(Matrix3& out)
 }
 
 
+Matrix4 Matrix4::inverse() const
+{
+	Matrix4 inverse;
+
+	Matrix4 adjoint = this->cofactor().transpose();
+	Scalar determinat = this->determinant();
+
+	int r = 4;
+	for (int i=0; i < r; i++)
+	{
+		for (int j=0; j < r; j++)
+		{
+			inverse.set(i, j, adjoint.get(i, j) / determinat);
+		}
+	}
+
+	return inverse;
+}
+
+Scalar determinant_r(const Scalar a[4][4], Scalar size)
+{
+	Scalar s=1, det=0, minor[4][4];
+
+	if (size==1)
+    {
+     return (a[0][0]);
+    }
+	else
+	{
+		for (int c=0; c < size; c++)
+		{
+			int m=0;
+			int n=0;
+			for (int i=0; i < size; i++)
+			{
+				for (int j=0; j < size; j++)
+				{
+					minor[i][j]=0;
+					if (i != 0 && j != c)
+					{
+						minor[m][n] = a[i][j];
+						if (n < (size-2))
+							n++;
+						else
+						{
+							n=0;
+							m++;
+						}
+					}
+				}
+			}
+			det= det + s * (a[0][c] * determinant_r(minor, size-1));
+			s=-1 * s;
+		}
+	}
+ 
+	return det;
+}
+
+Scalar Matrix4::determinant() const
+{
+	return determinant_r((const Scalar(*)[4])this->data, 4);
+}
+ 
+Matrix4 Matrix4::cofactor() const
+{
+	int f = 4;
+
+	Matrix4 b;
+	Matrix4 fac;
+
+	for (int q=0; q<f; q++)
+	{
+		for (int p=0; p<f; p++)
+		{
+			int m=0;
+			int n=0;
+			for (int i=0; i<f; i++)
+			{
+				for (int j=0; j<f; j++)
+				{
+					if (i != q && j != p)
+					{
+						b.set(m, n, this->get(i, j));
+						if (n < (f-2))
+							n++;
+						else
+						{
+							n=0;
+							m++;
+						}
+					}
+				}
+			}
+			fac.set(q, p, pow((Scalar)-1, (Scalar)q + p) * b.determinant());
+		}
+	}
+
+	return fac;
+}
 
 
+Matrix4 Matrix4::transpose() const
+{
+	int r = 4;
+	Matrix4 transpose;
+ 
+	for (unsigned int i=0; i < r; i++)
+	{
+		for (unsigned int j=0; j < r; j++)
+		{
+			transpose.set(i, j, this->get(j, i));
+		}
+	}
+
+	return transpose;
+}
 
 
 
