@@ -1,4 +1,16 @@
+## Refactor
+- flesh out ray test method
+- update parts of code for C++11
+- make basic math classes immutable
+- add operator overloads for basic math classes
+- add framework (base class) for demos
+
 ## Primary
+- integrate lua script support 
+    - add lua inline console support to demo framework
+- integrate crosshairs into demo framework
+- add free picking support
+- add support for physics explosions and other force generating events
 - add support for custom named vertex attributes
 - add more advanced lights interface to World
 - move wireframe mode to Graphics System
