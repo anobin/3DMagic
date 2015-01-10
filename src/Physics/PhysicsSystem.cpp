@@ -62,7 +62,31 @@ void PhysicsSystem::deinit()
     delete dynamicsWorld;
 }
     
-    
+
+btVector3 createBtVector(const Point3& inputVector)
+{
+	return btVector3(inputVector.getX(), inputVector.getY(), inputVector.getZ());
+}
+
+Point3 createPoint(const btVector3& inputVector)
+{
+	return Point3(inputVector.getX(), inputVector.getY(), inputVector.getZ());
+}
+
+// TODO: return a complex ray object, not just a hitpoint
+Point3 PhysicsSystem::createRay(const Point3& startPoint, const Vector3& direction, Scalar maxLength) const
+{
+	btVector3 start = createBtVector(startPoint);
+	btVector3 end = createBtVector(startPoint.translate(direction, maxLength));
+
+	btCollisionWorld::ClosestRayResultCallback result(start, end); 
+	this->dynamicsWorld->rayTest(start, end, result);
+
+	if (!result.hasHit())
+		return startPoint.translate(direction, maxLength);
+
+	return createPoint(result.m_hitPointWorld);
+}
     
     
     

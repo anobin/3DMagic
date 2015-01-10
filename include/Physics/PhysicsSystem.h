@@ -92,6 +92,8 @@ public:
         dynamicsWorld->addConstraint( c );
     }
 
+	Point3 createRay(const Point3& start, const Vector3& direction, Scalar maxLength) const;
+
 };
 
 
