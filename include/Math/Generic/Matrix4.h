@@ -29,7 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "MathTypes.h"
 
 // for Vector4 and Matrix3
-#include "Vector4.h"
+#include "Vector.h"
 #include "Matrix3.h"
 
 // for a lot of stuff
@@ -85,19 +85,21 @@ public:
     /// set a column
     inline void setColumn(unsigned int col, const Vector4 &v)
     {
-        data[col*4  ] = v.getX();
-        data[col*4+1] = v.getY();
-        data[col*4+2] = v.getZ();
-        data[col*4+3] = v.getW();
+        data[col*4  ] = v.x();
+        data[col*4+1] = v.y();
+        data[col*4+2] = v.z();
+        data[col*4+3] = v.w();
     }
 
     /// get a column
-    inline void getColumn(unsigned int col, Vector4& out) const
+    inline Vector4 getColumn(unsigned int col) const
     {
-        out.setX(data[col*4  ]);
-        out.setY(data[col*4+1]);
-        out.setZ(data[col*4+2]);
-        out.setW(data[col*4+3]);
+        return Vector4(
+			data[col*4  ],
+			data[col*4+1],
+			data[col*4+2],
+			data[col*4+3]
+		);
     }
     
     inline const Scalar* getArray() const

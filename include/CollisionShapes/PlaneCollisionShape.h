@@ -49,7 +49,7 @@ protected:
 public:
     /// default constructor
     inline PlaneCollisionShape(const Vector3& normal ): 
-        shape( btVector3(normal.getX(), normal.getY(), normal.getZ()), 0 ) {}
+        shape( btVector3(normal.x(), normal.y(), normal.z()), 0 ) {}
     
     /// destructor
     virtual ~PlaneCollisionShape();

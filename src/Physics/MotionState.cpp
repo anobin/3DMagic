@@ -50,27 +50,26 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
 	// major, we have to do some converting
     
 	btMatrix3x3 matrix;
-    Vector3 xAxis;
-    this->position->getLocalXAxis(xAxis);
+    Vector3 xAxis = this->position->getLocalXAxis();
     Vector3& up = this->position->getUpVector();
     Vector3& forward = this->position->getForwardVector();
 
     matrix.setValue (
     
         // fill in x axis, first column
-        xAxis.getX(),
-        xAxis.getY(),
-        xAxis.getZ(),
+        xAxis.x(),
+        xAxis.y(),
+        xAxis.z(),
         
         // fill in y axis, second column
-        up.getX(),
-        up.getY(),
-        up.getZ(),
+        up.x(),
+        up.y(),
+        up.z(),
                                 
         // fill in z axis, thrid column
-        forward.getX(),
-        forward.getY(),
-        forward.getZ()
+        forward.x(),
+        forward.y(),
+        forward.z()
     
     );
 	worldTrans.setBasis(matrix);
@@ -83,26 +82,17 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
  */
 void MotionState::setWorldTransform (const btTransform &worldTrans)
 {
-	// set the location/origin
 	const btVector3& location = worldTrans.getOrigin();
-	this->position->getLocation().set(location.getX(), location.getY(), location.getZ());
-	
-    
-	// set the basis/rotational matrix
 	const btMatrix3x3& matrix = worldTrans.getBasis();
-    
-    btVector3 upV = matrix.getColumn(1);
-    btVector3 forwardV = matrix.getColumn(2);
-        
-    // adjust y axis/up vector
-    this->position->getUpVector().set(upV.getX(), upV.getY(), upV.getZ());
-                            
-    // adjust z axis/forward vector
-    this->position->getForwardVector().set(forwardV.getX(), forwardV.getY(), forwardV.getZ());
-    
-    // normalize for good measure
-    this->position->getUpVector().normalize();
-    this->position->getForwardVector().normalize();
+	btVector3 upV = matrix.getColumn(1);
+    btVector3 forwardV = matrix.getColumn(2);                           
+
+	// TODO: clean this up, no need to use 
+	(*this->position) = Position(
+		Point3(location.getX(), location.getY(), location.getZ()),
+		Vector3(forwardV.getX(), forwardV.getY(), forwardV.getZ()),
+		Vector3(upV.getX(), upV.getY(), upV.getZ())
+	);
 }
 	
 	

@@ -24,6 +24,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <3DMagic.h>
 using namespace Magic3D;
 
+// test
+#include <Math/Generic/Vector.h>
+
 // SDL includes
 #include <SDL/SDL.h>
 
@@ -768,8 +771,8 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			t = new Object(&sphereModel, &sphereShape, prop);
 			t->setPosition(p);
 			world->addObject(t);
-			t->getPhysical()->applyForce(Vector3(p.getForwardVector().getX()*speed, 
-		        p.getForwardVector().getY()*speed, p.getForwardVector().getZ()*speed) );
+			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
+		        p.getForwardVector().y()*speed, p.getForwardVector().z()*speed) );
 			break;
 			
 		case Event::MIDDLE: 

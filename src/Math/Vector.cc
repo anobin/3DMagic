@@ -1,5 +1,5 @@
 /* 
-Copyright (c) 2011 Andrew Keating
+Copyright (c) 2015 Andrew Keating
 
 This file is part of 3DMagic.
 
@@ -17,27 +17,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Top-level include file for Math Interface
- *
- * @file Math.h
- * @author Andrew Keating
- */
-#ifndef MAGIC3D_MATH_H
-#define MAGIC3D_MATH_H
+
+// generic (portable) implementation
+#ifdef M3D_MATH_USE_GENERIC
+#include "Generic/Vector.cc"
 
 
-#include "MathTypes.h"
-// vector types
-#include "Vector.h"
-// point types
-#include "Point2.h"
-#include "Point3.h"
-#include "Point4.h"
-// matrix types
-#include "Matrix3.h"
-#include "Matrix4.h"
-// 3d position, using location, up and forward vectors
-#include "Position.h"
+// intel processors only implementation
+#elif defined(M3D_MATH_USE_INTEL)
+#include "IntelSIMD/Vector.cc"
 
 
-#endif
+// nothing is selected, not valid for math interface
+#else
+#error "No Math Implementation is selected"
+
+
+#endif // end of selector branch

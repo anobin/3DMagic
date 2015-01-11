@@ -30,25 +30,24 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 void Position::getTransformMatrix(Matrix4& out) const
 {
     // get local x axis
-    Vector3 xAxis;
-    xAxis.crossProduct(up, forward);
+    Vector3 xAxis = up.crossProduct(forward);
 
     // fill in x axis, first column
-    out.set(0,0,xAxis.getX());
-    out.set(0,1,xAxis.getY());
-    out.set(0,2,xAxis.getZ());
+    out.set(0,0,xAxis.x());
+    out.set(0,1,xAxis.y());
+    out.set(0,2,xAxis.z());
     out.set(0,3,0.0f);
     
     // fill in y axis, second column
-    out.set(1,0,up.getX());
-    out.set(1,1,up.getY());
-    out.set(1,2,up.getZ());
+    out.set(1,0,up.x());
+    out.set(1,1,up.y());
+    out.set(1,2,up.z());
     out.set(1,3,0.0f);       
                             
     // fill in z axis, thrid column
-    out.set(2,0,forward.getX());
-    out.set(2,1,forward.getY());
-    out.set(2,2,forward.getZ());
+    out.set(2,0,forward.x());
+    out.set(2,1,forward.y());
+    out.set(2,2,forward.z());
     out.set(2,3,0.0f);
 
     // fill in translation, fourth column
@@ -62,48 +61,46 @@ void Position::getTransformMatrix(Matrix4& out) const
 void Position::getRotationMatrix(Matrix3& out) const
 {
     // get local x axis
-    Vector3 xAxis;
-    xAxis.crossProduct(up, forward);
+    Vector3 xAxis = up.crossProduct(forward);
 
     // fill in x axis, first column
-    out.set(0,0,xAxis.getX());
-    out.set(0,1,xAxis.getY());
-    out.set(0,2,xAxis.getZ());
+    out.set(0,0,xAxis.x());
+    out.set(0,1,xAxis.y());
+    out.set(0,2,xAxis.z());
     
     // fill in y axis, second column
-    out.set(1,0,up.getX());
-    out.set(1,1,up.getY());
-    out.set(1,2,up.getZ());
+    out.set(1,0,up.x());
+    out.set(1,1,up.y());
+    out.set(1,2,up.z());
                             
     // fill in z axis, thrid column
-    out.set(2,0,forward.getX());
-    out.set(2,1,forward.getY());
-    out.set(2,2,forward.getZ());
+    out.set(2,0,forward.x());
+    out.set(2,1,forward.y());
+    out.set(2,2,forward.z());
 }
 
 /// get a matrix that can be used to move objects around the camera
 void Position::getCameraMatrix(Matrix4& out) const
 {
     // z is reversed
-    Vector3 z(-forward.getX(), -forward.getY(), -forward.getZ());
+    Vector3 z(-forward.x(), -forward.y(), -forward.z());
 
     // get x vector
-    Vector3 x;
-    x.crossProduct(up, z);
+    Vector3 x = up.crossProduct(z);
 
     // matrix is transposed (rows instead of columns)
     #define MAGIC3D_A(row,col,value)  out.set(col,row,value)
-        MAGIC3D_A(0, 0, x.getX());
-        MAGIC3D_A(0, 1, x.getY());
-        MAGIC3D_A(0, 2 ,x.getZ());
+        MAGIC3D_A(0, 0, x.x());
+        MAGIC3D_A(0, 1, x.y());
+        MAGIC3D_A(0, 2 ,x.z());
         MAGIC3D_A(0, 3, 0.0);
-        MAGIC3D_A(1, 0, up.getX());
-        MAGIC3D_A(1, 1, up.getY());
-        MAGIC3D_A(1, 2, up.getZ());
+        MAGIC3D_A(1, 0, up.x());
+        MAGIC3D_A(1, 1, up.y());
+        MAGIC3D_A(1, 2, up.z());
         MAGIC3D_A(1, 3, 0.0);
-        MAGIC3D_A(2, 0, z.getX());
-        MAGIC3D_A(2, 1, z.getY());
-        MAGIC3D_A(2, 2, z.getZ());
+        MAGIC3D_A(2, 0, z.x());
+        MAGIC3D_A(2, 1, z.y());
+        MAGIC3D_A(2, 2, z.z());
         MAGIC3D_A(2, 3, 0.0);
         MAGIC3D_A(3, 0, 0.0);
         MAGIC3D_A(3, 1, 0.0);
@@ -122,13 +119,13 @@ void Position::rotate(Scalar angle, const Vector3 &axis)
 {
     // create rotation matrix
     Matrix4 rotMat;
-    rotMat.createRotationMatrix(angle, axis.getX(), axis.getY(), axis.getZ());
+    rotMat.createRotationMatrix(angle, axis.x(), axis.y(), axis.z());
 
     // transform the up vector
-    up.transform(rotMat);
+    up = up.transform(rotMat);
 
     // transform the forward vector
-    forward.transform(rotMat);
+    forward = forward.transform(rotMat);
 }
 
 /// rotate this position in local coordinates
@@ -137,8 +134,7 @@ void Position::rotateLocal(Scalar angle, const Vector3 &axis)
     // transform the rotation axis to world coordinates
     Matrix3 rotMat;
     this->getRotationMatrix(rotMat);
-    Vector3 worldAxis(axis);
-    worldAxis.rotate(rotMat);
+    Vector3 worldAxis = axis.rotate(rotMat);
     
     // perform rotation
     this->rotate(angle, worldAxis);
@@ -150,15 +146,14 @@ void Position::normalize()
     // we normalize in reference to the forward vector
     
     // get x axis
-    Vector3 cross;
-    cross.crossProduct(up, forward);
+    Vector3 cross = forward.crossProduct(up);
     
     // recalculate up vector
-    up.crossProduct(cross, forward);
+    up = cross.crossProduct(forward);
     
     // normalize both vectors too
-    up.normalize();
-    forward.normalize();
+    up = up.normalize();
+    forward = forward.normalize();
 }
 
 

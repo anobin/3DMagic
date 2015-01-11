@@ -123,8 +123,8 @@ public:
 	inline void applyForce(Vector3 force, Vector3 origin = Vector3(0.0f,0.0f,0.0f))
     {
         body->applyForce(
-            btVector3(force.getX(), force.getY(), force.getZ()), 
-            btVector3(origin.getX(), origin.getY(), origin.getZ())
+            btVector3(force.x(), force.y(), force.z()), 
+            btVector3(origin.x(), origin.y(), origin.z())
         );
     }
 	

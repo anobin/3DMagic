@@ -45,7 +45,7 @@ const Position& FPCamera::getPosition() const
  void FPCamera::panView(float x, float y)
 {
     // rotate on Y-axis (around X-axis)
-    // rotate with rederence to local coords
+    // rotate with reference to local coords
     position.rotateLocal(y / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
 
     // check Y-axis bounds
@@ -53,9 +53,9 @@ const Position& FPCamera::getPosition() const
     Vector3& up = position.getUpVector();
     // enforce bounds by never allowing the up (Y-axis) vector to go negative
     // correct one degree at time
-    while (up.getY() < 0)
+    while (up.y() < 0)
     {
-        if (forward.getY() > 0)
+        if (forward.y() > 0)
             position.rotateLocal(1.0f / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
         else
             position.rotateLocal(-1.0f / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
@@ -66,7 +66,7 @@ const Position& FPCamera::getPosition() const
     position.rotate(x * (((float)M_PI) / 180.0f), Vector3(0.0f, 1.0f, 0.0f));
     Matrix4 rotMat;
     rotMat.createRotationMatrix(x * (((float)M_PI) / 180.0f), 0, 1, 0);
-    facing.transform(rotMat); 
+    facing = facing.transform(rotMat); 
 }
     
 
@@ -79,27 +79,27 @@ void FPCamera::lookat( const Point3& point )
     
     // get references
     const Point3& location = position.getLocation();
-    Vector3& forward = position.getForwardVector();
-    Vector3& up = position.getUpVector();
-    Vector3 cross;
     Vector3 wUp(0,1,0);
     
     // calc new forward from location and point to look at
-    forward.setX(point.getX() - location.getX());
-    forward.setY(point.getY() - location.getY());
-    forward.setZ(point.getZ() - location.getZ());
-    forward.normalize();
+    Vector3 forward(
+		point.getX() - location.getX(),
+		point.getY() - location.getY(),
+		point.getZ() - location.getZ()
+		);
+	forward = forward.normalize();
     
     // calc cross vector from forward and world up vectors
     // this ensures that cross.y is 0
-    cross.crossProduct( wUp, forward );
-    cross.normalize();
+	Vector3 cross = wUp.crossProduct(forward).normalize();
     
     // calc new local up vector, now that the other two vectors are good
-    up.crossProduct( forward, cross );
+    Vector3 up = forward.crossProduct(cross);
     
     // use world up and our cross vector to calculate facing
-    facing.crossProduct( cross, wUp );
+    this->facing = cross.crossProduct(wUp);
+
+	this->position = Position(location, forward, up);
 }
     
     

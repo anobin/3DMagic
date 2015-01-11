@@ -35,7 +35,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Matrix3.h"
 #include "Matrix4.h"
 #include "Point3.h"
-#include "Vector3.h"
+#include "Vector.h"
 
 /** Represents a 3D position using a location and directional vectors. 
  * Note to Implementations: The inline keywords are used here as a
@@ -59,8 +59,8 @@ public:
     inline Position(Scalar x, Scalar y, Scalar z): location(x,y,z), 
         forward(0,0,-1), up(0,1,0) {}
 
-	inline Position(const Point3& location, const Vector3& forward): location(location),
-		forward(forward)
+	inline Position(const Point3& location, const Vector3& forward, 
+		const Vector3& up): location(location), forward(forward), up(up)
 	{
 		this->normalize(); // normalize to set the correct up vector
 	}
@@ -73,8 +73,8 @@ public:
     inline void set(const Position &copy)
     {
         location.set(copy.location);
-        forward.set(copy.forward);
-        up.set(copy.up);
+        forward = copy.forward;
+        up = copy.up;
     }
 
     /// get location
@@ -107,7 +107,7 @@ public:
     inline const Vector3 &getLocalYAxis() const {return up;}
 
     /// get the local x axis
-    inline void getLocalXAxis(Vector3 &x) const {return x.crossProduct(up, forward);}
+    inline Vector3 getLocalXAxis() const {return up.crossProduct(forward);}
     
     /// translate the location along the orthonormal axis in real world coordinates
     inline void translate(Scalar x, Scalar y, Scalar z)
@@ -120,13 +120,12 @@ public:
      */
     inline void translateLocal(Scalar x, Scalar y, Scalar z)
     {
-        Vector3 cross;
-        this->getLocalXAxis(cross);
+        Vector3 cross = this->getLocalXAxis();
         // translate along each of the local axis for the ammount specified
         location.translate( 
-            (cross.getX()*x) + (forward.getX()*z) + (up.getX()*y),
-            (cross.getY()*x) + (forward.getY()*z) + (up.getY()*y),
-            (cross.getZ()*x) + (forward.getZ()*z) + (up.getZ()*y)
+            (cross.x()*x) + (forward.x()*z) + (up.x()*y),
+            (cross.y()*x) + (forward.y()*z) + (up.y()*y),
+            (cross.z()*x) + (forward.z()*z) + (up.z()*y)
         );
     }
 

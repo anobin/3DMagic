@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_COLLISION_SHAPE_H
 
 
-#include "../Math/Vector3.h"
+#include "../Math/Vector.h"
 
 // include bullet physics
 #include <btBulletDynamicsCommon.h>
@@ -64,15 +64,17 @@ public:
      * represent the bounding sphere of the graphical meshes since they can be different
      * from the physical collision shape (common for efficiency reasons).
      */
-     inline void getBoundingSphere(Vector3* center, Scalar* radius)
+     inline Vector3 getBoundingSphere(Scalar* radius)
      {
          btVector3 bt_center;
          btScalar bt_radius;
          this->getShape()->getBoundingSphere(bt_center, bt_radius);
-         center->setX(bt_center.getX());
-         center->setY(bt_center.getY());
-         center->setZ(bt_center.getZ());
-         (*radius) = (Scalar)bt_radius;
+		 (*radius) = (Scalar)bt_radius;
+		 return Vector3(
+			bt_center.getX(),
+			bt_center.getY(),
+			bt_center.getZ()
+		);
      }
 
 

@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_FP_CAMERA_H
 #define MAGIC3D_FP_CAMERA_H
 
-#include "../Math/Vector3.h"
+#include "../Math/Vector.h"
 #include "../Math/Position.h"
 #include "Camera.h"
 
@@ -51,12 +51,10 @@ private:
     float strafeSpeed;
     
 public:
-    inline FPCamera(): stepSpeed(1.0f), strafeSpeed(0.5f) 
+    inline FPCamera(): stepSpeed(1.0f), strafeSpeed(0.5f), 
+		position(Point3(0,0,0), Vector3(0,0,-1), Vector3(0,1,0))
     {
-        // perfectly standing stance from beginning
-        position.getForwardVector().set(0, 0, -1);
-        position.getUpVector().set(0, 1, 0);
-        facing.set(position.getForwardVector());
+        facing = position.getForwardVector();
     }
     
     virtual ~FPCamera();
@@ -74,17 +72,16 @@ public:
     inline void step(float steps)
     {
         // we only step forward or back in the xz plane
-        position.translate(facing.getX()*(stepSpeed*steps), 0.0f, 
-            facing.getZ()*(stepSpeed*steps));
+        position.translate(facing.x()*(stepSpeed*steps), 0.0f, 
+            facing.z()*(stepSpeed*steps));
     }
     
     inline void strafe(float steps)
     {
         // we only strafe left or right in the xz plane
-        Vector3 side;
-        position.getLocalXAxis(side);
-		position.translate(side.getX()*(strafeSpeed*steps), 0.0f, 
-		    side.getZ()*(strafeSpeed*steps));
+        Vector3 side = position.getLocalXAxis();
+		position.translate(side.x()*(strafeSpeed*steps), 0.0f, 
+		    side.z()*(strafeSpeed*steps));
     }
     
     /** Pan the view around in first-person mode

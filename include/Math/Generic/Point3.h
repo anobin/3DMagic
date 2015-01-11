@@ -120,9 +120,9 @@ public:
 	inline Point3 translate(const Vector3& direction, Scalar distance) const
 	{
 		return Point3(
-			this->x + (direction.getX() * distance),
-			this->y + (direction.getY() * distance),
-			this->z + (direction.getZ() * distance)
+			this->x + (direction.x() * distance),
+			this->y + (direction.y() * distance),
+			this->z + (direction.z() * distance)
 		);
 	}
 

@@ -25,7 +25,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_CAMERA_2D_H
 #define MAGIC3D_CAMERA_2D_H
 
-#include "../Math/Vector3.h"
 #include "../Math/Position.h"
 #include "Camera.h"
 

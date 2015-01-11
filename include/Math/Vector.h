@@ -1,5 +1,5 @@
 /* 
-Copyright (c) 2011 Andrew Keating
+Copyright (c) 2015 Andrew Keating
 
 This file is part of 3DMagic.
 
@@ -17,62 +17,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Selector file for Vector3 implementation file
- *
- * @file Vector3.cpp
- * @author Andrew Keating
- */
+#ifndef MAGIC3D_VECTOR_SELECTOR_H
+#define MAGIC3D_VECTOR_SELECTOR_H
 
-
-// include the actual Vector3 based on config
 
 // generic (portable) implementation
 #ifdef M3D_MATH_USE_GENERIC
-#include "Generic/Vector3.cc"
-
+#include "Generic/Vector.h"
 
 // intel processors only implementation
 #elif defined(M3D_MATH_USE_INTEL)
-#include "IntelSIMD/Vector3.cc"
-
+#include "Intel/Vector.h" // intel implementation needs to be cleaned up
 
 // nothing is selected, not valid for math interface
 #else
 #error "No Math Implementation is selected"
 
-
 #endif // end of selector branch
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
- 
- 
- 
- 
- 
+#endif

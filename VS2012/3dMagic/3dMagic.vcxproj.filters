@@ -61,9 +61,6 @@
     <Filter Include="Source Files\Resources\models">
       <UniqueIdentifier>{0857055e-48ed-4fc3-b12f-0812bdbfbd50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Math\IntelSIMD">
-      <UniqueIdentifier>{2acb97ec-8571-40cd-9c0d-8da68e55dba3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Math\Generic">
       <UniqueIdentifier>{29a7fe45-d249-4608-8779-35c5f74431b0}</UniqueIdentifier>
     </Filter>
@@ -120,9 +117,6 @@
     </Filter>
     <Filter Include="Header Files\Math\Generic">
       <UniqueIdentifier>{1dee1307-e10b-49c2-846e-25ab389dbe2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Math\Intel">
-      <UniqueIdentifier>{801b2391-3944-47df-bdd5-d62ccba02886}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,21 +285,6 @@
     <ClCompile Include="..\..\src\Math\Position.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Math\Vector3.cpp">
-      <Filter>Source Files\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\IntelSIMD\Matrix3.cc">
-      <Filter>Source Files\Math\IntelSIMD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\IntelSIMD\Matrix4.cc">
-      <Filter>Source Files\Math\IntelSIMD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\IntelSIMD\Point3.cc">
-      <Filter>Source Files\Math\IntelSIMD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\IntelSIMD\Position.cc">
-      <Filter>Source Files\Math\IntelSIMD</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Math\Generic\Matrix3.cc">
       <Filter>Source Files\Math\Generic</Filter>
     </ClCompile>
@@ -318,12 +297,6 @@
     <ClCompile Include="..\..\src\Math\Generic\Position.cc">
       <Filter>Source Files\Math\Generic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Math\IntelSIMD\Vector3.cc">
-      <Filter>Source Files\Math\IntelSIMD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\Generic\Vector3.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Graphics\GraphicalEntity.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -332,6 +305,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Math\Generic\Point4.cc">
       <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Math\Generic\Vector.cc">
+      <Filter>Source Files\Math\Generic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Math\Vector.cc">
+      <Filter>Source Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -533,45 +512,6 @@
     <ClInclude Include="..\..\include\Math\Position.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Vector2.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Vector3.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Vector4.h">
-      <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\MathTypes.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Matrix3.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Matrix4.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Point2.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Point3.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Point4.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Position.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Vector2.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Vector3.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Math\Intel\Vector4.h">
-      <Filter>Header Files\Math\Intel</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\Math\Generic\MathTypes.h">
       <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
@@ -593,14 +533,14 @@
     <ClInclude Include="..\..\include\Math\Generic\Position.h">
       <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Vector2.h">
+    <ClInclude Include="..\..\include\Math\Generic\BaseVector.h">
       <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Vector3.h">
+    <ClInclude Include="..\..\include\Math\Generic\Vector.h">
       <Filter>Header Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Vector4.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\include\Math\Vector.h">
+      <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
