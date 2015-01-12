@@ -43,7 +43,7 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
 {
 	// set the location/origin
 	Point3& l = this->position->getLocation();
-	worldTrans.setOrigin (btVector3(l.getX(), l.getY(), l.getZ()));
+	worldTrans.setOrigin (btVector3(l.x(), l.y(), l.z()));
 	
 	// set the basis/rotational matrix
 	// since openGL matrix is column major and Bullet is row

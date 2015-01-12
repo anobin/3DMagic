@@ -8,7 +8,7 @@
 #include <string.h>
 #include <lib3ds/mesh.h>
 #include <Graphics/BatchBuilder.h>
-#include <Math/Point3.h>
+#include <Math/Point.h>
 
 namespace Magic3D
 {
@@ -66,11 +66,12 @@ void Model3DSResource::getAllBatches(Batch* batches, const Matrix4& transform) c
             Lib3dsFace * face = &mesh->faceL[cur_face];
             for(unsigned int j = 0;j < 3;j++)
             {   
-                p.setX(mesh->pointL[face->points[ j ]].pos[0]);
-                p.setY(mesh->pointL[face->points[ j ]].pos[1]);
-                p.setZ(mesh->pointL[face->points[ j ]].pos[2]);
-                p.transform(transform);
-                bb.vertex3f( p.getX(), p.getY(), p.getZ() );
+                p = Point3(
+					mesh->pointL[face->points[ j ]].pos[0],
+					mesh->pointL[face->points[ j ]].pos[1],
+					mesh->pointL[face->points[ j ]].pos[2]
+				).transform(transform);
+                bb.vertex3f( p.x(), p.y(), p.z() );
                 bb.texCoord2f( 0.0f, 0.0f );
             }
         }

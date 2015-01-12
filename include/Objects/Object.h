@@ -150,7 +150,7 @@ public:
 	/// shortcut for setting just the location
 	inline void setLocation(const Point3& location)
 	{
-	    this->position.getLocation().set(location);
+		this->position.setLocation(location);
 	    if (physical)
 	        physical->syncPositionToPhysics();
 	}

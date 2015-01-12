@@ -63,9 +63,9 @@ void PhysicsSystem::deinit()
 }
     
 
-btVector3 createBtVector(const Point3& inputVector)
+btVector3 createBtVector(const Point3& inputPoint)
 {
-	return btVector3(inputVector.getX(), inputVector.getY(), inputVector.getZ());
+	return btVector3(inputPoint.x(), inputPoint.y(), inputPoint.z());
 }
 
 Point3 createPoint(const btVector3& inputVector)

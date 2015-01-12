@@ -35,6 +35,8 @@ public:
 	inline Vector() {}
 
 	inline Vector(const Vector<size>& copy): BaseVector(copy) {}
+
+	inline Vector(const Scalar data[size]): BaseVector(data) {}
 };
 
 template<>
@@ -44,6 +46,8 @@ public:
 	inline Vector() {}
 
 	inline Vector(const Vector<2>& copy): BaseVector(copy) {}
+
+	inline Vector(const Scalar data[2]): BaseVector(data) {}
 
 	inline Vector(Scalar x, Scalar y)
 	{
@@ -66,6 +70,8 @@ public:
 	inline Vector() {}
 
 	inline Vector(const Vector<3>& copy): BaseVector(copy) {}
+
+	inline Vector(const Scalar data[3]): BaseVector(data) {}
 
 	inline Vector(Scalar x, Scalar y, Scalar z)
 	{
@@ -103,6 +109,8 @@ public:
 	inline Vector() {}
 
 	inline Vector(const Vector<4>& copy): BaseVector(copy) {}
+
+	inline Vector(const Scalar data[4]): BaseVector(data) {}
 
 	inline Vector(Scalar x, Scalar y, Scalar z, Scalar w)
 	{

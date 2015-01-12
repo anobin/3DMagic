@@ -17,70 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Point3 Generic implementation
- *
- * @file Point3.cc
- * @author Andrew Keating
- */
 
-#include <Math/Generic/Matrix4.h>
-#include <Math/Generic/Matrix3.h>
-#include <Math/Generic/Point4.h>
+// generic (portable) implementation
+#ifdef M3D_MATH_USE_GENERIC
+#include "Generic/Point.cc"
 
+// intel processors only implementation
+#elif defined(M3D_MATH_USE_INTEL)
+#include "IntelSIMD/Point.cc"
 
-
-
-/// transform this point using a matrix
-Point4 Point4::transform(const Matrix4 &m) const
-{
-    Point4 ret;
-	ret.w = 0;
-
-	for(int i=0; i < 4; i++)
-	{
-		for(int j=0; j < 4; j++)
-		{
-			ret.set(i, ret.get(i) + (m.get(i, j) * this->get(j)) );
-		}
-	}
-
-	return ret;
-}
+// nothing is selected, not valid for math interface
+#else
+#error "No Math Implementation is selected"
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // end of selector branch

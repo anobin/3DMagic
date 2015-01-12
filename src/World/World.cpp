@@ -239,10 +239,9 @@ void World::renderObjects()
                         case Material::LIGHT_LOCATION:                 // vec3
                             MAGIC_THROW(light == NULL, "Material has the light location "
                                 "auto-bound uniform set, but no light is set for the world." );
-                            tempp3.set(light->getLocation());
-                            tempp3.transform(view);
-                            shader->setUniformf( u.varName, tempp3.getX(),
-                                tempp3.getY(), tempp3.getZ() );
+							tempp3 = light->getLocation().transform(view);
+                            shader->setUniformf( u.varName, tempp3.x(),
+                                tempp3.y(), tempp3.z() );
                             break;
                         default:
                             MAGIC_ASSERT( false );

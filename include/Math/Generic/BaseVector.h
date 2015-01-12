@@ -32,17 +32,27 @@ class BaseVector
 protected:
     Scalar data[size];
 
-	inline BaseVector() {}
+	inline BaseVector() 
+	{
+		for (int i=0; i < size; i++)
+			data[i] = 0;
+	}
 
 	inline BaseVector(const BaseVector<size,T>& copy)
 	{
 		for (int i=0; i < size; i++)
 			data[i] = copy.data[i];
 	}
+
+	inline BaseVector(const Scalar data[size])
+	{
+		for (int i=0; i < size; i++)
+			this->data[i] = data[i];
+	}
     
 public:
 
-    inline Scalar operator[](int component)
+    inline Scalar operator[](int component) const
 	{
 		return data[component];
 	}

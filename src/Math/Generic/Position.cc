@@ -51,9 +51,9 @@ void Position::getTransformMatrix(Matrix4& out) const
     out.set(2,3,0.0f);
 
     // fill in translation, fourth column
-    out.set(3,0,location.getX());
-    out.set(3,1,location.getY());
-    out.set(3,2,location.getZ());
+    out.set(3,0,location.x());
+    out.set(3,1,location.y());
+    out.set(3,2,location.z());
     out.set(3,3,1.0f); // W component is always 1, duh..
 }
 
@@ -110,7 +110,7 @@ void Position::getCameraMatrix(Matrix4& out) const
         
     // apply reversed translation
     Matrix4 trans;
-    trans.createTranslationMatrix(-location.getX(), -location.getY(), -location.getZ());
+    trans.createTranslationMatrix(-location.x(), -location.y(), -location.z());
     out.multiply(trans);
 }
 

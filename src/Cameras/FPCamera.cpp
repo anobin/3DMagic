@@ -83,9 +83,9 @@ void FPCamera::lookat( const Point3& point )
     
     // calc new forward from location and point to look at
     Vector3 forward(
-		point.getX() - location.getX(),
-		point.getY() - location.getY(),
-		point.getZ() - location.getZ()
+		point.x() - location.x(),
+		point.y() - location.y(),
+		point.z() - location.z()
 		);
 	forward = forward.normalize();
     

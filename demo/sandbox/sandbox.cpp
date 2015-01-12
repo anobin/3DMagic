@@ -488,11 +488,13 @@ void renderScene(void)
         }
     }
     
-    if (lightPos.getLocation().getY() <= -400.0f)
+    if (lightPos.getLocation().y() <= -400.0f)
         change = 1.0f;
-    else if (lightPos.getLocation().getY() >= 400.0f)
+    else if (lightPos.getLocation().y() >= 400.0f)
         change = -1.0f;
-    lightPos.getLocation().setY(lightPos.getLocation().getY()+change);
+	lightPos.setLocation(
+		lightPos.getLocation().withY(lightPos.getLocation().y()+change)
+	);
     
     
     // fun stuff

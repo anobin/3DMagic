@@ -94,14 +94,16 @@ public:
     
     inline void setLocation( const Point3& location)
     {
-        position.getLocation().set(location);
+		position.setLocation(location);
     }
     
     void lookat( const Point3& point );
     
     inline void elevate( float a )
     {
-        position.getLocation().setY( position.getLocation().getY()+a );
+		position.setLocation(
+			position.getLocation().withY(position.getLocation().y()+a)
+		);
     }
     
 };   
