@@ -24,6 +24,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <3DMagic.h>
 using namespace Magic3D;
 
+#include "../DemoBase.h"
+
 // test
 #include <Math/Generic/Vector.h>
 
@@ -107,7 +109,7 @@ Object* ceiling;
 Object* wallObject;
 
 // shader uniforms
-Position lightPos(0.0f, 1000.0f, 0.0f);
+
 Color groundColor(25,25,25);
 float groundColorf[3];
 Color skyColor(255,255,255);
@@ -115,10 +117,6 @@ float skyColorf[3];
 
 // shaders
 Shader* shader;
-
-// cameras
-FPCamera camera;
-
 bool wireframe = false;
 
 int screenWidth = 0;
@@ -134,12 +132,6 @@ bool moveBack = false;
 bool moveLeft = false;
 bool moveRight = false;
 bool releaseWater = false;
-
-// world and systems
-GraphicsSystem graphics;
-PhysicsSystem physics;
-EventSystem events;
-World* world;
 
 // builders
 BatchBuilder batchBuilder;
@@ -158,389 +150,21 @@ Object* chainObject;
 StaticFont* font;
 Image charImage(120, 120, 4);
 
-/** Called when the window size changes
- * @param w width of the new window
- * @param h hieght of the new window
- */
-void changeWindowSize(int w, int h)
-{
-	screenWidth = w;
-	screenHeight = h;
-	
-    // Create the projection matrix
-    camera.setPerspectiveProjection(60.0f, float(w)/float(h), INCH, 1000*FOOT);
-}
-
-
 Object* btBall; // graphical presence of ball used for bullet
 Object* btBox;
 bool fun = false;
-
-/** Global setup-related steps are performed here
- */
-void setup()
-{	
-	// bullet setup
-	physics.setGravity(0,-9.8f*METER,0);
-	
-	graphics.enableDepthTest();
-	
-    static Color lightBlue(5, 230, 255);
-	graphics.setClearColor(lightBlue );
-	
-	// init textures
-	Image tempImage;
-	if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
-	{
-		shared_ptr<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
-		stoneImage->getImage(&tempImage);
-		stoneTex = new Texture(tempImage);
-	}
-	else
-	{
-		Image stoneImage( 1, 1, 4, Color::WHITE);
-		stoneTex = new Texture(stoneImage);
-	}
-	if (resourceManager.doesResourceExist("images/marble.png"))
-	{
-		shared_ptr<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
-		marbleImage->getImage(&tempImage);
-		marbleTex= new Texture(tempImage);
-		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-	}
-	else
-	{
-		Image marbleImage( 1, 1, 4, Color::RED);
-		marbleTex= new Texture(marbleImage);
-		marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-	}
-	if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
-	{
-		shared_ptr<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-		bunkerImage->getImage(&tempImage);
-		bunkerTex = new Texture(tempImage);
-	}
-	if (resourceManager.doesResourceExist("images/singleBrick.tga"))
-	{
-		shared_ptr<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
-		brickImage->getImage(&tempImage);
-		brickTex = new Texture(tempImage);
-		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-	}
-	else
-	{
-		Image brickImage( 1, 1, 4, Color(255, 118, 27, 255));
-		brickTex = new Texture(brickImage);
-		brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-	}
-	Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
-	blueTex = new Texture(blueImage);
-	blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-	
-	// freetype stuff
-	/*static FT_Library library;
-	int error = FT_Init_FreeType(&library);
-	if (error)
-	    throw_MagicException("Failed to initalize freetype library.");
-	
-	error = FT_New_Face(library, 
-        "../../fonts/dejavu/DejaVuSansMono.ttf",
-	    0, // only want face index 0, some fonts have more than 1 index 
-	    &face );
-	if ( error == FT_Err_Unknown_File_Format ) 
-	    throw_MagicException("Font format unsupported.");
-	else if (error)
-	    throw_MagicException("Failed to open font file." );
-	
-	cout << "font file has " << face->num_faces << " faces!" << endl;
-	cout << face->num_glyphs << " glyphs!" << endl;
-	if (face->face_flags & FT_FACE_FLAG_SCALABLE)
-	    cout << "font is scalable :)" << endl;
-	else
-	    cout << "font is not scalable :(" << endl;
-	cout << face->num_fixed_sizes << " fixed sizes!" << endl;
-	
-	//error = FT_Set_Pixel_Sizes(face, 1200, 1200 );
-	error = FT_Set_Char_Size( face, 1200 << 6, 1200 << 6, 96, 96);
-	if (error)
-	    throw_MagicException( "Failed to set character size for font.");
-	
-	int glyph_index = FT_Get_Char_Index( face, 'Q' ); // even if char does not exist, a box will be rendered
-	
-	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT);
-	if (error)
-	    throw_MagicException("Failed to load character glyph.");
-	
-	// if the glyph was a scalable format and not a bitmap, convert to bitmap
-	if (face->glyph->format != FT_GLYPH_FORMAT_BITMAP)
-	{
-	    error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-	    if (error)
-	        throw_MagicException("Failed to convert glyph to bitmap.");
-	}
-	
-	FT_Bitmap& bitmap = face->glyph->bitmap;
-	Image charImage(bitmap.width, bitmap.rows, 3);
-	unsigned char* charData = charImage.getMutableRawData();
-	unsigned char* b = bitmap.buffer;
-	if (bitmap.pixel_mode != FT_PIXEL_MODE_GRAY	)
-	    throw_MagicException("font glyph bitmap is in wrong format." );
-	for (int y=0; y < bitmap.rows; y++)
-	{
-	    for (int x=0; x < bitmap.width; x++)
-	    {
-	        charData[(y*bitmap.width+x)*3 + 0] = b[y*bitmap.pitch + x]; // RED
-	        charData[(y*bitmap.width+x)*3 + 1] = b[y*bitmap.pitch + x]; // GREEN
-	        charData[(y*bitmap.width+x)*3 + 2] = b[y*bitmap.pitch + x]; // BLUE
-	    }
-	}
-	charTex = new Texture(charImage);
-        
-	//FT_Done_Face(face); // deallocate face
-	
-	//FT_Done_FreeType(library); // deallocate freetype*/
-	shared_ptr<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
-	    ( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
-	Character q_char;
-	dejavuResource->getMissingChar(&q_char, 20, 20);
-	font = new StaticFont(q_char);
-	for(unsigned int i=0; i < 128; i++)
-	{
-	    Character* c = new Character();
-	    dejavuResource->getChar(c, i, 20, 20);
-	    font->setChar(c);
-	}
-	
-	charImage.clear(Color::PINK);
-	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-	charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
-	charTex = new Texture(charImage);
-	
-	
-	// init shader
-	shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
-    shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
-	shader = new Shader( vp->getText(), fp->getText() );
-	shader->bindAttrib( "vertex" );
-	shader->bindAttrib( "normal" );
-	shader->bindAttrib( "texcoord0" );
-	shader->link();
-	
-	
-	// init batches
-	batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
-	batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
-	batchBuilder.buildBox(&bigSphereBatch, 3, 3, 3);
-	batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
-	    true, 15*FOOT, 12*FOOT );
-	float scale = 5.0f;
-	batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
-	
-	// init meshes
-	sphereMesh.copyBatchIn(sphereBatch);
-	tinySphereMesh.copyBatchIn(tinySphereBatch);
-	bigSphereMesh.copyBatchIn(bigSphereBatch);
-	floorMesh.copyBatchIn(floorBatch);
-	boxMesh.copyBatchIn(boxBatch);
-	
-	// init materials
-	materialBuilder.begin(&sphereMaterial, 5, 2);
-	materialBuilder.setShader(shader);
-	materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-	materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-	materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-	materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-	materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-	skyColor.getColor(skyColorf, 3);
-	materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
-	groundColor.getColor(groundColorf, 3);
-	materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
-	materialBuilder.setTexture(charTex);
-	materialBuilder.end();
-
-	materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
-	materialBuilder.setTexture(blueTex);
-	materialBuilder.end();
-
-	materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
-	materialBuilder.setTexture(charTex);
-	materialBuilder.end();
-
-	materialBuilder.expand(&floorMaterial, sphereMaterial);
-	materialBuilder.setTexture(stoneTex);
-	materialBuilder.end();
-
-	materialBuilder.expand(&boxMaterial, sphereMaterial);
-	materialBuilder.setTexture(charTex);
-	materialBuilder.end();
-	
-    // init models
-    modelBuilder.buildSimpleModel(&sphereModel, &sphereMesh, &sphereMaterial);
-	modelBuilder.buildSimpleModel(&tinySphereModel, &tinySphereMesh, &tinySphereMaterial);
-	modelBuilder.buildSimpleModel(&bigSphereModel, &bigSphereMesh, &bigSphereMaterial);
-	modelBuilder.buildSimpleModel(&floorModel, &floorMesh, &floorMaterial);
-	modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
-	
-	// init objects
-	PhysicalBody::Properties prop;
-	prop.mass = 1;
-	btBall = new Object(&sphereModel, &sphereShape, prop);
-	btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
-	world->addObject(btBall);
-	
-	floorObject = new Object(&floorModel, &floorShape); // static object
-	world->addObject(floorObject);
-	
-	float wallWidth =40;
-	float wallHeight = 10;
-	float brickHeight = 3*INCH*scale;
-	float brickWidth = 6*INCH*scale;
-	float h = brickHeight/2;
-	float xOffset = -(brickWidth*wallWidth)/2;
-	float zOffset = -100*FOOT;
-	prop.friction = 0.8f;
-	for (int i=0; i < wallHeight; i++, h+=brickHeight)
-	{
-		float w = xOffset;
-		if (i%2 != 0)
-			w = brickWidth/2 + xOffset;
-		for (int j=0; j < wallWidth; j++, w+=brickWidth)
-		{
-			if (i == wallHeight-1 && j == wallWidth-1)
-				continue;
-			btBox = new Object(&boxModel, &boxShape, prop );
-			btBox->setLocation( Point3(w, h, zOffset) );
-			world->addObject(btBox);
-		}
-	}
-	
-	// 3ds model
-	shared_ptr<Model3DSResource> chainResource = resourceManager.get
-	    <Model3DSResource>("models/chainLink.3ds");
-	chainBatches = new Batch[chainResource->getBatchCount()];
-	chainMeshes = new Mesh[chainResource->getBatchCount()];
-	Matrix4 m;
-	Matrix4 temp;
-	m.createScaleMatrix(0.1, 0.1, 0.1);
-	temp.createRotationMatrix(-90.0f/180.0f*M_PI, 1,0,0 );
-	m.multiply(temp);
-	chainResource->getAllBatches(chainBatches, m);
-	for (int i=0; i < chainResource->getBatchCount(); i++)
-	    chainMeshes[i].copyBatchIn(chainBatches[i]);
-	materialBuilder.expand(&chainMaterial, sphereMaterial);
-	materialBuilder.setTexture(charTex);
-	materialBuilder.end();
-	modelBuilder.begin(&chainModel, chainResource->getBatchCount());
-	for(int i=0; i < chainResource->getBatchCount(); i++)
-	    modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
-	modelBuilder.end();
-    //TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
-    //    ( chainBatches, chainResource()->getBatchCount() );
-	chainObject = new Object(&chainModel/*, chainShape*/);
-	chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
-	world->addObject(chainObject);
-	
-	
-	
-    // set eye level
-    camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
-	camera.setStepSpeed( FOOT );
-	camera.setStrafeSpeed( FOOT );
-	
-	// enable blending so transparency can happen
-	graphics.enableBlending();
-	
-	srand((unsigned int)time(NULL));
-}
 
 
 bool paused = true;
 int slow = 0;
 float change = -1.0f;
-/** Called to render each and every frame
- */
-void renderScene(void)
-{	
-	// move
-	Vector3 side;
-	if (moveForward)
-	    camera.step(1);
-	if (moveBack)
-		camera.step(-1);
-	if (moveLeft)
-	    camera.strafe(1);
-	if (moveRight)
-	    camera.strafe(-1);
-	
-	// release water
-	if (releaseWater)
-	{
-	    for (int i = 0; i < 20; i++)
-        {
-            PhysicalBody::Properties prop;
-            prop.mass = 0.1f;
-            Object* t = new Object(&tinySphereModel, &tinySphereShape, prop);
-            t->setLocation(Point3(0, 10.0f, 0));
-            world->addObject(t);
-            
-            t->getPhysical()->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
-                ((float)(rand()%100))*0.01f) );
-        }
-    }
-    
-    if (lightPos.getLocation().y() <= -400.0f)
-        change = 1.0f;
-    else if (lightPos.getLocation().y() >= 400.0f)
-        change = -1.0f;
-	lightPos.setLocation(
-		lightPos.getLocation().withY(lightPos.getLocation().y()+change)
-	);
-    
-    
-    // fun stuff
-    float c1, c2, c3;
-    static float acc = 0;
-    float c;
-    if (fun)
-    {
-        if ( rand()%2 && acc < 3)
-            c = 1.0f;
-        else if (acc > -3)
-            c = -0.3f;
-        else
-            c = 0.3f;
-        acc += c;
-        batchBuilder.modify(&boxBatch);
-        for (int i=0; i < boxBatch.getVertexCount(); i++)
-        {
-            batchBuilder.getVertex3f(&c1, &c2, &c3);
-            
-            batchBuilder.vertex3f(
-                c1<0?c1-c:c1+c, 
-                c2<0?c2-c:c2+c, 
-                c3<0?c3-c:c3+c
-            );
-        }
-        batchBuilder.end();
-        boxMesh.copyBatchIn(boxBatch);
-    }
-    
-    char fps[40];
-	charImage.clear(Color::BLUE);
-	//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-	sprintf(fps, "Figure: %d", world->getActualFPS() );
-	charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
-	charTex->set(charImage);
-    
-}
-
 
 /** Called when a normal key is pressed on the keyboard
  * @param key the key pressed
  * @param x the x-coord of the mouse at the time of the press
  * @param y the y-coord of the mouse at the time of the press
  */
-void keyPressed(int key)
+void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& world)
 {
 	Point3 origin;
 	Vector3 forward;
@@ -616,7 +240,7 @@ void keyPressed(int key)
 		    prop.mass = 1;
 			t = new Object(&bigSphereModel, &bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
-			world->addObject(t);
+			world.addObject(t);
 			
 			camera.lookat( Point3(0, 30, 0) );
 			
@@ -628,13 +252,13 @@ void keyPressed(int key)
 			if (paused)
 			{
 				paused = false;
-				world->alignPhysicsStepToFPS(true);
+				world.alignPhysicsStepToFPS(true);
 			}
 			else
 			{
 				paused = true;
-				world->alignPhysicsStepToFPS(false);
-				world->setPhysicsStepsPerFrame(0);
+				world.alignPhysicsStepToFPS(false);
+				world.setPhysicsStepsPerFrame(0);
 			}
 			break;
 			
@@ -673,7 +297,7 @@ void keyPressed(int key)
 		case 't':
 		    if (chainObject)
 		    {
-		        world->removeObject(chainObject);
+		        world.removeObject(chainObject);
 		        delete chainObject;
 		        chainObject = NULL;
 		    }
@@ -681,7 +305,7 @@ void keyPressed(int key)
 		    
 		case 'k':
 		    wireframe = !wireframe;
-		    world->setWireFrame(wireframe);
+		    world.setWireFrame(wireframe);
 
         default:
             break;
@@ -755,7 +379,7 @@ void specialKeyPressed(int key, int x, int y)
  * @param x the x-coord of the mouse at the time of the press
  * @param y the y-coord of the mouse at the time of the press
  */
-void mouseClicked(Event::MouseButtons button, int x, int y)
+void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, World& world)
 {
 	
 	Position p;
@@ -772,7 +396,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y)
 			prop.mass = 100;
 			t = new Object(&sphereModel, &sphereShape, prop);
 			t->setPosition(p);
-			world->addObject(t);
+			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
 		        p.getForwardVector().y()*speed, p.getForwardVector().z()*speed) );
 			break;
@@ -802,7 +426,7 @@ void mouseMoved(int x, int y)
  * @param x the x-coord of the mouse pointer
  * @param y the y-coord of the mouse pointer
  */
-void mouseMovedPassive(int x, int y)
+void mouseMovedPassive(int x, int y, FPCamera& camera, GraphicsSystem& graphics)
 {
     if (!lockCursor)
         return;
@@ -819,117 +443,343 @@ void mouseMovedPassive(int x, int y)
 }
 
 
+class Sandbox : public DemoBase
+{
+public:
+
+	void setup()
+	{
+
+		// bullet setup
+		physics.setGravity(0,-9.8f*METER,0);
+
+		graphics.enableDepthTest();
+
+		static Color lightBlue(5, 230, 255);
+		graphics.setClearColor(lightBlue );
+
+		// init textures
+		Image tempImage;
+		if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
+		{
+			shared_ptr<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
+			stoneImage->getImage(&tempImage);
+			stoneTex = new Texture(tempImage);
+		}
+		else
+		{
+			Image stoneImage( 1, 1, 4, Color::WHITE);
+			stoneTex = new Texture(stoneImage);
+		}
+		if (resourceManager.doesResourceExist("images/marble.png"))
+		{
+			shared_ptr<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
+			marbleImage->getImage(&tempImage);
+			marbleTex= new Texture(tempImage);
+			marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+		}
+		else
+		{
+			Image marbleImage( 1, 1, 4, Color::RED);
+			marbleTex= new Texture(marbleImage);
+			marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+		}
+		if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
+		{
+			shared_ptr<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
+			bunkerImage->getImage(&tempImage);
+			bunkerTex = new Texture(tempImage);
+		}
+		if (resourceManager.doesResourceExist("images/singleBrick.tga"))
+		{
+			shared_ptr<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
+			brickImage->getImage(&tempImage);
+			brickTex = new Texture(tempImage);
+			brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+		}
+		else
+		{
+			Image brickImage( 1, 1, 4, Color(255, 118, 27, 255));
+			brickTex = new Texture(brickImage);
+			brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+		}
+		Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
+		blueTex = new Texture(blueImage);
+		blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+
+		shared_ptr<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
+			( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
+		Character q_char;
+		dejavuResource->getMissingChar(&q_char, 20, 20);
+		font = new StaticFont(q_char);
+		for(unsigned int i=0; i < 128; i++)
+		{
+			Character* c = new Character();
+			dejavuResource->getChar(c, i, 20, 20);
+			font->setChar(c);
+		}
+
+		charImage.clear(Color::PINK);
+		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+		charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
+		charTex = new Texture(charImage);
+
+
+		// init shader
+		shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
+		shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
+		shader = new Shader( vp->getText(), fp->getText() );
+		shader->bindAttrib( "vertex" );
+		shader->bindAttrib( "normal" );
+		shader->bindAttrib( "texcoord0" );
+		shader->link();
+
+
+		// init batches
+		batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
+		batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
+		batchBuilder.buildBox(&bigSphereBatch, 3, 3, 3);
+		batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+			true, 15*FOOT, 12*FOOT );
+		float scale = 5.0f;
+		batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
+
+		// init meshes
+		sphereMesh.copyBatchIn(sphereBatch);
+		tinySphereMesh.copyBatchIn(tinySphereBatch);
+		bigSphereMesh.copyBatchIn(bigSphereBatch);
+		floorMesh.copyBatchIn(floorBatch);
+		boxMesh.copyBatchIn(boxBatch);
+
+		// init materials
+		materialBuilder.begin(&sphereMaterial, 5, 2);
+		materialBuilder.setShader(shader);
+		materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
+		materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
+		materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
+		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
+		materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
+		skyColor.getColor(skyColorf, 3);
+		materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
+		groundColor.getColor(groundColorf, 3);
+		materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
+		materialBuilder.setTexture(charTex);
+		materialBuilder.end();
+
+		materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
+		materialBuilder.setTexture(blueTex);
+		materialBuilder.end();
+
+		materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
+		materialBuilder.setTexture(charTex);
+		materialBuilder.end();
+
+		materialBuilder.expand(&floorMaterial, sphereMaterial);
+		materialBuilder.setTexture(stoneTex);
+		materialBuilder.end();
+
+		materialBuilder.expand(&boxMaterial, sphereMaterial);
+		materialBuilder.setTexture(charTex);
+		materialBuilder.end();
+
+		// init models
+		modelBuilder.buildSimpleModel(&sphereModel, &sphereMesh, &sphereMaterial);
+		modelBuilder.buildSimpleModel(&tinySphereModel, &tinySphereMesh, &tinySphereMaterial);
+		modelBuilder.buildSimpleModel(&bigSphereModel, &bigSphereMesh, &bigSphereMaterial);
+		modelBuilder.buildSimpleModel(&floorModel, &floorMesh, &floorMaterial);
+		modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
+
+		// init objects
+		PhysicalBody::Properties prop;
+		prop.mass = 1;
+		btBall = new Object(&sphereModel, &sphereShape, prop);
+		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
+		world->addObject(btBall);
+
+		floorObject = new Object(&floorModel, &floorShape); // static object
+		world->addObject(floorObject);
+
+		float wallWidth =40;
+		float wallHeight = 10;
+		float brickHeight = 3*INCH*scale;
+		float brickWidth = 6*INCH*scale;
+		float h = brickHeight/2;
+		float xOffset = -(brickWidth*wallWidth)/2;
+		float zOffset = -100*FOOT;
+		prop.friction = 0.8f;
+		for (int i=0; i < wallHeight; i++, h+=brickHeight)
+		{
+			float w = xOffset;
+			if (i%2 != 0)
+				w = brickWidth/2 + xOffset;
+			for (int j=0; j < wallWidth; j++, w+=brickWidth)
+			{
+				if (i == wallHeight-1 && j == wallWidth-1)
+					continue;
+				btBox = new Object(&boxModel, &boxShape, prop );
+				btBox->setLocation( Point3(w, h, zOffset) );
+				world->addObject(btBox);
+			}
+		}
+
+		// 3ds model
+		shared_ptr<Model3DSResource> chainResource = resourceManager.get
+			<Model3DSResource>("models/chainLink.3ds");
+		chainBatches = new Batch[chainResource->getBatchCount()];
+		chainMeshes = new Mesh[chainResource->getBatchCount()];
+		Matrix4 m;
+		Matrix4 temp;
+		m.createScaleMatrix(0.1, 0.1, 0.1);
+		temp.createRotationMatrix(-90.0f/180.0f*M_PI, 1,0,0 );
+		m.multiply(temp);
+		chainResource->getAllBatches(chainBatches, m);
+		for (int i=0; i < chainResource->getBatchCount(); i++)
+			chainMeshes[i].copyBatchIn(chainBatches[i]);
+		materialBuilder.expand(&chainMaterial, sphereMaterial);
+		materialBuilder.setTexture(charTex);
+		materialBuilder.end();
+		modelBuilder.begin(&chainModel, chainResource->getBatchCount());
+		for(int i=0; i < chainResource->getBatchCount(); i++)
+			modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
+		modelBuilder.end();
+		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
+		//    ( chainBatches, chainResource()->getBatchCount() );
+		chainObject = new Object(&chainModel/*, chainShape*/);
+		chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
+		world->addObject(chainObject);
+
+
+
+		// set eye level
+		camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
+		camera.setStepSpeed( FOOT );
+		camera.setStrafeSpeed( FOOT );
+
+		// enable blending so transparency can happen
+		graphics.enableBlending();
+
+		srand((unsigned int)time(NULL));
+	}
+
+
+	virtual void tick(void)
+	{	
+		// move
+		Vector3 side;
+		if (moveForward)
+			camera.step(1);
+		if (moveBack)
+			camera.step(-1);
+		if (moveLeft)
+			camera.strafe(1);
+		if (moveRight)
+			camera.strafe(-1);
+	
+		// release water
+		if (releaseWater)
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				PhysicalBody::Properties prop;
+				prop.mass = 0.1f;
+				Object* t = new Object(&tinySphereModel, &tinySphereShape, prop);
+				t->setLocation(Point3(0, 10.0f, 0));
+				world->addObject(t);
+            
+				t->getPhysical()->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
+					((float)(rand()%100))*0.01f) );
+			}
+		}
+    
+		if (lightPos.getLocation().y() <= -400.0f)
+			change = 1.0f;
+		else if (lightPos.getLocation().y() >= 400.0f)
+			change = -1.0f;
+		lightPos.setLocation(
+			lightPos.getLocation().withY(lightPos.getLocation().y()+change)
+		);
+    
+    
+		// fun stuff
+		float c1, c2, c3;
+		static float acc = 0;
+		float c;
+		if (fun)
+		{
+			if ( rand()%2 && acc < 3)
+				c = 1.0f;
+			else if (acc > -3)
+				c = -0.3f;
+			else
+				c = 0.3f;
+			acc += c;
+			batchBuilder.modify(&boxBatch);
+			for (int i=0; i < boxBatch.getVertexCount(); i++)
+			{
+				batchBuilder.getVertex3f(&c1, &c2, &c3);
+            
+				batchBuilder.vertex3f(
+					c1<0?c1-c:c1+c, 
+					c2<0?c2-c:c2+c, 
+					c3<0?c3-c:c3+c
+				);
+			}
+			batchBuilder.end();
+			boxMesh.copyBatchIn(boxBatch);
+		}
+    
+		char fps[40];
+		charImage.clear(Color::BLUE);
+		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
+		sprintf(fps, "Figure: %d", world->getActualFPS() );
+		charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
+		charTex->set(charImage);
+    
+	}
+
+	virtual void handleEvent(const Event& event)
+	{
+		switch(event.data.type)
+		{
+			case Event::VIDEO_RESIZE:
+				screenHeight = event.data.resize.h;
+				screenWidth = event.data.resize.w;
+				break;
+
+			case Event::KEY_DOWN:
+				keyPressed( event.data.key.key, this->camera, this->graphics, *this->world);
+	            break;
+	                
+	        case Event::MOUSE_MOTION:
+				mouseMovedPassive( event.data.motion.x, event.data.motion.y, this->camera, this->graphics );
+	            break;
+	                
+	        case Event::MOUSE_BUTTON_DOWN:
+	            mouseClicked( event.data.button.button, event.data.button.x, 
+					event.data.button.y, this->camera, *this->world);
+	            break;
+	                
+	        case Event::MOUSE_BUTTON_UP:
+	            break;
+	                
+	        case Event::KEY_UP:
+	            keyReleased( event.data.key.key );
+	            break;
+		}
+	}
+
+};
+
+
 /** Main program entry point
  */
 int main(int argc, char* argv[])
 {
 	
-	graphics.init();
-	graphics.setDisplaySize( 1280, 1024 );
-	graphics.createScreen();
-	
-	physics.init();
-	
-	world = new World(&graphics, &physics);
-	
-	events.init();
-	
-	// perform setup
-	setup();
-	
-	changeWindowSize(1280,1024); // to ensure transform pipeline is setup
-	graphics.createScreen();
-	
-	world->setCamera(&camera);
-	world->setLight(&lightPos);
-	
-	// run SDL
-	Event event;
-	while( true )
-	{
-	    world->startFrame();
-	    
-	    while ( events.poll( &event ) )
-	    {
-	        switch( event.data.type )
-	        {
-	            case Event::QUIT:
-	                exit(0);
-	                
-	            case Event::VIDEO_RESIZE:
-	                graphics.setDisplaySize( event.data.resize.w, event.data.resize.h );
-	                graphics.createScreen();
-	                changeWindowSize( event.data.resize.w, event.data.resize.h );
-	                break;
-	                
-	            case Event::KEY_DOWN:
-	                keyPressed( event.data.key.key );
-	                break;
-	                
-	            case Event::MOUSE_MOTION:
-	                mouseMovedPassive( event.data.motion.x, event.data.motion.y );
-	                break;
-	                
-	            case Event::MOUSE_BUTTON_DOWN:
-	                mouseClicked( event.data.button.button, event.data.button.x, event.data.button.y );
-	                break;
-	                
-	            case Event::MOUSE_BUTTON_UP:
-	                break;
-	                
-	            case Event::KEY_UP:
-	                keyReleased( event.data.key.key );
-	                break;
-	        }
-	    }
-	        
-	    renderScene();
-	    
-	    world->stepPhysics();
-	    
-	    world->renderObjects();
-	    
-	    world->endFrame();
-	}
-	
-	graphics.deinit();
-	physics.deinit();
-	events.deinit();
-	
+	Sandbox sandbox;
+
+	sandbox.setup();
+	sandbox.start();
     
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
