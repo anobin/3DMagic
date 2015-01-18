@@ -40,7 +40,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // graphics
 #include "Graphics/Texture.h"
-#include "Graphics/ModelBuilder.h"
 #include "Graphics/BatchBuilder.h"
 #include "Graphics/MaterialBuilder.h"
 #include "Graphics/Material.h"

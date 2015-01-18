@@ -30,7 +30,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
 #include "../Physics/PhysicalBody.h"
-#include "../Graphics/Model.h"
+#include "../Graphics/Mesh.h"
+#include "../Graphics/Material.h"
 
 #include <set>
 
@@ -49,8 +50,9 @@ protected:
 	/// 3D position of object
 	Position position;
 	
-	/// graphical body for object
-	Model* model;
+	Mesh* mesh;
+
+	Material* material;
 	
 	/// physical body for object
 	PhysicalBody* physical;
@@ -61,24 +63,24 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(): model(NULL),  
+	inline Object(): mesh(NULL), material(NULL),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(Model* model): model(model),
+	inline Object(Mesh* mesh, Material* material): mesh(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
 	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): model(NULL),
+	    PhysicalBody::Properties() ): mesh(NULL), material(nullptr),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
 	}
 	
 	/// standard constructor for objects
-	inline Object(Model* model, CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): model(model),
+	inline Object(Mesh* mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): mesh(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
@@ -157,9 +159,14 @@ public:
 	    return physical;
 	}
 
-	inline Model* getModel()
+	inline Mesh* getMesh()
 	{
-	     return model;   
+	     return mesh;   
+	}
+
+	inline Material* getMaterial()
+	{
+		return material;
 	}
 
 };

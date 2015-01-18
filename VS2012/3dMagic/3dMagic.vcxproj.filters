@@ -183,12 +183,6 @@
     <ClCompile Include="..\..\src\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\Model.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\ModelBuilder.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Graphics\Texture.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -384,12 +378,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Graphics\Mesh.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Model.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\ModelBuilder.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Graphics\Texture.h">

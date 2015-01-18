@@ -66,13 +66,6 @@ Texture* brickTex = NULL;
 Texture* blueTex = NULL;
 Texture* charTex = NULL;
 
-// models
-Model floorModel;
-Model sphereModel;
-Model tinySphereModel;
-Model bigSphereModel;
-Model boxModel;
-
 // batches
 Batch floorBatch;
 Batch sphereBatch;
@@ -136,12 +129,10 @@ bool releaseWater = false;
 // builders
 BatchBuilder batchBuilder;
 MaterialBuilder materialBuilder;
-ModelBuilder modelBuilder;
 
 // 3ds stuff
 Batch* chainBatches;
 Mesh* chainMeshes;
-Model chainModel;
 Material chainMaterial;
 Texture* chainTex;
 Object* chainObject;
@@ -238,7 +229,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(&bigSphereModel, &bigSphereShape, prop );
+			t = new Object(&bigSphereMesh, &bigSphereMaterial, &bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -394,7 +385,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(&sphereModel, &sphereShape, prop);
+			t = new Object(&sphereMesh, &sphereMaterial, &sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -582,13 +573,6 @@ public:
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 
-		// init models
-		modelBuilder.buildSimpleModel(&sphereModel, &sphereMesh, &sphereMaterial);
-		modelBuilder.buildSimpleModel(&tinySphereModel, &tinySphereMesh, &tinySphereMaterial);
-		modelBuilder.buildSimpleModel(&bigSphereModel, &bigSphereMesh, &bigSphereMaterial);
-		modelBuilder.buildSimpleModel(&floorModel, &floorMesh, &floorMaterial);
-		modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
-
 
 
 
@@ -615,20 +599,18 @@ public:
 		materialBuilder.setTexture(blueTex);
 		materialBuilder.end();
 
-		Model* circle2DModel = new Model();
-		modelBuilder.buildSimpleModel(circle2DModel, circle2DMesh, circle2DMaterial);
-		world->addObject(new Object(circle2DModel));
+		world->addObject(new Object(circle2DMesh, circle2DMaterial));
 
 
 
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(&sphereModel, &sphereShape, prop);
+		btBall = new Object(&sphereMesh, &sphereMaterial, &sphereShape, prop);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(&floorModel, &floorShape); // static object
+		floorObject = new Object(&floorMesh, &floorMaterial, &floorShape); // static object
 		world->addObject(floorObject);
 
 		float wallWidth =40;
@@ -648,14 +630,14 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(&boxModel, &boxShape, prop );
+				btBox = new Object(&boxMesh, &boxMaterial, &boxShape, prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
 		}
 
 		// 3ds model
-		shared_ptr<Model3DSResource> chainResource = resourceManager.get
+		/*shared_ptr<Model3DSResource> chainResource = resourceManager.get
 			<Model3DSResource>("models/chainLink.3ds");
 		chainBatches = new Batch[chainResource->getBatchCount()];
 		chainMeshes = new Mesh[chainResource->getBatchCount()];
@@ -676,9 +658,9 @@ public:
 		modelBuilder.end();
 		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
 		//    ( chainBatches, chainResource()->getBatchCount() );
-		chainObject = new Object(&chainModel/*, chainShape*/);
+		chainObject = new Object(&chainModel);
 		chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
-		world->addObject(chainObject);
+		world->addObject(chainObject);*/
 
 
 
@@ -714,7 +696,7 @@ public:
 			{
 				PhysicalBody::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(&tinySphereModel, &tinySphereShape, prop);
+				Object* t = new Object(&tinySphereMesh, &tinySphereMaterial, &tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             

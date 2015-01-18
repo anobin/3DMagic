@@ -33,8 +33,6 @@
     <ClCompile Include="..\..\src\Graphics\Image.cpp" />
     <ClCompile Include="..\..\src\Graphics\MaterialBuilder.cpp" />
     <ClCompile Include="..\..\src\Graphics\Mesh.cpp" />
-    <ClCompile Include="..\..\src\Graphics\Model.cpp" />
-    <ClCompile Include="..\..\src\Graphics\ModelBuilder.cpp" />
     <ClCompile Include="..\..\src\Graphics\Texture.cpp" />
     <ClCompile Include="..\..\src\Graphics\VertexArray.cpp" />
     <ClCompile Include="..\..\src\Math\Generic\Matrix3.cc" />
@@ -101,8 +99,6 @@
     <ClInclude Include="..\..\include\Graphics\Material.h" />
     <ClInclude Include="..\..\include\Graphics\MaterialBuilder.h" />
     <ClInclude Include="..\..\include\Graphics\Mesh.h" />
-    <ClInclude Include="..\..\include\Graphics\Model.h" />
-    <ClInclude Include="..\..\include\Graphics\ModelBuilder.h" />
     <ClInclude Include="..\..\include\Graphics\Texture.h" />
     <ClInclude Include="..\..\include\Graphics\VertexArray.h" />
     <ClInclude Include="..\..\include\Lights\Light.h" />

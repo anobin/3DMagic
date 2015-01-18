@@ -70,12 +70,6 @@ void World::renderObjects()
 	// render all objects
 	std::set<Object*>::iterator it = objects.begin();
 	Object* ob;
-	const Model* model;
-	const Mesh* mesh;
-	const Mesh** meshes;
-	const Material** materials;
-	int meshCount;
-	const Material* material;
 	VertexArray* array;
 	const Mesh::AttributeData* adata;
 	int attributeCount;
@@ -90,193 +84,177 @@ void World::renderObjects()
 	    Object* base_ob = ob;
 	    std::set<Object*>::iterator it = base_ob->attachments.begin();
 	    while (ob != NULL)
-	    {
-			model = ob->getModel();
-            // ensure there is a graphical part to this entity
-            if (model == NULL)
-                break; // no graphical part to render
-            
+	    {   
             // get mesh and material data
-            meshes = model->getMeshData();
-            materials = model->getMaterialData();
-            meshCount = model->getMeshCount();
-            
-            // ensure there is at least one mesh
-            MAGIC_ASSERT(meshCount > 0);
+			const Mesh* mesh = ob->getMesh();
+			const Material* material = ob->getMaterial();
+			if (mesh == nullptr)
+				break;
             
             // get model/world matrix for object (same for all meshes in object)
             Matrix4 model;
             ob->getPosition().getTransformMatrix(model);
-            
-            // render each mesh
-            for(int i=0; i < meshCount; i++)   
+                
+            // ensure there is a shader
+            shader = material->shader;
+            MAGIC_ASSERT(shader != NULL);
+                
+            // get mesh data
+            adata = mesh->getAttributeData();
+            attributeCount = mesh->getAttributeCount();
+            vertexCount = mesh->getVertexCount();
+                
+            // 'use' shader
+            shader->use();
+                
+            // set named uniforms
+            for(int i=0; i < material->namedUniformCount; i++)
             {
-                // get mesh and material
-                mesh = meshes[i];
-                material = materials[i];
-                
-                // ensure there is a shader
-                shader = material->shader;
-                MAGIC_ASSERT(shader != NULL);
-                
-                // get mesh data
-                adata = mesh->getAttributeData();
-                attributeCount = mesh->getAttributeCount();
-                vertexCount = mesh->getVertexCount();
-                
-                // 'use' shader
-                shader->use();
-                
-                // set named uniforms
-                for(int i=0; i < material->namedUniformCount; i++)
+                Material::NamedUniform& u = material->namedUniforms[i];
+                switch(u.datatype)
                 {
-                    Material::NamedUniform& u = material->namedUniforms[i];
-                    switch(u.datatype)
-                    {
-                        case VertexArray::FLOAT:
-                            shader->setUniformfv(u.varName, u.comp_count, (const float*)u.data);
-                            break;
-                        case VertexArray::INT:
-                            shader->setUniformiv(u.varName, u.comp_count, (const int*)u.data);
-                            break;
-                        default:
-                            throw_MagicException("Unsupported Auto Uniform datatype." );
-                            break;
-                    }
+                    case VertexArray::FLOAT:
+                        shader->setUniformfv(u.varName, u.comp_count, (const float*)u.data);
+                        break;
+                    case VertexArray::INT:
+                        shader->setUniformiv(u.varName, u.comp_count, (const int*)u.data);
+                        break;
+                    default:
+                        throw_MagicException("Unsupported Auto Uniform datatype." );
+                        break;
                 }
+            }
                 
-                // set auto uniforms
-                Matrix4 temp4m;
-                Matrix4 temp4m2;
-                Matrix3 temp3m;
-                Point3 tempp3;
-                for(int i=0; i < material->autoUniformCount; i++)
+            // set auto uniforms
+            Matrix4 temp4m;
+            Matrix4 temp4m2;
+            Matrix3 temp3m;
+            Point3 tempp3;
+            for(int i=0; i < material->autoUniformCount; i++)
+            {
+                Material::AutoUniform& u = material->uniforms[i];
+                switch (u.type)
                 {
-                    Material::AutoUniform& u = material->uniforms[i];
-                    switch (u.type)
-                    {
-                        case Material::MODEL_MATRIX:                   // mat4
-                            shader->setUniformMatrix( u.varName, 4, model.getArray() );
-                            break;
-                        case Material::VIEW_MATRIX:                    // mat4
-                            shader->setUniformMatrix( u.varName, 4, view.getArray() );
-                            break;
-                        case Material::PROJECTION_MATRIX:              // mat4
-                            shader->setUniformMatrix( u.varName, 4, projection.getArray() );
-                            break;
-                        case Material::MODEL_VIEW_MATRIX:              // mat4
-                            temp4m.multiply(view, model);
-                            shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
-                            break;
-                        case Material::VIEW_PROJECTION_MATRIX:         // mat4
-                            temp4m.multiply(projection, view);
-                            shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
-                            break;
-                        case Material::MODEL_PROJECTION_MATRIX:        // mat4
-                            temp4m.multiply(projection, model);
-                            shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
-                            break;
-                        case Material::MODEL_VIEW_PROJECTION_MATRIX:   // mat4
-                            temp4m.multiply(view, model);
-                            temp4m2.multiply(projection, temp4m);
-                            shader->setUniformMatrix( u.varName, 4, temp4m2.getArray() );
-                            break;
-                        case Material::NORMAL_MATRIX:                  // mat3
-                            temp4m.multiply(view, model);
-                            temp4m.extractRotation(temp3m);
-                            shader->setUniformMatrix( u.varName, 3, temp3m.getArray() );
-                            break;
-                        case Material::FPS:                            // int
-                            shader->setUniformiv( u.varName, 1, &this->actualFPS );
-                            break;
-                        case Material::TEXTURE0:                       // sampler2D
-                            MAGIC_THROW(material->textures[0] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[0] );
-                            break;
-                        case Material::TEXTURE1:                       // sampler2D
-                            MAGIC_THROW(material->textures[1] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[1] );
-                            break;
-                        case Material::TEXTURE2:                       // sampler2D
-                            MAGIC_THROW(material->textures[2] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[2] );
-                            break;
-                        case Material::TEXTURE3:                       // sampler2D
-                            MAGIC_THROW(material->textures[3] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[3] );
-                            break;
-                        case Material::TEXTURE4:                       // sampler2D
-                            MAGIC_THROW(material->textures[4] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[4] );
-                            break;
-                        case Material::TEXTURE5:                       // sampler2D
-                            MAGIC_THROW(material->textures[5] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[5] );
-                            break;
-                        case Material::TEXTURE6:                       // sampler2D
-                            MAGIC_THROW(material->textures[6] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[6] );
-                            break;
-                        case Material::TEXTURE7:                       // sampler2D
-                            MAGIC_THROW(material->textures[7] == NULL, "Material has auto-bound "
-                                "texture set, but no texture set for the index." );
-                            shader->setTexture( u.varName, material->textures[7] );
-                            break;
-                        case Material::LIGHT_LOCATION:                 // vec3
-                            MAGIC_THROW(light == NULL, "Material has the light location "
-                                "auto-bound uniform set, but no light is set for the world." );
-							tempp3 = light->getLocation().transform(view);
-                            shader->setUniformf( u.varName, tempp3.x(),
-                                tempp3.y(), tempp3.z() );
-                            break;
-						case Material::FLAT_PROJECTION:   // mat4
-							temp4m.createOrthographicMatrix(0, this->graphics.getDisplayWidth(), 
-								0, this->graphics.getDisplayHeight(), -1.0, 1.0);
-                            shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
-                            break;
-                        default:
-                            MAGIC_ASSERT( false );
-                            break;
-                    }
+                    case Material::MODEL_MATRIX:                   // mat4
+                        shader->setUniformMatrix( u.varName, 4, model.getArray() );
+                        break;
+                    case Material::VIEW_MATRIX:                    // mat4
+                        shader->setUniformMatrix( u.varName, 4, view.getArray() );
+                        break;
+                    case Material::PROJECTION_MATRIX:              // mat4
+                        shader->setUniformMatrix( u.varName, 4, projection.getArray() );
+                        break;
+                    case Material::MODEL_VIEW_MATRIX:              // mat4
+                        temp4m.multiply(view, model);
+                        shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+                        break;
+                    case Material::VIEW_PROJECTION_MATRIX:         // mat4
+                        temp4m.multiply(projection, view);
+                        shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+                        break;
+                    case Material::MODEL_PROJECTION_MATRIX:        // mat4
+                        temp4m.multiply(projection, model);
+                        shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+                        break;
+                    case Material::MODEL_VIEW_PROJECTION_MATRIX:   // mat4
+                        temp4m.multiply(view, model);
+                        temp4m2.multiply(projection, temp4m);
+                        shader->setUniformMatrix( u.varName, 4, temp4m2.getArray() );
+                        break;
+                    case Material::NORMAL_MATRIX:                  // mat3
+                        temp4m.multiply(view, model);
+                        temp4m.extractRotation(temp3m);
+                        shader->setUniformMatrix( u.varName, 3, temp3m.getArray() );
+                        break;
+                    case Material::FPS:                            // int
+                        shader->setUniformiv( u.varName, 1, &this->actualFPS );
+                        break;
+                    case Material::TEXTURE0:                       // sampler2D
+                        MAGIC_THROW(material->textures[0] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[0] );
+                        break;
+                    case Material::TEXTURE1:                       // sampler2D
+                        MAGIC_THROW(material->textures[1] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[1] );
+                        break;
+                    case Material::TEXTURE2:                       // sampler2D
+                        MAGIC_THROW(material->textures[2] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[2] );
+                        break;
+                    case Material::TEXTURE3:                       // sampler2D
+                        MAGIC_THROW(material->textures[3] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[3] );
+                        break;
+                    case Material::TEXTURE4:                       // sampler2D
+                        MAGIC_THROW(material->textures[4] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[4] );
+                        break;
+                    case Material::TEXTURE5:                       // sampler2D
+                        MAGIC_THROW(material->textures[5] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[5] );
+                        break;
+                    case Material::TEXTURE6:                       // sampler2D
+                        MAGIC_THROW(material->textures[6] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[6] );
+                        break;
+                    case Material::TEXTURE7:                       // sampler2D
+                        MAGIC_THROW(material->textures[7] == NULL, "Material has auto-bound "
+                            "texture set, but no texture set for the index." );
+                        shader->setTexture( u.varName, material->textures[7] );
+                        break;
+                    case Material::LIGHT_LOCATION:                 // vec3
+                        MAGIC_THROW(light == NULL, "Material has the light location "
+                            "auto-bound uniform set, but no light is set for the world." );
+						tempp3 = light->getLocation().transform(view);
+                        shader->setUniformf( u.varName, tempp3.x(),
+                            tempp3.y(), tempp3.z() );
+                        break;
+					case Material::FLAT_PROJECTION:   // mat4
+						temp4m.createOrthographicMatrix(0, this->graphics.getDisplayWidth(), 
+							0, this->graphics.getDisplayHeight(), -1.0, 1.0);
+                        shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+                        break;
+                    default:
+                        MAGIC_ASSERT( false );
+                        break;
                 }
+            }
                 
-                // bind vertexArray
-                array = new VertexArray();
-                for(int j=0; j < attributeCount; j++)
-                {
-                    int bind = shader->getAttribBinding( 
-                        Batch::attributeTypeNames[(int)adata[j].type] );
-                    if (bind < 0) // shader does not have attribute
-                        continue; 
-                    array->setAttributeArray(bind, Batch::attributeTypeCompCount[(int)adata[j].type],
-                        VertexArray::FLOAT, adata[j].buffer);
-                }
+            // bind vertexArray
+            array = new VertexArray();
+            for(int j=0; j < attributeCount; j++)
+            {
+                int bind = shader->getAttribBinding( 
+                    Batch::attributeTypeNames[(int)adata[j].type] );
+                if (bind < 0) // shader does not have attribute
+                    continue; 
+                array->setAttributeArray(bind, Batch::attributeTypeCompCount[(int)adata[j].type],
+                    VertexArray::FLOAT, adata[j].buffer);
+            }
                 
-                // check for a depth lie
-                if (material->depthBufferLie)
-                {
-                    glPolygonOffset( material->depthBufferLie, 1.0f );
-                    glEnable(GL_POLYGON_OFFSET_FILL);
-                }
+            // check for a depth lie
+            if (material->depthBufferLie)
+            {
+                glPolygonOffset( material->depthBufferLie, 1.0f );
+                glEnable(GL_POLYGON_OFFSET_FILL);
+            }
                 
-                // draw mesh
-                array->draw(material->primitive, vertexCount);
+            // draw mesh
+            array->draw(material->primitive, vertexCount);
                 
-                // disable depth lie if it was enabled
-                if (material->depthBufferLie)
-                    glDisable(GL_POLYGON_OFFSET_FILL);
+            // disable depth lie if it was enabled
+            if (material->depthBufferLie)
+                glDisable(GL_POLYGON_OFFSET_FILL);
                 
-                // delete bound array
-                delete array;
-                
-            } // end of each mesh
+            // delete bound array
+            delete array;
             
             // check object for (more) attachments
             if ( it != base_ob->attachments.end() )
