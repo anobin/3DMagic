@@ -50,7 +50,7 @@ protected:
 	/// 3D position of object
 	Position position;
 	
-	Mesh* mesh;
+	Batch* batch;
 
 	Material* material;
 	
@@ -63,24 +63,24 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(): mesh(NULL), material(NULL),
+	inline Object(): batch(NULL), material(NULL),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(Mesh* mesh, Material* material): mesh(mesh), material(material),
+	inline Object(Batch* batch, Material* material): batch(batch), material(material),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
 	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): mesh(NULL), material(nullptr),
+	    PhysicalBody::Properties() ): batch(NULL), material(nullptr),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
 	}
 	
 	/// standard constructor for objects
-	inline Object(Mesh* mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): mesh(mesh), material(material),
+	inline Object(Batch* batch, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): batch(batch), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
@@ -159,9 +159,9 @@ public:
 	    return physical;
 	}
 
-	inline Mesh* getMesh()
+	inline Batch* getBatch()
 	{
-	     return mesh;   
+	     return batch;   
 	}
 
 	inline Material* getMaterial()

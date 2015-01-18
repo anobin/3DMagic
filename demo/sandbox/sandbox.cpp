@@ -73,13 +73,6 @@ Batch tinySphereBatch;
 Batch bigSphereBatch;
 Batch boxBatch;
 
-// meshes
-Mesh floorMesh;
-Mesh sphereMesh;
-Mesh tinySphereMesh;
-Mesh bigSphereMesh;
-Mesh boxMesh;
-
 // materials
 Material floorMaterial;
 Material sphereMaterial;
@@ -229,7 +222,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(&bigSphereMesh, &bigSphereMaterial, &bigSphereShape, prop );
+			t = new Object(&bigSphereBatch, &bigSphereMaterial, &bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -385,7 +378,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(&sphereMesh, &sphereMaterial, &sphereShape, prop);
+			t = new Object(&sphereBatch, &sphereMaterial, &sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -535,13 +528,6 @@ public:
 		float scale = 5.0f;
 		batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
 
-		// init meshes
-		sphereMesh.copyBatchIn(sphereBatch);
-		tinySphereMesh.copyBatchIn(tinySphereBatch);
-		bigSphereMesh.copyBatchIn(bigSphereBatch);
-		floorMesh.copyBatchIn(floorBatch);
-		boxMesh.copyBatchIn(boxBatch);
-
 		// init materials
 		materialBuilder.begin(&sphereMaterial, 5, 2);
 		materialBuilder.setShader(shader);
@@ -585,11 +571,9 @@ public:
 		shader2D->link();
 
 		// circle in middle of screen
-		Batch circle2D;
+		Batch* circle2D = new Batch();
 		//batchBuilder.build2DCircle(&circle2D, 0, 0, 50, 5);
-		batchBuilder.build2DRectangle(&circle2D, 0, 0, 50, 50);
-		Mesh* circle2DMesh = new Mesh();
-		circle2DMesh->copyBatchIn(circle2D);
+		batchBuilder.build2DRectangle(circle2D, 0, 0, 50, 50);
 
 		Material* circle2DMaterial = new Material();
 		materialBuilder.begin(circle2DMaterial, 2, 0);
@@ -599,18 +583,18 @@ public:
 		materialBuilder.setTexture(blueTex);
 		materialBuilder.end();
 
-		world->addObject(new Object(circle2DMesh, circle2DMaterial));
+		world->addObject(new Object(circle2D, circle2DMaterial));
 
 
 
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(&sphereMesh, &sphereMaterial, &sphereShape, prop);
+		btBall = new Object(&sphereBatch, &sphereMaterial, &sphereShape, prop);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(&floorMesh, &floorMaterial, &floorShape); // static object
+		floorObject = new Object(&floorBatch, &floorMaterial, &floorShape); // static object
 		world->addObject(floorObject);
 
 		float wallWidth =40;
@@ -630,7 +614,7 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(&boxMesh, &boxMaterial, &boxShape, prop );
+				btBox = new Object(&boxBatch, &boxMaterial, &boxShape, prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
@@ -696,7 +680,7 @@ public:
 			{
 				PhysicalBody::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(&tinySphereMesh, &tinySphereMaterial, &tinySphereShape, prop);
+				Object* t = new Object(&tinySphereBatch, &tinySphereMaterial, &tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             
@@ -739,7 +723,6 @@ public:
 				);
 			}
 			batchBuilder.end();
-			boxMesh.copyBatchIn(boxBatch);
 		}
     
 		char fps[40];

@@ -85,11 +85,13 @@ void World::renderObjects()
 	    std::set<Object*>::iterator it = base_ob->attachments.begin();
 	    while (ob != NULL)
 	    {   
-            // get mesh and material data
-			const Mesh* mesh = ob->getMesh();
-			const Material* material = ob->getMaterial();
-			if (mesh == nullptr)
+			Batch* batch = ob->getBatch();
+			if (batch == nullptr)
 				break;
+
+            // get mesh and material data
+			const Mesh* mesh = batch->getMesh();
+			const Material* material = ob->getMaterial();
             
             // get model/world matrix for object (same for all meshes in object)
             Matrix4 model;

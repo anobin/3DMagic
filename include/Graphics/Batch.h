@@ -106,6 +106,8 @@ protected:
 	
 	/// number of attributes
 	int attributeCount;
+
+	Mesh* mesh;
 	
 	/// (Re)allocate batch data
 	inline void allocate(int vertexCount, int attributeCount)
@@ -121,7 +123,7 @@ protected:
     
 public:
     /// standard constructor
-    inline Batch(): data(NULL), vertexCount(0), attributeCount(0) {}
+    inline Batch(): data(NULL), vertexCount(0), attributeCount(0), mesh(nullptr) {}
     
     /// destructor
     virtual ~Batch();
@@ -132,8 +134,7 @@ public:
         return this->vertexCount;
     }
     
-    
-    
+    Mesh* getMesh();
     
 };   
     

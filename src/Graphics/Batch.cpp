@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Graphics/Batch.h>
+#include <Graphics/Mesh.h>
 
 namespace Magic3D
 {
@@ -32,6 +33,7 @@ namespace Magic3D
 Batch::~Batch()
 {
     delete[] this->data;
+	delete this->mesh;
 }
 
 /// names of shader variables for each of the auto-bound attribute types
@@ -70,7 +72,15 @@ const int Batch::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
 };
 
 
-
+Mesh* Batch::getMesh()
+{
+	if (mesh == nullptr)
+	{
+		mesh = new Mesh();
+		mesh->copyBatchIn(*this);
+	}
+	return mesh;
+}
 
 
 
@@ -78,16 +88,3 @@ const int Batch::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
 
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
