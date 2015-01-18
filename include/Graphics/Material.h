@@ -63,6 +63,7 @@ public:
         TEXTURE6,                       // sampler2D
         TEXTURE7,                       // sampler2D
         LIGHT_LOCATION,                 // vec3
+		FLAT_PROJECTION,				// mat4
         MAX_AUTO_UNIFORM_TYPE
     };
     

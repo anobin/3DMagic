@@ -28,8 +28,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 uniform mat4	mvpMatrix;
 
 // Incoming per vertex
-attribute vec4 location;
-attribute vec2 texCoord;
+attribute vec4 vertex;
+attribute vec2 texcoord0;
 
 // outgoing tex coord to fragment shader
 varying vec2 vTexCoord;
@@ -37,7 +37,7 @@ varying vec2 vTexCoord;
 void main(void) 
 { 
     // simply transform the geometry
-    gl_Position = mvpMatrix * location;
+    gl_Position = mvpMatrix * vertex;
 	// pass along texture coordinate
-	vTexCoord = texCoord;
+	vTexCoord = texcoord0;
 }

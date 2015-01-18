@@ -243,6 +243,11 @@ void World::renderObjects()
                             shader->setUniformf( u.varName, tempp3.x(),
                                 tempp3.y(), tempp3.z() );
                             break;
+						case Material::FLAT_PROJECTION:   // mat4
+							temp4m.createOrthographicMatrix(0, this->graphics.getDisplayWidth(), 
+								0, this->graphics.getDisplayHeight(), -1.0, 1.0);
+                            shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+                            break;
                         default:
                             MAGIC_ASSERT( false );
                             break;

@@ -589,6 +589,38 @@ public:
 		modelBuilder.buildSimpleModel(&floorModel, &floorMesh, &floorMaterial);
 		modelBuilder.buildSimpleModel(&boxModel, &boxMesh, &boxMaterial);
 
+
+
+
+		// 2D shader
+		shared_ptr<TextResource> vp2D = resourceManager.get<TextResource>("shaders/Shader2D.vp");
+		shared_ptr<TextResource> fp2D = resourceManager.get<TextResource>("shaders/Shader2D.fp");
+		Shader* shader2D = new Shader(vp2D->getText(), fp2D->getText());
+		shader2D->bindAttrib( "vertex" );
+		shader2D->bindAttrib( "texcoord0" );
+		shader2D->link();
+
+		// circle in middle of screen
+		Batch circle2D;
+		//batchBuilder.build2DCircle(&circle2D, 0, 0, 50, 5);
+		batchBuilder.build2DRectangle(&circle2D, 0, 0, 50, 50);
+		Mesh* circle2DMesh = new Mesh();
+		circle2DMesh->copyBatchIn(circle2D);
+
+		Material* circle2DMaterial = new Material();
+		materialBuilder.begin(circle2DMaterial, 2, 0);
+		materialBuilder.setShader(shader2D);
+		materialBuilder.addAutoUniform( "mvpMatrix", Material::FLAT_PROJECTION );
+		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
+		materialBuilder.setTexture(blueTex);
+		materialBuilder.end();
+
+		Model* circle2DModel = new Model();
+		modelBuilder.buildSimpleModel(circle2DModel, circle2DMesh, circle2DMaterial);
+		world->addObject(new Object(circle2DModel));
+
+
+
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;

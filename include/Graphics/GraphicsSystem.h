@@ -87,6 +87,16 @@ public:
         this->displayWidth = width;
         this->displayHeight = height;
     }
+
+	inline int getDisplayWidth()
+	{
+		return this->displayWidth;
+	}
+
+	inline int getDisplayHeight()
+	{
+		return this->displayHeight;
+	}
     
     /// create the display screen
     void createScreen();
