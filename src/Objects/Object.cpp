@@ -32,8 +32,6 @@ namespace Magic3D
 /// destructor
 Object::~Object()
 {
-    if (graphicalAlloc)
-        delete graphical;
     if (physicalAlloc)
         delete physical;
 }

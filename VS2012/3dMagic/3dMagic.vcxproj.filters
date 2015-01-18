@@ -291,9 +291,6 @@
     <ClCompile Include="..\..\src\Math\Generic\Position.cc">
       <Filter>Source Files\Math\Generic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\GraphicalEntity.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Graphics\MaterialBuilder.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -372,9 +369,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Graphics\Buffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\GraphicalEntity.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Graphics\GraphicsSystem.h">

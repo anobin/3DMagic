@@ -30,7 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
 #include "../Physics/PhysicalBody.h"
-#include "../Graphics/GraphicalEntity.h"
+#include "../Graphics/Model.h"
 
 #include <set>
 
@@ -50,8 +50,7 @@ protected:
 	Position position;
 	
 	/// graphical body for object
-	GraphicalEntity* graphical;
-	bool graphicalAlloc;
+	Model* model;
 	
 	/// physical body for object
 	PhysicalBody* physical;
@@ -62,19 +61,16 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(): graphical(NULL), graphicalAlloc(false), 
+	inline Object(): model(NULL),  
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(Model* model): graphical(NULL), graphicalAlloc(false), 
-	    physical(NULL), physicalAlloc(false) 
-	{
-	    this->createGraphical(model);
-	}
+	inline Object(Model* model): model(model),
+	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
 	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): graphical(NULL), graphicalAlloc(false), 
+	    PhysicalBody::Properties() ): model(NULL),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
@@ -82,10 +78,9 @@ public:
 	
 	/// standard constructor for objects
 	inline Object(Model* model, CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): graphical(NULL), graphicalAlloc(false), 
+	    PhysicalBody::Properties() ): model(model),
 	    physical(NULL), physicalAlloc(false) 
 	{
-	    this->createGraphical(model);
 	    this->createPhysical(shape, prop);
 	}
 	    
@@ -109,33 +104,6 @@ public:
 	        delete this->physical;
 	    this->physical = new PhysicalBody(this->position, *shape, prop);
 	    this->physicalAlloc = true;
-	}
-	
-	/// set the graphicsl component directly
-	inline void setGraphical(GraphicalEntity* e)
-	{
-	    if (graphicalAlloc)
-	        delete this->graphical;
-	    this->graphical = e;
-	    this->graphicalAlloc = false;
-	}
-	
-	/// create the graphical component
-	inline void createGraphical(Model* model)
-	{
-	    if (graphicalAlloc)
-	        delete this->graphical;
-	    this->graphical = new GraphicalEntity(model);
-	    this->graphicalAlloc = true;
-	}
-	
-	/// remove the graphical component
-	inline void removeGraphical()
-	{
-	    if (graphicalAlloc)
-	        delete this->graphical;
-	    this->graphical = NULL;
-	    this->graphicalAlloc = false;
 	}
 	
 	/// remove the physical component
@@ -188,11 +156,10 @@ public:
 	{
 	    return physical;
 	}
-	
-	/// get graphical body for this model
-	inline GraphicalEntity* getGraphical()
+
+	inline Model* getModel()
 	{
-	     return graphical;   
+	     return model;   
 	}
 
 };

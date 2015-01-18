@@ -29,7 +29,6 @@
     <ClCompile Include="..\..\src\Graphics\Batch.cpp" />
     <ClCompile Include="..\..\src\Graphics\BatchBuilder.cpp" />
     <ClCompile Include="..\..\src\Graphics\Buffer.cpp" />
-    <ClCompile Include="..\..\src\Graphics\GraphicalEntity.cpp" />
     <ClCompile Include="..\..\src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="..\..\src\Graphics\Image.cpp" />
     <ClCompile Include="..\..\src\Graphics\MaterialBuilder.cpp" />
@@ -97,7 +96,6 @@
     <ClInclude Include="..\..\include\Graphics\Batch.h" />
     <ClInclude Include="..\..\include\Graphics\BatchBuilder.h" />
     <ClInclude Include="..\..\include\Graphics\Buffer.h" />
-    <ClInclude Include="..\..\include\Graphics\GraphicalEntity.h" />
     <ClInclude Include="..\..\include\Graphics\GraphicsSystem.h" />
     <ClInclude Include="..\..\include\Graphics\Image.h" />
     <ClInclude Include="..\..\include\Graphics\Material.h" />

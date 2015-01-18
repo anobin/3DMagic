@@ -70,7 +70,6 @@ void World::renderObjects()
 	// render all objects
 	std::set<Object*>::iterator it = objects.begin();
 	Object* ob;
-	GraphicalEntity* en;
 	const Model* model;
 	const Mesh* mesh;
 	const Mesh** meshes;
@@ -92,16 +91,10 @@ void World::renderObjects()
 	    std::set<Object*>::iterator it = base_ob->attachments.begin();
 	    while (ob != NULL)
 	    {
-	    
-            en = ob->getGraphical();
-            
+			model = ob->getModel();
             // ensure there is a graphical part to this entity
-            if (en == NULL)
+            if (model == NULL)
                 break; // no graphical part to render
-            
-            // get model
-            model = en->getModel();
-            MAGIC_ASSERT(model != NULL);
             
             // get mesh and material data
             meshes = model->getMeshData();
