@@ -42,6 +42,9 @@ using namespace Magic3D;
 #include <map>
 #include <list>
 #include <memory>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
 using std::cout;
 using std::endl;
 using std::shared_ptr;
@@ -429,6 +432,8 @@ void mouseMovedPassive(int x, int y, FPCamera& camera, GraphicsSystem& graphics)
 
 class Sandbox : public DemoBase
 {
+	Texture* screenTex;
+
 public:
 
 	void setup()
@@ -573,14 +578,19 @@ public:
 		// circle in middle of screen
 		Batch* circle2D = new Batch();
 		//batchBuilder.build2DCircle(&circle2D, 0, 0, 50, 5);
-		batchBuilder.build2DRectangle(circle2D, 0, 0, 50, 50);
+		batchBuilder.build2DRectangle(circle2D, 0, 0, 300, 300);
+
+		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
+		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
+		screenTex = new Texture(screenImage);
+		screenTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
 		Material* circle2DMaterial = new Material();
 		materialBuilder.begin(circle2DMaterial, 2, 0);
 		materialBuilder.setShader(shader2D);
 		materialBuilder.addAutoUniform( "mvpMatrix", Material::FLAT_PROJECTION );
 		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-		materialBuilder.setTexture(blueTex);
+		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
 
 		world->addObject(new Object(circle2D, circle2DMaterial));
@@ -590,7 +600,7 @@ public:
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(&sphereBatch, &sphereMaterial, &sphereShape, prop);
+		btBall = new Object(&sphereBatch, &sphereMaterial);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
@@ -731,6 +741,22 @@ public:
 		sprintf(fps, "Figure: %d", world->getActualFPS() );
 		charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
 		charTex->set(charImage);
+
+		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
+
+		btBall->setPosition(Position(
+			endPoint,
+			btBall->getPosition().getForwardVector(),
+			btBall->getPosition().getUpVector()
+		));
+
+		std::stringstream ss;
+		ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
+			<< ", " << endPoint.z();
+
+		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color(255, 255, 255, 255));
+		screenTex->set(screenImage);
     
 	}
 

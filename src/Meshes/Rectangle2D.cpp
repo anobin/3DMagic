@@ -38,31 +38,31 @@ void BatchBuilder::build2DRectangle(Batch* batch, int x, int y, int width, int h
 {	
 	// since this is a 2D model, we leave all z coords at 0
 	
-	// 4 points using a TRIANGLE FAN
+	// 6 points using a TRIANGLE FAN
 	this->begin(6, 2, batch);
 	
 	// bottom right
-	texCoord2f(1.0f, 0.0f);
+	texCoord2f(1.0f, 1.0f);
 	vertex3f((float)x+width, (float)y, 0.0f);
 	
 	// bottom left
-	texCoord2f(0.0f, 0.0f);
+	texCoord2f(0.0f, 1.0f);
 	vertex3f((float)x, (float)y, 0.0f);
 	
 	// top left
-	texCoord2f(0.0f, 1.0f);
+	texCoord2f(0.0f, 0.0f);
 	vertex3f((float)x, (float)y+height, 0.0f);
 
 	// top left
-	texCoord2f(0.0f, 1.0f);
+	texCoord2f(0.0f, 0.0f);
 	vertex3f((float)x, (float)y+height, 0.0f);
 
 	// bottom right
-	texCoord2f(1.0f, 0.0f);
+	texCoord2f(1.0f, 1.0f);
 	vertex3f((float)x+width, (float)y, 0.0f);
 	
 	// top right
-	texCoord2f(1.0f, 1.0f);
+	texCoord2f(1.0f, 0.0f);
 	vertex3f((float)x+width, (float)y+height, 0.0f);
 	
 	// end vertex data
