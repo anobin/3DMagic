@@ -17,13 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for TGA2DResource class
- *
- * @file TGA2DResource.cpp
- * @author Andrew Keating
- */
 
-#include <Resources/Images/TGA2DResource.h>
+#include "TGAImageLoader.h"
 #include <Exceptions/ResourceNotFoundException.h>
 #include <Exceptions/MagicException.h>
 #include <Util/magic_assert.h>
@@ -63,33 +58,13 @@ typedef struct
 #undef PACKED
 
 
-/** Standard constructor
- * @param path full path to TGA image
- * @param name name of the resource
- * @param manager the resource manager
- */
-TGA2DResource::TGA2DResource(const std::string& path, const std::string& name):
-	Image2DResource(name)
+std::shared_ptr<Image> TGAImageLoader::getImage(const std::string& path) const
 {
-    // Attempt to open the file
-    pFile = fopen(path.c_str(), "rb");
+	// Attempt to open the file
+    FILE* pFile = fopen(path.c_str(), "rb");
     if(pFile == NULL)
         throw_ResourceNotFoundException("Could not find TGA image file");
-}
-	
-	
-/// destructor
-TGA2DResource::~TGA2DResource()
-{
-	// close image file
-	fclose(pFile);
-}
 
-/** Get a image represented by this resource
- * @param image image to place resource data into
- */
-void TGA2DResource::getImage(Image* image) const
-{
     TGAHEADER tgaHeader;		// TGA file header
     
     // read in header
@@ -109,6 +84,7 @@ void TGA2DResource::getImage(Image* image) const
     unsigned char* tempData = new unsigned char[length];
     
     // allocate memory in image
+	std::shared_ptr<Image> image = std::make_shared<Image>();
     image->allocate(width, height, channels );
     
     // read in raw image data
@@ -136,6 +112,10 @@ void TGA2DResource::getImage(Image* image) const
 	// delete temporary image data
 	delete[] tempData;
 
+	// close image file
+	fclose(pFile);
+
+	return image;
 }
 	
 	

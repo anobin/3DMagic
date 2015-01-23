@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Resources/Images/PNG2DResource.h>
+#include "PNGImageLoader.h"
 #include <Exceptions/ResourceNotFoundException.h>
 #include <Exceptions/MagicException.h>
 #include <Util/magic_assert.h>
@@ -34,22 +34,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Magic3D
 {
-	
 
-
-
-/** Standard constructor
- * @param path full path to TGA image
- * @param name name of the resource
- * @param manager the resource manager
- */
-PNG2DResource::PNG2DResource(const std::string& path, const std::string& name):
-	Image2DResource(name)
+std::shared_ptr<Image> PNGImageLoader::getImage(const std::string& path) const
 {
 	png_byte signiture [8];
 	
     // open the file given, in binary mode
-	this->fp = fopen(path.c_str(), "rb");
+	FILE* fp = fopen(path.c_str(), "rb");
     if (!fp)
         throw_MagicException( "Could not open PNG 2D resource file" );
     
@@ -58,21 +49,6 @@ PNG2DResource::PNG2DResource(const std::string& path, const std::string& name):
     if (png_sig_cmp(signiture, 0, 8))
         throw_MagicException( "Attempted to create PNG resource from a non-PNG file" );
 
-}
-	
-	
-/// destructor
-PNG2DResource::~PNG2DResource()
-{
-	// close file pointer
-    fclose(fp);
-}
-
-/** Get a image represented by this resource
- * @param image image to place resource data into
- */
-void PNG2DResource::getImage(Image* image) const
-{
     png_structp png_ptr;
 	png_infop info_ptr;
 	png_byte color_type;
@@ -143,6 +119,7 @@ void PNG2DResource::getImage(Image* image) const
     }
     
     // allocate the output image
+	std::shared_ptr<Image> image = std::make_shared<Image>();
     image->allocate(width, height, channels);
 
     // allocate temporary buffer to place PNG data into
@@ -181,6 +158,10 @@ void PNG2DResource::getImage(Image* image) const
     // free temporary buffer data
     delete[] row_pointers;
     delete[] imageData;
+
+	fclose(fp);
+
+	return image;
 }
 	
 	

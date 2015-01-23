@@ -35,7 +35,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Exceptions/MagicException.h"
 
-#include "../Resources/Image2DResource.h"
 #include "Image.h"
 
 

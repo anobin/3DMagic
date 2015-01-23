@@ -17,42 +17,28 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Image2DResource class
- *
- * @file Image2DResource.h
- * @author Andrew Keating
- */
+#ifndef MAGIC3D_TGA_IMAGE_LOADER_H
+#define MAGIC3D_TGA_IMAGE_LOADER_H
 
-#include <Resources/Image2DResource.h>
+#include <string>
+#include <memory>
+#include "../ImageLoaders.h"
 
 namespace Magic3D
 {
-	
-	
-/// destructor
-Image2DResource::~Image2DResource()
-{
-	/* intentionally left blank */
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+/** Represents a single 2D TGA image resource
+ */
+class TGAImageLoader : public ImageLoader
+{	
+public:
+
+	virtual std::shared_ptr<Image> getImage(const std::string& path) const;
+
 };
+
+
+};
+
+
+#endif

@@ -29,6 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "TextResource.h"
 #include "../Exceptions/MagicException.h"
 #include "../Exceptions/ResourceNotFoundException.h"
+#include "ImageLoaders.h"
 #include <string>
 #include <map>
 #include <memory>
@@ -132,6 +133,15 @@ inline std::shared_ptr<TextResource> ResourceManager::_get<TextResource>(const s
 	text[length] = 0; // null terminated string
   
 	return std::make_shared<TextResource>(text);
+}
+
+template<>
+inline std::shared_ptr<Image> ResourceManager::_get<Image>(const std::string& fullPath)
+{
+	std::string ext = fullPath.substr(fullPath.find_last_of("."));
+	auto loader = ImageLoaders::getSingleton().get(ext);
+	// TODO: add exception
+	return loader->getImage(fullPath);
 }
 
 

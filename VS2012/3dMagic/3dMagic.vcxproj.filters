@@ -171,9 +171,6 @@
     <ClCompile Include="..\..\src\Resources\FontResource.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\Image2DResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\ModelResource.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
@@ -185,12 +182,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\fonts\TTFontResource.cpp">
       <Filter>Source Files\Resources\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Resources\Images\PNG2DResource.cpp">
-      <Filter>Source Files\Resources\Images</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Resources\Images\TGA2DResource.cpp">
-      <Filter>Source Files\Resources\Images</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\models\Model3DSResource.cpp">
       <Filter>Source Files\Resources\models</Filter>
@@ -250,6 +241,15 @@
       <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\TextResource.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Images\PNGImageLoader.cpp">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Images\TGAImageLoader.cpp">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ImageLoaders.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -398,9 +398,6 @@
     <ClInclude Include="..\..\src\Resources\FontResource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Resources\Image2DResource.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Resources\ModelResource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
@@ -412,12 +409,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\fonts\TTFontResource.h">
       <Filter>Source Files\Resources\fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Resources\Images\PNG2DResource.h">
-      <Filter>Source Files\Resources\Images</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Resources\Images\TGA2DResource.h">
-      <Filter>Source Files\Resources\Images</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\models\Model3DSResource.h">
       <Filter>Source Files\Resources\models</Filter>
@@ -460,6 +451,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\TextResource.h">
       <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\ImageLoaders.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\Images\PNGImageLoader.h">
+      <Filter>Source Files\Resources\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\Images\TGAImageLoader.h">
+      <Filter>Source Files\Resources\Images</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

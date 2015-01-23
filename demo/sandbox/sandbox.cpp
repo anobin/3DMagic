@@ -448,12 +448,10 @@ public:
 		graphics.setClearColor(lightBlue );
 
 		// init textures
-		Image tempImage;
 		if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
 		{
-			shared_ptr<TGA2DResource> stoneImage = resourceManager.get<TGA2DResource>("images/bareConcrete.tga");
-			stoneImage->getImage(&tempImage);
-			stoneTex = new Texture(tempImage);
+			shared_ptr<Image> stoneImage = resourceManager.get<Image>("images/bareConcrete.tga");
+			stoneTex = new Texture(*stoneImage);
 		}
 		else
 		{
@@ -462,9 +460,8 @@ public:
 		}
 		if (resourceManager.doesResourceExist("images/marble.png"))
 		{
-			shared_ptr<PNG2DResource> marbleImage = resourceManager.get<PNG2DResource>("images/marble.png");
-			marbleImage->getImage(&tempImage);
-			marbleTex= new Texture(tempImage);
+			shared_ptr<Image> marbleImage = resourceManager.get<Image>("images/marble.png");
+			marbleTex= new Texture(*marbleImage);
 			marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 		}
 		else
@@ -475,15 +472,13 @@ public:
 		}
 		if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
 		{
-			shared_ptr<TGA2DResource> bunkerImage = resourceManager.get<TGA2DResource>("images/ConcreteBunkerDirty.tga");
-			bunkerImage->getImage(&tempImage);
-			bunkerTex = new Texture(tempImage);
+			shared_ptr<Image> bunkerImage = resourceManager.get<Image>("images/ConcreteBunkerDirty.tga");
+			bunkerTex = new Texture(*bunkerImage);
 		}
 		if (resourceManager.doesResourceExist("images/singleBrick.tga"))
 		{
-			shared_ptr<TGA2DResource> brickImage = resourceManager.get<TGA2DResource>("images/singleBrick.tga");
-			brickImage->getImage(&tempImage);
-			brickTex = new Texture(tempImage);
+			shared_ptr<Image> brickImage = resourceManager.get<Image>("images/singleBrick.tga");
+			brickTex = new Texture(*brickImage);
 			brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 		}
 		else

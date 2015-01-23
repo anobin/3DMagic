@@ -17,59 +17,30 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Image2DResource class
- *
- * @file Image2DResource.h
- * @author Andrew Keating
- */
-#ifndef MAGIC3D_IMAGE_2D_RESOURCE_H
-#define MAGIC3D_IMAGE_2D_RESOURCE_H
+#ifndef MAGIC3D_PNG_IMAGE_LOADER_H
+#define MAGIC3D_PNG_IMAGE_LOADER_H
 
-#include "Resource.h"
-#include "../Graphics/Image.h"
+#include "../ImageLoaders.h"
+#include <Graphics\Image.h>
 
-#ifdef _WIN32
-#include <gl/glew.h>
-#include <gl/gl.h>
-#else
-#include <glew.h>
-#include <gl.h>
-#endif
+#include <string>
+#include <memory>
 
 namespace Magic3D
 {
 
-/** Base class for all 2D image resources
+/** Represents a single 2D PNG image resource
  */
-class Image2DResource
+class PNGImageLoader : public Magic3D::ImageLoader
 {
-protected:
-	
-	/// standard constructor
-	inline Image2DResource(const std::string& name){}
-		
 public:
-	/// destructor
-	virtual ~Image2DResource();
-	
-	
-	/** Get a image represented by this resource
-	 * @param image image to place resource data into
-	 */
-	virtual void getImage(Image* image) const = 0;
+
+	virtual std::shared_ptr<Image> getImage(const std::string& path) const;
 
 };
 
 
 };
-
 
 
 #endif
-
-
-
-
-
-
-
