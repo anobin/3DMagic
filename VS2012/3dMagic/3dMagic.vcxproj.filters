@@ -183,9 +183,6 @@
     <ClCompile Include="..\..\src\Resources\ResourceManager.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\TextResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\fonts\TTFontResource.cpp">
       <Filter>Source Files\Resources\fonts</Filter>
     </ClCompile>
@@ -251,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Math\Point.cpp">
       <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\TextResource.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,16 +404,10 @@
     <ClInclude Include="..\..\src\Resources\ModelResource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Resources\RawResource.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Resources\Resource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\ResourceManager.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Resources\TextResource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\fonts\TTFontResource.h">
@@ -463,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\3DMagic.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\TextResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

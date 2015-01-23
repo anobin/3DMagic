@@ -51,8 +51,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // resources
 #include "Resources/Resource.h"
-#include "Resources/ResourceManager.h"
 #include "Resources/TextResource.h"
+#include "Resources/ResourceManager.h"
 #include "Resources/Image2DResource.h"
 #include "Resources/Images/TGA2DResource.h"
 #include "Resources/Images/PNG2DResource.h"

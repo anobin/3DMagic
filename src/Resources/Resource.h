@@ -24,7 +24,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_RESOURCE_H
 #define MAGIC3D_RESOURCE_H
 
-#include <string>
 
 namespace Magic3D
 {
@@ -32,29 +31,14 @@ namespace Magic3D
 /** base class for all resources
  */
 class Resource
-{	
-private:
-	/// default constructor, can't be used
-	inline Resource(): name(NULL) {}
-
-protected:
-	/// the name of this resource
-	std::string name;
-	
+{
+protected:	
 	/// standard constructor
-	inline Resource(const std::string& name): name(name) {}
+	inline Resource() {}
 
 public:	
 	/// destructor
 	virtual ~Resource();
-	
-	/** get the name of this resource
-	 * @return const reference to the name of thisa resource.
-	 */
-	inline const std::string& getName() const
-	{
-		return name;
-	}
 
 };
 

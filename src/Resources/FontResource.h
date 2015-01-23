@@ -33,12 +33,12 @@ namespace Magic3D
 
 /** Base class for all text font resources
  */
-class FontResource : public Resource
+class FontResource
 {
 protected:
 	
 	/// standard constructor
-	inline FontResource(const std::string& name): Resource(name) {}
+	inline FontResource(const std::string& name){}
 		
 public:
 	/// destructor

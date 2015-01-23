@@ -24,40 +24,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Resources/TextResource.h>
-#include <Exceptions/ResourceNotFoundException.h>
-#include <iostream>
-#include <fstream>
 
 namespace Magic3D
 {
-	
-/** Standard constructor
- * @param path full path for text file to read
- */
-TextResource::TextResource(const std::string& path, const std::string& name): Resource(name)
-{
-	std::ifstream file;
-	file.open (path, std::ios::binary );
-	
-	if (!file.is_open() || !file.good())
-	{
-		file.close();
-		throw_MagicException("Failed to open text resource");
-	}
-
-	// get length of file:
-	file.seekg (0, std::ios::end);
-	int length = (int)file.tellg();
-	file.seekg (0, std::ios::beg);
-
-	// read all data into memory
-	text = new char [length+1];
-	file.read (text,length);
-	text[length] = 0; // null terminated string
-  
-	// close file
-	file.close();
-}
 
 /// destructor
 TextResource::~TextResource()
@@ -65,32 +34,6 @@ TextResource::~TextResource()
 	delete[] text;
 }
 	
-/** Retrieve the text data for this resource
- * @return the text data as a const C string
- */
-const char* TextResource::getText() const
-{
-	return this->text;
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 };
-
-
-
-
-
-
-
-

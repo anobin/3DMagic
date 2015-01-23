@@ -24,7 +24,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Resources/Resource.h>
-#include <Resources/ResourceManager.h>
 
 namespace Magic3D
 {

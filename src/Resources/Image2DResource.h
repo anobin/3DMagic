@@ -41,13 +41,12 @@ namespace Magic3D
 
 /** Base class for all 2D image resources
  */
-class Image2DResource : public Resource
+class Image2DResource
 {
 protected:
 	
 	/// standard constructor
-	inline Image2DResource(const std::string& name):
-		Resource(name) {}
+	inline Image2DResource(const std::string& name){}
 		
 public:
 	/// destructor

@@ -26,11 +26,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_RESOURCE_MANAGER_H
 
 #include "Resource.h"
+#include "TextResource.h"
 #include "../Exceptions/MagicException.h"
 #include "../Exceptions/ResourceNotFoundException.h"
 #include <string>
 #include <map>
 #include <memory>
+#include <fstream>
 
 
 namespace Magic3D
@@ -50,10 +52,16 @@ private:
 	
 	/// default constructor
 	inline ResourceManager() {}
+
+	template<class T>
+	inline std::shared_ptr<T> _get(const std::string& fullPath)
+	{
+		/* intentionally left blank, always need a specialization */
+		return std::make_shared<T>(fullPath, fullPath);
+	}
 	
 public:
-	friend class Resource;
-	
+
 	/** Standard constructor
 	 * @param resourceDir the directory where resources are located
 	 */
@@ -67,17 +75,17 @@ public:
 	 * @param name the name of the resource
 	 * @return true for exists, false otherwise
 	 */
-	bool doesResourceExist(std::string name);
+	bool doesResourceExist(const std::string& path);
 		
 	/** get a resource
 	 * @param name the name of the resource including any extra path info
-	 * @return handle to text resource
+	 * @return handle to resource
 	 */
 	template <class T>
-	inline std::shared_ptr<T> get(std::string name)
+	inline std::shared_ptr<T> get(const std::string& path)
 	{
 		// check if resource is already loaded
-		auto it = resources.find(name);
+		auto it = resources.find(path);
 		if (it != resources.end() && !it->second.expired())
 		{
 			std::shared_ptr<Resource> ptr = std::shared_ptr<Resource>(it->second);
@@ -87,19 +95,44 @@ public:
 		// otherwise, create new resource
 
 		// make sure file exists
-		if (!this->doesResourceExist(name))
-			throw_ResourceNotFoundException(name);
+		if (!this->doesResourceExist(path))
+			throw_ResourceNotFoundException(path);
 
 		// load resource
-		std::shared_ptr<T> r = std::make_shared<T>(resourceDir + "/" + name, name);
-		resources.insert(std::pair<std::string, std::weak_ptr<Resource>>(name, std::weak_ptr<T>(r)));
-
-		return r;
+		std::shared_ptr<T> resource = this->_get<T>(resourceDir + "/" + path);
+		resources.insert(std::pair<std::string, std::weak_ptr<Resource>>(
+			path, std::weak_ptr<Resource>(std::dynamic_pointer_cast<Resource>(resource))));
+		return resource;
 	}
 	
 };
 
 
+
+template<>
+inline std::shared_ptr<TextResource> ResourceManager::_get<TextResource>(const std::string& fullPath)
+{
+	std::ifstream file;
+	file.open (fullPath, std::ios::binary );
+	
+	if (!file.is_open() || !file.good())
+	{
+		file.close();
+		throw_MagicException("Failed to open text resource");
+	}
+
+	// get length of file:
+	file.seekg (0, std::ios::end);
+	int length = (int)file.tellg();
+	file.seekg (0, std::ios::beg);
+
+	// read all data into memory
+	char* text = new char [length+1];
+	file.read (text,length);
+	text[length] = 0; // null terminated string
+  
+	return std::make_shared<TextResource>(text);
+}
 
 
 };

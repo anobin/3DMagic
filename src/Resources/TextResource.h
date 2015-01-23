@@ -43,22 +43,18 @@ public:
 	/** Standard constructor
 	 * @param path full path for text file to read
 	 */
-	TextResource(const std::string& path, const std::string& name);
+	inline TextResource(char* text): text(text) {}
 
-	/// copy constructor
-	inline TextResource(const TextResource& copy): Resource(copy.name), text(copy.text) {}
-	
-	/// destructor
 	virtual ~TextResource();
 	
 	
 	/** Retrieve the text data for this resource
 	 * @return the text data as a const C string
 	 */
-	virtual const char* getText() const;
-	
-	
-	
+	inline const char* getText() const
+	{
+		return text;
+	}
 	
 };	
 	
@@ -69,6 +65,3 @@ public:
 
 
 #endif
-
-
-

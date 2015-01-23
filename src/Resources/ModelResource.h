@@ -10,19 +10,21 @@
 #include "../Graphics/Batch.h"
 #include "../Math/Matrix4.h"
 
+#include <string>
+
 namespace Magic3D
 {
 
 /** Respresents a single model resource
  */
-class ModelResource : public Resource
+class ModelResource
 {
 protected:
 	/** Standard constructor
 	 * @param name the name for this resource
 	 * @param manager the manager for this resource
 	 */
-	inline ModelResource(const std::string& name): Resource(name) {}
+	inline ModelResource(const std::string& name) {}
 
 
 public:

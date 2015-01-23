@@ -40,11 +40,11 @@ ResourceManager::~ResourceManager()
  * @param name the name of the resource
  * @return true for exists, false otherwise
  */
-bool ResourceManager::doesResourceExist(std::string name)
+bool ResourceManager::doesResourceExist(const std::string& path)
 {
 	std::ifstream test;
-	test.open((resourceDir + "/" + name).c_str());
-	if (test.is_open())
+	test.open((resourceDir + "/" + path).c_str());
+	if (test.is_open() && test.good())
 		return true;
 	return false;
 }

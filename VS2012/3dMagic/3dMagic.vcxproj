@@ -128,7 +128,6 @@
     <ClInclude Include="..\..\src\Resources\Images\TGA2DResource.h" />
     <ClInclude Include="..\..\src\Resources\ModelResource.h" />
     <ClInclude Include="..\..\src\Resources\models\Model3DSResource.h" />
-    <ClInclude Include="..\..\src\Resources\RawResource.h" />
     <ClInclude Include="..\..\src\Resources\Resource.h" />
     <ClInclude Include="..\..\src\Resources\ResourceManager.h" />
     <ClInclude Include="..\..\src\Resources\TextResource.h" />
