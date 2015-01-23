@@ -64,59 +64,11 @@
     <Filter Include="Source Files\Math\Generic">
       <UniqueIdentifier>{29a7fe45-d249-4608-8779-35c5f74431b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Cameras">
-      <UniqueIdentifier>{a0384f65-c9f5-4d8c-bde4-be9bdad95fe7}</UniqueIdentifier>
+    <Filter Include="Source Files\Lights">
+      <UniqueIdentifier>{0420d41d-3bb4-4424-8ce3-4302a1ac3abc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\CollisionShapes">
-      <UniqueIdentifier>{35630821-4207-4d23-bda3-a81dd9f88c97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Event">
-      <UniqueIdentifier>{d73f287a-f4fd-4140-94be-bece08e96797}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Exceptions">
-      <UniqueIdentifier>{df30fa44-f713-4c73-bbd1-955246a773ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{5838aeb6-489e-4189-97a9-c1b26d4bc55e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Lights">
-      <UniqueIdentifier>{4adda562-6fef-4c0f-8171-ab1c5d4b5ced}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Math">
-      <UniqueIdentifier>{3e058090-3375-4a00-ad0c-ecd83075d0b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{b4d24733-15c9-4c19-9492-556bf5c6530a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Physics">
-      <UniqueIdentifier>{dca095db-bf42-40bc-af4e-109c3394fbfb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Resources">
-      <UniqueIdentifier>{6ffe5468-cfc7-4d04-812b-b08ab286cb0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Shaders">
-      <UniqueIdentifier>{ab673629-5c95-4dca-a13c-b90b606da8d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Time">
-      <UniqueIdentifier>{eeb11918-f34d-400e-9dfc-25d14006c080}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Util">
-      <UniqueIdentifier>{9e862cef-c177-4d2c-bec2-71eb52424d62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\World">
-      <UniqueIdentifier>{c8eba8ce-6be7-4806-9617-177c0e01dbc0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Resources\fonts">
-      <UniqueIdentifier>{7eef80a0-77f0-4124-825a-17f7d96a80bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Resources\Images">
-      <UniqueIdentifier>{dc39039f-26db-4ee3-868f-7ad9b8a38bc8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Resources\models">
-      <UniqueIdentifier>{5ac8420b-0269-456c-a12e-f35390a530f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Math\Generic">
-      <UniqueIdentifier>{1dee1307-e10b-49c2-846e-25ab389dbe2e}</UniqueIdentifier>
+    <Filter Include="Source Files\Time">
+      <UniqueIdentifier>{4a8084d9-0892-4212-b81c-bcfe136d3847}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -302,215 +254,215 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\3DMagic.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\src\Cameras\Camera.h">
+      <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Cameras\Camera.h">
-      <Filter>Header Files\Cameras</Filter>
+    <ClInclude Include="..\..\src\Cameras\Camera2D.h">
+      <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Cameras\Camera2D.h">
-      <Filter>Header Files\Cameras</Filter>
+    <ClInclude Include="..\..\src\Cameras\FixedCamera.h">
+      <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Cameras\FixedCamera.h">
-      <Filter>Header Files\Cameras</Filter>
+    <ClInclude Include="..\..\src\Cameras\FlyCamera.h">
+      <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Cameras\FlyCamera.h">
-      <Filter>Header Files\Cameras</Filter>
+    <ClInclude Include="..\..\src\Cameras\FPCamera.h">
+      <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Cameras\FPCamera.h">
-      <Filter>Header Files\Cameras</Filter>
+    <ClInclude Include="..\..\src\CollisionShapes\BoxCollisionShape.h">
+      <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CollisionShapes\BoxCollisionShape.h">
-      <Filter>Header Files\CollisionShapes</Filter>
+    <ClInclude Include="..\..\src\CollisionShapes\CollisionShape.h">
+      <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CollisionShapes\CollisionShape.h">
-      <Filter>Header Files\CollisionShapes</Filter>
+    <ClInclude Include="..\..\src\CollisionShapes\PlaneCollisionShape.h">
+      <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CollisionShapes\PlaneCollisionShape.h">
-      <Filter>Header Files\CollisionShapes</Filter>
+    <ClInclude Include="..\..\src\CollisionShapes\SphereCollisionShape.h">
+      <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CollisionShapes\SphereCollisionShape.h">
-      <Filter>Header Files\CollisionShapes</Filter>
+    <ClInclude Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.h">
+      <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\CollisionShapes\TriangleMeshCollisionShape.h">
-      <Filter>Header Files\CollisionShapes</Filter>
+    <ClInclude Include="..\..\src\Event\Event.h">
+      <Filter>Source Files\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Event\Event.h">
-      <Filter>Header Files\Event</Filter>
+    <ClInclude Include="..\..\src\Event\EventSystem.h">
+      <Filter>Source Files\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Event\EventSystem.h">
-      <Filter>Header Files\Event</Filter>
+    <ClInclude Include="..\..\src\Exceptions\MagicAssertException.h">
+      <Filter>Source Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Exceptions\MagicAssertException.h">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="..\..\src\Exceptions\MagicException.h">
+      <Filter>Source Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Exceptions\MagicException.h">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="..\..\src\Exceptions\ResourceNotFoundException.h">
+      <Filter>Source Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Exceptions\ResourceNotFoundException.h">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="..\..\src\Exceptions\ShaderCompileException.h">
+      <Filter>Source Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Exceptions\ShaderCompileException.h">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="..\..\src\Exceptions\ShaderVertexInterfaceException.h">
+      <Filter>Source Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Exceptions\ShaderVertexInterfaceException.h">
-      <Filter>Header Files\Exceptions</Filter>
+    <ClInclude Include="..\..\src\Graphics\Batch.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Batch.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\BatchBuilder.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\BatchBuilder.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\Buffer.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Buffer.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\GraphicsSystem.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\GraphicsSystem.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\Image.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Image.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\Material.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Material.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\MaterialBuilder.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\MaterialBuilder.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\Mesh.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Mesh.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\Texture.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\Texture.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Graphics\VertexArray.h">
+      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Graphics\VertexArray.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="..\..\src\Lights\Light.h">
+      <Filter>Source Files\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Lights\Light.h">
-      <Filter>Header Files\Lights</Filter>
+    <ClInclude Include="..\..\src\Math\Math.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Objects\Object.h">
-      <Filter>Header Files\Objects</Filter>
+    <ClInclude Include="..\..\src\Math\MathTypes.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Physics\MotionState.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="..\..\src\Math\Matrix3.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Physics\PhysicalBody.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="..\..\src\Math\Matrix4.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Physics\PhysicsSystem.h">
-      <Filter>Header Files\Physics</Filter>
+    <ClInclude Include="..\..\src\Math\Point.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\FontResource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Position.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\Image2DResource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Vector.h">
+      <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\ModelResource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\BasePoint.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\RawResource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\BaseVector.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\Resource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\MathTypes.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\ResourceManager.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\Matrix3.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\TextResource.h">
-      <Filter>Header Files\Resources</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\Matrix4.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\fonts\TTFontResource.h">
-      <Filter>Header Files\Resources\fonts</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\Point.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\Images\PNG2DResource.h">
-      <Filter>Header Files\Resources\Images</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\Position.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\Images\TGA2DResource.h">
-      <Filter>Header Files\Resources\Images</Filter>
+    <ClInclude Include="..\..\src\Math\Generic\Vector.h">
+      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Resources\models\Model3DSResource.h">
-      <Filter>Header Files\Resources\models</Filter>
+    <ClInclude Include="..\..\src\Objects\Object.h">
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Shaders\Shader.h">
-      <Filter>Header Files\Shaders</Filter>
+    <ClInclude Include="..\..\src\Physics\MotionState.h">
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Time\StopWatch.h">
-      <Filter>Header Files\Time</Filter>
+    <ClInclude Include="..\..\src\Physics\PhysicalBody.h">
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\Character.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Physics\PhysicsSystem.h">
+      <Filter>Source Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\Color.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\FontResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\Helpers.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\Image2DResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\magic_assert.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\ModelResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\magic_throw.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\RawResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\StaticFont.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\Resource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\Types.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\ResourceManager.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Util\Units.h">
-      <Filter>Header Files\Util</Filter>
+    <ClInclude Include="..\..\src\Resources\TextResource.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\World\World.h">
-      <Filter>Header Files\World</Filter>
+    <ClInclude Include="..\..\src\Resources\fonts\TTFontResource.h">
+      <Filter>Source Files\Resources\fonts</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Math.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Resources\Images\PNG2DResource.h">
+      <Filter>Source Files\Resources\Images</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\MathTypes.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Resources\Images\TGA2DResource.h">
+      <Filter>Source Files\Resources\Images</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Matrix3.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Resources\models\Model3DSResource.h">
+      <Filter>Source Files\Resources\models</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Matrix4.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Shaders\Shader.h">
+      <Filter>Source Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Position.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Util\Character.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\MathTypes.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\Color.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Matrix3.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\Helpers.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Matrix4.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\magic_assert.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Position.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\magic_throw.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\BaseVector.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\StaticFont.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Vector.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Util\Types.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Vector.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\Util\Units.h">
+      <Filter>Source Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\Point.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\Time\StopWatch.h">
+      <Filter>Source Files\Time</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Generic\BasePoint.h">
-      <Filter>Header Files\Math\Generic</Filter>
+    <ClInclude Include="..\..\src\World\World.h">
+      <Filter>Source Files\World</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Math\Point.h">
-      <Filter>Header Files\Math</Filter>
+    <ClInclude Include="..\..\src\3DMagic.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
