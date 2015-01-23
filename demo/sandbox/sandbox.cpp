@@ -59,7 +59,7 @@ using std::shared_ptr;
 Matrix4 projectionMatrix;
 
 // resource manager
-ResourceManager resourceManager("../../../../");
+ResourceManager resourceManager("../../../../resources/");
 
 // textures
 Texture* stoneTex = NULL;
