@@ -30,6 +30,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/MagicException.h"
 #include "../Exceptions/ResourceNotFoundException.h"
 #include "ImageLoaders.h"
+#include "FontResource.h"
+#include "fonts\TTFontResource.h"
 #include <string>
 #include <map>
 #include <memory>
@@ -144,6 +146,13 @@ inline std::shared_ptr<Image> ResourceManager::_get<Image>(const std::string& fu
 	return loader->getImage(fullPath);
 }
 
+
+template<>
+inline std::shared_ptr<FontResource> ResourceManager::_get(const std::string& fullPath)
+{
+	// TODO: add loaders for other formats
+	return std::make_shared<TTFontResource>(fullPath, fullPath);
+}
 
 };
 

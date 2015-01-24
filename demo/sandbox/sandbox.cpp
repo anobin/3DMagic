@@ -491,7 +491,7 @@ public:
 		blueTex = new Texture(blueImage);
 		blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
-		shared_ptr<TTFontResource> dejavuResource = resourceManager.get<TTFontResource>
+		shared_ptr<FontResource> dejavuResource = resourceManager.get<FontResource>
 			( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
 		Character q_char;
 		dejavuResource->getMissingChar(&q_char, 20, 20);
