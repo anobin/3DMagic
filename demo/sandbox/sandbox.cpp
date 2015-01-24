@@ -635,7 +635,8 @@ public:
 		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
 		//    ( chainBatches, chainResource()->getBatchCount() );
 		chainObject = new Object(chainBatches,  &chainMaterial);
-		chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
+		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
+		chainObject->getTransformMatrix().createScaleMatrix(0.1, 0.1, 0.1);
 		world->addObject(chainObject);
 
 

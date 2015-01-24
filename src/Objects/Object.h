@@ -60,6 +60,8 @@ protected:
 	
 	/// purely graphical attachments to this object, used mainly for decals
 	std::set<Object*> attachments;
+
+	Matrix4 transformMatrix;
 	
 public:
 	/// standard constructor
@@ -167,6 +169,16 @@ public:
 	inline Material* getMaterial()
 	{
 		return material;
+	}
+
+	inline Matrix4& getTransformMatrix()
+	{
+		return this->transformMatrix;
+	}
+
+	inline const Matrix4& getTransformMatrix() const
+	{
+		return this->transformMatrix;
 	}
 
 };

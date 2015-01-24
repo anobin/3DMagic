@@ -95,6 +95,7 @@ void World::renderObjects()
             // get model/world matrix for object (same for all meshes in object)
             Matrix4 model;
             ob->getPosition().getTransformMatrix(model);
+			model.multiply(ob->getTransformMatrix());
                 
             // ensure there is a shader
             shader = material->shader;
