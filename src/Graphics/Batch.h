@@ -143,9 +143,15 @@ public:
     
 class Batches : public Resource, public std::vector<std::shared_ptr<Batch>>
 {
+public:
+	inline Batches() {}
 
+	Batches(std::shared_ptr<Batch> batch)
+	{
+		this->push_back(batch);
+	}
 };
-    
+
 
     
 };

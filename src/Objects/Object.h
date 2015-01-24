@@ -50,7 +50,7 @@ protected:
 	/// 3D position of object
 	Position position;
 	
-	std::shared_ptr<Mesh> mesh;
+	std::shared_ptr<Meshes> meshes;
 
 	Material* material;
 	
@@ -63,24 +63,24 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(): mesh(NULL), material(NULL),
+	inline Object(): meshes(NULL), material(NULL),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(std::shared_ptr<Mesh> mesh, Material* material): mesh(mesh), material(material),
+	inline Object(std::shared_ptr<Meshes> mesh, Material* material): meshes(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
 	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): mesh(NULL), material(nullptr),
+	    PhysicalBody::Properties() ): meshes(NULL), material(nullptr),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
 	}
 	
 	/// standard constructor for objects
-	inline Object(std::shared_ptr<Mesh> mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): mesh(mesh), material(material),
+	inline Object(std::shared_ptr<Meshes> mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): meshes(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
@@ -159,9 +159,9 @@ public:
 	    return physical;
 	}
 
-	inline std::shared_ptr<Mesh> getMesh()
+	inline std::shared_ptr<Meshes> getMeshes()
 	{
-	     return mesh;   
+	     return meshes;   
 	}
 
 	inline Material* getMaterial()

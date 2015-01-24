@@ -224,7 +224,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(std::make_shared<Mesh>(bigSphereBatch), &bigSphereMaterial, &bigSphereShape, prop );
+			t = new Object(std::make_shared<Meshes>(bigSphereBatch), &bigSphereMaterial, &bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -380,7 +380,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(std::make_shared<Mesh>(sphereBatch), &sphereMaterial, &sphereShape, prop);
+			t = new Object(std::make_shared<Meshes>(sphereBatch), &sphereMaterial, &sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -586,18 +586,18 @@ public:
 		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
 
-		world->addObject(new Object(std::make_shared<Mesh>(*circle2D), circle2DMaterial));
+		world->addObject(new Object(std::make_shared<Meshes>(*circle2D), circle2DMaterial));
 
 
 
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(std::make_shared<Mesh>(sphereBatch), &sphereMaterial);
+		btBall = new Object(std::make_shared<Meshes>(sphereBatch), &sphereMaterial);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(std::make_shared<Mesh>(floorBatch), &floorMaterial, &floorShape); // static object
+		floorObject = new Object(std::make_shared<Meshes>(floorBatch), &floorMaterial, &floorShape); // static object
 		world->addObject(floorObject);
 
 		float wallWidth =40;
@@ -617,7 +617,7 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(std::make_shared<Mesh>(boxBatch), &boxMaterial, &boxShape, prop );
+				btBox = new Object(std::make_shared<Meshes>(boxBatch), &boxMaterial, &boxShape, prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
@@ -634,7 +634,7 @@ public:
 		modelBuilder.end();*/
 		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
 		//    ( chainBatches, chainResource()->getBatchCount() );
-		chainObject = new Object(std::make_shared<Mesh>(*chainBatches->at(0)),  &chainMaterial);
+		chainObject = new Object(std::make_shared<Meshes>(*chainBatches->at(0)),  &chainMaterial);
 		chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
 		world->addObject(chainObject);
 
@@ -672,7 +672,7 @@ public:
 			{
 				PhysicalBody::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(std::make_shared<Mesh>(tinySphereBatch), &tinySphereMaterial, &tinySphereShape, prop);
+				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), &tinySphereMaterial, &tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             

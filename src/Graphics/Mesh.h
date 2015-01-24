@@ -32,6 +32,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Texture.h"
 
 #include <vector>
+#include <memory>
 #include <string.h>
 
 namespace Magic3D
@@ -112,6 +113,26 @@ public:
 	
 	void copyBatchIn(const Batch& batch);
 	
+};
+
+
+class Meshes : public Resource, public std::vector<std::shared_ptr<Mesh>>
+{
+public:
+	inline Meshes() {}
+
+	inline Meshes(const Batches& batches)
+	{
+		for(auto batch : batches)
+		{
+			this->push_back(std::make_shared<Mesh>(*batch));
+		}
+	}
+
+	inline Meshes(const Batch& batch)
+	{
+		this->push_back(std::make_shared<Mesh>(batch));
+	}
 };
 
 
