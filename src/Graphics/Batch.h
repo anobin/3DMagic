@@ -137,9 +137,6 @@ public:
     {
         return this->vertexCount;
     }
-    
-    Mesh* getMesh();
-    
 };   
     
     

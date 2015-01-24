@@ -87,6 +87,11 @@ public:
     /// Standard Constructor
 	inline Mesh(): attributeData(NULL), vertexCount(0) , attributeCount(0) {}
     
+	inline Mesh(const Batch& batch): attributeData(nullptr)
+	{
+		this->copyBatchIn(batch);
+	}
+
 	/// destructor
 	~Mesh();
 

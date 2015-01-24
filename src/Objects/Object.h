@@ -50,7 +50,7 @@ protected:
 	/// 3D position of object
 	Position position;
 	
-	Batch* batch;
+	std::shared_ptr<Mesh> mesh;
 
 	Material* material;
 	
@@ -63,24 +63,24 @@ protected:
 	
 public:
 	/// standard constructor
-	inline Object(): batch(NULL), material(NULL),
+	inline Object(): mesh(NULL), material(NULL),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(Batch* batch, Material* material): batch(batch), material(material),
+	inline Object(std::shared_ptr<Mesh> mesh, Material* material): mesh(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
 	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): batch(NULL), material(nullptr),
+	    PhysicalBody::Properties() ): mesh(NULL), material(nullptr),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
 	}
 	
 	/// standard constructor for objects
-	inline Object(Batch* batch, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): batch(batch), material(material),
+	inline Object(std::shared_ptr<Mesh> mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	    PhysicalBody::Properties() ): mesh(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
 	    this->createPhysical(shape, prop);
@@ -159,9 +159,9 @@ public:
 	    return physical;
 	}
 
-	inline Batch* getBatch()
+	inline std::shared_ptr<Mesh> getMesh()
 	{
-	     return batch;   
+	     return mesh;   
 	}
 
 	inline Material* getMaterial()

@@ -72,19 +72,4 @@ const int Batch::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
 };
 
 
-Mesh* Batch::getMesh()
-{
-	if (mesh == nullptr)
-	{
-		mesh = new Mesh();
-		mesh->copyBatchIn(*this);
-	}
-	return mesh;
-}
-
-
-
-
-
-
 };
