@@ -36,7 +36,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <memory>
 #include <fstream>
-#include "models\Model3DSResource.h"
+#include "BatchLoader.h"
+#include <vector>
 
 
 namespace Magic3D
@@ -139,24 +140,24 @@ inline std::shared_ptr<TextResource> ResourceManager::_get<TextResource>(const s
 template<>
 inline std::shared_ptr<Image> ResourceManager::_get<Image>(const std::string& fullPath)
 {
-	std::string ext = fullPath.substr(fullPath.find_last_of("."));
+	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
 	auto loader = ImageLoaders::getSingleton().get(ext);
 	// TODO: add exception
 	return loader->getImage(fullPath);
 }
 
 template<>
-inline std::shared_ptr<FontResource> ResourceManager::_get(const std::string& fullPath)
+inline std::shared_ptr<FontResource> ResourceManager::_get<FontResource>(const std::string& fullPath)
 {
 	// TODO: add loaders for other formats
 	return std::make_shared<TTFontResource>(fullPath, fullPath);
 }
 
 template<>
-inline std::shared_ptr<ModelResource> ResourceManager::_get(const std::string& fullPath)
+inline std::shared_ptr<Batches> ResourceManager::_get<Batches>(const std::string& fullPath)
 {
-	// TODO: add loaders for other formats and make it so it produces a actual model
-	return std::make_shared<Model3DSResource>(fullPath, fullPath);
+	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
+	return BatchLoaders::getSingleton().get(ext)->getBatches(fullPath);
 }
 
 

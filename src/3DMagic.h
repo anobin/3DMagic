@@ -53,8 +53,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Resources/Resource.h"
 #include "Resources/TextResource.h"
 #include "Resources/ResourceManager.h"
-#include "Resources/ModelResource.h"
-#include "Resources/models/Model3DSResource.h"
 #include "Resources/fonts/TTFontResource.h"
 
 // shaders

@@ -171,9 +171,6 @@
     <ClCompile Include="..\..\src\Resources\FontResource.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\ModelResource.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\Resource.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
@@ -182,9 +179,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\fonts\TTFontResource.cpp">
       <Filter>Source Files\Resources\fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Resources\models\Model3DSResource.cpp">
-      <Filter>Source Files\Resources\models</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Shaders\Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
@@ -250,6 +244,12 @@
       <Filter>Source Files\Resources\Images</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\ImageLoaders.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\models\BatchLoader3DS.cpp">
+      <Filter>Source Files\Resources\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\BatchLoader.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -398,9 +398,6 @@
     <ClInclude Include="..\..\src\Resources\FontResource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Resources\ModelResource.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Resources\Resource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
@@ -409,9 +406,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\fonts\TTFontResource.h">
       <Filter>Source Files\Resources\fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Resources\models\Model3DSResource.h">
-      <Filter>Source Files\Resources\models</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Shaders\Shader.h">
       <Filter>Source Files\Shaders</Filter>
@@ -460,6 +454,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\Images\TGAImageLoader.h">
       <Filter>Source Files\Resources\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\models\BatchLoader3DS.h">
+      <Filter>Source Files\Resources\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\BatchLoader.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

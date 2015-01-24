@@ -26,6 +26,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_BATCH_H
 
 #include <stdlib.h>
+#include <Resources/Resource.h>
+
+#include <vector>
+#include <memory>
 
 namespace Magic3D
 {
@@ -36,7 +40,7 @@ class BatchBuilder;
  * and/or copied to video memory as a mesh. Use the batchbuilder class to
  * build or modify a batch.
  */
-class Batch
+class Batch : public Resource
 {
 public:
     /** different auto-bound attributes types that can be present in mesh data.
@@ -140,7 +144,10 @@ public:
     
     
     
-    
+class Batches : public Resource, public std::vector<std::shared_ptr<Batch>>
+{
+
+};
     
 
     

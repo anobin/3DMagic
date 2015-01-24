@@ -127,7 +127,6 @@ BatchBuilder batchBuilder;
 MaterialBuilder materialBuilder;
 
 // 3ds stuff
-Batch* chainBatches;
 Mesh* chainMeshes;
 Material chainMaterial;
 Texture* chainTex;
@@ -430,6 +429,8 @@ void mouseMovedPassive(int x, int y, FPCamera& camera, GraphicsSystem& graphics)
 }
 
 
+std::shared_ptr<Batches> chainBatches;
+
 class Sandbox : public DemoBase
 {
 	Texture* screenTex;
@@ -626,30 +627,19 @@ public:
 		}
 
 		// 3ds model
-		/*shared_ptr<Model3DSResource> chainResource = resourceManager.get
-			<Model3DSResource>("models/chainLink.3ds");
-		chainBatches = new Batch[chainResource->getBatchCount()];
-		chainMeshes = new Mesh[chainResource->getBatchCount()];
-		Matrix4 m;
-		Matrix4 temp;
-		m.createScaleMatrix(0.1, 0.1, 0.1);
-		temp.createRotationMatrix(-90.0f/180.0f*M_PI, 1,0,0 );
-		m.multiply(temp);
-		chainResource->getAllBatches(chainBatches, m);
-		for (int i=0; i < chainResource->getBatchCount(); i++)
-			chainMeshes[i].copyBatchIn(chainBatches[i]);
+		chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
 		materialBuilder.expand(&chainMaterial, sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
-		modelBuilder.begin(&chainModel, chainResource->getBatchCount());
+		/*modelBuilder.begin(&chainModel, chainResource->getBatchCount());
 		for(int i=0; i < chainResource->getBatchCount(); i++)
 			modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
-		modelBuilder.end();
+		modelBuilder.end();*/
 		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
 		//    ( chainBatches, chainResource()->getBatchCount() );
-		chainObject = new Object(&chainModel);
+		chainObject = new Object(chainBatches->at(0).get(),  &chainMaterial);
 		chainObject->setLocation(Point3(0.0f, 40.0f, 0.0f));
-		world->addObject(chainObject);*/
+		world->addObject(chainObject);
 
 
 
