@@ -26,6 +26,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Graphics/Batch.h>
 #include <Graphics/Mesh.h>
 
+#include <Graphics\BatchBuilder.h>
+
 namespace Magic3D
 {
 
@@ -34,6 +36,22 @@ Batch::~Batch()
 {
     delete[] this->data;
 	delete this->mesh;
+}
+
+void Batch::applyTransform(const Matrix4& matrix)
+{
+	BatchBuilder bb;
+	bb.modify(this);
+	float temp[3];
+	bb.setCurrentVertex(0);
+	for(int j=0; j < this->getVertexCount(); j++)
+	{
+		bb.getVertex3f( &temp[0], &temp[1], &temp[2] );
+        Point3 point(temp);
+		point = point.transform(matrix);
+		bb.vertex3f(point.x(), point.y(), point.z());
+	}
+	bb.end();
 }
 
 /// names of shader variables for each of the auto-bound attribute types

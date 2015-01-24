@@ -625,14 +625,16 @@ public:
 
 		// 3ds model
 		std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
+		Matrix4 scaleMatrix;
+		scaleMatrix.createScaleMatrix(0.1, 0.1, 0.1);
+		chainBatches->applyTransform(scaleMatrix);
 		materialBuilder.expand(&chainMaterial, sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 		TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape(*chainBatches);
-		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), &chainMaterial, 
+		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), &chainMaterial,
 			chainShape);
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
-		//chainObject->getTransformMatrix().createScaleMatrix(0.1, 0.1, 0.1);
 		world->addObject(chainObject);
 
 

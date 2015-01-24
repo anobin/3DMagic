@@ -31,6 +31,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <memory>
 
+#include <Math/Matrix4.h>
+
 namespace Magic3D
 {
     
@@ -137,6 +139,8 @@ public:
     {
         return this->vertexCount;
     }
+
+	void applyTransform(const Matrix4& matrix);
 };   
     
     
@@ -149,6 +153,12 @@ public:
 	Batches(std::shared_ptr<Batch> batch)
 	{
 		this->push_back(batch);
+	}
+
+	inline void applyTransform(const Matrix4& matrix)
+	{
+		for(auto it : *this)
+			it->applyTransform(matrix);
 	}
 };
 
