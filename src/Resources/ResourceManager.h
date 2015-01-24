@@ -36,6 +36,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <memory>
 #include <fstream>
+#include "models\Model3DSResource.h"
 
 
 namespace Magic3D
@@ -60,7 +61,6 @@ private:
 	inline std::shared_ptr<T> _get(const std::string& fullPath)
 	{
 		/* intentionally left blank, always need a specialization */
-		return std::make_shared<T>(fullPath, fullPath);
 	}
 	
 public:
@@ -111,7 +111,6 @@ public:
 };
 
 
-
 template<>
 inline std::shared_ptr<TextResource> ResourceManager::_get<TextResource>(const std::string& fullPath)
 {
@@ -146,13 +145,20 @@ inline std::shared_ptr<Image> ResourceManager::_get<Image>(const std::string& fu
 	return loader->getImage(fullPath);
 }
 
-
 template<>
 inline std::shared_ptr<FontResource> ResourceManager::_get(const std::string& fullPath)
 {
 	// TODO: add loaders for other formats
 	return std::make_shared<TTFontResource>(fullPath, fullPath);
 }
+
+template<>
+inline std::shared_ptr<ModelResource> ResourceManager::_get(const std::string& fullPath)
+{
+	// TODO: add loaders for other formats and make it so it produces a actual model
+	return std::make_shared<Model3DSResource>(fullPath, fullPath);
+}
+
 
 };
 
