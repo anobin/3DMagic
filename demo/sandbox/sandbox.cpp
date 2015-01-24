@@ -624,19 +624,15 @@ public:
 		}
 
 		// 3ds model
-		std::shared_ptr<Meshes> chainBatches = resourceManager.get<Meshes>("models/chainLink.3ds");
+		std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
 		materialBuilder.expand(&chainMaterial, sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
-		/*modelBuilder.begin(&chainModel, chainResource->getBatchCount());
-		for(int i=0; i < chainResource->getBatchCount(); i++)
-			modelBuilder.addMesh(&chainMeshes[i], &chainMaterial);
-		modelBuilder.end();*/
-		//TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape
-		//    ( chainBatches, chainResource()->getBatchCount() );
-		chainObject = new Object(chainBatches,  &chainMaterial);
+		TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape(*chainBatches);
+		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), &chainMaterial, 
+			chainShape);
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
-		chainObject->getTransformMatrix().createScaleMatrix(0.1, 0.1, 0.1);
+		//chainObject->getTransformMatrix().createScaleMatrix(0.1, 0.1, 0.1);
 		world->addObject(chainObject);
 
 

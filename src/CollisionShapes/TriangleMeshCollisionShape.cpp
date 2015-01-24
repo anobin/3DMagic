@@ -30,7 +30,7 @@ namespace Magic3D
 {
     
 /// default constructor
-TriangleMeshCollisionShape::TriangleMeshCollisionShape(Batch* batches, int batchCount):
+TriangleMeshCollisionShape::TriangleMeshCollisionShape(Batches& batches):
     shape(NULL)
 {
     BatchBuilder bb;
@@ -38,11 +38,10 @@ TriangleMeshCollisionShape::TriangleMeshCollisionShape(Batch* batches, int batch
     
     // go through all batches and add all vertices
     // and add triangles to physics mesh
-    for(int i=0; i < batchCount; i++)
+    for(auto batch : batches)
     {
-        Batch& batch = batches[i];
-        bb.modify(&batch);
-        for(int j=0; j < batch.getVertexCount(); j+=3)
+		bb.modify(batch.get());
+        for(int j=0; j < batch->getVertexCount(); j+=3)
         {
             // get three vertices for triangle
             bb.setCurrentVertex(j);
