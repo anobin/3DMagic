@@ -180,9 +180,6 @@
     <ClCompile Include="..\..\src\Resources\fonts\TTFontResource.cpp">
       <Filter>Source Files\Resources\fonts</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Shaders\Shader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Util\Character.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
@@ -251,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\BatchLoader.cpp">
       <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Shaders\GpuProgram.cpp">
+      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +407,6 @@
     <ClInclude Include="..\..\src\Resources\fonts\TTFontResource.h">
       <Filter>Source Files\Resources\fonts</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Shaders\Shader.h">
-      <Filter>Source Files\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Util\Character.h">
       <Filter>Source Files\Util</Filter>
     </ClInclude>
@@ -460,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\BatchLoader.h">
       <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Shaders\GpuProgram.h">
+      <Filter>Source Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -64,7 +64,7 @@
     <ClCompile Include="..\..\src\Resources\Resource.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
     <ClCompile Include="..\..\src\Resources\TextResource.cpp" />
-    <ClCompile Include="..\..\src\Shaders\Shader.cpp" />
+    <ClCompile Include="..\..\src\Shaders\GpuProgram.cpp" />
     <ClCompile Include="..\..\src\Util\Character.cpp" />
     <ClCompile Include="..\..\src\Util\Color.cpp" />
     <ClCompile Include="..\..\src\Util\Freetype_Init.cpp" />
@@ -131,7 +131,7 @@
     <ClInclude Include="..\..\src\Resources\Resource.h" />
     <ClInclude Include="..\..\src\Resources\ResourceManager.h" />
     <ClInclude Include="..\..\src\Resources\TextResource.h" />
-    <ClInclude Include="..\..\src\Shaders\Shader.h" />
+    <ClInclude Include="..\..\src\Shaders\GpuProgram.h" />
     <ClInclude Include="..\..\src\Time\StopWatch.h" />
     <ClInclude Include="..\..\src\Util\Character.h" />
     <ClInclude Include="..\..\src\Util\Color.h" />

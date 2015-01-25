@@ -58,10 +58,10 @@ public:
         this->material->set(basis);
     }
     
-    inline void setShader(Shader* shader)
+    inline void setShader(GpuProgram* gpuProgram)
     {
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
-        material->shader = shader;
+        material->gpuProgram = gpuProgram;
     }
     
     inline void setRenderPrimitive(VertexArray::Primitives primitive)

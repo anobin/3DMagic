@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MATERIAL_H
 
 #include "VertexArray.h"
-#include "../Shaders/Shader.h"
+#include <Shaders\GpuProgram.h>
 #include "Texture.h"
 #include <string.h>
 #include <memory>
@@ -47,7 +47,7 @@ protected:
     friend class MaterialBuilder;
     friend class World;
     
-    Shader* shader;
+    GpuProgram* gpuProgram;
     
     VertexArray::Primitives primitive;
     
@@ -59,7 +59,7 @@ protected:
     
     inline void allocate()
     {
-        this->shader = NULL;
+        this->gpuProgram = NULL;
         this->primitive = VertexArray::TRIANGLES;
         this->transparent = false;
         for(int i=0; i < 8; i++)
@@ -68,14 +68,14 @@ protected:
     }
     
 public:
-    inline Material(): shader(NULL), primitive(VertexArray::TRIANGLES), transparent(false),
+    inline Material(): gpuProgram(NULL), primitive(VertexArray::TRIANGLES), transparent(false),
 		depthBufferLie(0)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
     }
 
-    inline Material(const Material& m): shader(m.shader), primitive(m.primitive),
+	inline Material(const Material& m): gpuProgram(m.gpuProgram), primitive(m.primitive),
         transparent(m.transparent)
     {
         for(int i=0; i < 8; i++)
@@ -84,7 +84,7 @@ public:
 
     inline void set(const Material& m)
     {
-        this->shader = m.shader;
+		this->gpuProgram = m.gpuProgram;
         this->primitive = m.primitive;
         this->transparent = m.transparent;
 

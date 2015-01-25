@@ -56,7 +56,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Resources/fonts/TTFontResource.h"
 
 // shaders
-#include "Shaders/Shader.h"
+#include "Shaders\GpuProgram.h"
 
 // physics
 #include "Physics/MotionState.h"

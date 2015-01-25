@@ -52,13 +52,13 @@ public:
 	    /// attribute data in a buffer on graphics memory
 		const Buffer& buffer;
 		/// auto-bound attribute type for data
-		const Shader::AttributeType& type;
+		const GpuProgram::AttributeType& type;
 	
 	protected:
 	    friend class Mesh;
 	    
 	    Buffer _buffer;
-	    Shader::AttributeType _type;
+	    GpuProgram::AttributeType _type;
 		inline AttributeData(): buffer(_buffer), type(_type) {}
 	};
 

@@ -97,7 +97,7 @@ Color skyColor(255,255,255);
 float skyColorf[3];
 
 // shaders
-Shader* shader;
+GpuProgram* shader;
 bool wireframe = false;
 
 int screenWidth = 0;
@@ -469,15 +469,15 @@ public:
 		// init shader
 		shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
 		shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
-		shader = new Shader( vp->getText(), fp->getText() );
-		shader->bindAttrib("vertex", Shader::VERTEX);
-		shader->bindAttrib("normal", Shader::NORMAL);
-		shader->bindAttrib("texcoord0", Shader::TEX_COORD_0);
-		shader->addAutoUniform( "mvMatrix", Shader::MODEL_VIEW_MATRIX );
-		shader->addAutoUniform( "mvpMatrix", Shader::MODEL_VIEW_PROJECTION_MATRIX );
-		shader->addAutoUniform( "normalMatrix", Shader::NORMAL_MATRIX );
-		shader->addAutoUniform( "textureMap", Shader::TEXTURE0 );
-		shader->addAutoUniform( "lightPosition", Shader::LIGHT_LOCATION);
+		shader = new GpuProgram( vp->getText(), fp->getText() );
+		shader->bindAttrib("vertex", GpuProgram::VERTEX);
+		shader->bindAttrib("normal", GpuProgram::NORMAL);
+		shader->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
+		shader->addAutoUniform( "mvMatrix", GpuProgram::MODEL_VIEW_MATRIX );
+		shader->addAutoUniform( "mvpMatrix", GpuProgram::MODEL_VIEW_PROJECTION_MATRIX );
+		shader->addAutoUniform( "normalMatrix", GpuProgram::NORMAL_MATRIX );
+		shader->addAutoUniform( "textureMap", GpuProgram::TEXTURE0 );
+		shader->addAutoUniform( "lightPosition", GpuProgram::LIGHT_LOCATION);
 		skyColor.getColor(skyColorf, 3);
 		shader->addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
 		groundColor.getColor(groundColorf, 3);
@@ -520,11 +520,11 @@ public:
 		// 2D shader
 		shared_ptr<TextResource> vp2D = resourceManager.get<TextResource>("shaders/Shader2D.vp");
 		shared_ptr<TextResource> fp2D = resourceManager.get<TextResource>("shaders/Shader2D.fp");
-		Shader* shader2D = new Shader(vp2D->getText(), fp2D->getText());
-		shader2D->bindAttrib("vertex", Shader::VERTEX);
-		shader2D->bindAttrib("texcoord0", Shader::TEX_COORD_0);
-		shader2D->addAutoUniform( "mvpMatrix", Shader::FLAT_PROJECTION );
-		shader2D->addAutoUniform( "textureMap", Shader::TEXTURE0 );
+		GpuProgram* shader2D = new GpuProgram(vp2D->getText(), fp2D->getText());
+		shader2D->bindAttrib("vertex", GpuProgram::VERTEX);
+		shader2D->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
+		shader2D->addAutoUniform( "mvpMatrix", GpuProgram::FLAT_PROJECTION );
+		shader2D->addAutoUniform( "textureMap", GpuProgram::TEXTURE0 );
 		shader2D->link();
 
 		// circle in middle of screen

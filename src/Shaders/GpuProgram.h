@@ -17,13 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for Shader class
- *
- * @file Shader.h
- * @author Andrew Keating
- */
-#ifndef MAGIC3D_SHADER_H
-#define MAGIC3D_SHADER_H
+#ifndef MAGIC3D_GPU_PROGRAM_H
+#define MAGIC3D_GPU_PROGRAM_H
 
 #include <map>
 #include <string>
@@ -53,9 +48,8 @@ namespace Magic3D
 	
 class World;
 
-/** Base class for all shaders
- */
-class Shader
+
+class GpuProgram
 {
 public:
     /** different auto-bound attributes types that can be present in mesh data.
@@ -108,7 +102,7 @@ public:
     };
 
 	/// number of components for shader variables for each of the auto-bound attribute types
-    static const int attributeTypeCompCount[ Shader::MAX_ATTRIBUTE_TYPES ];
+    static const int attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ];
 
 protected:
 	friend class World;
@@ -116,7 +110,7 @@ protected:
 	struct AutoUniform
     {
         char* varName;
-        Shader::AutoUniformType type;
+        AutoUniformType type;
         
         inline AutoUniform(): varName(NULL) {}
 
@@ -186,7 +180,7 @@ protected:
 	std::vector<std::shared_ptr<NamedUniform>> namedUniforms;
     
 	/// default constructor
-	inline Shader() { /* intentionally left blank */ }
+	inline GpuProgram() { /* intentionally left blank */ }
 
 public:
     /** Create shader
@@ -194,10 +188,10 @@ public:
      * @param fragmentProgram source of the fragment program
      * @param ... number of attributes followed by attribute pairs
      */
-    Shader( const char* vertexProgram, const char* fragmentProgram);
+    GpuProgram( const char* vertexProgram, const char* fragmentProgram);
     
 	/// destructor
-	virtual ~Shader();
+	virtual ~GpuProgram();
 
 	/** Enable this shader to be used on the next drawing operation
      * and for setting uniforms
@@ -215,7 +209,7 @@ public:
 	    nextIndex++;
 	}
 
-	void addAutoUniform(const char* varName, Shader::AutoUniformType type)
+	void addAutoUniform(const char* varName, AutoUniformType type)
 	{
 		auto u = std::make_shared<AutoUniform>();
 		u->varName = new char[strlen(varName) + 1];

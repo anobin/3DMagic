@@ -17,19 +17,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Shader class
- *
- * @file Shader.cpp
- * @author Andrew Keating
- */
 
-#include <Shaders/Shader.h>
+#include <Shaders/GpuProgram.h>
 
 
 namespace Magic3D
 {
 
-const int Shader::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
+const int GpuProgram::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = 
+{
     4, // vertex
     3, // normal
     4, // color
@@ -51,7 +47,7 @@ const int Shader::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
  * @param fragmentProgram source of the fragment program
  * @param ... number of attributes followed by attribute pairs
  */
-Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
+GpuProgram::GpuProgram( const char* vertexProgram, const char* fragmentProgram)
 {
     // create new empty vertex and fragment shaders
     GLuint vsId = glCreateShader(GL_VERTEX_SHADER);
@@ -101,7 +97,7 @@ Shader::Shader( const char* vertexProgram, const char* fragmentProgram)
 }
 
 /// destructor
-Shader::~Shader()
+GpuProgram::~GpuProgram()
 {
     // delete the shader from opengl memory
     glDeleteProgram(this->programId);
@@ -110,7 +106,7 @@ Shader::~Shader()
 /** Enable this shader to be used on the next drawing operation
  * and for setting uniforms
  */
-void Shader::use()
+void GpuProgram::use()
 {
     // set opengl to use this shader
     glUseProgram(this->programId);

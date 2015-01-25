@@ -25,6 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  
 #include <World/World.h>
 #include <Cameras/FPCamera.h>
+#include <Shaders\GpuProgram.h>
 
 namespace Magic3D
 {
@@ -74,7 +75,7 @@ void World::renderObjects()
 	const Mesh::AttributeData* adata;
 	int attributeCount;
 	int vertexCount;
-	Shader* shader; 
+	GpuProgram* gpuProgram; 
 	for(; it != objects.end(); it++)
 	{
 	    // get object and entity
@@ -97,9 +98,9 @@ void World::renderObjects()
             ob->getPosition().getTransformMatrix(model);
 			model.multiply(ob->getTransformMatrix());
                 
-            // ensure there is a shader
-            shader = material->shader;
-            MAGIC_ASSERT(shader != NULL);
+            // ensure there is a gpuProgram
+            gpuProgram = material->gpuProgram;
+            MAGIC_ASSERT(gpuProgram != NULL);
 
 			for(const std::shared_ptr<Mesh> mesh : *meshes)
 			{
@@ -109,20 +110,20 @@ void World::renderObjects()
 				attributeCount = mesh->getAttributeCount();
 				vertexCount = mesh->getVertexCount();
                 
-				// 'use' shader
-				shader->use();
+				// 'use' gpuProgram
+				gpuProgram->use();
                 
 				// set named uniforms
-				for(int i=0; i < shader->namedUniforms.size(); i++)
+				for(int i=0; i < gpuProgram->namedUniforms.size(); i++)
 				{
-					Shader::NamedUniform& u = *shader->namedUniforms[i];
+					GpuProgram::NamedUniform& u = *gpuProgram->namedUniforms[i];
 					switch(u.datatype)
 					{
 						case VertexArray::FLOAT:
-							shader->setUniformfv(u.varName, u.comp_count, (const float*)u.data);
+							gpuProgram->setUniformfv(u.varName, u.comp_count, (const float*)u.data);
 							break;
 						case VertexArray::INT:
-							shader->setUniformiv(u.varName, u.comp_count, (const int*)u.data);
+							gpuProgram->setUniformiv(u.varName, u.comp_count, (const int*)u.data);
 							break;
 						default:
 							throw_MagicException("Unsupported Auto Uniform datatype." );
@@ -135,96 +136,96 @@ void World::renderObjects()
 				Matrix4 temp4m2;
 				Matrix3 temp3m;
 				Point3 tempp3;
-				for(int i=0; i < shader->autoUniforms.size(); i++)
+				for(int i=0; i < gpuProgram->autoUniforms.size(); i++)
 				{
-					Shader::AutoUniform& u = *shader->autoUniforms[i];
+					GpuProgram::AutoUniform& u = *gpuProgram->autoUniforms[i];
 					switch (u.type)
 					{
-						case Shader::MODEL_MATRIX:                   // mat4
-							shader->setUniformMatrix( u.varName, 4, model.getArray() );
+						case GpuProgram::MODEL_MATRIX:                   // mat4
+							gpuProgram->setUniformMatrix( u.varName, 4, model.getArray() );
 							break;
-						case Shader::VIEW_MATRIX:                    // mat4
-							shader->setUniformMatrix( u.varName, 4, view.getArray() );
+						case GpuProgram::VIEW_MATRIX:                    // mat4
+							gpuProgram->setUniformMatrix( u.varName, 4, view.getArray() );
 							break;
-						case Shader::PROJECTION_MATRIX:              // mat4
-							shader->setUniformMatrix( u.varName, 4, projection.getArray() );
+						case GpuProgram::PROJECTION_MATRIX:              // mat4
+							gpuProgram->setUniformMatrix( u.varName, 4, projection.getArray() );
 							break;
-						case Shader::MODEL_VIEW_MATRIX:              // mat4
+						case GpuProgram::MODEL_VIEW_MATRIX:              // mat4
 							temp4m.multiply(view, model);
-							shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 4, temp4m.getArray() );
 							break;
-						case Shader::VIEW_PROJECTION_MATRIX:         // mat4
+						case GpuProgram::VIEW_PROJECTION_MATRIX:         // mat4
 							temp4m.multiply(projection, view);
-							shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 4, temp4m.getArray() );
 							break;
-						case Shader::MODEL_PROJECTION_MATRIX:        // mat4
+						case GpuProgram::MODEL_PROJECTION_MATRIX:        // mat4
 							temp4m.multiply(projection, model);
-							shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 4, temp4m.getArray() );
 							break;
-						case Shader::MODEL_VIEW_PROJECTION_MATRIX:   // mat4
+						case GpuProgram::MODEL_VIEW_PROJECTION_MATRIX:   // mat4
 							temp4m.multiply(view, model);
 							temp4m2.multiply(projection, temp4m);
-							shader->setUniformMatrix( u.varName, 4, temp4m2.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 4, temp4m2.getArray() );
 							break;
-						case Shader::NORMAL_MATRIX:                  // mat3
+						case GpuProgram::NORMAL_MATRIX:                  // mat3
 							temp4m.multiply(view, model);
 							temp4m.extractRotation(temp3m);
-							shader->setUniformMatrix( u.varName, 3, temp3m.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 3, temp3m.getArray() );
 							break;
-						case Shader::FPS:                            // int
-							shader->setUniformiv( u.varName, 1, &this->actualFPS );
+						case GpuProgram::FPS:                            // int
+							gpuProgram->setUniformiv( u.varName, 1, &this->actualFPS );
 							break;
-						case Shader::TEXTURE0:                       // sampler2D
+						case GpuProgram::TEXTURE0:                       // sampler2D
 							MAGIC_THROW(material->textures[0] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[0].get() );
+							gpuProgram->setTexture( u.varName, material->textures[0].get() );
 							break;
-						case Shader::TEXTURE1:                       // sampler2D
+						case GpuProgram::TEXTURE1:                       // sampler2D
 							MAGIC_THROW(material->textures[1] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[1].get() );
+							gpuProgram->setTexture( u.varName, material->textures[1].get() );
 							break;
-						case Shader::TEXTURE2:                       // sampler2D
+						case GpuProgram::TEXTURE2:                       // sampler2D
 							MAGIC_THROW(material->textures[2] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[2].get() );
+							gpuProgram->setTexture( u.varName, material->textures[2].get() );
 							break;
-						case Shader::TEXTURE3:                       // sampler2D
+						case GpuProgram::TEXTURE3:                       // sampler2D
 							MAGIC_THROW(material->textures[3] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[3].get() );
+							gpuProgram->setTexture( u.varName, material->textures[3].get() );
 							break;
-						case Shader::TEXTURE4:                       // sampler2D
+						case GpuProgram::TEXTURE4:                       // sampler2D
 							MAGIC_THROW(material->textures[4] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[4].get() );
+							gpuProgram->setTexture( u.varName, material->textures[4].get() );
 							break;
-						case Shader::TEXTURE5:                       // sampler2D
+						case GpuProgram::TEXTURE5:                       // sampler2D
 							MAGIC_THROW(material->textures[5] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[5].get() );
+							gpuProgram->setTexture( u.varName, material->textures[5].get() );
 							break;
-						case Shader::TEXTURE6:                       // sampler2D
+						case GpuProgram::TEXTURE6:                       // sampler2D
 							MAGIC_THROW(material->textures[6] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[6].get() );
+							gpuProgram->setTexture( u.varName, material->textures[6].get() );
 							break;
-						case Shader::TEXTURE7:                       // sampler2D
+						case GpuProgram::TEXTURE7:                       // sampler2D
 							MAGIC_THROW(material->textures[7] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[7].get() );
+							gpuProgram->setTexture( u.varName, material->textures[7].get() );
 							break;
-						case Shader::LIGHT_LOCATION:                 // vec3
+						case GpuProgram::LIGHT_LOCATION:                 // vec3
 							MAGIC_THROW(light == NULL, "Material has the light location "
 								"auto-bound uniform set, but no light is set for the world." );
 							tempp3 = light->getLocation().transform(view);
-							shader->setUniformf( u.varName, tempp3.x(),
+							gpuProgram->setUniformf( u.varName, tempp3.x(),
 								tempp3.y(), tempp3.z() );
 							break;
-						case Shader::FLAT_PROJECTION:   // mat4
+						case GpuProgram::FLAT_PROJECTION:   // mat4
 							temp4m.createOrthographicMatrix(0, this->graphics.getDisplayWidth(), 
 								0, (Scalar)this->graphics.getDisplayHeight(), -1.0, 1.0);
-							shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
+							gpuProgram->setUniformMatrix( u.varName, 4, temp4m.getArray() );
 							break;
 						default:
 							MAGIC_ASSERT( false );
@@ -236,10 +237,10 @@ void World::renderObjects()
 				array = new VertexArray();
 				for(int j=0; j < attributeCount; j++)
 				{
-					int bind = shader->getAttribBinding(adata[j].type);
-					if (bind < 0) // shader does not have attribute
+					int bind = gpuProgram->getAttribBinding(adata[j].type);
+					if (bind < 0) // gpuProgram does not have attribute
 						continue; 
-					array->setAttributeArray(bind, Shader::attributeTypeCompCount[(int)adata[j].type],
+					array->setAttributeArray(bind, GpuProgram::attributeTypeCompCount[(int)adata[j].type],
 						VertexArray::FLOAT, adata[j].buffer);
 				}
                 

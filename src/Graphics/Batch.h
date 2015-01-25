@@ -27,10 +27,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdlib.h>
 #include <Resources/Resource.h>
+#include <Shaders\GpuProgram.h>
 
 #include <vector>
 #include <memory>
-#include <Shaders\Shader.h>
 
 #include <Math/Matrix4.h>
 
@@ -57,19 +57,19 @@ protected:
         /// current length of data (in bytes)
         int dataLen;
         /// auto-bound attribute type for data
-		Shader::AttributeType type;
+		GpuProgram::AttributeType type;
         
         inline AttributeData(): data(NULL), dataLen(0) {}
         inline ~AttributeData()
         {
             delete[] data;
         }
-        inline void allocate(int vertexCount, Shader::AttributeType type)
+        inline void allocate(int vertexCount, GpuProgram::AttributeType type)
         {
             delete[] data;
             this->type = type;
-            this->dataLen = vertexCount * Shader::attributeTypeCompCount[(int)type] * sizeof(float);
-            this->data = new float[ vertexCount * Shader::attributeTypeCompCount[(int)type] ];
+            this->dataLen = vertexCount * GpuProgram::attributeTypeCompCount[(int)type] * sizeof(float);
+            this->data = new float[ vertexCount * GpuProgram::attributeTypeCompCount[(int)type] ];
         }
     };
     
