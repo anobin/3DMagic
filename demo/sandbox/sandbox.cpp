@@ -473,6 +473,15 @@ public:
 		shader->bindAttrib("vertex", Shader::VERTEX);
 		shader->bindAttrib("normal", Shader::NORMAL);
 		shader->bindAttrib("texcoord0", Shader::TEX_COORD_0);
+		shader->addAutoUniform( "mvMatrix", Shader::MODEL_VIEW_MATRIX );
+		shader->addAutoUniform( "mvpMatrix", Shader::MODEL_VIEW_PROJECTION_MATRIX );
+		shader->addAutoUniform( "normalMatrix", Shader::NORMAL_MATRIX );
+		shader->addAutoUniform( "textureMap", Shader::TEXTURE0 );
+		shader->addAutoUniform( "lightPosition", Shader::LIGHT_LOCATION);
+		skyColor.getColor(skyColorf, 3);
+		shader->addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
+		groundColor.getColor(groundColorf, 3);
+		shader->addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
 		shader->link();
 
 
@@ -486,17 +495,8 @@ public:
 		batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
 
 		// init materials
-		materialBuilder.begin(&sphereMaterial, 5, 2);
+		materialBuilder.begin(&sphereMaterial);
 		materialBuilder.setShader(shader);
-		materialBuilder.addAutoUniform( "mvMatrix", Material::MODEL_VIEW_MATRIX );
-		materialBuilder.addAutoUniform( "mvpMatrix", Material::MODEL_VIEW_PROJECTION_MATRIX );
-		materialBuilder.addAutoUniform( "normalMatrix", Material::NORMAL_MATRIX );
-		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
-		materialBuilder.addAutoUniform( "lightPosition", Material::LIGHT_LOCATION);
-		skyColor.getColor(skyColorf, 3);
-		materialBuilder.addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
-		groundColor.getColor(groundColorf, 3);
-		materialBuilder.addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 
@@ -523,6 +523,8 @@ public:
 		Shader* shader2D = new Shader(vp2D->getText(), fp2D->getText());
 		shader2D->bindAttrib("vertex", Shader::VERTEX);
 		shader2D->bindAttrib("texcoord0", Shader::TEX_COORD_0);
+		shader2D->addAutoUniform( "mvpMatrix", Shader::FLAT_PROJECTION );
+		shader2D->addAutoUniform( "textureMap", Shader::TEXTURE0 );
 		shader2D->link();
 
 		// circle in middle of screen
@@ -536,10 +538,8 @@ public:
 		screenTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
 		Material* circle2DMaterial = new Material();
-		materialBuilder.begin(circle2DMaterial, 2, 0);
+		materialBuilder.begin(circle2DMaterial);
 		materialBuilder.setShader(shader2D);
-		materialBuilder.addAutoUniform( "mvpMatrix", Material::FLAT_PROJECTION );
-		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
 		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
 
@@ -548,10 +548,8 @@ public:
 		auto logoTex = resourceManager.get<Texture>("textures/logo.tex.xml");
 
 		Material* logo2DMaterial = new Material();
-		materialBuilder.begin(logo2DMaterial, 2, 0);
+		materialBuilder.begin(logo2DMaterial);
 		materialBuilder.setShader(shader2D);
-		materialBuilder.addAutoUniform( "mvpMatrix", Material::FLAT_PROJECTION );
-		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
 

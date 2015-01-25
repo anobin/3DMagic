@@ -39,35 +39,23 @@ class MaterialBuilder
 private:
     /// the material being built
     Material* material;
-    
-    int curAutoUniform;
-    
-    int curNamedUniform;
-    
 public:
-    inline MaterialBuilder(): material(NULL), curAutoUniform(0), curNamedUniform(0) {}
+    inline MaterialBuilder(): material(NULL) {}
     
-    inline void begin(Material* material, int autoUniformCount, int namedUniformCount)
+    inline void begin(Material* material)
     {
         this->material = material;
-        material->allocate(autoUniformCount, namedUniformCount);
-        this->curAutoUniform = 0;
-        this->curNamedUniform = 0;
     }
 
     inline void modify(Material* material)
     {
         this->material = material;
-        this->curAutoUniform = material->autoUniformCount;
-        this->curNamedUniform = material->namedUniformCount;
     }
 
     inline void expand(Material* material, const Material& basis)
     {
         this->material = material;
         this->material->set(basis);
-        this->curAutoUniform = material->autoUniformCount;
-        this->curNamedUniform = material->namedUniformCount;
     }
     
     inline void setShader(Shader* shader)
@@ -87,11 +75,6 @@ public:
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->transparent = transparent;
     }
-    
-    void addAutoUniform(const char* varName, Material::AutoUniformType type);
-    
-    void addNamedUniform(const char* varName, VertexArray::DataTypes datatype,
-        int comp_count, const void* data);
     
     inline void setTexture(std::shared_ptr<Texture> t, int number = 0)
     {
