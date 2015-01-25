@@ -1,0 +1,68 @@
+- Image
+	- png, tga : no custom properties, all should be in image file?
+- Texture
+	- png, tga : defaults texture properties, no Image resource persisted
+	- xml[Texture] : can specify properties (wrapping, mag/min), also defaults if not provided
+- Text
+	- any extension : no properties, just direct text
+- TextMap
+	- xml[TextMap] : specify keyed text items, used for translations of text
+- Sound
+	- wav, ogg : default properties set (full length, no loop)
+	- xml[Sound] : can specify sound file and properties
+- Batches/Batch
+	- 3ds : all vertex data loaded from file, all properties defaulted
+	- xml[Batches] : can specify properties (transforms, etc.)
+		- specify generated shapes?
+		- specify vertexes directly in xml?
+- Meshes/Mesh
+	- 3ds : loaded directly into v-mem, no batch resource cached (a shortcut)
+	- xml[Meshes] : can specify properties (batches, transforms, etc.)
+- Settings??? - non-homogeneous map
+- Math primitives (vector, matrix, point, etc.)
+	- xml[Vector,Matrix,Point] : specify data and properties directly
+- GpuProgram
+	- vp, fp, gp ? do we need properties for attributes?
+	- xml[GpuProgram]
+- Shader
+	- xml[Shader]
+		- vertex, geometry, fragment gpu programs
+		- uniforms? or in gpu program?
+- Font
+	- ttf
+	- xml mabye?? What properties are there?
+- Material
+	- xml[Material]
+		- Shader
+		- Texture
+		- other Properties???
+- Shape
+	- xml[Shape] : refer to built-in's, specify a mesh
+- Model
+	- xml[Model]
+		- Meshes
+		- Material
+		- Shape (optional)
+		- Scale, rotate, etc.
+- Object
+	- xml[Object]
+		- Model
+		- Properties
+		- Position (location + rotation)
+		- Can specify base to extend and override?
+- Scenery
+	- xml[Scenery]
+		- Model
+		- Properties
+		- Position (location + rotation)
+		- Can specify base to extend and override?
+- Scene
+	- xml[Scene]
+		- Objects
+		- Properties
+			- Background music
+		- Camera: refer to built-in cameras
+	
+
+- Animation ???
+- Script ???
