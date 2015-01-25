@@ -252,6 +252,9 @@
     <ClCompile Include="..\..\src\Shaders\GpuProgram.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Shaders\Shader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cameras\Camera.h">
@@ -459,6 +462,9 @@
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Shaders\GpuProgram.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Shaders\Shader.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,56 +42,13 @@ const int GpuProgram::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] =
     3  // binormal
 };
 
-/** Create shader
- * @param vertexProgram source of the vertex program
- * @param fragmentProgram source of the fragment program
- * @param ... number of attributes followed by attribute pairs
- */
-GpuProgram::GpuProgram( const char* vertexProgram, const char* fragmentProgram)
-{
-    // create new empty vertex and fragment shaders
-    GLuint vsId = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fsId = glCreateShader(GL_FRAGMENT_SHADER);
-	
-    // Load vertex shader
-	GLchar* shaderListing[1];
-	shaderListing[0] = (GLchar*)vertexProgram;
-	glShaderSource(vsId, 1, (const GLchar**)shaderListing, NULL);
-	
-	// Load fragment shader
-	shaderListing[0] = (GLchar*)fragmentProgram;
-	glShaderSource(fsId, 1, (const GLchar**)shaderListing, NULL);
-   
-    // Compile shader source
-    glCompileShader(vsId);
-    glCompileShader(fsId);
-    
-    // Check for compile errors
-	GLint ret;
-    glGetShaderiv(vsId, GL_COMPILE_STATUS, &ret);
-    if(ret == GL_FALSE)
-	{
-		// delete shaders and throw exception
-        glDeleteShader(vsId);
-        glDeleteShader(fsId);
-        throw_ShaderCompileException("Vertex shader failed to compile");
-	}
-    glGetShaderiv(fsId, GL_COMPILE_STATUS, &ret);
-    if(ret == GL_FALSE)
-	{
-        glDeleteShader(vsId);
-        glDeleteShader(fsId);
-        throw_ShaderCompileException("Fragment shader failed to compile");
-	}
-    
+
+GpuProgram::GpuProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader)
+{   
     // create new program and attach compiled shaders
 	programId = glCreateProgram();
-    glAttachShader(programId, vsId);
-    glAttachShader(programId, fsId);
-    
-    // delete temp shader storage
-    glDeleteShader(vsId);
-    glDeleteShader(fsId);
+    glAttachShader(programId, vertexShader->id);
+    glAttachShader(programId, fragmentShader->id);
     
     nextIndex = 0;
 }

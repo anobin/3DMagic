@@ -237,10 +237,7 @@ void World::renderObjects()
 				array = new VertexArray();
 				for(int j=0; j < attributeCount; j++)
 				{
-					int bind = gpuProgram->getAttribBinding(adata[j].type);
-					if (bind < 0) // gpuProgram does not have attribute
-						continue; 
-					array->setAttributeArray(bind, GpuProgram::attributeTypeCompCount[(int)adata[j].type],
+					array->setAttributeArray((int)adata[j].type, GpuProgram::attributeTypeCompCount[(int)adata[j].type],
 						VertexArray::FLOAT, adata[j].buffer);
 				}
                 

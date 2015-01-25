@@ -185,6 +185,22 @@ inline std::shared_ptr<Meshes> ResourceManager::_get<Meshes>(const std::string& 
 	return std::make_shared<Meshes>(*BatchLoaders::getSingleton().get(ext)->getBatches(fullPath));
 }
 
+template<>
+inline std::shared_ptr<Shader> ResourceManager::_get<Shader>(const std::string& fullPath)
+{
+	auto text = this->_get<TextResource>(fullPath);
+	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
+	
+	// TODO: add else case and exception
+	Shader::Type type = Shader::Type::COMPUTE;
+	if (ext == "vp")
+		type = Shader::Type::VERTEX;
+	else if (ext == "fp")
+		type = Shader::Type::FRAGMENT;
+
+	return std::make_shared<Shader>(text->getText(), type);
+}
+
 class ColorParser
 {
 	std::map<std::string, Color> namedColors;

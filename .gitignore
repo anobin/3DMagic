@@ -24,3 +24,5 @@ CMakeFiles/
 *.opensdf
 debug/
 release/
+/VS2012/*/*.vspx
+/VS2012/*/*.psess

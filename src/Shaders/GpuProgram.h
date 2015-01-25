@@ -20,7 +20,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_GPU_PROGRAM_H
 #define MAGIC3D_GPU_PROGRAM_H
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <vector>
 #include <memory>
@@ -41,6 +41,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Exceptions/ShaderCompileException.h"
 #include "../Util/magic_throw.h"
 #include <Graphics\VertexArray.h>
+#include "Shader.h"
 
 
 namespace Magic3D
@@ -171,24 +172,19 @@ protected:
     
     /// next index to use for arribute bind
     int nextIndex;
-    
-    /// attribute indexes
-    std::map<AttributeType, int> attribIndexes;
 
 	std::vector<std::shared_ptr<AutoUniform>> autoUniforms;
 
 	std::vector<std::shared_ptr<NamedUniform>> namedUniforms;
+
+	std::shared_ptr<Shader> vertexShader;
+	std::shared_ptr<Shader> fragmentShader;
     
 	/// default constructor
 	inline GpuProgram() { /* intentionally left blank */ }
 
 public:
-    /** Create shader
-     * @param vertexProgram source of the vertex program
-     * @param fragmentProgram source of the fragment program
-     * @param ... number of attributes followed by attribute pairs
-     */
-    GpuProgram( const char* vertexProgram, const char* fragmentProgram);
+	GpuProgram(std::shared_ptr<Shader> vertexShader, std::shared_ptr<Shader> fragmentShader);
     
 	/// destructor
 	virtual ~GpuProgram();
@@ -200,11 +196,9 @@ public:
 	
 	inline void bindAttrib(const char* name, AttributeType type)
 	{
-	    glBindAttribLocation(programId, nextIndex, name);
+	    glBindAttribLocation(programId, (int)type, name);
 	    
 	    MAGIC_THROW( glGetError() != GL_NO_ERROR, "Failed to bind attribute." );
-	    
-		attribIndexes.insert(std::make_pair(type, nextIndex));
 	    
 	    nextIndex++;
 	}
@@ -238,14 +232,6 @@ public:
 	std::vector<std::shared_ptr<NamedUniform>> getNamedUniforms()
 	{
 		return this->namedUniforms;
-	}
-	
-	inline int getAttribBinding(AttributeType type)
-	{
-	    auto it = attribIndexes.find(type);
-	    if (it == attribIndexes.end())
-	        return -1;
-	    return it->second;
 	}
 	
 	inline void link()

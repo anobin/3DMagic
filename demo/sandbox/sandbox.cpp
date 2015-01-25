@@ -467,9 +467,9 @@ public:
 		charTex = std::make_shared<Texture>(charImage);
 
 		// init shader
-		shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
-		shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
-		shader = new GpuProgram( vp->getText(), fp->getText() );
+		auto vp = resourceManager.get<Shader>("shaders/HemisphereTexShader.vp");
+		auto fp = resourceManager.get<Shader>("shaders/HemisphereTexShader.fp");
+		shader = new GpuProgram(vp, fp);
 		shader->bindAttrib("vertex", GpuProgram::VERTEX);
 		shader->bindAttrib("normal", GpuProgram::NORMAL);
 		shader->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
@@ -518,9 +518,9 @@ public:
 
 
 		// 2D shader
-		shared_ptr<TextResource> vp2D = resourceManager.get<TextResource>("shaders/Shader2D.vp");
-		shared_ptr<TextResource> fp2D = resourceManager.get<TextResource>("shaders/Shader2D.fp");
-		GpuProgram* shader2D = new GpuProgram(vp2D->getText(), fp2D->getText());
+		shared_ptr<Shader> vp2D = resourceManager.get<Shader>("shaders/Shader2D.vp");
+		shared_ptr<Shader> fp2D = resourceManager.get<Shader>("shaders/Shader2D.fp");
+		GpuProgram* shader2D = new GpuProgram(vp2D, fp2D);
 		shader2D->bindAttrib("vertex", GpuProgram::VERTEX);
 		shader2D->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
 		shader2D->addAutoUniform( "mvpMatrix", GpuProgram::FLAT_PROJECTION );
