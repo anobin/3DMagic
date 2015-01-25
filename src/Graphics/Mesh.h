@@ -52,13 +52,13 @@ public:
 	    /// attribute data in a buffer on graphics memory
 		const Buffer& buffer;
 		/// auto-bound attribute type for data
-		const Batch::AttributeType& type;
+		const Shader::AttributeType& type;
 	
 	protected:
 	    friend class Mesh;
 	    
 	    Buffer _buffer;
-	    Batch::AttributeType _type;
+	    Shader::AttributeType _type;
 		inline AttributeData(): buffer(_buffer), type(_type) {}
 	};
 

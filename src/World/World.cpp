@@ -236,11 +236,10 @@ void World::renderObjects()
 				array = new VertexArray();
 				for(int j=0; j < attributeCount; j++)
 				{
-					int bind = shader->getAttribBinding( 
-						Batch::attributeTypeNames[(int)adata[j].type] );
+					int bind = shader->getAttribBinding(adata[j].type);
 					if (bind < 0) // shader does not have attribute
 						continue; 
-					array->setAttributeArray(bind, Batch::attributeTypeCompCount[(int)adata[j].type],
+					array->setAttributeArray(bind, Shader::attributeTypeCompCount[(int)adata[j].type],
 						VertexArray::FLOAT, adata[j].buffer);
 				}
                 

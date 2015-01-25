@@ -443,7 +443,7 @@ public:
 		// init textures
 		auto stoneTex = resourceManager.get<Texture>("textures/bareConcrete.tex.xml");
 		auto marbleTex = resourceManager.get<Texture>("textures/marble.tex.xml");
-		//auto brickTex = resourceManager.get<Texture>("textures/singleBrick.tex.xml");
+		auto brickTex = resourceManager.get<Texture>("textures/singleBrick.tex.xml");
 
 		Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
 		auto blueTex = std::make_shared<Texture>(blueImage);
@@ -470,9 +470,9 @@ public:
 		shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
 		shared_ptr<TextResource> fp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.fp");
 		shader = new Shader( vp->getText(), fp->getText() );
-		shader->bindAttrib( "vertex" );
-		shader->bindAttrib( "normal" );
-		shader->bindAttrib( "texcoord0" );
+		shader->bindAttrib("vertex", Shader::VERTEX);
+		shader->bindAttrib("normal", Shader::NORMAL);
+		shader->bindAttrib("texcoord0", Shader::TEX_COORD_0);
 		shader->link();
 
 
@@ -513,7 +513,7 @@ public:
 		materialBuilder.end();
 
 		materialBuilder.expand(&boxMaterial, sphereMaterial);
-		materialBuilder.setTexture(charTex);
+		materialBuilder.setTexture(brickTex);
 		materialBuilder.end();
 
 
@@ -521,8 +521,8 @@ public:
 		shared_ptr<TextResource> vp2D = resourceManager.get<TextResource>("shaders/Shader2D.vp");
 		shared_ptr<TextResource> fp2D = resourceManager.get<TextResource>("shaders/Shader2D.fp");
 		Shader* shader2D = new Shader(vp2D->getText(), fp2D->getText());
-		shader2D->bindAttrib( "vertex" );
-		shader2D->bindAttrib( "texcoord0" );
+		shader2D->bindAttrib("vertex", Shader::VERTEX);
+		shader2D->bindAttrib("texcoord0", Shader::TEX_COORD_0);
 		shader2D->link();
 
 		// circle in middle of screen

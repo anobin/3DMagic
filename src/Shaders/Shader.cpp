@@ -29,6 +29,23 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 
+const int Shader::attributeTypeCompCount[ MAX_ATTRIBUTE_TYPES ] = {
+    4, // vertex
+    3, // normal
+    4, // color
+    4, // color2
+    2, // texcoord0
+    2, // texcoord1
+    2, // texcoord2
+    2, // texcoord3
+    2, // texcoord4
+    2, // texcoord5
+    2, // texcoord6
+    2, // texcoord7
+    3, // tangent
+    3  // binormal
+};
+
 /** Create shader
  * @param vertexProgram source of the vertex program
  * @param fragmentProgram source of the fragment program
