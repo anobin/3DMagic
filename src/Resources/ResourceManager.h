@@ -56,33 +56,47 @@ private:
 	std::map<std::string, std::weak_ptr<Resource>> resources;
 	
 	/// directory where resources are contained
-	std::string resourceDir;
-	
-	/// default constructor
-	inline ResourceManager() {}
+	std::vector<std::string> resourceDirs;
 
 	template<class T>
 	inline std::shared_ptr<T> _get(const std::string& fullPath)
 	{
 		/* intentionally left blank, always need a specialization */
 	}
+
+	inline std::string getFullPath(const std::string& path)
+	{
+		for (const std::string& basePath : resourceDirs)
+		{
+			std::ifstream test;
+			std::string fullPath = basePath + "/" + path;
+			test.open(fullPath.c_str());
+			if (test.is_open() && test.good())
+				return fullPath;
+		}
+		return "";
+	}
 	
 public:
 
-	/** Standard constructor
-	 * @param resourceDir the directory where resources are located
-	 */
-	inline ResourceManager(std::string resourceDir): resourceDir(resourceDir)
-		{ /*intentionally left blank*/ }
+	inline ResourceManager() {}
 		
 	/// destructor
 	virtual ~ResourceManager();
+
+	inline void addResourceDir(const std::string& dir)
+	{
+		this->resourceDirs.push_back(dir);
+	}
 		
 	/** Check if a resource exists, to be to avoid exceptions for optional resources
 	 * @param name the name of the resource
 	 * @return true for exists, false otherwise
 	 */
-	bool doesResourceExist(const std::string& path);
+	inline bool doesResourceExist(const std::string& path)
+	{
+		return (this->getFullPath(path) != "");
+	}
 		
 	/** get a resource
 	 * @param name the name of the resource including any extra path info
@@ -102,11 +116,12 @@ public:
 		// otherwise, create new resource
 
 		// make sure file exists
-		if (!this->doesResourceExist(path))
+		std::string fullPath = this->getFullPath(path);
+		if (fullPath == "")
 			throw_ResourceNotFoundException(path);
 
 		// load resource
-		std::shared_ptr<T> resource = this->_get<T>(resourceDir + "/" + path);
+		std::shared_ptr<T> resource = this->_get<T>(fullPath);
 		resources.insert(std::pair<std::string, std::weak_ptr<Resource>>(
 			path, std::weak_ptr<Resource>(std::dynamic_pointer_cast<Resource>(resource))));
 		return resource;

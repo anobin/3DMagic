@@ -35,19 +35,6 @@ namespace Magic3D
 ResourceManager::~ResourceManager()
 {
 }
-	
-/** Check if a resource exists, to be to avoid exceptions for optional resources
- * @param name the name of the resource
- * @return true for exists, false otherwise
- */
-bool ResourceManager::doesResourceExist(const std::string& path)
-{
-	std::ifstream test;
-	test.open((resourceDir + "/" + path).c_str());
-	if (test.is_open() && test.good())
-		return true;
-	return false;
-}
 
 
 	

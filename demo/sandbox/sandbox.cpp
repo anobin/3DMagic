@@ -59,7 +59,7 @@ using std::shared_ptr;
 Matrix4 projectionMatrix;
 
 // resource manager
-ResourceManager resourceManager("../../../../resources/");
+ResourceManager resourceManager;
 
 // batches
 Batch floorBatch;
@@ -429,6 +429,8 @@ public:
 
 	void setup()
 	{
+		resourceManager.addResourceDir("../../../../resources/");
+		resourceManager.addResourceDir("../../../../../resources/");
 
 		// bullet setup
 		physics.setGravity(0,-9.8f*METER,0);
