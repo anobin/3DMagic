@@ -75,7 +75,7 @@ void World::renderObjects()
 	const Mesh::AttributeData* adata;
 	int attributeCount;
 	int vertexCount;
-	GpuProgram* gpuProgram; 
+	std::shared_ptr<GpuProgram> gpuProgram; 
 	for(; it != objects.end(); it++)
 	{
 	    // get object and entity

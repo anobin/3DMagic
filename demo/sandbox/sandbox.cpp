@@ -97,7 +97,7 @@ Color skyColor(255,255,255);
 float skyColorf[3];
 
 // shaders
-GpuProgram* shader;
+std::shared_ptr<GpuProgram> shader;
 bool wireframe = false;
 
 int screenWidth = 0;
@@ -469,7 +469,7 @@ public:
 		// init shader
 		auto vp = resourceManager.get<Shader>("shaders/HemisphereTexShader.vp");
 		auto fp = resourceManager.get<Shader>("shaders/HemisphereTexShader.fp");
-		shader = new GpuProgram(vp, fp);
+		shader = std::make_shared<GpuProgram>(vp, fp);
 		shader->bindAttrib("vertex", GpuProgram::VERTEX);
 		shader->bindAttrib("normal", GpuProgram::NORMAL);
 		shader->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
@@ -496,7 +496,7 @@ public:
 
 		// init materials
 		materialBuilder.begin(&sphereMaterial);
-		materialBuilder.setShader(shader);
+		materialBuilder.setGpuProgram(shader);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 
@@ -516,16 +516,8 @@ public:
 		materialBuilder.setTexture(brickTex);
 		materialBuilder.end();
 
-
 		// 2D shader
-		shared_ptr<Shader> vp2D = resourceManager.get<Shader>("shaders/Shader2D.vp");
-		shared_ptr<Shader> fp2D = resourceManager.get<Shader>("shaders/Shader2D.fp");
-		GpuProgram* shader2D = new GpuProgram(vp2D, fp2D);
-		shader2D->bindAttrib("vertex", GpuProgram::VERTEX);
-		shader2D->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
-		shader2D->addAutoUniform( "mvpMatrix", GpuProgram::FLAT_PROJECTION );
-		shader2D->addAutoUniform( "textureMap", GpuProgram::TEXTURE0 );
-		shader2D->link();
+		auto program2D = resourceManager.get<GpuProgram>("shaders/GpuProgram2D.xml");
 
 		// circle in middle of screen
 		Batch* circle2D = new Batch();
@@ -539,7 +531,7 @@ public:
 
 		Material* circle2DMaterial = new Material();
 		materialBuilder.begin(circle2DMaterial);
-		materialBuilder.setShader(shader2D);
+		materialBuilder.setGpuProgram(program2D);
 		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
 
@@ -549,7 +541,7 @@ public:
 
 		Material* logo2DMaterial = new Material();
 		materialBuilder.begin(logo2DMaterial);
-		materialBuilder.setShader(shader2D);
+		materialBuilder.setGpuProgram(program2D);
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
 

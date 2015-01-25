@@ -47,7 +47,7 @@ protected:
     friend class MaterialBuilder;
     friend class World;
     
-    GpuProgram* gpuProgram;
+    std::shared_ptr<GpuProgram> gpuProgram;
     
     VertexArray::Primitives primitive;
     

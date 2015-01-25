@@ -58,7 +58,7 @@ public:
         this->material->set(basis);
     }
     
-    inline void setShader(GpuProgram* gpuProgram)
+    inline void setGpuProgram(std::shared_ptr<GpuProgram> gpuProgram)
     {
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->gpuProgram = gpuProgram;

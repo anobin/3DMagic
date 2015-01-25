@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <GpuProgram>
-	<vertexShader>shaders/Shader2D.vp</vertexShader>
-	<geometryShader></geometryShader> <!-- not supported yet -->
-	<fragmentShader>shaders/Shader.fp</fragmentShader>
+	<vertexShader ref="shaders/Shader2D.vp" />
+	<fragmentShader ref="shaders/Shader2D.fp" />
 	
 	<attribute>
 		<name>vertex</name>
-		<type>VERTEX</name>
+		<type>VERTEX</type>
 	</attribute>
 	<attribute>
-		<name>textCoord0</name>
+		<name>texcoord0</name>
 		<type>TEX_COORD_0</type>
 	</attribute>
 	
 	<uniform>
 		<name>mvpMatrix</name>
-		<value ref="FLAT_PROJECTION">
+		<value ref="FLAT_PROJECTION" />
 	</uniform>
 	<uniform>
 		<name>textureMap</name>
-		<value ref="TEXTURE0">
+		<value ref="TEXTURE0" />
 	</uniform>
 </GpuProgram>

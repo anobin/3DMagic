@@ -278,6 +278,103 @@ inline std::shared_ptr<Texture> ResourceManager::_get<Texture>(const std::string
 }
 
 
+class GpuProgramParser
+{
+	std::map<std::string, GpuProgram::AttributeType> attributeMap;
+	std::map<std::string, GpuProgram::AutoUniformType> uniformMap;
+
+	GpuProgramParser()
+	{
+		attributeMap.insert(std::make_pair("VERTEX", GpuProgram::AttributeType::VERTEX));
+		attributeMap.insert(std::make_pair("NORMAL", GpuProgram::AttributeType::NORMAL));
+		attributeMap.insert(std::make_pair("COLOR", GpuProgram::AttributeType::COLOR));
+		attributeMap.insert(std::make_pair("COLOR2", GpuProgram::AttributeType::COLOR2));
+		attributeMap.insert(std::make_pair("TEX_COORD_0", GpuProgram::AttributeType::TEX_COORD_0));
+		attributeMap.insert(std::make_pair("TANGENT", GpuProgram::AttributeType::TANGENT));
+		attributeMap.insert(std::make_pair("BINORMAL", GpuProgram::AttributeType::BINORMAL));
+
+		uniformMap.insert(std::make_pair("MODEL_MATRIX", GpuProgram::AutoUniformType::MODEL_MATRIX));
+		uniformMap.insert(std::make_pair("VIEW_MATRIX", GpuProgram::AutoUniformType::VIEW_MATRIX));
+		uniformMap.insert(std::make_pair("PROJECTION_MATRIX", GpuProgram::AutoUniformType::PROJECTION_MATRIX));
+        uniformMap.insert(std::make_pair("MODEL_VIEW_MATRIX", GpuProgram::AutoUniformType::MODEL_VIEW_MATRIX));
+        uniformMap.insert(std::make_pair("VIEW_PROJECTION_MATRIX", GpuProgram::AutoUniformType::VIEW_PROJECTION_MATRIX));
+        uniformMap.insert(std::make_pair("MODEL_PROJECTION_MATRIX", GpuProgram::AutoUniformType::MODEL_PROJECTION_MATRIX));
+        uniformMap.insert(std::make_pair("MODEL_VIEW_PROJECTION_MATRIX", GpuProgram::AutoUniformType::MODEL_VIEW_PROJECTION_MATRIX));
+        uniformMap.insert(std::make_pair("NORMAL_MATRIX", GpuProgram::AutoUniformType::NORMAL_MATRIX));
+		uniformMap.insert(std::make_pair("FPS", GpuProgram::AutoUniformType::FPS));
+		uniformMap.insert(std::make_pair("TEXTURE0", GpuProgram::AutoUniformType::TEXTURE0));
+		uniformMap.insert(std::make_pair("LIGHT_LOCATION", GpuProgram::AutoUniformType::LIGHT_LOCATION));
+		uniformMap.insert(std::make_pair("FLAT_PROJECTION", GpuProgram::AutoUniformType::FLAT_PROJECTION));
+
+	}
+
+public:
+	inline static GpuProgramParser& getSingleton()
+	{
+		static GpuProgramParser* parser = nullptr;
+		if (parser == nullptr)
+			parser = new GpuProgramParser();
+		return *parser;
+	}
+
+	inline GpuProgram::AttributeType parseAttributeType(const std::string& text)
+	{
+		// TODO: add possible exception
+		return this->attributeMap.find(text)->second;
+	}
+
+	inline GpuProgram::AutoUniformType parseAutoUniformType(const std::string& text)
+	{
+		// TODO: add possible exception
+		return this->uniformMap.find(text)->second;
+	}
+	
+};
+
+template<>
+inline std::shared_ptr<GpuProgram> ResourceManager::_get<GpuProgram>(const std::string& fullPath)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError error = doc.LoadFile(fullPath.c_str());
+	// TODO: check doc load error and throw exception
+
+	// TODO: check nodes for null and throw exception
+	tinyxml2::XMLElement* programNode = doc.FirstChildElement("GpuProgram");
+
+	auto vertexProgram = this->get<Shader>(programNode->FirstChildElement("vertexShader")->Attribute("ref"));
+	auto fragmentProgram = this->get<Shader>(programNode->FirstChildElement("fragmentShader")->Attribute("ref"));
+
+	auto program = std::make_shared<GpuProgram>(vertexProgram, fragmentProgram);
+
+	auto parser = GpuProgramParser::getSingleton();
+
+	auto attributeNode = programNode->FirstChildElement("attribute");
+	while (attributeNode != nullptr)
+	{
+		auto name = attributeNode->FirstChildElement("name")->GetText();
+		auto typeText = attributeNode->FirstChildElement("type")->GetText();
+		auto type = parser.parseAttributeType(typeText);
+		program->bindAttrib(name, type);
+
+		attributeNode = attributeNode->NextSiblingElement("attribute");
+	}
+
+	auto uniformNode = programNode->FirstChildElement("uniform");
+	while(uniformNode != nullptr)
+	{
+		auto name = uniformNode->FirstChildElement("name")->GetText();
+		auto valueRef = uniformNode->FirstChildElement("value")->Attribute("ref");
+		auto value = parser.parseAutoUniformType(valueRef);
+		program->addAutoUniform(name, value);
+
+		uniformNode = uniformNode->NextSiblingElement("uniform");
+	}
+
+	program->link();
+	return program;
+}
+
+
 };
 
 
