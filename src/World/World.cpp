@@ -103,13 +103,7 @@ void World::renderObjects()
             MAGIC_ASSERT(gpuProgram != NULL);
 
 			for(const std::shared_ptr<Mesh> mesh : *meshes)
-			{
-                
-				// get mesh data
-				adata = mesh->getAttributeData();
-				attributeCount = mesh->getAttributeCount();
-				vertexCount = mesh->getVertexCount();
-                
+			{   
 				// 'use' gpuProgram
 				gpuProgram->use();
                 
@@ -233,14 +227,6 @@ void World::renderObjects()
 					}
 				}
                 
-				// bind vertexArray
-				array = new VertexArray();
-				for(int j=0; j < attributeCount; j++)
-				{
-					array->setAttributeArray((int)adata[j].type, GpuProgram::attributeTypeCompCount[(int)adata[j].type],
-						VertexArray::FLOAT, adata[j].buffer);
-				}
-                
 				// check for a depth lie
 				if (material->depthBufferLie)
 				{
@@ -249,14 +235,11 @@ void World::renderObjects()
 				}
                 
 				// draw mesh
-				array->draw(material->primitive, vertexCount);
+				mesh->getVertexArray().draw(material->primitive, mesh->getVertexCount());
                 
 				// disable depth lie if it was enabled
 				if (material->depthBufferLie)
 					glDisable(GL_POLYGON_OFFSET_FILL);
-                
-				// delete bound array
-				delete array;
 			}
             
             // check object for (more) attachments

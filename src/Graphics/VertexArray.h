@@ -129,20 +129,22 @@ public:
 	}
 	
 	/// bind this vertex array 
-	inline void bind()
+	inline void bind() const
 	{
 #ifndef MAGIC3D_NO_VERTEX_ARRAYS
+		if (VertexArray::boundArrayId == arrayId)
+			return; // already bound
 		VertexArray::boundArrayId = arrayId;
 		glBindVertexArray(arrayId); //openGL 3
 #endif
 	}
 	
 	/// unbind this vertex array
-	inline void unBind()
+	inline void unBind() const
 	{
 #ifndef MAGIC3D_NO_VERTEX_ARRAYS
 		if (arrayId != VertexArray::boundArrayId)
-			return;
+			return; // TODO: should throw exception here
 		glBindVertexArray(0); // openGL 3
 		VertexArray::boundArrayId = 0;
 #endif
@@ -188,7 +190,7 @@ public:
 	 * @param vertexCount the number of verticies to render
 	 * @param startingVertex the vertex to start at
 	 */
-	inline void draw(Primitives primitive, unsigned int vertexCount, unsigned int startingVertex = 0)
+	inline void draw(Primitives primitive, unsigned int vertexCount, unsigned int startingVertex = 0) const
 	{
 		this->bind();
 		glDrawArrays(primitive, startingVertex, vertexCount);

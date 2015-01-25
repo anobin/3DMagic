@@ -71,24 +71,14 @@ private:
 	
 	/// number of attributes
 	int attributeCount;
-	
-	/// (Re)allocate mesh data
-	inline void allocate(int vertexCount, int attributeCount)
-	{
-	    // free any previous data in mesh
-	    delete[] this->attributeData;
-	
-	    // setup mesh
-	    this->vertexCount = vertexCount;
-	    this->attributeCount = attributeCount;
-	    this->attributeData = new AttributeData[attributeCount];
-	}
+
+	VertexArray* vertexArray;
 	
 public:
     /// Standard Constructor
-	inline Mesh(): attributeData(NULL), vertexCount(0) , attributeCount(0) {}
+	inline Mesh(): attributeData(nullptr), vertexCount(0) , attributeCount(0), vertexArray(nullptr) {}
     
-	inline Mesh(const Batch& batch): attributeData(nullptr)
+	inline Mesh(const Batch& batch): attributeData(nullptr), vertexArray(nullptr)
 	{
 		this->copyBatchIn(batch);
 	}
@@ -109,6 +99,11 @@ public:
 	inline int getVertexCount() const
 	{
 	    return vertexCount;
+	}
+
+	inline const VertexArray& getVertexArray() const
+	{
+		return *this->vertexArray;
 	}
 	
 	void copyBatchIn(const Batch& batch);

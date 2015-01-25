@@ -32,12 +32,18 @@ namespace Magic3D
 Mesh::~Mesh()
 {
 	delete[] attributeData;
+	delete vertexArray;
 }
 
 void Mesh::copyBatchIn(const Batch& batch)
 {
     // allocate mesh attributes, also clears any previous data
-    this->allocate(batch.vertexCount, batch.attributeCount);
+	delete[] this->attributeData;
+	delete this->vertexArray;
+	this->vertexCount = batch.vertexCount;
+	this->attributeCount = batch.attributeCount;
+	this->attributeData = new AttributeData[this->attributeCount];
+	this->vertexArray = new VertexArray();
     
     // go through all attributes in batch and copy data into video
     // memory buffer
@@ -46,8 +52,15 @@ void Mesh::copyBatchIn(const Batch& batch)
         Mesh::AttributeData& d = this->attributeData[i];
         const Batch::AttributeData& b = batch.data[i];
         d._type = b.type;
-        d._buffer.allocate( b.dataLen, b.data, Buffer::STATIC_DRAW );
+        d._buffer.allocate( b.dataLen, b.data, Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
+		this->vertexArray->setAttributeArray(
+			(int)d.type,
+			GpuProgram::attributeTypeCompCount[(int)d.type],
+			VertexArray::FLOAT, // make this dynamic per each attribute
+			d.buffer
+		);
     }
+
 }
 	
 	
