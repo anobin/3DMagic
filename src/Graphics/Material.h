@@ -29,6 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Shaders/Shader.h"
 #include "Texture.h"
 #include <string.h>
+#include <memory>
 
 namespace Magic3D
 {
@@ -145,7 +146,7 @@ protected:
     
     int namedUniformCount;
     
-    Texture* textures[8];
+    std::shared_ptr<Texture> textures[8];
     
     float depthBufferLie;
     

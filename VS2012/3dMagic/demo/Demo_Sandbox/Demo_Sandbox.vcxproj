@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>BulletCollision_debug.lib;BulletDynamics_debug.lib;freetype.lib;glew32.lib;lib3ds.lib;libpng.lib;LinearMath_debug.lib;SDL.lib;SDLmain.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision_debug.lib;BulletDynamics_debug.lib;freetype.lib;glew32.lib;lib3ds.lib;libpng.lib;LinearMath_debug.lib;SDL.lib;SDLmain.lib;opengl32.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\..\external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

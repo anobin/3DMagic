@@ -93,7 +93,7 @@ public:
     void addNamedUniform(const char* varName, VertexArray::DataTypes datatype,
         int comp_count, const void* data);
     
-    inline void setTexture(Texture* t, int number = 0)
+    inline void setTexture(std::shared_ptr<Texture> t, int number = 0)
     {
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         MAGIC_THROW(number < 0 || number > 7, "Tried to set out-of-range texture." );

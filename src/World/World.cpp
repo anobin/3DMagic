@@ -177,42 +177,42 @@ void World::renderObjects()
 						case Material::TEXTURE0:                       // sampler2D
 							MAGIC_THROW(material->textures[0] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[0] );
+							shader->setTexture( u.varName, material->textures[0].get() );
 							break;
 						case Material::TEXTURE1:                       // sampler2D
 							MAGIC_THROW(material->textures[1] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[1] );
+							shader->setTexture( u.varName, material->textures[1].get() );
 							break;
 						case Material::TEXTURE2:                       // sampler2D
 							MAGIC_THROW(material->textures[2] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[2] );
+							shader->setTexture( u.varName, material->textures[2].get() );
 							break;
 						case Material::TEXTURE3:                       // sampler2D
 							MAGIC_THROW(material->textures[3] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[3] );
+							shader->setTexture( u.varName, material->textures[3].get() );
 							break;
 						case Material::TEXTURE4:                       // sampler2D
 							MAGIC_THROW(material->textures[4] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[4] );
+							shader->setTexture( u.varName, material->textures[4].get() );
 							break;
 						case Material::TEXTURE5:                       // sampler2D
 							MAGIC_THROW(material->textures[5] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[5] );
+							shader->setTexture( u.varName, material->textures[5].get() );
 							break;
 						case Material::TEXTURE6:                       // sampler2D
 							MAGIC_THROW(material->textures[6] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[6] );
+							shader->setTexture( u.varName, material->textures[6].get() );
 							break;
 						case Material::TEXTURE7:                       // sampler2D
 							MAGIC_THROW(material->textures[7] == NULL, "Material has auto-bound "
 								"texture set, but no texture set for the index." );
-							shader->setTexture( u.varName, material->textures[7] );
+							shader->setTexture( u.varName, material->textures[7].get() );
 							break;
 						case Material::LIGHT_LOCATION:                 // vec3
 							MAGIC_THROW(light == NULL, "Material has the light location "
@@ -223,7 +223,7 @@ void World::renderObjects()
 							break;
 						case Material::FLAT_PROJECTION:   // mat4
 							temp4m.createOrthographicMatrix(0, this->graphics.getDisplayWidth(), 
-								0, this->graphics.getDisplayHeight(), -1.0, 1.0);
+								0, (Scalar)this->graphics.getDisplayHeight(), -1.0, 1.0);
 							shader->setUniformMatrix( u.varName, 4, temp4m.getArray() );
 							break;
 						default:

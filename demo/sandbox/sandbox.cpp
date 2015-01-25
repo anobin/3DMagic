@@ -61,14 +61,6 @@ Matrix4 projectionMatrix;
 // resource manager
 ResourceManager resourceManager("../../../../resources/");
 
-// textures
-Texture* stoneTex = NULL;
-Texture* marbleTex = NULL;
-Texture* bunkerTex = NULL;
-Texture* brickTex = NULL;
-Texture* blueTex = NULL;
-Texture* charTex = NULL;
-
 // batches
 Batch floorBatch;
 Batch sphereBatch;
@@ -430,7 +422,8 @@ void mouseMovedPassive(int x, int y, FPCamera& camera, GraphicsSystem& graphics)
 
 class Sandbox : public DemoBase
 {
-	Texture* screenTex;
+	std::shared_ptr<Texture> charTex;
+	std::shared_ptr<Texture> screenTex;
 
 public:
 
@@ -446,47 +439,12 @@ public:
 		graphics.setClearColor(lightBlue );
 
 		// init textures
-		if (resourceManager.doesResourceExist("images/bareConcrete.tga"))
-		{
-			shared_ptr<Image> stoneImage = resourceManager.get<Image>("images/bareConcrete.tga");
-			stoneTex = new Texture(*stoneImage);
-		}
-		else
-		{
-			Image stoneImage( 1, 1, 4, Color::WHITE);
-			stoneTex = new Texture(stoneImage);
-		}
-		if (resourceManager.doesResourceExist("images/marble.png"))
-		{
-			shared_ptr<Image> marbleImage = resourceManager.get<Image>("images/marble.png");
-			marbleTex= new Texture(*marbleImage);
-			marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-		}
-		else
-		{
-			Image marbleImage( 1, 1, 4, Color::RED);
-			marbleTex= new Texture(marbleImage);
-			marbleTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-		}
-		if (resourceManager.doesResourceExist("images/ConcreteBunkerDirty.tga"))
-		{
-			shared_ptr<Image> bunkerImage = resourceManager.get<Image>("images/ConcreteBunkerDirty.tga");
-			bunkerTex = new Texture(*bunkerImage);
-		}
-		if (resourceManager.doesResourceExist("images/singleBrick.tga"))
-		{
-			shared_ptr<Image> brickImage = resourceManager.get<Image>("images/singleBrick.tga");
-			brickTex = new Texture(*brickImage);
-			brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-		}
-		else
-		{
-			Image brickImage( 1, 1, 4, Color(255, 118, 27, 255));
-			brickTex = new Texture(brickImage);
-			brickTex->setWrapMode(Texture::CLAMP_TO_EDGE);
-		}
+		auto stoneTex = resourceManager.get<Texture>("textures/bareConcrete.tex.xml");
+		auto marbleTex = resourceManager.get<Texture>("textures/marble.tex.xml");
+		//auto brickTex = resourceManager.get<Texture>("textures/singleBrick.tex.xml");
+
 		Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
-		blueTex = new Texture(blueImage);
+		auto blueTex = std::make_shared<Texture>(blueImage);
 		blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
 		shared_ptr<FontResource> dejavuResource = resourceManager.get<FontResource>
@@ -504,8 +462,7 @@ public:
 		charImage.clear(Color::PINK);
 		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
 		charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
-		charTex = new Texture(charImage);
-
+		charTex = std::make_shared<Texture>(charImage);
 
 		// init shader
 		shared_ptr<TextResource> vp = resourceManager.get<TextResource>("shaders/HemisphereTexShader.vp");
@@ -558,8 +515,6 @@ public:
 		materialBuilder.end();
 
 
-
-
 		// 2D shader
 		shared_ptr<TextResource> vp2D = resourceManager.get<TextResource>("shaders/Shader2D.vp");
 		shared_ptr<TextResource> fp2D = resourceManager.get<TextResource>("shaders/Shader2D.fp");
@@ -575,7 +530,7 @@ public:
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
-		screenTex = new Texture(screenImage);
+		screenTex = std::make_shared<Texture>(screenImage);
 		screenTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
 		Material* circle2DMaterial = new Material();
@@ -587,6 +542,22 @@ public:
 		materialBuilder.end();
 
 		world->addObject(new Object(std::make_shared<Meshes>(*circle2D), circle2DMaterial));
+
+		auto logoTex = resourceManager.get<Texture>("textures/logo.tex.xml");
+
+		Material* logo2DMaterial = new Material();
+		materialBuilder.begin(logo2DMaterial, 2, 0);
+		materialBuilder.setShader(shader2D);
+		materialBuilder.addAutoUniform( "mvpMatrix", Material::FLAT_PROJECTION );
+		materialBuilder.addAutoUniform( "textureMap", Material::TEXTURE0 );
+		materialBuilder.setTexture(logoTex);
+		materialBuilder.end();
+
+		Batch* logoBatch = new Batch();
+		batchBuilder.build2DRectangle(logoBatch, 200, 0, 173, 50);
+
+		Object* logoObject = new Object(std::make_shared<Meshes>(*logoBatch), logo2DMaterial);
+		world->addObject(logoObject);
 
 
 
@@ -626,7 +597,7 @@ public:
 		// 3ds model
 		std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
-		scaleMatrix.createScaleMatrix(0.1, 0.1, 0.1);
+		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
 		chainBatches->applyTransform(scaleMatrix);
 		materialBuilder.expand(&chainMaterial, sphereMaterial);
 		materialBuilder.setTexture(charTex);

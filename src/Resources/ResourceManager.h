@@ -39,6 +39,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "BatchLoader.h"
 #include <vector>
 #include <Graphics\Mesh.h>
+#include <tinyxml2.h>
+#include <Util/Color.h>
 
 
 namespace Magic3D
@@ -166,6 +168,82 @@ inline std::shared_ptr<Meshes> ResourceManager::_get<Meshes>(const std::string& 
 {
 	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
 	return std::make_shared<Meshes>(*BatchLoaders::getSingleton().get(ext)->getBatches(fullPath));
+}
+
+class ColorParser
+{
+	std::map<std::string, Color> namedColors;
+
+	ColorParser()
+	{
+		namedColors.insert(std::make_pair("BLACK", Color::BLACK));
+		namedColors.insert(std::make_pair("WHITE", Color::WHITE));
+		namedColors.insert(std::make_pair("GREEN", Color::GREEN));
+		namedColors.insert(std::make_pair("BLUE", Color::BLUE));
+		namedColors.insert(std::make_pair("RED", Color::RED));
+		namedColors.insert(std::make_pair("LIGHT_GREEN", Color::LIGHT_GREEN));
+		namedColors.insert(std::make_pair("ORANGE", Color::ORANGE));
+		namedColors.insert(std::make_pair("YELLOW", Color::YELLOW));
+		namedColors.insert(std::make_pair("PURPLE", Color::PURPLE));
+		namedColors.insert(std::make_pair("GRAY", Color::GRAY));
+		namedColors.insert(std::make_pair("PINK", Color::PINK));
+		namedColors.insert(std::make_pair("LIGHT_BLUE", Color::LIGHT_BLUE));
+	}
+
+public:
+
+	static ColorParser& getSingleton()
+	{
+		static ColorParser* parser = nullptr;
+		if (parser == nullptr)
+			parser = new ColorParser();
+		return *parser;
+	}
+
+	inline Color parse(tinyxml2::XMLElement* colorNode)
+	{
+		const char* name = colorNode->Attribute("name");
+		if (name != nullptr)
+		{
+			// TODO: add exception for missing name
+			return namedColors.find(name)->second;
+		}
+
+		// TODO: add individual component parsing
+		return Color::PINK;
+	}
+
+};
+
+template<>
+inline std::shared_ptr<Texture> ResourceManager::_get<Texture>(const std::string& fullPath)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError error = doc.LoadFile(fullPath.c_str());
+	// TODO: check doc load error and throw exception
+
+	// TODO: check nodes for null and throw exception
+	tinyxml2::XMLElement* textureNode = doc.FirstChildElement("Texture");
+
+	tinyxml2::XMLElement* imageNode = textureNode->FirstChildElement("image");
+	const char* imageRef = imageNode->Attribute("ref");
+
+	std::shared_ptr<Image> image;
+	if (this->doesResourceExist(imageRef))
+		image = this->get<Image>(imageRef);
+	else
+	{
+		tinyxml2::XMLElement* fallbackNode = textureNode->FirstChildElement("fallback");
+		tinyxml2::XMLElement* colorNode = fallbackNode->FirstChildElement("Color");
+		Color color = ColorParser::getSingleton().parse(colorNode);
+		image = std::make_shared<Image>(1, 1, color.getChannelCount(), color);
+	}
+
+	auto texture = std::make_shared<Texture>(*image);
+	
+	// TODO: parse wrap mode and other texture properties
+
+	return texture;
 }
 
 

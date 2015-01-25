@@ -29,6 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include "magic_throw.h"
+#include <Resources\Resource.h>
 
 // everything is in 3DMagic namespace
 namespace Magic3D
@@ -42,7 +43,7 @@ namespace Magic3D
  * a single byte. There is no channel or color padding. Input can be float
  * format (0.0 to 1.0) or byte format (same as internal).
  */
-class Color
+class Color : public Resource
 {
 private:
 	/// Internal color storage, RGBA, single byte per channel

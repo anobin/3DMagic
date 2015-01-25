@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Texture>
+	<image ref="images/singleBrick.tga" />
+	<wrapMode>CLAMP_TO_EDGE</wrapMode>
+	<!--<fallback>
+		<Color r="255" g="118" b="27" a="255" />
+	</fallback>-->
+</Texture>
