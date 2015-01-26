@@ -467,23 +467,7 @@ public:
 		charTex = std::make_shared<Texture>(charImage);
 
 		// init shader
-		auto vp = resourceManager.get<Shader>("shaders/HemisphereTexShader.vp");
-		auto fp = resourceManager.get<Shader>("shaders/HemisphereTexShader.fp");
-		shader = std::make_shared<GpuProgram>(vp, fp);
-		shader->bindAttrib("vertex", GpuProgram::VERTEX);
-		shader->bindAttrib("normal", GpuProgram::NORMAL);
-		shader->bindAttrib("texcoord0", GpuProgram::TEX_COORD_0);
-		shader->addAutoUniform( "mvMatrix", GpuProgram::MODEL_VIEW_MATRIX );
-		shader->addAutoUniform( "mvpMatrix", GpuProgram::MODEL_VIEW_PROJECTION_MATRIX );
-		shader->addAutoUniform( "normalMatrix", GpuProgram::NORMAL_MATRIX );
-		shader->addAutoUniform( "textureMap", GpuProgram::TEXTURE0 );
-		shader->addAutoUniform( "lightPosition", GpuProgram::LIGHT_LOCATION);
-		skyColor.getColor(skyColorf, 3);
-		shader->addNamedUniform( "skyColor", VertexArray::FLOAT, 3, skyColorf);
-		groundColor.getColor(groundColorf, 3);
-		shader->addNamedUniform( "groundColor", VertexArray::FLOAT, 3, groundColorf);
-		shader->link();
-
+		shader = resourceManager.get<GpuProgram>("shaders/HemisphereTex.gpu.xml");
 
 		// init batches
 		batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);

@@ -135,35 +135,20 @@ protected:
         }
     };
     
+	// TODO: refactor this and place in seperate class
     struct NamedUniform
     {
         char* varName;
         VertexArray::DataTypes datatype;
         int comp_count;
-        const void* data;
+        void* data;
         
         inline NamedUniform(): varName(NULL), comp_count(0), data(NULL) {}
 
-        inline NamedUniform(const NamedUniform& u): datatype(u.datatype), 
-            comp_count(u.comp_count), data(u.data)
-        {
-            this->varName = new char[strlen(u.varName)+1];
-            strcpy(this->varName, u.varName);
-        }
-
-        inline void set(const NamedUniform& u)
-        {
-            this->datatype = u.datatype;
-            this->comp_count = u.comp_count;
-            this->data = u.data;
-            delete[] this->varName;
-            this->varName = new char[strlen(u.varName)+1];
-            strcpy(this->varName, u.varName);
-        }
-        
         inline ~NamedUniform()
         {
             delete[] varName;
+			delete[] data;
         }
     };
 
@@ -225,7 +210,8 @@ public:
 		strcpy(u->varName, varName);
 		u->datatype = datatype;
 		u->comp_count = comp_count;
-		u->data = data;
+		u->data = new char[VertexArray::getDataTypeSize(datatype)*comp_count];
+		memcpy(u->data, data, VertexArray::getDataTypeSize(datatype)*comp_count);
 		this->namedUniforms.push_back(u);
 	}
 

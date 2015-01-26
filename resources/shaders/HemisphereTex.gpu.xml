@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GpuProgram>
+	<vertexShader ref="shaders/HemisphereTexShader.vp" />
+	<fragmentShader ref="shaders/HemisphereTexShader.fp" />
+	
+	<attribute>
+		<name>vertex</name>
+		<type>VERTEX</type>
+	</attribute>
+	<attribute>
+		<name>normal</name>
+		<type>NORMAL</type>
+	</attribute>
+	<attribute>
+		<name>texcoord0</name>
+		<type>TEX_COORD_0</type>
+	</attribute>
+	
+	<uniform>
+		<name>mvMatrix</name>
+		<value ref="MODEL_VIEW_MATRIX" />
+	</uniform>
+	<uniform>
+		<name>mvpMatrix</name>
+		<value ref="MODEL_VIEW_PROJECTION_MATRIX" />
+	</uniform>
+	<uniform>
+		<name>normalMatrix</name>
+		<value ref="NORMAL_MATRIX" />
+	</uniform>
+	<uniform>
+		<name>textureMap</name>
+		<value ref="TEXTURE0" />
+	</uniform>
+	<uniform>
+		<name>lightPosition</name>
+		<value ref="LIGHT_LOCATION" />
+	</uniform>
+	
+	<uniform>
+		<name>skyColor</name>
+		<value type="FLOAT">
+			<c>1.0</c>
+			<c>1.0</c>
+			<c>1.0</c>
+		</value>
+	</uniform>
+	<uniform>
+		<name>groundColor</name>
+		<value type="FLOAT">
+			<c>0.1</c>
+			<c>0.1</c>
+			<c>0.1</c>
+		</value>
+	</uniform>
+	
+</GpuProgram>

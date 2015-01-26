@@ -363,9 +363,30 @@ inline std::shared_ptr<GpuProgram> ResourceManager::_get<GpuProgram>(const std::
 	while(uniformNode != nullptr)
 	{
 		auto name = uniformNode->FirstChildElement("name")->GetText();
-		auto valueRef = uniformNode->FirstChildElement("value")->Attribute("ref");
-		auto value = parser.parseAutoUniformType(valueRef);
-		program->addAutoUniform(name, value);
+		
+		auto valueNode = uniformNode->FirstChildElement("value");
+		auto valueRef = valueNode->Attribute("ref");
+		if (valueRef != nullptr)
+		{
+			auto value = parser.parseAutoUniformType(valueRef);
+			program->addAutoUniform(name, value);
+		}
+		else
+		{
+			auto componentNode = valueNode->FirstChildElement("c");
+			std::vector<float> components;
+			while (componentNode != nullptr)
+			{
+				components.push_back(std::stof(componentNode->GetText()));
+				componentNode = componentNode->NextSiblingElement("c");
+			}
+
+			float* data = new float[components.size()];
+			for(int i=0; i < components.size(); i++)
+				data[i] = components[i];
+			program->addNamedUniform(name, VertexArray::FLOAT, components.size(), data);
+			delete[] data;
+		}
 
 		uniformNode = uniformNode->NextSiblingElement("uniform");
 	}
