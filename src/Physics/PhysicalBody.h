@@ -25,6 +25,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_PHYSICAL_BODY_H
 #define MAGIC3D_PHYSICAL_BODY_H
 
+#include <memory>
+
 #include "../Math/Position.h"
 #include "../Exceptions/MagicException.h"
 #include "MotionState.h"
@@ -68,6 +70,8 @@ protected:
 	
 	/// physical body for object
 	btRigidBody* body;
+
+	std::shared_ptr<CollisionShape> shape;
 	
 	inline void build(btCollisionShape* shape, const Properties& prop)
 	{   
@@ -110,11 +114,11 @@ protected:
 	
 public:
 	/// standard constructor
-	inline PhysicalBody(Position& position, CollisionShape& shape, 
+	inline PhysicalBody(Position& position, std::shared_ptr<CollisionShape> shape, 
 	    const Properties& prop = Properties()): 
-	    motionState(position), body(NULL) 
+	    motionState(position), body(NULL), shape(shape)
 	{ 
-	    build(shape.getShape(), prop); 
+	    build(shape->getShape(), prop); 
 	}
 	
 	/// destructor

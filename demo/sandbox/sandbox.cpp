@@ -75,11 +75,10 @@ std::shared_ptr<Material> tinySphereMaterial;
 std::shared_ptr<Material> bigSphereMaterial;
 
 // collisions shapes
-PlaneCollisionShape floorShape( Vector3(0,1,0) );
-SphereCollisionShape sphereShape( 2*FOOT );
-SphereCollisionShape tinySphereShape( 1*FOOT );
-BoxCollisionShape bigSphereShape( 3, 3, 3 );
-BoxCollisionShape boxShape( 6*INCH*5.0f, 3*INCH*5.0f, 3*INCH*5.0f );
+auto floorShape = std::make_shared<PlaneCollisionShape>( Vector3(0,1,0) );
+auto sphereShape = std::make_shared<SphereCollisionShape>( 2*FOOT );
+auto tinySphereShape = std::make_shared<SphereCollisionShape>( 1*FOOT );
+auto bigSphereShape = std::make_shared<BoxCollisionShape>( 3, 3, 3 );
 
 // objects
 Object* bigBall;
@@ -214,7 +213,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(std::make_shared<Meshes>(bigSphereBatch), bigSphereMaterial, &bigSphereShape, prop );
+			t = new Object(std::make_shared<Meshes>(bigSphereBatch), bigSphereMaterial, bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -370,7 +369,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial, &sphereShape, prop);
+			t = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial, sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -544,13 +543,15 @@ public:
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(std::make_shared<Meshes>(floorBatch), floorMaterial, &floorShape); // static object
+		floorObject = new Object(std::make_shared<Meshes>(floorBatch), floorMaterial, floorShape); // static object
 		world->addObject(floorObject);
+
+		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
 		float wallWidth =40;
 		float wallHeight = 10;
-		float brickHeight = 3*INCH*scale;
-		float brickWidth = 6*INCH*scale;
+		float brickHeight = 0.375;
+		float brickWidth = 0.75;
 		float h = brickHeight/2;
 		float xOffset = -(brickWidth*wallWidth)/2;
 		float zOffset = -100*FOOT;
@@ -564,7 +565,7 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(std::make_shared<Meshes>(boxBatch), brickMaterial, &boxShape, prop );
+				btBox = new Object(std::make_shared<Meshes>(boxBatch), brickMaterial, brickShape, prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
@@ -579,7 +580,7 @@ public:
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
-		TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape(*chainBatches);
+		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
 		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), chainMaterial,
 			chainShape);
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
@@ -619,7 +620,7 @@ public:
 			{
 				PhysicalBody::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), tinySphereMaterial, &tinySphereShape, prop);
+				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), tinySphereMaterial, tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             

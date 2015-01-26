@@ -73,7 +73,7 @@ public:
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
-	inline Object(CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	inline Object(std::shared_ptr<CollisionShape> shape, const PhysicalBody::Properties& prop = 
 	    PhysicalBody::Properties() ): meshes(NULL), material(nullptr),
 	    physical(NULL), physicalAlloc(false) 
 	{
@@ -81,7 +81,7 @@ public:
 	}
 	
 	/// standard constructor for objects
-	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material, std::shared_ptr<CollisionShape> shape, const PhysicalBody::Properties& prop = 
 	    PhysicalBody::Properties() ): meshes(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
@@ -101,12 +101,12 @@ public:
 	}
 	
 	/// create the physical component
-	inline void createPhysical(CollisionShape* shape, 
+	inline void createPhysical(std::shared_ptr<CollisionShape> shape, 
 	    const PhysicalBody::Properties& prop = PhysicalBody::Properties() )
 	{
 	    if (physicalAlloc)
 	        delete this->physical;
-	    this->physical = new PhysicalBody(this->position, *shape, prop);
+	    this->physical = new PhysicalBody(this->position, shape, prop);
 	    this->physicalAlloc = true;
 	}
 	
