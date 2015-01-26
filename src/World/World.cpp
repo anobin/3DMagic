@@ -91,7 +91,7 @@ void World::renderObjects()
 				break;
 
             // get mesh and material data
-			const Material* material = ob->getMaterial();
+			auto material = ob->getMaterial();
             
             // get model/world matrix for object (same for all meshes in object)
             Matrix4 model;

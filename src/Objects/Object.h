@@ -52,7 +52,7 @@ protected:
 	
 	std::shared_ptr<Meshes> meshes;
 
-	Material* material;
+	std::shared_ptr<Material> material;
 	
 	/// physical body for object
 	PhysicalBody* physical;
@@ -69,7 +69,7 @@ public:
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for graphical-only objects
-	inline Object(std::shared_ptr<Meshes> mesh, Material* material): meshes(mesh), material(material),
+	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material): meshes(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) {}
 	
 	/// standard constructor for physical-only objects
@@ -81,7 +81,7 @@ public:
 	}
 	
 	/// standard constructor for objects
-	inline Object(std::shared_ptr<Meshes> mesh, Material* material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
+	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material, CollisionShape* shape, const PhysicalBody::Properties& prop = 
 	    PhysicalBody::Properties() ): meshes(mesh), material(material),
 	    physical(NULL), physicalAlloc(false) 
 	{
@@ -166,7 +166,7 @@ public:
 	     return meshes;   
 	}
 
-	inline Material* getMaterial()
+	inline std::shared_ptr<Material> getMaterial()
 	{
 		return material;
 	}

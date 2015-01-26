@@ -41,6 +41,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Graphics\Mesh.h>
 #include <tinyxml2.h>
 #include <Util/Color.h>
+#include <Graphics\Material.h>
+#include <Graphics\MaterialBuilder.h>
 
 
 namespace Magic3D
@@ -394,6 +396,34 @@ inline std::shared_ptr<GpuProgram> ResourceManager::_get<GpuProgram>(const std::
 	program->link();
 	return program;
 }
+
+
+template<>
+inline std::shared_ptr<Material> ResourceManager::_get<Material>(const std::string& fullPath)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError error = doc.LoadFile(fullPath.c_str());
+	// TODO: check doc load error and throw exception
+
+	// TODO: check nodes for null and throw exception
+	tinyxml2::XMLElement* programNode = doc.FirstChildElement("Material");
+
+	auto gpuProgramRef = programNode->FirstChildElement("gpuProgram")->Attribute("ref");
+	auto gpuProgram = this->get<GpuProgram>(gpuProgramRef);
+
+	auto textureRef = programNode->FirstChildElement("texture")->Attribute("ref");
+	auto texture = this->get<Texture>(textureRef);
+
+	auto material = std::make_shared<Material>();
+	MaterialBuilder builder;
+	builder.begin(material.get());
+	builder.setGpuProgram(gpuProgram);
+	builder.setTexture(texture);
+	builder.end();
+
+	return material;
+}
+
 
 
 };

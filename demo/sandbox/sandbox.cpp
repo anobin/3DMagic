@@ -69,11 +69,10 @@ Batch bigSphereBatch;
 Batch boxBatch;
 
 // materials
-Material floorMaterial;
-Material sphereMaterial;
-Material tinySphereMaterial;
-Material bigSphereMaterial;
-Material boxMaterial; 
+std::shared_ptr<Material> floorMaterial;
+std::shared_ptr<Material> sphereMaterial;
+std::shared_ptr<Material> tinySphereMaterial;
+std::shared_ptr<Material> bigSphereMaterial;
 
 // collisions shapes
 PlaneCollisionShape floorShape( Vector3(0,1,0) );
@@ -120,7 +119,6 @@ MaterialBuilder materialBuilder;
 
 // 3ds stuff
 Mesh* chainMeshes;
-Material chainMaterial;
 Texture* chainTex;
 Object* chainObject;
 
@@ -216,7 +214,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(std::make_shared<Meshes>(bigSphereBatch), &bigSphereMaterial, &bigSphereShape, prop );
+			t = new Object(std::make_shared<Meshes>(bigSphereBatch), bigSphereMaterial, &bigSphereShape, prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -372,7 +370,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(std::make_shared<Meshes>(sphereBatch), &sphereMaterial, &sphereShape, prop);
+			t = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial, &sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -479,26 +477,28 @@ public:
 		batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
 
 		// init materials
-		materialBuilder.begin(&sphereMaterial);
+		sphereMaterial = std::make_shared<Material>();
+		materialBuilder.begin(sphereMaterial.get());
 		materialBuilder.setGpuProgram(shader);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 
-		materialBuilder.expand(&tinySphereMaterial, sphereMaterial);
+		tinySphereMaterial = std::make_shared<Material>();
+		materialBuilder.expand(tinySphereMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(blueTex);
 		materialBuilder.end();
 
-		materialBuilder.expand(&bigSphereMaterial, sphereMaterial);
+		bigSphereMaterial = std::make_shared<Material>();
+		materialBuilder.expand(bigSphereMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 
-		materialBuilder.expand(&floorMaterial, sphereMaterial);
+		floorMaterial = std::make_shared<Material>();
+		materialBuilder.expand(floorMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(stoneTex);
 		materialBuilder.end();
 
-		materialBuilder.expand(&boxMaterial, sphereMaterial);
-		materialBuilder.setTexture(brickTex);
-		materialBuilder.end();
+		auto brickMaterial = resourceManager.get<Material>("materials/Brick.xml");
 
 		// 2D shader
 		auto program2D = resourceManager.get<GpuProgram>("shaders/GpuProgram2D.xml");
@@ -513,8 +513,8 @@ public:
 		screenTex = std::make_shared<Texture>(screenImage);
 		screenTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
-		Material* circle2DMaterial = new Material();
-		materialBuilder.begin(circle2DMaterial);
+		auto circle2DMaterial = std::make_shared<Material>();
+		materialBuilder.begin(circle2DMaterial.get());
 		materialBuilder.setGpuProgram(program2D);
 		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
@@ -523,8 +523,8 @@ public:
 
 		auto logoTex = resourceManager.get<Texture>("textures/logo.tex.xml");
 
-		Material* logo2DMaterial = new Material();
-		materialBuilder.begin(logo2DMaterial);
+		auto logo2DMaterial = std::make_shared<Material>();
+		materialBuilder.begin(logo2DMaterial.get());
 		materialBuilder.setGpuProgram(program2D);
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
@@ -540,11 +540,11 @@ public:
 		// init objects
 		PhysicalBody::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(std::make_shared<Meshes>(sphereBatch), &sphereMaterial);
+		btBall = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(std::make_shared<Meshes>(floorBatch), &floorMaterial, &floorShape); // static object
+		floorObject = new Object(std::make_shared<Meshes>(floorBatch), floorMaterial, &floorShape); // static object
 		world->addObject(floorObject);
 
 		float wallWidth =40;
@@ -564,7 +564,7 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(std::make_shared<Meshes>(boxBatch), &boxMaterial, &boxShape, prop );
+				btBox = new Object(std::make_shared<Meshes>(boxBatch), brickMaterial, &boxShape, prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
@@ -575,11 +575,12 @@ public:
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
 		chainBatches->applyTransform(scaleMatrix);
-		materialBuilder.expand(&chainMaterial, sphereMaterial);
+		auto chainMaterial = std::make_shared<Material>();
+		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 		TriangleMeshCollisionShape* chainShape = new TriangleMeshCollisionShape(*chainBatches);
-		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), &chainMaterial,
+		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), chainMaterial,
 			chainShape);
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
@@ -618,7 +619,7 @@ public:
 			{
 				PhysicalBody::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), &tinySphereMaterial, &tinySphereShape, prop);
+				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), tinySphereMaterial, &tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             

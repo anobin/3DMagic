@@ -41,7 +41,7 @@ class World;
  * attributes to pass to the shader, uniforms to pass to the shader, 
  * the primitive to render, etc.
  */
-class Material
+class Material : public Resource
 {
 protected:
     friend class MaterialBuilder;
