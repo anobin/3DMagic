@@ -10,6 +10,13 @@
 - generally try to remove mutation of objects, especially required mutation for basic creation
 - get rid of c strings and c methods for strings and files
 
+## Rendering Performance
+- add configurable frustrum culling
+	- can use bullet collision to build bounding spheres for meshes and test collisions
+- add configurable object distance sorting
+	- opaque objects rendered from front to back; to take advantage of depth buffer
+	- transparent objects rendered from back to front; to maintain transparency, depth buffer off
+
 ## fix
 - fix resource exists method to actually check if file exists
 
