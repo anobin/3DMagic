@@ -48,9 +48,7 @@ protected:
     friend class World;
     
     std::shared_ptr<GpuProgram> gpuProgram;
-    
-    VertexArray::Primitives primitive;
-    
+
     bool transparent;
     
     std::shared_ptr<Texture> textures[8];
@@ -60,7 +58,6 @@ protected:
     inline void allocate()
     {
         this->gpuProgram = NULL;
-        this->primitive = VertexArray::TRIANGLES;
         this->transparent = false;
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
@@ -68,15 +65,14 @@ protected:
     }
     
 public:
-    inline Material(): gpuProgram(NULL), primitive(VertexArray::TRIANGLES), transparent(false),
+    inline Material(): gpuProgram(NULL), transparent(false),
 		depthBufferLie(0)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
     }
 
-	inline Material(const Material& m): gpuProgram(m.gpuProgram), primitive(m.primitive),
-        transparent(m.transparent)
+	inline Material(const Material& m): gpuProgram(m.gpuProgram), transparent(m.transparent)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = m.textures[i];
@@ -85,7 +81,6 @@ public:
     inline void set(const Material& m)
     {
 		this->gpuProgram = m.gpuProgram;
-        this->primitive = m.primitive;
         this->transparent = m.transparent;
 
         for(int i=0; i < 8; i++)

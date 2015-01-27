@@ -43,6 +43,7 @@ void Mesh::copyBatchIn(const Batch& batch)
 	this->vertexCount = batch.vertexCount;
 	this->attributeCount = batch.attributeCount;
 	this->attributeData = new AttributeData[this->attributeCount];
+	this->primitive = batch.primitive;
 	this->vertexArray = new VertexArray();
     
     // go through all attributes in batch and copy data into video

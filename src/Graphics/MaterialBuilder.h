@@ -64,12 +64,6 @@ public:
         material->gpuProgram = gpuProgram;
     }
     
-    inline void setRenderPrimitive(VertexArray::Primitives primitive)
-    {
-        MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
-        material->primitive = primitive;
-    }
-    
     inline void setTransparentFlag(bool transparent)
     {
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");

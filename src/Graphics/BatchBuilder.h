@@ -198,7 +198,8 @@ public:
 	/** Starts a vertex building sequence
 	 * @param vertexCount the number of verticies to be handled
 	 */
-	void begin(int vertexCount, int attributeCount, Batch* batch);
+	void begin(int vertexCount, int attributeCount, Batch* batch,
+		VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES);
 	
 	/** Modify a current batch.
 	 * @param batch the batch to modify

@@ -35,7 +35,6 @@ namespace Magic3D
 Batch::~Batch()
 {
     delete[] this->data;
-	delete this->mesh;
 }
 
 void Batch::applyTransform(const Matrix4& matrix)

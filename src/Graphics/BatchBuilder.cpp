@@ -46,7 +46,8 @@ BatchBuilder::~BatchBuilder()
 /** Starts a vertex building sequence
  * @param vertexCount the number of verticies to be handled
  */
-void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
+void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch, 
+						 VertexArray::Primitives primitive)
 {
     MAGIC_THROW( this->batch != NULL, "Called begin() before end() of previous build sequence." );
 	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");
@@ -62,6 +63,7 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch)
     
     // init batch members, this also frees any current data
     batch->allocate(vertexCount, attributeCount);
+	batch->primitive = primitive;
 	
     // init internal members
 	this->batch = batch;

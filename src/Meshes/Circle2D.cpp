@@ -45,7 +45,7 @@ void BatchBuilder::build2DCircle(Batch* batch, int x, int y, int radius, float p
 	
 	// points using a TRIANGLE FAN
 	int edges = int(360.0f/precisionAngle);
-	this->begin(1 + edges, 2, batch);
+	this->begin(1 + edges, 2, batch, VertexArray::Primitives::TRIANGLE_FAN);
 	
 	// center
 	texCoord2f(0.5f, 0.5f);

@@ -229,7 +229,7 @@ void World::renderObjects()
 			}
                 
 			// draw mesh
-			mesh->getVertexArray().draw(material->primitive, mesh->getVertexCount());
+			mesh->getVertexArray().draw(mesh->getPrimitive(), mesh->getVertexCount());
 			vertexCount += mesh->getVertexCount();
                 
 			// disable depth lie if it was enabled

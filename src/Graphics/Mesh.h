@@ -72,6 +72,8 @@ private:
 	/// number of attributes
 	int attributeCount;
 
+	VertexArray::Primitives primitive;
+
 	VertexArray* vertexArray;
 	
 public:
@@ -99,6 +101,11 @@ public:
 	inline int getVertexCount() const
 	{
 	    return vertexCount;
+	}
+
+	inline VertexArray::Primitives getPrimitive() const
+	{
+		return this->primitive;
 	}
 
 	inline const VertexArray& getVertexArray() const
