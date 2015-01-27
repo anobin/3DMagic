@@ -75,96 +75,94 @@ public:
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL),
         light(NULL), wireframeEnabled(false) {} 
     
-   inline void addObject(Object* object)
-   {
-       objects.insert( object );
-       if (object->getPhysical())
-           physics.addBody( *object->getPhysical() );
-   }
+	inline void addObject(Object* object)
+	{
+		objects.insert(object);
+		physics.addBody(*object);
+	}
    
-   inline void removeObject(Object* object)
-   {
-       std::set<Object*>::iterator it = objects.find(object);
-       if ( it != objects.end() )
-       {
-           objects.erase(it);
-           if (object->getPhysical())
-               physics.removeBody(*object->getPhysical());
-       }
-   }
+	inline void removeObject(Object* object)
+	{
+		std::set<Object*>::iterator it = objects.find(object);
+		if ( it != objects.end() )
+		{
+			objects.erase(it);
+			physics.removeBody(*object);
+		}
+	}
    
-   inline void setCamera(Camera* camera)
-   {
-       this->camera = camera;
-   }
+	inline void setCamera(Camera* camera)
+	{
+		this->camera = camera;
+	}
    
-   inline void setLight(Position* light)
-   {
-       this->light = light;
-   }
+	inline void setLight(Position* light)
+	{
+		this->light = light;
+	}
    
-   inline void setTargetFPS(int fps)
-   {
-       this->fps = fps;
-       if ( alignPStep2FPS )
-           physicsStepTime = 1.0f/((float)fps);
-   }
+	inline void setTargetFPS(int fps)
+	{
+		this->fps = fps;
+		if ( alignPStep2FPS )
+			physicsStepTime = 1.0f/((float)fps);
+	}
    
-   inline void alignPhysicsStepToFPS( bool align )
-   {
-       this->alignPStep2FPS = align;
-       if (align)
-       {
-           this->physicsStepsPerFrame = 1;
-           physicsStepTime = 1.0f/((float)fps);
-       }
-   }
+	inline void alignPhysicsStepToFPS( bool align )
+	{
+		this->alignPStep2FPS = align;
+		if (align)
+		{
+			this->physicsStepsPerFrame = 1;
+			physicsStepTime = 1.0f/((float)fps);
+		}
+	}
    
-   inline void setPhysicsStepTime( float time )
-   {
-       if (alignPStep2FPS)
-       {
-           throw_MagicException( "Tried to manually set physics step time when physics "
-               "step is aligned to FPS." );
-       }
-       this->physicsStepTime = time;
-   }
+	inline void setPhysicsStepTime( float time )
+	{
+		if (alignPStep2FPS)
+		{
+			throw_MagicException( "Tried to manually set physics step time when physics "
+				"step is aligned to FPS." );
+		}
+		this->physicsStepTime = time;
+	}
    
-   inline void setPhysicsStepsPerFrame( int steps )
-   {
-       if (alignPStep2FPS)
-       {
-           throw_MagicException( "Tried to manually set physics steps per frame when physics "
-               "step is aligned to FPS." );
-       }
-       this->physicsStepsPerFrame = steps;
-   }
+	inline void setPhysicsStepsPerFrame( int steps )
+	{
+		if (alignPStep2FPS)
+		{
+			throw_MagicException( "Tried to manually set physics steps per frame when physics "
+				"step is aligned to FPS." );
+		}
+		this->physicsStepsPerFrame = steps;
+	}
    
-   inline void setWireFrame(bool t)
-   {
-       this->wireframeEnabled = t;
-   }
+	inline void setWireFrame(bool t)
+	{
+		this->wireframeEnabled = t;
+	}
    
-   inline void startFrame()
-   {
-       frameTimer.reset();
-   }
+	inline void startFrame()
+	{
+		frameTimer.reset();
+	}
    
-   virtual void stepPhysics();
+	virtual void stepPhysics();
    
-   virtual void renderObjects();
+	virtual void renderObjects();
    
-   inline void endFrame()
-   {
-       float frameTime = 1.0f/((float)fps);
-       while (frameTimer.getElapsedTime() < frameTime);
-       actualFPS = (int) (1.0f / frameTimer.getElapsedTime());
-   }
+	inline void endFrame()
+	{
+		float frameTime = 1.0f/((float)fps);
+		while (frameTimer.getElapsedTime() < frameTime);
+		actualFPS = (int) (1.0f / frameTimer.getElapsedTime());
+	}
    
-   inline int getActualFPS()
-   {
-       return actualFPS;
-   }
+	inline int getActualFPS()
+	{
+		return actualFPS;
+	}
     
 };
 

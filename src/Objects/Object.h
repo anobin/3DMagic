@@ -29,9 +29,13 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
-#include "../Physics/PhysicalBody.h"
 #include "../Graphics/Mesh.h"
 #include "../Graphics/Material.h"
+#include <CollisionShapes\CollisionShape.h>
+#include <Physics\MotionState.h>
+
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
 
 #include <set>
 
@@ -39,126 +43,111 @@ namespace Magic3D
 {
 
 class World;
+class PhysicsSystem;
     
 /** Base class for all objects 
  */
 class Object
 {
+public:
+    /// properties of physical body
+    struct Properties
+    {
+        /// mass of object, 0 means static object, defaults to 0
+        Scalar mass;
+        /// friction of object's surface, defaults to 0.5
+        Scalar friction;
+        /// bouncyness of object, defaults to 0
+        Scalar bouncyness;
+        
+        inline Properties(): mass(0.0f), friction(0.5f), bouncyness(0) {}
+    };
+
 protected:
     friend class World;
+	friend class PhysicsSystem;
     
-	/// 3D position of object
 	Position position;
 	
 	std::shared_ptr<Meshes> meshes;
-
 	std::shared_ptr<Material> material;
-	
-	/// physical body for object
-	PhysicalBody* physical;
-	bool physicalAlloc;
-	
-	/// purely graphical attachments to this object, used mainly for decals
-	std::set<Object*> attachments;
+	std::shared_ptr<CollisionShape> shape;
 
-	Matrix4 transformMatrix;
-	
-public:
-	/// standard constructor
-	inline Object(): meshes(NULL), material(NULL),
-	    physical(NULL), physicalAlloc(false) {}
-	
-	/// standard constructor for graphical-only objects
-	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material): meshes(mesh), material(material),
-	    physical(NULL), physicalAlloc(false) {}
-	
-	/// standard constructor for physical-only objects
-	inline Object(std::shared_ptr<CollisionShape> shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): meshes(NULL), material(nullptr),
-	    physical(NULL), physicalAlloc(false) 
+	MotionState motionState;
+	btRigidBody* body;
+
+
+	/** sync the graphical position with the physical
+	 * position.
+	 * @note call this after manually setting the position,
+	 * this method does not need to be called for the physics
+	 * to update the position, only the other way around
+	 * @note try to avoid manually setting an object's position
+	 * in the first place, use forces and constraints where possible
+	 */
+	inline void syncPositionToPhysics()
 	{
-	    this->createPhysical(shape, prop);
+		if (body == nullptr)
+			return;
+		// position is already set, so we can get what the transform
+		// should be from our motions state.	
+		// we have to do this because bullet only gets the world
+		// transform from our motion state when the body is created
+		
+		// sync out position and the rigid body center of mass
+		btTransform transform;
+		motionState.getWorldTransform(transform);
+		body->setCenterOfMassTransform(transform);
+		
+		// tell bullet that the rigid body needs some attention
+		body->activate();
 	}
 	
-	/// standard constructor for objects
-	inline Object(std::shared_ptr<Meshes> mesh, std::shared_ptr<Material> material, std::shared_ptr<CollisionShape> shape, const PhysicalBody::Properties& prop = 
-	    PhysicalBody::Properties() ): meshes(mesh), material(material),
-	    physical(NULL), physicalAlloc(false) 
+public:
+	inline Object(
+		std::shared_ptr<Meshes> meshes, 
+		std::shared_ptr<Material> material, 
+		std::shared_ptr<CollisionShape> shape = nullptr, 
+		const Properties& prop = Properties() 
+		): meshes(meshes), material(material), shape(shape), motionState(position), body(nullptr)
 	{
-	    this->createPhysical(shape, prop);
+		if (shape != nullptr)
+		{
+			// calc inertia
+			btVector3 fallInertia(0,0,0);
+			if (prop.mass != 0.0f)
+				shape->getShape()->calculateLocalInertia(prop.mass,fallInertia);
+		
+			// construct rigid body
+			btRigidBody::btRigidBodyConstructionInfo 
+				fallRigidBodyCI(prop.mass, &motionState, shape->getShape(), fallInertia);
+			fallRigidBodyCI.m_friction = prop.friction;
+			fallRigidBodyCI.m_restitution = prop.bouncyness;
+			body = new btRigidBody(fallRigidBodyCI);
+		}
 	}
 	    
 	/// destructor
 	virtual ~Object();
 	
-	/// set the physical component directly
-	inline void setPhysical(PhysicalBody* pbody)
-	{
-	    if (physicalAlloc)
-	        delete this->physical;
-	    this->physical = pbody;
-	    this->physicalAlloc = false;
-	}
-	
-	/// create the physical component
-	inline void createPhysical(std::shared_ptr<CollisionShape> shape, 
-	    const PhysicalBody::Properties& prop = PhysicalBody::Properties() )
-	{
-	    if (physicalAlloc)
-	        delete this->physical;
-	    this->physical = new PhysicalBody(this->position, shape, prop);
-	    this->physicalAlloc = true;
-	}
-	
-	/// remove the physical component
-	inline void removePhysical()
-	{
-	    if (physicalAlloc)
-	        delete this->physical;
-	    this->physical = NULL;
-	    this->physicalAlloc = false;
-	}
-	
 	/// shortcut for setting just the location
 	inline void setLocation(const Point3& location)
 	{
 		this->position.setLocation(location);
-	    if (physical)
-	        physical->syncPositionToPhysics();
+		this->syncPositionToPhysics();
 	}
 
 	/// set the Position
 	inline void setPosition(const Position& position)
 	{
 	    this->position.set(position);
-	    if (physical)
-	        physical->syncPositionToPhysics();
+		this->syncPositionToPhysics();
 	}
 	
 	/// get the position for modification
 	inline const Position& getPosition()
 	{
 		return this->position;
-	}
-	
-	inline void addAttachment(Object* ob)
-	{
-	    attachments.insert(ob);
-	}
-	
-	inline void removeAttachment(Object* ob)
-	{
-	    std::set<Object*>::iterator it;
-	    it = attachments.find(ob);
-	    MAGIC_THROW(it == attachments.end(), "Attempted to remove an attachment that "
-	        "was never attached.");
-	    attachments.erase(ob);
-	}
-	
-	/// get physical body for this model
-	inline PhysicalBody* getPhysical()
-	{
-	    return physical;
 	}
 
 	inline std::shared_ptr<Meshes> getMeshes()
@@ -171,15 +160,13 @@ public:
 		return material;
 	}
 
-	inline Matrix4& getTransformMatrix()
-	{
-		return this->transformMatrix;
-	}
-
-	inline const Matrix4& getTransformMatrix() const
-	{
-		return this->transformMatrix;
-	}
+	inline void applyForce(Vector3 force, Vector3 origin = Vector3(0.0f,0.0f,0.0f))
+    {
+        body->applyForce(
+            btVector3(force.x(), force.y(), force.z()), 
+            btVector3(origin.x(), origin.y(), origin.z())
+        );
+    }
 
 };
 
@@ -192,24 +179,3 @@ public:
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

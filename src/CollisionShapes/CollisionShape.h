@@ -36,7 +36,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
     
-class PhysicalBody;
+class Object;
 
 /** Base class for all collision shapes used in physics collison calculations.
  * Note that the physical shape of an object can (and probably should) not match
@@ -47,7 +47,7 @@ class PhysicalBody;
 class CollisionShape
 {
 protected:
-    friend class PhysicalBody;
+    friend class Object;
     
     /// get the bullet physics collison shape
     virtual btCollisionShape* getShape() = 0;

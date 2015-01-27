@@ -17,11 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Object class
- *
- * @file Object.cpp
- * @author Andrew Keating
- */
 
 #include <Objects/Object.h>
 
@@ -32,25 +27,8 @@ namespace Magic3D
 /// destructor
 Object::~Object()
 {
-    if (physicalAlloc)
-        delete physical;
-}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    delete body;
+}	
 	
 	
 };
-
-
-
-

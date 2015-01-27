@@ -52,7 +52,6 @@
     <ClCompile Include="..\..\src\Meshes\Sphere.cpp" />
     <ClCompile Include="..\..\src\Objects\Object.cpp" />
     <ClCompile Include="..\..\src\Physics\MotionState.cpp" />
-    <ClCompile Include="..\..\src\Physics\PhysicalBody.cpp" />
     <ClCompile Include="..\..\src\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="..\..\src\Resources\BatchLoader.cpp" />
     <ClCompile Include="..\..\src\Resources\FontResource.cpp" />
@@ -120,7 +119,6 @@
     <ClInclude Include="..\..\src\Math\Vector.h" />
     <ClInclude Include="..\..\src\Objects\Object.h" />
     <ClInclude Include="..\..\src\Physics\MotionState.h" />
-    <ClInclude Include="..\..\src\Physics\PhysicalBody.h" />
     <ClInclude Include="..\..\src\Physics\PhysicsSystem.h" />
     <ClInclude Include="..\..\src\Resources\BatchLoader.h" />
     <ClInclude Include="..\..\src\Resources\FontResource.h" />

@@ -162,9 +162,6 @@
     <ClCompile Include="..\..\src\Physics\MotionState.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Physics\PhysicalBody.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Physics\PhysicsSystem.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
@@ -390,9 +387,6 @@
       <Filter>Source Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Physics\MotionState.h">
-      <Filter>Source Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Physics\PhysicalBody.h">
       <Filter>Source Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Physics\PhysicsSystem.h">

@@ -150,11 +150,8 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 	Object* t;
     std::vector<Object*>::iterator it;
     //int i;
-    PhysicalBody::Properties prop;
+    Object::Properties prop;
     
-	
-	
-	
 	switch(key)
 	{
 		// space
@@ -360,7 +357,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 	Position p;
 	Object* t;
 	static float speed = 1000 * 300;
-	PhysicalBody::Properties prop;
+	Object::Properties prop;
 	
 	switch(button)
 	{
@@ -372,7 +369,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			t = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial, sphereShape, prop);
 			t->setPosition(p);
 			world.addObject(t);
-			t->getPhysical()->applyForce(Vector3(p.getForwardVector().x()*speed, 
+			t->applyForce(Vector3(p.getForwardVector().x()*speed, 
 		        p.getForwardVector().y()*speed, p.getForwardVector().z()*speed) );
 			break;
 			
@@ -537,7 +534,7 @@ public:
 
 
 		// init objects
-		PhysicalBody::Properties prop;
+		Object::Properties prop;
 		prop.mass = 1;
 		btBall = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial);
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
@@ -618,13 +615,13 @@ public:
 		{
 			for (int i = 0; i < 20; i++)
 			{
-				PhysicalBody::Properties prop;
+				Object::Properties prop;
 				prop.mass = 0.1f;
 				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), tinySphereMaterial, tinySphereShape, prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             
-				t->getPhysical()->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
+				t->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
 					((float)(rand()%100))*0.01f) );
 			}
 		}

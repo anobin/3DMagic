@@ -29,7 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
-#include "PhysicalBody.h"
+#include <Objects\Object.h>
 
 namespace Magic3D
 {
@@ -51,16 +51,16 @@ private:
 protected:
     friend class World;
     
-    inline void addBody( PhysicalBody& body )
+    inline void addBody( Object& ob )
     {
-        if (body.body)
-            dynamicsWorld->addRigidBody(body.body);
+        if (ob.body)
+            dynamicsWorld->addRigidBody(ob.body);
     }
     
-    inline void removeBody( PhysicalBody& body )
+    inline void removeBody( Object& ob )
     {
-        if (body.body)
-            dynamicsWorld->removeRigidBody(body.body);
+        if (ob.body)
+            dynamicsWorld->removeRigidBody(ob.body);
     }
 
     inline void stepSimulation( float secs, int substeps )
