@@ -144,6 +144,7 @@ public:
     inline void enableDepthTest()
     {
         glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
     }
     
     inline void disableDepthTest()

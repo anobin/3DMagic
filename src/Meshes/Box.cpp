@@ -64,32 +64,31 @@ void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(-width, height, depth); // bottom left
     normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
-    normal3f	(0.0f, 1.0f, 0.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(width, height, depth); // bottom right
+	normal3f	(0.0f, 1.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
     
     // bottom, 6 points
     normal3f	(0.0f, -1.0f, 0.0f);
     texCoord2f	(1.0f, 0.0f);
     vertex3f	(-width, -height, -depth); // top left
-    normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom left
-    normal3f	(0.0f, -1.0f, 0.0f);
+	normal3f	(0.0f, -1.0f, 0.0f);
     texCoord2f	(0.0f, 0.0f);
     vertex3f	(width, -height, -depth); // top right
     normal3f	(0.0f, -1.0f, 0.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(-width, -height, depth); // bottom left
     normal3f	(0.0f, -1.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(-width, -height, depth); // bottom left
+	normal3f	(0.0f, -1.0f, 0.0f);
     texCoord2f	(0.0f, 0.0f);
     vertex3f	(width, -height, -depth); // top right
     normal3f	(0.0f, -1.0f, 0.0f);
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(width, -height, depth); // bottom right
-
 
     // left side, 6 points
     normal3f	(-1.0f, 0.0f, 0.0f);
@@ -105,29 +104,29 @@ void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(-width, -height, -depth); // bottom left
     normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(-width, height, depth); // top right
-    normal3f	(-1.0f, 0.0f, 0.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(-width, -height, depth); // bottom right
+	normal3f	(-1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 0.0f);
+    vertex3f	(-width, height, depth); // top right
     
     // right side, 6 points
     normal3f	(1.0f, 0.0f, 0.0f);
     texCoord2f	(1.0f, 0.0f);
     vertex3f	(width, height, -depth); // top left
-    normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, -height, -depth); // bottom left
-    normal3f	(1.0f, 0.0f, 0.0f);
+	normal3f	(1.0f, 0.0f, 0.0f);
     texCoord2f	(0.0f, 0.0f);
     vertex3f	(width, height, depth); // top right
     normal3f	(1.0f, 0.0f, 0.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(width, -height, -depth); // bottom left
     normal3f	(1.0f, 0.0f, 0.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, -height, -depth); // bottom left
+	normal3f	(1.0f, 0.0f, 0.0f);
     texCoord2f	(0.0f, 0.0f);
     vertex3f	(width, height, depth); // top right
-    normal3f	(1.0f, 0.0f, 0.0f);
+	normal3f	(1.0f, 0.0f, 0.0f);
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(width, -height, depth); // bottom right
 	
@@ -136,18 +135,18 @@ void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth
     texCoord2f	(1.0f, 0.0f);
     vertex3f	(-width, height, -depth); // top left
     normal3f	(0.0f, 0.0f, -1.0f);
+    texCoord2f	(0.0f, 0.0f);
+    vertex3f	(width, height, -depth); // top right
+	normal3f	(0.0f, 0.0f, -1.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(-width, -height, -depth); // bottom left
     normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
-    normal3f	(0.0f, 0.0f, -1.0f);
     texCoord2f	(1.0f, 1.0f);
     vertex3f	(-width, -height, -depth); // bottom left
-    normal3f	(0.0f, 0.0f, -1.0f);
+	normal3f	(0.0f, 0.0f, -1.0f);
     texCoord2f	(0.0f, 0.0f);
     vertex3f	(width, height, -depth); // top right
-    normal3f	(0.0f, 0.0f, -1.0f);
+	normal3f	(0.0f, 0.0f, -1.0f);
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(width, -height, -depth); // bottom right
 	
@@ -164,12 +163,12 @@ void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth
     normal3f	(0.0f, 0.0f, 1.0f);
     texCoord2f	(0.0f, 1.0f);
     vertex3f	(-width, -height, depth); // bottom left
+	normal3f	(0.0f, 0.0f, 1.0f);
+    texCoord2f	(1.0f, 1.0f);
+    vertex3f	(width, -height, depth); // bottom right
     normal3f	(0.0f, 0.0f, 1.0f);
     texCoord2f	(1.0f, 0.0f);
     vertex3f	(width, height, depth); // top right
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, -height, depth); // bottom right
 	
 	this->end();
 }

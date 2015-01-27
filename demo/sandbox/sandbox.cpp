@@ -457,7 +457,7 @@ public:
 			font->setChar(c);
 		}
 
-		charImage.clear(Color::PINK);
+		charImage.clear(Color(Color::PINK.getRed(), Color::PINK.getGreen(), Color::PINK.getBlue(), 125));
 		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
 		charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
 		charTex = std::make_shared<Texture>(charImage);
@@ -503,7 +503,7 @@ public:
 
 		// circle in middle of screen
 		Batch* circle2D = new Batch();
-		//batchBuilder.build2DCircle(&circle2D, 0, 0, 50, 5);
+		//batchBuilder.build2DCircle(circle2D, 150, 150, 300, 5);
 		batchBuilder.build2DRectangle(circle2D, 0, 0, 300, 300);
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
@@ -515,6 +515,7 @@ public:
 		materialBuilder.begin(circle2DMaterial.get());
 		materialBuilder.setGpuProgram(program2D);
 		materialBuilder.setTexture(screenTex);
+		//materialBuilder.setRenderPrimitive(VertexArray::Primitives::TRIANGLE_FAN);
 		materialBuilder.end();
 
 		world->addObject(new Object(std::make_shared<Model>(std::make_shared<Meshes>(*circle2D), circle2DMaterial)));

@@ -44,26 +44,26 @@ void BatchBuilder::build2DRectangle(Batch* batch, int x, int y, int width, int h
 	// bottom right
 	texCoord2f(1.0f, 1.0f);
 	vertex3f((float)x+width, (float)y, 0.0f);
-	
-	// bottom left
-	texCoord2f(0.0f, 1.0f);
-	vertex3f((float)x, (float)y, 0.0f);
-	
-	// top left
-	texCoord2f(0.0f, 0.0f);
-	vertex3f((float)x, (float)y+height, 0.0f);
 
-	// top left
-	texCoord2f(0.0f, 0.0f);
-	vertex3f((float)x, (float)y+height, 0.0f);
-
-	// bottom right
-	texCoord2f(1.0f, 1.0f);
-	vertex3f((float)x+width, (float)y, 0.0f);
-	
 	// top right
 	texCoord2f(1.0f, 0.0f);
 	vertex3f((float)x+width, (float)y+height, 0.0f);
+
+	// top left
+	texCoord2f(0.0f, 0.0f);
+	vertex3f((float)x, (float)y+height, 0.0f);
+	
+	// bottom right
+	texCoord2f(1.0f, 1.0f);
+	vertex3f((float)x+width, (float)y, 0.0f);
+
+	// top left
+	texCoord2f(0.0f, 0.0f);
+	vertex3f((float)x, (float)y+height, 0.0f);
+
+	// bottom left
+	texCoord2f(0.0f, 1.0f);
+	vertex3f((float)x, (float)y, 0.0f);
 	
 	// end vertex data
 	this->end();
