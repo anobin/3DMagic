@@ -170,6 +170,11 @@ public:
 	{
 		return vertexCount;
 	}
+
+	inline int getObjectCount()
+	{
+		return this->objects.size();
+	}
     
 };
 

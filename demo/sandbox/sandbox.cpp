@@ -690,8 +690,12 @@ public:
 		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 100, Color::WHITE);
 
 		ss.str("");
-		ss << "Vertices: " << world->getVertexCount();
+		ss << "Objects: " << world->getObjectCount();
 		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 150, Color::WHITE);
+
+		ss.str("");
+		ss << "Vertices: " << world->getVertexCount();
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 200, Color::WHITE);
 
 		screenTex->set(screenImage);
     
