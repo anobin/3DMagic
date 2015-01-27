@@ -210,7 +210,8 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(std::make_shared<Meshes>(bigSphereBatch), bigSphereMaterial, bigSphereShape, prop );
+			t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(bigSphereBatch), 
+				bigSphereMaterial, bigSphereShape), prop );
 			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
@@ -366,7 +367,8 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial, sphereShape, prop);
+			t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(sphereBatch), 
+				sphereMaterial, sphereShape), prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -515,7 +517,7 @@ public:
 		materialBuilder.setTexture(screenTex);
 		materialBuilder.end();
 
-		world->addObject(new Object(std::make_shared<Meshes>(*circle2D), circle2DMaterial));
+		world->addObject(new Object(std::make_shared<Model>(std::make_shared<Meshes>(*circle2D), circle2DMaterial)));
 
 		auto logoTex = resourceManager.get<Texture>("textures/logo.tex.xml");
 
@@ -528,7 +530,8 @@ public:
 		Batch* logoBatch = new Batch();
 		batchBuilder.build2DRectangle(logoBatch, 200, 0, 173, 50);
 
-		Object* logoObject = new Object(std::make_shared<Meshes>(*logoBatch), logo2DMaterial);
+		Object* logoObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*logoBatch), 
+			logo2DMaterial));
 		world->addObject(logoObject);
 
 
@@ -536,11 +539,13 @@ public:
 		// init objects
 		Object::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(std::make_shared<Meshes>(sphereBatch), sphereMaterial);
+		btBall = new Object(std::make_shared<Model>(std::make_shared<Meshes>(sphereBatch), 
+			sphereMaterial));
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);
 
-		floorObject = new Object(std::make_shared<Meshes>(floorBatch), floorMaterial, floorShape); // static object
+		floorObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(floorBatch), 
+			floorMaterial, floorShape)); // static object
 		world->addObject(floorObject);
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
@@ -562,7 +567,8 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(std::make_shared<Meshes>(boxBatch), brickMaterial, brickShape, prop );
+				btBox = new Object(std::make_shared<Model>(std::make_shared<Meshes>(boxBatch), 
+					brickMaterial, brickShape), prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
@@ -578,8 +584,8 @@ public:
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
-		chainObject = new Object(std::make_shared<Meshes>(*chainBatches), chainMaterial,
-			chainShape);
+		chainObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*chainBatches), 
+			chainMaterial, chainShape));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
 
@@ -617,7 +623,8 @@ public:
 			{
 				Object::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(std::make_shared<Meshes>(tinySphereBatch), tinySphereMaterial, tinySphereShape, prop);
+				Object* t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(tinySphereBatch), 
+					tinySphereMaterial, tinySphereShape), prop);
 				t->setLocation(Point3(0, 10.0f, 0));
 				world->addObject(t);
             

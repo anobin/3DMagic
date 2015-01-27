@@ -33,6 +33,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Graphics/Material.h"
 #include <CollisionShapes\CollisionShape.h>
 #include <Physics\MotionState.h>
+#include <Objects\Model.h>
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
@@ -69,9 +70,7 @@ protected:
     
 	Position position;
 	
-	std::shared_ptr<Meshes> meshes;
-	std::shared_ptr<Material> material;
-	std::shared_ptr<CollisionShape> shape;
+	std::shared_ptr<Model> model;
 
 	MotionState motionState;
 	btRigidBody* body;
@@ -105,22 +104,23 @@ protected:
 	
 public:
 	inline Object(
-		std::shared_ptr<Meshes> meshes, 
-		std::shared_ptr<Material> material, 
-		std::shared_ptr<CollisionShape> shape = nullptr, 
+		std::shared_ptr<Model> model, 
 		const Properties& prop = Properties() 
-		): meshes(meshes), material(material), shape(shape), motionState(position), body(nullptr)
+		): model(model), motionState(position), body(nullptr)
 	{
-		if (shape != nullptr)
+		if (model->getCollisionShape() != nullptr)
 		{
 			// calc inertia
 			btVector3 fallInertia(0,0,0);
 			if (prop.mass != 0.0f)
-				shape->getShape()->calculateLocalInertia(prop.mass,fallInertia);
+				model->getCollisionShape()->getShape()->calculateLocalInertia(prop.mass,fallInertia);
 		
 			// construct rigid body
-			btRigidBody::btRigidBodyConstructionInfo 
-				fallRigidBodyCI(prop.mass, &motionState, shape->getShape(), fallInertia);
+			btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(
+				prop.mass, 
+				&motionState, 
+				model->getCollisionShape()->getShape(), 
+				fallInertia);
 			fallRigidBodyCI.m_friction = prop.friction;
 			fallRigidBodyCI.m_restitution = prop.bouncyness;
 			body = new btRigidBody(fallRigidBodyCI);
@@ -150,14 +150,9 @@ public:
 		return this->position;
 	}
 
-	inline std::shared_ptr<Meshes> getMeshes()
+	inline std::shared_ptr<Model> getModel()
 	{
-	     return meshes;   
-	}
-
-	inline std::shared_ptr<Material> getMaterial()
-	{
-		return material;
+	     return model;
 	}
 
 	inline void applyForce(Vector3 force, Vector3 origin = Vector3(0.0f,0.0f,0.0f))

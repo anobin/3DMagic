@@ -117,6 +117,7 @@
     <ClInclude Include="..\..\src\Math\Point.h" />
     <ClInclude Include="..\..\src\Math\Position.h" />
     <ClInclude Include="..\..\src\Math\Vector.h" />
+    <ClInclude Include="..\..\src\Objects\Model.h" />
     <ClInclude Include="..\..\src\Objects\Object.h" />
     <ClInclude Include="..\..\src\Physics\MotionState.h" />
     <ClInclude Include="..\..\src\Physics\PhysicsSystem.h" />

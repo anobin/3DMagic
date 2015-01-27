@@ -461,5 +461,8 @@
     <ClInclude Include="..\..\src\Shaders\Shader.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Objects\Model.h">
+      <Filter>Source Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

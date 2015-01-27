@@ -81,12 +81,12 @@ void World::renderObjects()
 	    // get object and entity
 	    ob = (*it);
 	    
-		const std::shared_ptr<Meshes> meshes = ob->getMeshes();
+		const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
 		if (meshes == nullptr)
 			break;
 
         // get mesh and material data
-		auto material = ob->getMaterial();
+		auto material = ob->getModel()->getMaterial();
             
         // get model/world matrix for object (same for all meshes in object)
         Matrix4 model;
