@@ -62,6 +62,8 @@ private:
     int physicsStepsPerFrame;
     
     int actualFPS;
+
+	int vertexCount;
     
     Camera* camera;
     
@@ -72,7 +74,7 @@ private:
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
-        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), camera(NULL),
+        alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         light(NULL), wireframeEnabled(false) {} 
     
 	inline void addObject(Object* object)
@@ -162,6 +164,11 @@ public:
 	inline int getActualFPS()
 	{
 		return actualFPS;
+	}
+
+	inline int getVertexCount()
+	{
+		return vertexCount;
 	}
     
 };

@@ -668,13 +668,6 @@ public:
 			}
 			batchBuilder.end();
 		}
-    
-		char fps[40];
-		charImage.clear(Color::BLUE);
-		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
-		sprintf(fps, "Figure: %d", world->getActualFPS() );
-		charImage.drawAsciiText(*font, fps, 2, 60, Color::WHITE);
-		charTex->set(charImage);
 
 		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 
@@ -684,12 +677,22 @@ public:
 			btBall->getPosition().getUpVector()
 		));
 
-		std::stringstream ss;
-		ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
-			<< ", " << endPoint.z();
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color(255, 255, 255, 255));
+		std::stringstream ss;
+
+		ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
+			<< ", " << endPoint.z();
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color::WHITE);
+
+		ss.str("");
+		ss << "Fps: " << world->getActualFPS();
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 100, Color::WHITE);
+
+		ss.str("");
+		ss << "Vertices: " << world->getVertexCount();
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 150, Color::WHITE);
+
 		screenTex->set(screenImage);
     
 	}

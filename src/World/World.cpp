@@ -74,8 +74,8 @@ void World::renderObjects()
 	VertexArray* array;
 	const Mesh::AttributeData* adata;
 	int attributeCount;
-	int vertexCount;
 	std::shared_ptr<GpuProgram> gpuProgram; 
+	vertexCount = 0;
 	for(; it != objects.end(); it++)
 	{
 	    // get object and entity
@@ -230,6 +230,7 @@ void World::renderObjects()
                 
 			// draw mesh
 			mesh->getVertexArray().draw(material->primitive, mesh->getVertexCount());
+			vertexCount += mesh->getVertexCount();
                 
 			// disable depth lie if it was enabled
 			if (material->depthBufferLie)
