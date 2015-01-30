@@ -20,9 +20,10 @@ CMakeFiles/
 # visual studio ignores
 *.vcxproj.user
 *.v11.suo
+*.v12.suo
 *.sdf
 *.opensdf
 debug/
 release/
-/VS2012/*/*.vspx
-/VS2012/*/*.psess
+/VS2013/*/*.vspx
+/VS2013/*/*.psess
