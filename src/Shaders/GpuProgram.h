@@ -110,44 +110,33 @@ protected:
 
 	struct AutoUniform
     {
-        char* varName;
+		std::string varName;
         AutoUniformType type;
         
-        inline AutoUniform(): varName(NULL) {}
+        inline AutoUniform() {}
 
-        inline AutoUniform(const AutoUniform& u): type(u.type)
-        {
-            this->varName = new char[strlen(u.varName)+1];
-            strcpy(this->varName, u.varName);
-        }
+        inline AutoUniform(const AutoUniform& u): varName(u.varName), 
+			type(u.type) {}
 
         inline void set(const AutoUniform& u)
         {
             this->type = u.type;
-            delete[] varName;
-            this->varName = new char[strlen(u.varName)+1];
-            strcpy(this->varName, u.varName);
-        }
-        
-        inline ~AutoUniform()
-        {
-            delete[] varName;
+			this->varName = u.varName;
         }
     };
     
 	// TODO: refactor this and place in seperate class
     struct NamedUniform
     {
-        char* varName;
+        std::string varName;
         VertexArray::DataTypes datatype;
         int comp_count;
         void* data;
         
-        inline NamedUniform(): varName(NULL), comp_count(0), data(NULL) {}
+        inline NamedUniform(): comp_count(0), data(NULL) {}
 
         inline ~NamedUniform()
         {
-            delete[] varName;
 			delete[] data;
         }
     };
@@ -191,8 +180,7 @@ public:
 	void addAutoUniform(const char* varName, AutoUniformType type)
 	{
 		auto u = std::make_shared<AutoUniform>();
-		u->varName = new char[strlen(varName) + 1];
-		strcpy(u->varName, varName);
+		u->varName = varName;
 		u->type = type;
 		this->autoUniforms.push_back(u);
 	}
@@ -206,8 +194,7 @@ public:
         int comp_count, const void* data)
 	{
 		auto u = std::make_shared<NamedUniform>();
-		u->varName = new char[strlen(varName) + 1];
-		strcpy(u->varName, varName);
+		u->varName = varName;
 		u->datatype = datatype;
 		u->comp_count = comp_count;
 		u->data = new char[VertexArray::getDataTypeSize(datatype)*comp_count];

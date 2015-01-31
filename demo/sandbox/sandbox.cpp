@@ -78,7 +78,7 @@ std::shared_ptr<Material> bigSphereMaterial;
 auto floorShape = std::make_shared<PlaneCollisionShape>( Vector3(0,1,0) );
 auto sphereShape = std::make_shared<SphereCollisionShape>( 2*FOOT );
 auto tinySphereShape = std::make_shared<SphereCollisionShape>( 1*FOOT );
-auto bigSphereShape = std::make_shared<BoxCollisionShape>( 3, 3, 3 );
+auto bigSphereShape = std::make_shared<BoxCollisionShape>( 3.0f, 3.0f, 3.0f );
 
 // objects
 Object* bigBall;

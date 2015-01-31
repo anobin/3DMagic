@@ -379,7 +379,7 @@ inline std::shared_ptr<GpuProgram> ResourceManager::_get<GpuProgram>(const std::
 			}
 
 			float* data = new float[components.size()];
-			for(int i=0; i < components.size(); i++)
+			for(unsigned int i=0; i < components.size(); i++)
 				data[i] = components[i];
 			program->addNamedUniform(name, VertexArray::FLOAT, components.size(), data);
 			delete[] data;

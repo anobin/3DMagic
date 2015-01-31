@@ -98,7 +98,7 @@ void Image::blendImage(Image* dest, const Image& source, int destX,
     MAGIC_THROW( (sourceY+height) > source.height, "Height of rect too large.");
     
     // don't let unsigned char overflow, if we go over max, we can clamp to max
-#define prevent_overflow(x) ( (x) > 255.0f ? 255 : (x) ) 
+#define prevent_overflow(x) ((unsigned char)( (x) > 255.0f ? 255 : (x) ))
     
     // have to blend pixel by pixel
     // this whole algorithm can and should be optimized, this is the simple readable implementation
@@ -149,8 +149,8 @@ void Image::drawAsciiText(const StaticFont& font, const char* str, int x, int y,
         for(int i=0; i < c.getBitmap().bitmap.width*c.getBitmap().bitmap.height; i++)
             m.data[i*4+3] = c.getBitmap().bitmap.data[i];
         const Character::Metrics& t = c.getMetrics();
-        Image::blendImage(this, m, x + t.horiBearingX, y - t.horiBearingY);
-        x += t.horiAdvance;
+        Image::blendImage(this, m, (int)(x + t.horiBearingX), (int)(y - t.horiBearingY));
+        x += (int)t.horiAdvance;
     }
 }
     

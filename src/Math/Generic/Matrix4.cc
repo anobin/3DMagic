@@ -317,9 +317,9 @@ Matrix4 Matrix4::transpose() const
 	int r = 4;
 	Matrix4 transpose;
  
-	for (unsigned int i=0; i < r; i++)
+	for (int i=0; i < r; i++)
 	{
-		for (unsigned int j=0; j < r; j++)
+		for (int j=0; j < r; j++)
 		{
 			transpose.set(i, j, this->get(j, i));
 		}
