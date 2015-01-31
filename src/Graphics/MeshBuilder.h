@@ -17,22 +17,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Header file for BatchBuilder class
- *
- * @file BatchBuilder.h
- * @author Andrew Keating
- */
-#ifndef MAGIC3D_BATCH_BUILDER_H
-#define MAGIC3D_BATCH_BUILDER_H
+#ifndef MAGIC3D_MESH_BUILDER_H
+#define MAGIC3D_MESH_BUILDER_H
 
 #include "../Exceptions/MagicException.h"
 #include <Shaders\GpuProgram.h>
 #include "VertexArray.h"
-#include "Batch.h"
 #include "../Util/Color.h"
 #include "../Math/Math.h"
 #include "../Util/magic_throw.h"
 #include "../Util/magic_assert.h"
+#include <Graphics\Mesh.h>
 
 #include <vector>
 
@@ -42,7 +37,7 @@ namespace Magic3D
 /** Helps to manage vertex attributes when
  * building and drawing objects.
  */
-class BatchBuilder
+class MeshBuilder
 {
 private:	
     /// datatype used when building model by hand, before end() call
@@ -52,7 +47,7 @@ private:
 		int currentIndex;
 		int currentVertex;
 		
-		inline BuildData(Batch::AttributeData* data)
+		inline BuildData(Mesh::AttributeData* data)
 		{
 		    this->data = data->data; // data indeed!
 		    this->currentIndex = 0;
@@ -72,7 +67,7 @@ private:
 	BuildData* buildData[GpuProgram::MAX_ATTRIBUTE_TYPES];
 	
 	/// the batch currently being built
-	Batch* batch;
+	Mesh* mesh;
 	
 	/// number of verticies being managed
 	int vertexCount;
@@ -82,23 +77,23 @@ private:
 	
 	inline BuildData* setupBuildData(GpuProgram::AttributeType type)
 	{
-	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+	    MAGIC_THROW( mesh == NULL, "Not currently in a build sequence." );
 	    
 	    BuildData* b = this->buildData[(int)type];
 	    if (b != NULL)
 	        return b; // already setup
 	    
 	    // make sure we haven't exceeded attribute limit
-	    MAGIC_THROW(curAttributeCount >= batch->attributeCount, 
+	    MAGIC_THROW(curAttributeCount >= mesh->attributeCount, 
 	        "Exceeded specified attribute limit on batch." );
 	    
 	    // get next unallocate attribute data instance
-	    Batch::AttributeData* data = NULL;
-	    for (int i=0; i < batch->attributeCount; i++)
+	    Mesh::AttributeData* data = NULL;
+	    for (int i=0; i < mesh->attributeCount; i++)
 	    {
-	        if (batch->data[i].data == NULL)
+			if (mesh->attributeData[i].data == NULL)
 	        {
-	            data = &batch->data[i];
+				data = &mesh->attributeData[i];
 	            break;
 	        }
 	    }
@@ -115,7 +110,7 @@ private:
 	
 	inline BuildData* getBuildData(GpuProgram::AttributeType type)
 	{
-	    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+	    MAGIC_THROW( mesh == NULL, "Not currently in a build sequence." );
 	    
 	    BuildData* b = this->buildData[(int)type];
 	    MAGIC_THROW(b == NULL, "Tried to get data for unused attribute." );
@@ -190,21 +185,21 @@ private:
 public:
 	/** Standard Constructor
 	 */
-	BatchBuilder();
+	MeshBuilder();
 	
 	/// destructor
-	~BatchBuilder();
+	~MeshBuilder();
 	
 	/** Starts a vertex building sequence
 	 * @param vertexCount the number of verticies to be handled
 	 */
-	void begin(int vertexCount, int attributeCount, Batch* batch,
+	void begin(int vertexCount, int attributeCount, Mesh* batch,
 		VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES);
 	
 	/** Modify a current batch.
 	 * @param batch the batch to modify
 	 */
-	void modify(Batch* batch);
+	void modify(Mesh* batch);
 	
 	/** Manually set the current vertex for all currently 
 	 * know attributes. Note that any skipped over values are not set
@@ -425,7 +420,7 @@ public:
      * @param height the height of the box
      * @param depth the depth of the box
      */
-	void buildBox(Batch* mesh, float width, float height, float depth );
+	void buildBox(Mesh* mesh, float width, float height, float depth );
 	
 	/** Build a 2D circle mesh
      * @param x the x coordinate of the center
@@ -434,7 +429,7 @@ public:
      * @param precisionAngle the angle between any two points on the edge of the
                             circle, the lower angle, the better looking
      */
-	void build2DCircle(Batch* mesh, int x, int y, int radius, float precisionAngle );
+	void build2DCircle(Mesh* mesh, int x, int y, int radius, float precisionAngle );
 	
 	/** Build a flat surface
      * @param width the width of the surface
@@ -442,7 +437,7 @@ public:
      * @param slices the number of squares on width
      * @param stacks the number of squares on height
      */
-    void buildFlatSurface(Batch* mesh, float width, float height, int slices, 
+    void buildFlatSurface(Mesh* mesh, float width, float height, int slices, 
         int stacks, bool texRepeat, float texPerX, float texPerY);
 
     /** Build 2D rectangle
@@ -451,14 +446,14 @@ public:
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      */
-    void build2DRectangle(Batch* mesh, int x, int y, int width, int height);
+    void build2DRectangle(Mesh* mesh, int x, int y, int width, int height);
     
     /** Build sphere
      * @param radius the radius of the sphere
      * @param slices the number of squares on width
      * @param stacks the number of squares on height
      */
-    void buildSphere(Batch* mesh, float radius, int slices, int stacks);
+    void buildSphere(Mesh* mesh, float radius, int slices, int stacks);
     
 };
 

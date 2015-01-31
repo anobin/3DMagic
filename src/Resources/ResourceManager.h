@@ -36,7 +36,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <memory>
 #include <fstream>
-#include "BatchLoader.h"
+#include "MeshLoader.h"
 #include <vector>
 #include <Graphics\Mesh.h>
 #include <tinyxml2.h>
@@ -176,17 +176,10 @@ inline std::shared_ptr<FontResource> ResourceManager::_get<FontResource>(const s
 }
 
 template<>
-inline std::shared_ptr<Batches> ResourceManager::_get<Batches>(const std::string& fullPath)
-{
-	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
-	return BatchLoaders::getSingleton().get(ext)->getBatches(fullPath);
-}
-
-template<>
 inline std::shared_ptr<Meshes> ResourceManager::_get<Meshes>(const std::string& fullPath)
 {
 	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
-	return std::make_shared<Meshes>(*BatchLoaders::getSingleton().get(ext)->getBatches(fullPath));
+	return MeshLoaders::getSingleton().get(ext)->getMeshes(fullPath);
 }
 
 template<>

@@ -17,27 +17,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for BatchBuilder class
- * 
- * @file BatchBuilder.cpp
- * @author Andrew Keating
- */
 
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
+#include <Graphics/Mesh.h>
 
 namespace Magic3D
 {
 	
 /** Standard Constructor
  */
-BatchBuilder::BatchBuilder(): batch(NULL), vertexCount(0), curAttributeCount(0)
+MeshBuilder::MeshBuilder(): mesh(NULL), vertexCount(0), curAttributeCount(0)
 {
     for (int i=0; i < GpuProgram::MAX_ATTRIBUTE_TYPES; i++)
         buildData[i] = NULL;
 }
 	
 /// destructor
-BatchBuilder::~BatchBuilder()
+MeshBuilder::~MeshBuilder()
 {
 	for (int i=0; i < GpuProgram::MAX_ATTRIBUTE_TYPES; i++)
         delete buildData[i];
@@ -46,10 +42,10 @@ BatchBuilder::~BatchBuilder()
 /** Starts a vertex building sequence
  * @param vertexCount the number of verticies to be handled
  */
-void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch, 
+void MeshBuilder::begin(int vertexCount, int attributeCount, Mesh* mesh, 
 						 VertexArray::Primitives primitive)
 {
-    MAGIC_THROW( this->batch != NULL, "Called begin() before end() of previous build sequence." );
+    MAGIC_THROW( this->mesh != NULL, "Called begin() before end() of previous build sequence." );
 	MAGIC_THROW( vertexCount <= 0, "Invalid vertex count given to begin()");
 	MAGIC_THROW( attributeCount <= 0 || attributeCount >= GpuProgram::MAX_ATTRIBUTE_TYPES, 
 	    "Invalid attribute count given to begin()");
@@ -62,11 +58,11 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch,
     }
     
     // init batch members, this also frees any current data
-    batch->allocate(vertexCount, attributeCount);
-	batch->primitive = primitive;
+    mesh->allocate(vertexCount, attributeCount);
+	mesh->primitive = primitive;
 	
     // init internal members
-	this->batch = batch;
+	this->mesh = mesh;
 	this->vertexCount = vertexCount;
 	this->curAttributeCount = 0; // no current attributes
 }
@@ -74,10 +70,10 @@ void BatchBuilder::begin(int vertexCount, int attributeCount, Batch* batch,
 /** Modify a current batch.
  * @param batch the batch to modify
  */
-void BatchBuilder::modify(Batch* batch)
+void MeshBuilder::modify(Mesh* mesh)
 {
-    MAGIC_THROW(batch->data == NULL, "Tried to call modify() on a new batch, use begin()." );
-    MAGIC_THROW( this->batch != NULL, "Called modify() before end() of previous build sequence." );
+	MAGIC_THROW(mesh->attributeData == NULL, "Tried to call modify() on a new batch, use begin().");
+    MAGIC_THROW( this->mesh != NULL, "Called modify() before end() of previous build sequence." );
     
     // clear any current build data
     for (int i=0; i < GpuProgram::MAX_ATTRIBUTE_TYPES; i++)
@@ -87,24 +83,24 @@ void BatchBuilder::modify(Batch* batch)
     }
     
     // init build data to attributes in batch
-    for(int i=0; i < batch->attributeCount; i++)
+    for(int i=0; i < mesh->attributeCount; i++)
     {
-        Batch::AttributeData& b = batch->data[i];
+		Mesh::AttributeData& b = mesh->attributeData[i];
         buildData[(int)b.type] = new BuildData(&b);
     }
 	
     // init internal members
-	this->batch = batch;
-	this->vertexCount = batch->vertexCount;
-	this->curAttributeCount = batch->attributeCount;
+	this->mesh = mesh;
+	this->vertexCount = mesh->vertexCount;
+	this->curAttributeCount = mesh->attributeCount;
 }
 
 /** end a vertex building sequence
  */
-void BatchBuilder::end()
+void MeshBuilder::end()
 {
     // check to make sure all attributes were specified
-    MAGIC_THROW(this->curAttributeCount != batch->attributeCount, 
+    MAGIC_THROW(this->curAttributeCount != mesh->attributeCount, 
         "Failed to use the full number of specified attributes." );
    
     // go through all build data
@@ -114,9 +110,13 @@ void BatchBuilder::end()
         delete buildData[i];
         buildData[i] = NULL;
     }
+
+	/*this->mesh->vertexCount = this->batch->vertexCount;
+	this->mesh->attributeCount = this->batch->attributeCount;
+	this->mesh->primitive = this->batch->primitive;*/
     
     // reset internal members
-    this->batch = NULL;	
+	this->mesh = nullptr;
     this->vertexCount = 0;
     this->curAttributeCount = 0;
 }
@@ -127,9 +127,9 @@ void BatchBuilder::end()
  * will start at 0 as normal and not this vertex.
  * @param currentVertex the vertex to set
  */
-void BatchBuilder::setCurrentVertex( int currentVertex )
+void MeshBuilder::setCurrentVertex( int currentVertex )
 {
-    MAGIC_THROW( batch == NULL, "Not currently in a build sequence." );
+    MAGIC_THROW( mesh == NULL, "Not currently in a build sequence." );
     MAGIC_THROW(currentVertex < 0 || currentVertex >= this->vertexCount,
         "Invalid current vertex to set." );
     

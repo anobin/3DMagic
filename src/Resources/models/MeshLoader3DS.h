@@ -6,9 +6,8 @@
 #ifndef MAGIC3D_MODEL_3DS_RESOURCE_H
 #define MAGIC3D_MODEL_3DS_RESOURCE_H
 
-#include "../BatchLoader.h"
+#include "../MeshLoader.h"
 #include "../../Exceptions/MagicException.h"
-#include "../../Graphics/Batch.h"
 #include <lib3ds/file.h>
 #include "../../Math/Matrix4.h"
 
@@ -17,10 +16,10 @@ namespace Magic3D
 
 /** Represents a single .3ds model resource
  */
-class BatchLoader3DS : public BatchLoader
+class MeshLoader3DS : public MeshLoader
 {
 public:
-	virtual std::shared_ptr<Batches> getBatches(const std::string& path) const;
+	virtual std::shared_ptr<Meshes> getMeshes(const std::string& path) const;
 
 };
 

@@ -27,9 +27,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Exceptions/MagicException.h"
 #include "Buffer.h"
-#include "Batch.h"
 #include "VertexArray.h"
 #include "Texture.h"
+#include <Shaders/GpuProgram.h>
 
 #include <vector>
 #include <memory>
@@ -38,7 +38,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
     
-class Mesh;
+class MeshBuilder;
 
 /** Contains the attribute data for a batch of vertices as well as properties,
  * such as texture, that are used to setup the shader to render the vertices.
@@ -50,19 +50,31 @@ public:
 	struct AttributeData
 	{
 	    /// attribute data in a buffer on graphics memory
-		const Buffer& buffer;
+		Buffer buffer;
 		/// auto-bound attribute type for data
-		const GpuProgram::AttributeType& type;
-	
-	protected:
-	    friend class Mesh;
-	    
-	    Buffer _buffer;
-	    GpuProgram::AttributeType _type;
-		inline AttributeData(): buffer(_buffer), type(_type) {}
+		GpuProgram::AttributeType type;
+		/// current data in batch
+		float* data;
+		/// current length of data (in bytes)
+		int dataLen;
+
+		inline AttributeData() : data(NULL), dataLen(0) {}
+		inline ~AttributeData()
+		{
+			delete[] data;
+		}
+		inline void allocate(int vertexCount, GpuProgram::AttributeType type)
+		{
+			delete[] data;
+			this->type = type;
+			this->dataLen = vertexCount * GpuProgram::attributeTypeCompCount[(int)type] * sizeof(float);
+			this->data = new float[vertexCount * GpuProgram::attributeTypeCompCount[(int)type]];
+		}
 	};
 
 private:	  
+	friend class MeshBuilder;
+
 	/// list of attribute data
 	AttributeData* attributeData;
 	
@@ -75,23 +87,27 @@ private:
 	VertexArray::Primitives primitive;
 
 	VertexArray* vertexArray;
+
+	inline void allocate(int vertexCount, int attributeCount)
+	{
+		// free any previous data in batch
+		delete[] this->attributeData;
+
+		// setup mesh
+		this->vertexCount = vertexCount;
+		this->attributeCount = attributeCount;
+		this->attributeData = new AttributeData[attributeCount];
+	}
+
+	void copyBatchIn();
 	
 public:
     /// Standard Constructor
-	inline Mesh(): attributeData(nullptr), vertexCount(0) , attributeCount(0), vertexArray(nullptr) {}
-    
-	inline Mesh(const Batch& batch): attributeData(nullptr), vertexArray(nullptr)
-	{
-		this->copyBatchIn(batch);
-	}
+	inline Mesh(): attributeData(nullptr), vertexCount(0), 
+		attributeCount(0), vertexArray(nullptr) {}
 
 	/// destructor
 	~Mesh();
-
-	inline const AttributeData* getAttributeData() const
-	{
-	     return attributeData;   
-	}
 	
 	inline int getAttributeCount() const
 	{
@@ -108,12 +124,7 @@ public:
 		return this->primitive;
 	}
 
-	inline const VertexArray& getVertexArray() const
-	{
-		return *this->vertexArray;
-	}
-	
-	void copyBatchIn(const Batch& batch);
+	const VertexArray& getVertexArray();
 	
 };
 
@@ -123,18 +134,11 @@ class Meshes : public Resource, public std::vector<std::shared_ptr<Mesh>>
 public:
 	inline Meshes() {}
 
-	inline Meshes(const Batches& batches)
+	inline Meshes(std::shared_ptr<Mesh> mesh)
 	{
-		for(auto batch : batches)
-		{
-			this->push_back(std::make_shared<Mesh>(*batch));
-		}
+		this->push_back(mesh);
 	}
 
-	inline Meshes(const Batch& batch)
-	{
-		this->push_back(std::make_shared<Mesh>(batch));
-	}
 };
 
 

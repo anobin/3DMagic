@@ -28,7 +28,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CollisionShape.h"
 
-#include "../Graphics/Batch.h"
+#include <Graphics/Mesh.h>
 
 // include bullet physics
 #include <btBulletDynamicsCommon.h>
@@ -52,7 +52,7 @@ protected:
 
 public:
     /// default constructor
-    TriangleMeshCollisionShape(Batches& batches);
+    TriangleMeshCollisionShape(Meshes& batches);
     
     /// destructor
     virtual ~TriangleMeshCollisionShape();

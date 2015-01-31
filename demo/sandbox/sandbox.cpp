@@ -62,11 +62,11 @@ Matrix4 projectionMatrix;
 ResourceManager resourceManager;
 
 // batches
-Batch floorBatch;
-Batch sphereBatch;
-Batch tinySphereBatch;
-Batch bigSphereBatch;
-Batch boxBatch;
+std::shared_ptr<Mesh> floorBatch;
+std::shared_ptr<Mesh> sphereBatch;
+std::shared_ptr<Mesh> tinySphereBatch;
+std::shared_ptr<Mesh> bigSphereBatch;
+std::shared_ptr<Mesh> boxBatch;
 
 // materials
 std::shared_ptr<Material> floorMaterial;
@@ -113,7 +113,7 @@ bool moveRight = false;
 bool releaseWater = false;
 
 // builders
-BatchBuilder batchBuilder;
+MeshBuilder batchBuilder;
 MaterialBuilder materialBuilder;
 
 // 3ds stuff
@@ -465,14 +465,20 @@ public:
 		// init shader
 		shader = resourceManager.get<GpuProgram>("shaders/HemisphereTex.gpu.xml");
 
+		sphereBatch = std::make_shared<Mesh>();
+		tinySphereBatch = std::make_shared<Mesh>();
+		bigSphereBatch = std::make_shared<Mesh>();
+		floorBatch = std::make_shared<Mesh>();
+		boxBatch = std::make_shared<Mesh>();
+
 		// init batches
-		batchBuilder.buildSphere(&sphereBatch, 2*FOOT, 55, 32);
-		batchBuilder.buildSphere(&tinySphereBatch, 1*FOOT, 4, 4);
-		batchBuilder.buildBox(&bigSphereBatch, 3, 3, 3);
-		batchBuilder.buildFlatSurface(&floorBatch, ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+		batchBuilder.buildSphere(sphereBatch.get(), 2*FOOT, 55, 32);
+		batchBuilder.buildSphere(tinySphereBatch.get(), 1*FOOT, 4, 4);
+		batchBuilder.buildBox(bigSphereBatch.get(), 3, 3, 3);
+		batchBuilder.buildFlatSurface(floorBatch.get(), ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-		batchBuilder.buildBox(&boxBatch, 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
+		batchBuilder.buildBox(boxBatch.get(), 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -502,9 +508,9 @@ public:
 		auto program2D = resourceManager.get<GpuProgram>("shaders/GpuProgram2D.xml");
 
 		// circle in middle of screen
-		Batch* circle2D = new Batch();
+		std::shared_ptr<Mesh> circle2D = std::make_shared<Mesh>();
 		//batchBuilder.build2DCircle(circle2D, 150, 150, 300, 5);
-		batchBuilder.build2DRectangle(circle2D, 0, 0, 300, 300);
+		batchBuilder.build2DRectangle(circle2D.get(), 0, 0, 300, 300);
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
@@ -518,7 +524,7 @@ public:
 		//materialBuilder.setRenderPrimitive(VertexArray::Primitives::TRIANGLE_FAN);
 		materialBuilder.end();
 
-		world->addObject(new Object(std::make_shared<Model>(std::make_shared<Meshes>(*circle2D), circle2DMaterial)));
+		world->addObject(new Object(std::make_shared<Model>(std::make_shared<Meshes>(circle2D), circle2DMaterial)));
 
 		auto logoTex = resourceManager.get<Texture>("textures/logo.tex.xml");
 
@@ -528,10 +534,10 @@ public:
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
 
-		Batch* logoBatch = new Batch();
-		batchBuilder.build2DRectangle(logoBatch, 200, 0, 173, 50);
+		auto logoBatch = std::make_shared<Mesh>();
+		batchBuilder.build2DRectangle(logoBatch.get(), 200, 0, 173, 50);
 
-		Object* logoObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*logoBatch), 
+		Object* logoObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(logoBatch), 
 			logo2DMaterial));
 		world->addObject(logoObject);
 
@@ -576,7 +582,7 @@ public:
 		}
 
 		// 3ds model
-		std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
+		/*std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
 		chainBatches->applyTransform(scaleMatrix);
@@ -588,7 +594,7 @@ public:
 		chainObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*chainBatches), 
 			chainMaterial, chainShape));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
-		world->addObject(chainObject);
+		world->addObject(chainObject);*/
 
 
 
@@ -656,8 +662,8 @@ public:
 			else
 				c = 0.3f;
 			acc += c;
-			batchBuilder.modify(&boxBatch);
-			for (int i=0; i < boxBatch.getVertexCount(); i++)
+			batchBuilder.modify(boxBatch.get());
+			for (int i=0; i < boxBatch->getVertexCount(); i++)
 			{
 				batchBuilder.getVertex3f(&c1, &c2, &c3);
             

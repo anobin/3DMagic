@@ -117,12 +117,6 @@
     <ClCompile Include="..\..\src\Exceptions\ShaderVertexInterfaceException.cpp">
       <Filter>Source Files\Exceptions</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\Batch.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Graphics\BatchBuilder.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Graphics\Buffer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -240,17 +234,20 @@
     <ClCompile Include="..\..\src\Resources\ImageLoaders.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Resources\models\BatchLoader3DS.cpp">
-      <Filter>Source Files\Resources\models</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Resources\BatchLoader.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Shaders\GpuProgram.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Shaders\Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Graphics\MeshBuilder.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\MeshLoader.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\models\MeshLoader3DS.cpp">
+      <Filter>Source Files\Resources\models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,12 +301,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Exceptions\ShaderVertexInterfaceException.h">
       <Filter>Source Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Graphics\Batch.h">
-      <Filter>Source Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Graphics\BatchBuilder.h">
-      <Filter>Source Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Graphics\Buffer.h">
       <Filter>Source Files\Graphics</Filter>
@@ -449,12 +440,6 @@
     <ClInclude Include="..\..\src\Resources\Images\TGAImageLoader.h">
       <Filter>Source Files\Resources\Images</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Resources\models\BatchLoader3DS.h">
-      <Filter>Source Files\Resources\models</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Resources\BatchLoader.h">
-      <Filter>Source Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Shaders\GpuProgram.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
@@ -463,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Objects\Model.h">
       <Filter>Source Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Graphics\MeshBuilder.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\MeshLoader.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Resources\models\MeshLoader3DS.h">
+      <Filter>Source Files\Resources\models</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

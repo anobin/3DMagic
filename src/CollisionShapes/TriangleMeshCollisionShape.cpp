@@ -24,16 +24,16 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 #include <CollisionShapes/TriangleMeshCollisionShape.h>
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
     
 /// default constructor
-TriangleMeshCollisionShape::TriangleMeshCollisionShape(Batches& batches):
+TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
     shape(NULL)
 {
-    BatchBuilder bb;
+    MeshBuilder bb;
     float temp[3][3];
     
     // go through all batches and add all vertices

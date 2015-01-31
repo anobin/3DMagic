@@ -1,31 +1,31 @@
 
-#include "BatchLoader3DS.h"
+#include "MeshLoader3DS.h"
 #include <string.h>
 #include <lib3ds/mesh.h>
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 #include <Math/Point.h>
 
 namespace Magic3D
 {
 
 
-std::shared_ptr<Batches> BatchLoader3DS::getBatches(const std::string& path) const
+std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
 {	
 	Lib3dsFile* file = lib3ds_file_load(path.c_str());
 	if (!file)
 		throw_MagicException("Could not load model file");
 
-	std::shared_ptr<Batches> batches = std::make_shared<Batches>();
+	std::shared_ptr<Meshes> meshes = std::make_shared<Meshes>();
 
 	// Loop through all the meshes
-	BatchBuilder bb;
+	MeshBuilder bb;
 	int i;
 	Lib3dsMesh * mesh;
 	Point3 p;
 	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
 	{
 	    // start the batch
-		std::shared_ptr<Batch> batch = std::make_shared<Batch>();
+		std::shared_ptr<Mesh> batch = std::make_shared<Mesh>();
 		bb.begin((int)mesh->faces*3, 3, batch.get());
 	    
 	    // set normals
@@ -52,12 +52,12 @@ std::shared_ptr<Batches> BatchLoader3DS::getBatches(const std::string& path) con
         
         // end current batch
         bb.end();
-		batches->push_back(batch);
+		meshes->push_back(batch);
 	}
 
 	lib3ds_file_free(file);
 
-	return batches;
+	return meshes;
 }
 	
 	

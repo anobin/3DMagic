@@ -24,7 +24,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <Graphics/Mesh.h>
-#include <Graphics/Batch.h>
 
 namespace Magic3D
 {
@@ -35,15 +34,11 @@ Mesh::~Mesh()
 	delete vertexArray;
 }
 
-void Mesh::copyBatchIn(const Batch& batch)
+const VertexArray& Mesh::getVertexArray()
 {
-    // allocate mesh attributes, also clears any previous data
-	delete[] this->attributeData;
-	delete this->vertexArray;
-	this->vertexCount = batch.vertexCount;
-	this->attributeCount = batch.attributeCount;
-	this->attributeData = new AttributeData[this->attributeCount];
-	this->primitive = batch.primitive;
+	if (this->vertexArray != nullptr)
+		return *this->vertexArray;
+
 	this->vertexArray = new VertexArray();
     
     // go through all attributes in batch and copy data into video
@@ -51,9 +46,7 @@ void Mesh::copyBatchIn(const Batch& batch)
     for (int i=0; i < this->attributeCount; i++)
     {
         Mesh::AttributeData& d = this->attributeData[i];
-        const Batch::AttributeData& b = batch.data[i];
-        d._type = b.type;
-        d._buffer.allocate( b.dataLen, b.data, Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
+        d.buffer.allocate( d.dataLen, d.data, Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
 		this->vertexArray->setAttributeArray(
 			(int)d.type,
 			GpuProgram::attributeTypeCompCount[(int)d.type],
@@ -62,9 +55,25 @@ void Mesh::copyBatchIn(const Batch& batch)
 		);
     }
 
+	return *this->vertexArray;
 }
 	
 	
+/*void Batch::applyTransform(const Matrix4& matrix)
+{
+MeshBuilder bb;
+bb.modify(this);
+float temp[3];
+bb.setCurrentVertex(0);
+for(int j=0; j < this->getVertexCount(); j++)
+{
+bb.getVertex3f( &temp[0], &temp[1], &temp[2] );
+Point3 point(temp);
+point = point.transform(matrix);
+bb.vertex3f(point.x(), point.y(), point.z());
+}
+bb.end();
+}*/
 	
 	
 	

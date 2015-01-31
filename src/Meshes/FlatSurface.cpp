@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -34,7 +34,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
- void BatchBuilder::buildFlatSurface(Batch* batch, float width, float height, int slices, 
+ void MeshBuilder::buildFlatSurface(Mesh* batch, float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
     this->begin(slices*stacks*6, 3, batch);

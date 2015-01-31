@@ -2,7 +2,7 @@
 #define MAGIC3D_BATCH_LOADER_H
 
 #include "./Resource.h"
-#include "../Graphics/Batch.h"
+#include <Graphics/Mesh.h>
 #include "../Math/Matrix4.h"
 
 #include <string>
@@ -13,23 +13,23 @@
 namespace Magic3D
 {
 
-class BatchLoader
+class MeshLoader
 {
 public:
-	virtual std::shared_ptr<Batches> getBatches(const std::string& path) const = 0; 
+	virtual std::shared_ptr<Meshes> getMeshes(const std::string& path) const = 0; 
 
 };
 
-class BatchLoaders
+class MeshLoaders
 {
-	std::map<std::string, std::shared_ptr<BatchLoader>> loaders;
+	std::map<std::string, std::shared_ptr<MeshLoader>> loaders;
 
 public:
-	static BatchLoaders& getSingleton();
+	static MeshLoaders& getSingleton();
 
-	inline void registerLoader(const std::string& ext, std::shared_ptr<BatchLoader> loader)
+	inline void registerLoader(const std::string& ext, std::shared_ptr<MeshLoader> loader)
 	{
-		loaders.insert(std::pair<std::string, std::shared_ptr<BatchLoader>>(ext, loader));
+		loaders.insert(std::pair<std::string, std::shared_ptr<MeshLoader>>(ext, loader));
 	}
 
 	inline void unregisterLoader(const std::string& ext)
@@ -39,7 +39,7 @@ public:
 			loaders.erase(it);
 	}
 
-	inline std::shared_ptr<BatchLoader> get(const std::string ext)
+	inline std::shared_ptr<MeshLoader> get(const std::string ext)
 	{
 		auto it = loaders.find(ext);
 		if (it == loaders.end())

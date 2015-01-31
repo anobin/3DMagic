@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -35,7 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-void BatchBuilder::buildSphere(Batch* batch, float radius, int slices, int stacks)
+void MeshBuilder::buildSphere(Mesh* batch, float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
     GLfloat dtheta = 2.0f * (GLfloat)(M_PI) / (GLfloat) slices;

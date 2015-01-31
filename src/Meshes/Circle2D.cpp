@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -38,7 +38,7 @@ namespace Magic3D
  * @param precisionAngle the angle between any two points on the edge of the
                         circle, the lower angle, the better looking
  */
-void BatchBuilder::build2DCircle(Batch* batch, int x, int y, int radius, float precisionAngle )
+void MeshBuilder::build2DCircle(Mesh* batch, int x, int y, int radius, float precisionAngle )
 {
 	
 	// since this is a 2D model, we leave all z coords at 0

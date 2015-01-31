@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -34,7 +34,7 @@ namespace Magic3D
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-void BatchBuilder::build2DRectangle(Batch* batch, int x, int y, int width, int height)
+void MeshBuilder::build2DRectangle(Mesh* batch, int x, int y, int width, int height)
 {	
 	// since this is a 2D model, we leave all z coords at 0
 	

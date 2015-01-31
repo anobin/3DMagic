@@ -24,7 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-#include <Graphics/BatchBuilder.h>
+#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -34,7 +34,7 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-void BatchBuilder::buildBox(Batch* batch, float width, float height, float depth )
+void MeshBuilder::buildBox(Mesh* batch, float width, float height, float depth )
 {
 	// we always work with half lengths
 	width = width/2;
