@@ -267,15 +267,6 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		    fun = !fun;
 		    break;
 		    
-		case 't':
-		    if (chainObject)
-		    {
-		        world.removeObject(chainObject);
-		        delete chainObject;
-		        chainObject = NULL;
-		    }
-		    break;
-		    
 		case 'k':
 		    wireframe = !wireframe;
 		    world.setWireFrame(wireframe);
@@ -485,21 +476,25 @@ public:
 		materialBuilder.begin(sphereMaterial.get());
 		materialBuilder.setGpuProgram(shader);
 		materialBuilder.setTexture(charTex);
+		materialBuilder.setTransparentFlag(true);
 		materialBuilder.end();
 
 		tinySphereMaterial = std::make_shared<Material>();
 		materialBuilder.expand(tinySphereMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(blueTex);
+		materialBuilder.setTransparentFlag(false);
 		materialBuilder.end();
 
 		bigSphereMaterial = std::make_shared<Material>();
 		materialBuilder.expand(bigSphereMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
+		materialBuilder.setTransparentFlag(true);
 		materialBuilder.end();
 
 		floorMaterial = std::make_shared<Material>();
 		materialBuilder.expand(floorMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(stoneTex);
+		materialBuilder.setTransparentFlag(false);
 		materialBuilder.end();
 
 		auto brickMaterial = resourceManager.get<Material>("materials/Brick.xml");

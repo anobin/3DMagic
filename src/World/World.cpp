@@ -17,12 +17,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for World class
- *
- * @file World.h
- * @author Andrew Keating
- */
- 
+
+#include <algorithm>
+
 #include <World/World.h>
 #include <Cameras/FPCamera.h>
 #include <Shaders\GpuProgram.h>
@@ -68,12 +65,45 @@ void World::renderObjects()
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
+
+	std::vector<Object*> sortedObjects;
+	sortedObjects.reserve(this->objects.size());
+	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+
+	Point3 loc = camera->getPosition().getLocation();
+	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
+		auto aTrans = a->getModel()->getMaterial()->transparent;
+		auto bTrans = b->getModel()->getMaterial()->transparent;
+
+		// sort transparent objects to back
+		if (!aTrans && bTrans)
+			return true; // a should go before as it's not transparent
+		else if (aTrans && !bTrans)
+			return false; // b should go before as it's not transparent
+
+		// sort opaque objects from front to back, to take advantage of depth buffer
+		if (!aTrans)
+		{
+			return loc.distanceTo(a->getPosition().getLocation()) <
+				loc.distanceTo(b->getPosition().getLocation());
+		}
+		// sort transparent objects from back to front, to ensure rendering works
+		else
+		{
+			return loc.distanceTo(a->getPosition().getLocation()) >
+				loc.distanceTo(b->getPosition().getLocation());
+		}
+	});
+
+	// start off with depth buffer writes on
+	glDepthMask(GL_TRUE);
+
 	// render all objects
-	std::set<Object*>::iterator it = objects.begin();
+	std::vector<Object*>::iterator it = sortedObjects.begin();
 	Object* ob;
 	std::shared_ptr<GpuProgram> gpuProgram; 
 	vertexCount = 0;
-	for(; it != objects.end(); it++)
+	for(; it != sortedObjects.end(); it++)
 	{
 	    // get object and entity
 	    ob = (*it);
@@ -84,6 +114,10 @@ void World::renderObjects()
 
         // get mesh and material data
 		auto material = ob->getModel()->getMaterial();
+
+		// disable depth buffer writes once we get to the transparent objects
+		if (material->transparent)
+			glDepthMask(GL_FALSE);
             
         // get model/world matrix for object (same for all meshes in object)
         Matrix4 model;
@@ -245,6 +279,10 @@ void World::renderObjects()
 	
 	// Do the buffer Swap
     graphics.swapBuffers();
+
+	// re-enable depth buffer writes at the end so that depth buffer can be cleared for the
+	// next frame correctly
+	glDepthMask(GL_TRUE);
 }
 
 
