@@ -46,6 +46,8 @@ void World::stepPhysics()
     
 void World::renderObjects()
 {   
+	StopWatch timer;
+
     // ensure that we have a camera
     MAGIC_THROW(camera == NULL, "Tried to process a frame without a camera set." );
     
@@ -283,6 +285,8 @@ void World::renderObjects()
 	// re-enable depth buffer writes at the end so that depth buffer can be cleared for the
 	// next frame correctly
 	glDepthMask(GL_TRUE);
+
+	this->renderTimeElapsed = timer.getElapsedTime();
 }
 
 

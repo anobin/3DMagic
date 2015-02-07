@@ -70,6 +70,8 @@ private:
     Position* light;
     
     bool wireframeEnabled;
+
+	float renderTimeElapsed;
     
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
@@ -176,6 +178,10 @@ public:
 		return this->objects.size();
 	}
     
+	inline float getRenderTimeElapsed()
+	{
+		return this->renderTimeElapsed;
+	}
 };
 
 };

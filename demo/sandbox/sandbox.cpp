@@ -689,15 +689,19 @@ public:
 
 		ss.str("");
 		ss << "Fps: " << world->getActualFPS();
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 100, Color::WHITE);
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 80, Color::WHITE);
 
 		ss.str("");
 		ss << "Objects: " << world->getObjectCount();
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 150, Color::WHITE);
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 110, Color::WHITE);
 
 		ss.str("");
 		ss << "Vertices: " << world->getVertexCount();
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 200, Color::WHITE);
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 140, Color::WHITE);
+
+		ss.str("");
+		ss << "Render Time: " << (world->getRenderTimeElapsed() * 1000) << " ms";
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 170, Color::WHITE);
 
 		screenTex->set(screenImage);
     
