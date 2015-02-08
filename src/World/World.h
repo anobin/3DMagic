@@ -72,6 +72,9 @@ private:
     bool wireframeEnabled;
 
 	float renderTimeElapsed;
+
+    void renderMesh(Mesh& mesh, Material& material, const Matrix4& modelMatrix, 
+        const Matrix4& viewMatrix, const Matrix4& projectionMatrix);
     
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
