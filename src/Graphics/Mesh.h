@@ -148,7 +148,7 @@ public:
     const SphereCollisionShape& getBoundingSphere();
 
     // used for debugging and developer tools
-    const Mesh& getBoundingSphereMesh();
+    Mesh& getBoundingSphereMesh();
 
 };
 

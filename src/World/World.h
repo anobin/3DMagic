@@ -71,16 +71,18 @@ private:
     
     bool wireframeEnabled;
 
+    bool showBoundingSpheres;
+
 	float renderTimeElapsed;
 
     void renderMesh(Mesh& mesh, Material& material, const Matrix4& modelMatrix, 
-        const Matrix4& viewMatrix, const Matrix4& projectionMatrix);
+        const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe);
     
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
-        light(NULL), wireframeEnabled(false) {} 
+        light(NULL), wireframeEnabled(false), showBoundingSpheres(false){}
     
 	inline void addObject(Object* object)
 	{
@@ -185,6 +187,16 @@ public:
 	{
 		return this->renderTimeElapsed;
 	}
+
+    inline void setShowBoundingSpheres(bool show)
+    {
+        this->showBoundingSpheres = show;
+    }
+
+    inline bool getShowBoundingSpheres()
+    {
+        return this->showBoundingSpheres;
+    }
 };
 
 };

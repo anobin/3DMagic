@@ -270,6 +270,11 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		case 'k':
 		    wireframe = !wireframe;
 		    world.setWireFrame(wireframe);
+            break;
+
+        case 'b':
+            world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
+            break;
 
         default:
             break;

@@ -45,7 +45,8 @@ void World::stepPhysics()
     
 
 void World::renderMesh(Mesh& mesh, Material& material, 
-    const Matrix4& modelMatrix, const Matrix4& viewMatrix, const Matrix4& projectionMatrix)
+    const Matrix4& modelMatrix, const Matrix4& viewMatrix, const Matrix4& projectionMatrix,
+    bool wireframe)
 {
     auto gpuProgram = material.gpuProgram;
     MAGIC_ASSERT(gpuProgram != nullptr);
@@ -187,6 +188,15 @@ void World::renderMesh(Mesh& mesh, Material& material,
     if (material.transparent)
         glDepthMask(GL_FALSE);
 
+    // setup wireframe if set to
+    if (wireframe)
+    {
+        glEnable(GL_BLEND);
+        glEnable(GL_LINE_SMOOTH);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDisable(GL_CULL_FACE);
+    }
+
     // draw mesh
     mesh.getVertexArray().draw(mesh.getPrimitive(), mesh.getVertexCount());
     vertexCount += mesh.getVertexCount();
@@ -198,6 +208,14 @@ void World::renderMesh(Mesh& mesh, Material& material,
     // re-enabled depth buffer write
     if (material.transparent)
         glDepthMask(GL_TRUE);
+
+    // restore after wireframe
+    if (wireframe)
+    {
+        glDisable(GL_LINE_SMOOTH);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_CULL_FACE);
+    }
 }
     
 void World::renderObjects()
@@ -214,14 +232,6 @@ void World::renderObjects()
     Matrix4 view;
     camera->getPosition().getCameraMatrix(view);
     const Matrix4& projection = camera->getProjectionMatrix();
-    
-    // setup wireframe if set to
-    if (wireframeEnabled)
-    {
-        glEnable(GL_BLEND);
-        glEnable(GL_LINE_SMOOTH);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
 
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
@@ -274,17 +284,14 @@ void World::renderObjects()
         
 		for(const std::shared_ptr<Mesh> mesh : *meshes)
 		{   
-            renderMesh(*mesh, *material, model, view, projection);
+            renderMesh(*mesh, *material, model, view, projection, this->wireframeEnabled);
 		}
+
+        // render bounding sphere, if requested
+        if (this->showBoundingSpheres)
+            renderMesh(meshes->getBoundingSphereMesh(), *material, model, view, projection, true);
 	    
 	} // end of all objects 
-	
-	// restore after wireframe
-    if (wireframeEnabled)
-    {
-        glDisable(GL_LINE_SMOOTH);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
 	
 	// Do the buffer Swap
     graphics.swapBuffers();

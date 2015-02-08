@@ -86,7 +86,7 @@ const SphereCollisionShape& Meshes::getBoundingSphere()
 }
 	
 
-const Mesh& Meshes::getBoundingSphereMesh()
+Mesh& Meshes::getBoundingSphereMesh()
 {
     // lazy init
     if (this->boundingSphereMesh == nullptr)
