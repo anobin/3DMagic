@@ -17,13 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for Mesh class
- * 
- * @file Mesh.cpp
- * @author Andrew Keating
- */
 
 #include <Graphics/Mesh.h>
+#include <CollisionShapes\TriangleMeshCollisionShape.h>
+#include <Graphics\MeshBuilder.h>
 
 namespace Magic3D
 {
@@ -76,8 +73,41 @@ bb.end();
 }*/
 	
 	
+const SphereCollisionShape& Meshes::getBoundingSphere()
+{
+    // lazy init
+    if (this->boundingSphere == nullptr)
+    {
+        TriangleMeshCollisionShape realShape(*this);
+        this->boundingSphere = realShape.getBoundingSphere();
+    }
+
+    return (*this->boundingSphere);
+}
 	
-	
+
+const Mesh& Meshes::getBoundingSphereMesh()
+{
+    // lazy init
+    if (this->boundingSphereMesh == nullptr)
+    {
+        this->boundingSphereMesh = std::make_shared<Mesh>();
+        MeshBuilder mb;
+
+        // TODO: use some scalable detail based on the radius
+        // TODO: apply a transform for the offset of the bounding sphere to
+        //       every vertex of mesh
+        mb.buildSphere(
+            this->boundingSphereMesh.get(),
+            this->getBoundingSphere().getRadius(),
+            20,
+            20
+        );
+    }
+
+    return *this->boundingSphereMesh;
+}
+
 	
 };
 

@@ -87,6 +87,11 @@ public:
 	inline Scalar z() const { return data[2]; }
 	inline Point<3> withZ(Scalar z) const { return with(2, z); }
 
+	inline bool isAtOrigin()
+	{
+		return (x()==0) && (y()==0) && (z()==0);
+	}
+
 	using BasePoint::translate;
 
 	inline Point<3> translate(Scalar x, Scalar y, Scalar z) const

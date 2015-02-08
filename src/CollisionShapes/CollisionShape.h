@@ -26,16 +26,20 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_COLLISION_SHAPE_H
 
 
-#include "../Math/Vector.h"
+#include <Math/Vector.h>
+#include <Math/Point.h>
 
 // include bullet physics
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+#include <memory>
+
 
 namespace Magic3D
 {
     
+class SphereCollisionShape;
 class Object;
 
 /** Base class for all collision shapes used in physics collison calculations.
@@ -52,33 +56,23 @@ protected:
     /// get the bullet physics collison shape
     virtual btCollisionShape* getShape() = 0;
 
-    /// default constructor
-    inline CollisionShape() {}
+	Point3 offset;
+
+	/// constructor specifying an offset in local space, defaults to origin
+	inline CollisionShape(Point3 offset = Point3()): offset(offset) {}
 
 public:
     
     /// destructor
     virtual ~CollisionShape();
+
+    inline const Point3& getOffset()
+    {
+        return this->offset;
+    }
     
-    /** Get bounding sphere of collision shape. Does not necessarily (and probably wouldn't)
-     * represent the bounding sphere of the graphical meshes since they can be different
-     * from the physical collision shape (common for efficiency reasons).
-     */
-     inline Vector3 getBoundingSphere(Scalar* radius)
-     {
-         btVector3 bt_center;
-         btScalar bt_radius;
-         this->getShape()->getBoundingSphere(bt_center, bt_radius);
-		 (*radius) = (Scalar)bt_radius;
-		 return Vector3(
-			bt_center.getX(),
-			bt_center.getY(),
-			bt_center.getZ()
-		);
-     }
-
-
-
+    /// Get bounding sphere of collision shape.
+    std::shared_ptr<SphereCollisionShape> getBoundingSphere();
 
 };
 

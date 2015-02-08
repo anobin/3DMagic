@@ -30,6 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "VertexArray.h"
 #include "Texture.h"
 #include <Shaders/GpuProgram.h>
+#include <CollisionShapes\SphereCollisionShape.h>
 
 #include <vector>
 #include <memory>
@@ -131,13 +132,23 @@ public:
 
 class Meshes : public Resource, public std::vector<std::shared_ptr<Mesh>>
 {
+private:
+    std::shared_ptr<SphereCollisionShape> boundingSphere;
+
+    std::shared_ptr<Mesh> boundingSphereMesh;
+
 public:
-	inline Meshes() {}
+	inline Meshes(): boundingSphere(nullptr), boundingSphereMesh(nullptr) {}
 
 	inline Meshes(std::shared_ptr<Mesh> mesh)
 	{
 		this->push_back(mesh);
 	}
+
+    const SphereCollisionShape& getBoundingSphere();
+
+    // used for debugging and developer tools
+    const Mesh& getBoundingSphereMesh();
 
 };
 

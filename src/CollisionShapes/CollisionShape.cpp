@@ -17,14 +17,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/** Implementation file for CollisionShape base class
- *
- * @file CollisionShape.cpp
- * @author Andrew Keating
- */
  
 #include <CollisionShapes/CollisionShape.h>
-
+#include <CollisionShapes\SphereCollisionShape.h>
 
 namespace Magic3D
 {
@@ -36,6 +31,15 @@ CollisionShape::~CollisionShape()
 }   
     
     
+std::shared_ptr<SphereCollisionShape> CollisionShape::getBoundingSphere()
+{
+    btVector3 bt_center;
+    btScalar bt_radius;
+    this->getShape()->getBoundingSphere(bt_center, bt_radius);
+    
+    return std::make_shared<SphereCollisionShape>((Scalar)bt_radius,
+        Point3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
+}
     
     
     

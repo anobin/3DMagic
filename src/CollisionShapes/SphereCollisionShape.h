@@ -42,18 +42,24 @@ class SphereCollisionShape : public CollisionShape
 {
 protected:
     btSphereShape shape;
+
+    Scalar radius;
     
     /// get the bullet physics collison shape
     virtual btCollisionShape* getShape();
 
 public:
     /// default constructor
-    inline SphereCollisionShape(Scalar radius): shape((btScalar)radius) {}
+    inline SphereCollisionShape(Scalar radius, Point3 offset = Point3()): CollisionShape(offset), 
+		radius(radius), shape((btScalar)radius) {}
     
     /// destructor
     virtual ~SphereCollisionShape();
 
-
+    inline const Scalar& getRadius() const
+    {
+        return this->radius;
+    }
 
 };
 
