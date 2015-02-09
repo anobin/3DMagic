@@ -458,5 +458,8 @@
     <ClInclude Include="..\..\src\Resources\models\MeshLoader3DS.h">
       <Filter>Source Files\Resources\models</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Cameras\ViewFrustum.h">
+      <Filter>Source Files\Cameras</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

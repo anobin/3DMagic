@@ -439,7 +439,7 @@ public:
 
 		Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
 		auto blueTex = std::make_shared<Texture>(blueImage);
-		blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+        blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
 
 		shared_ptr<FontResource> dejavuResource = resourceManager.get<FontResource>
 			( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
@@ -581,6 +581,13 @@ public:
 			}
 		}
 
+        FPCamera testCamera;
+        testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);
+        //testCamera.getViewFrustumMesh
+        world->addObject(new Object(std::make_shared<Model>(
+            std::make_shared<Meshes>(testCamera.getViewFrustum().createMesh()),
+            brickMaterial)));
+
 		// 3ds model
 		/*std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
@@ -640,13 +647,13 @@ public:
 			}
 		}
     
-		if (lightPos.getLocation().y() <= -400.0f)
+		/*if (lightPos.getLocation().y() <= -400.0f)
 			change = 1.0f;
 		else if (lightPos.getLocation().y() >= 400.0f)
 			change = -1.0f;
 		lightPos.setLocation(
 			lightPos.getLocation().withY(lightPos.getLocation().y()+change)
-		);
+		);*/
     
     
 		// fun stuff
@@ -676,21 +683,21 @@ public:
 			batchBuilder.end();
 		}
 
-		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
+		/*Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 
 		btBall->setPosition(Position(
 			endPoint,
 			btBall->getPosition().getForwardVector(),
 			btBall->getPosition().getUpVector()
-		));
+		));*/
 
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		std::stringstream ss;
 
-		ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
+		/*ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
 			<< ", " << endPoint.z();
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color::WHITE);
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color::WHITE);*/
 
 		ss.str("");
 		ss << "Fps: " << world->getActualFPS();

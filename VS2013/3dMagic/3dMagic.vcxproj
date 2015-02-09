@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\src\Cameras\FixedCamera.h" />
     <ClInclude Include="..\..\src\Cameras\FlyCamera.h" />
     <ClInclude Include="..\..\src\Cameras\FPCamera.h" />
+    <ClInclude Include="..\..\src\Cameras\ViewFrustum.h" />
     <ClInclude Include="..\..\src\CollisionShapes\BoxCollisionShape.h" />
     <ClInclude Include="..\..\src\CollisionShapes\CollisionShape.h" />
     <ClInclude Include="..\..\src\CollisionShapes\PlaneCollisionShape.h" />

@@ -225,6 +225,11 @@ public:
 	    this->setAttribute4( this->setupBuildData( GpuProgram::VERTEX ), 
 	        v1, v2, v3, 1.0f );
 	}
+
+    inline void vertex3f(Point3 point)
+    {
+        this->vertex3f(point.x(), point.y(), point.z());
+    }
 	
 	inline void vertex3fv(float* data, int count)
 	{

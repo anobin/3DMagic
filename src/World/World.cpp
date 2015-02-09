@@ -233,6 +233,9 @@ void World::renderObjects()
     camera->getPosition().getCameraMatrix(view);
     const Matrix4& projection = camera->getProjectionMatrix();
 
+    Matrix4 cameraModelMatrix;
+    camera->getPosition().getTransformMatrix(cameraModelMatrix);
+
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
 	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
@@ -290,7 +293,6 @@ void World::renderObjects()
         // render bounding sphere, if requested
         if (this->showBoundingSpheres)
             renderMesh(meshes->getBoundingSphereMesh(), *material, model, view, projection, true);
-	    
 	} // end of all objects 
 	
 	// Do the buffer Swap

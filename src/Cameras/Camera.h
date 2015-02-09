@@ -27,6 +27,12 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Math/Matrix4.h"
 #include "../Math/Position.h"
+#include <Graphics\Mesh.h>
+#include <Graphics\MeshBuilder.h>
+
+#include <memory>
+
+#include "ViewFrustum.h"
 
 namespace Magic3D
 {
@@ -41,6 +47,8 @@ protected:
 
     /// projection matrix for camera
     Matrix4 projectionMatrix;
+
+    std::shared_ptr<ViewFrustum> viewFrustum;
     
 public:
     /// destructor
@@ -50,6 +58,12 @@ public:
         Scalar zMax )
     {
         projectionMatrix.createPerspectiveMatrix(fov, aspectRatio, zMin, zMax);
+        viewFrustum = std::make_shared<ViewFrustum>(fov, aspectRatio, zMin, zMax);
+    }
+
+    inline const ViewFrustum& getViewFrustum() const
+    {
+        return *this->viewFrustum;
     }
     
     inline void setOrthographicProjection(Scalar xMin, Scalar xMax, Scalar yMin, 
