@@ -234,11 +234,28 @@ void World::renderObjects()
     const Matrix4& projection = camera->getProjectionMatrix();
 
     Matrix4 cameraModelMatrix;
-    camera->getPosition().getTransformMatrix(cameraModelMatrix);
+    const Position& p = camera->getPosition();
+    // try to understand why the position needs to be changed like this
+    Position(
+        Point3(-p.getLocation().x(), p.getLocation().y(), -p.getLocation().z()),
+        Vector3(-p.getForwardVector().x(), p.getForwardVector().y(), -p.getForwardVector().z()),
+        p.getUpVector()).getTransformMatrix(cameraModelMatrix);
 
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
-	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+	//sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+
+    // only render objects that exist in the view frustum of the camera
+    auto viewFrustum = camera->getViewFrustum().transform(cameraModelMatrix);
+    for (Object* o : this->objects)
+    {
+        auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
+        // TODO: add in bounding sphere offset for this to work correctly
+        if (viewFrustum->containsSphere(o->getPosition().getLocation(), sphere.getRadius()))
+            sortedObjects.push_back(o);
+        else
+            continue;
+    }
 
 	Point3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
@@ -293,8 +310,8 @@ void World::renderObjects()
         // render bounding sphere, if requested
         if (this->showBoundingSpheres)
             renderMesh(meshes->getBoundingSphereMesh(), *material, model, view, projection, true);
-	} // end of all objects 
-	
+	} // end of all objects
+
 	// Do the buffer Swap
     graphics.swapBuffers();
 

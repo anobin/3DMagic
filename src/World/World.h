@@ -197,6 +197,11 @@ public:
     {
         return this->showBoundingSpheres;
     }
+
+    inline Camera& getCamera()
+    {
+        return *this->camera;
+    }
 };
 
 };

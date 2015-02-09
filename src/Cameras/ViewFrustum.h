@@ -94,6 +94,27 @@ public:
         return this->projectionMatrix;
     }
 
+    inline std::shared_ptr<ViewFrustum> transform(const Matrix4& matrix) const
+    {
+        auto newFrustum = std::make_shared<ViewFrustum>(
+                this->fov,
+                this->aspectRatio,
+                this->zMin,
+                this->zMax
+            );
+
+        for (int i = 0; i < 6; i++)
+        {
+            ViewPlane& plane = newFrustum->planes[i];
+            plane.topLeft = plane.topLeft.transform(matrix);
+            plane.topRight = plane.topRight.transform(matrix);
+            plane.bottomLeft = plane.bottomLeft.transform(matrix);
+            plane.bottomRight = plane.bottomRight.transform(matrix);
+        }
+
+        return newFrustum;
+    }
+
     std::shared_ptr<Mesh> createMesh() const
     {
         MeshBuilder mb;
@@ -136,6 +157,45 @@ public:
         mb.end();
 
         return mesh;
+    }
+
+    inline bool containsSphere(const Point3& center, Scalar radius)
+    {
+        // check to see if the sphere is on the inside of all 6 planes
+        // TODO: optimize this logic
+        for (int i = 0; i < 6; i++)
+        {
+            auto plane = planes[i];
+
+            auto topLeft = plane.topLeft;
+            auto topRight = plane.topRight;
+            auto bottomLeft = plane.bottomLeft;
+
+            Vector3 v(
+                topLeft.x() - topRight.x(),
+                topLeft.y() - topRight.y(),
+                topLeft.z() - topRight.z()
+            );
+
+            Vector3 u(
+                bottomLeft.x() - topRight.x(),
+                bottomLeft.y() - topRight.y(),
+                bottomLeft.z() - topRight.z()
+            );
+
+            Vector3 n = v.crossProduct(u).normalize();
+            Scalar d = n.dotProduct(
+                Vector3(plane.bottomRight.x(), plane.bottomRight.y(), plane.bottomRight.z())
+            );
+
+            Scalar distance = n.dotProduct(
+                Vector3(center.x(), center.y(), center.z())
+            ) + d;
+
+            if (distance < -radius)
+                return false;
+        }
+        return true;
     }
 
 };

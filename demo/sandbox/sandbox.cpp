@@ -151,6 +151,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
     std::vector<Object*>::iterator it;
     //int i;
     Object::Properties prop;
+    Matrix4 matrix;
     
 	switch(key)
 	{
@@ -170,6 +171,18 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		// escape
 		case 0x1B:
 			exit(1);
+
+        case 'j':
+            p = world.getCamera().getPosition();
+            p = Position(
+                Point3(-p.getLocation().x(), p.getLocation().y(), -p.getLocation().z()),
+                Vector3(-p.getForwardVector().x(), p.getForwardVector().y(), -p.getForwardVector().z()),
+                p.getUpVector());
+            p.getTransformMatrix(matrix);
+            world.addObject(new Object(std::make_shared<Model>(
+                std::make_shared<Meshes>(world.getCamera().getViewFrustum().transform(matrix)->createMesh()),
+                bigSphereMaterial)));
+            break;
 			
 		// w, forward
 		case 'w':
@@ -546,10 +559,10 @@ public:
 		// init objects
 		Object::Properties prop;
 		prop.mass = 1;
-		btBall = new Object(std::make_shared<Model>(std::make_shared<Meshes>(sphereBatch), 
+		/*btBall = new Object(std::make_shared<Model>(std::make_shared<Meshes>(sphereBatch), 
 			sphereMaterial));
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
-		world->addObject(btBall);
+		world->addObject(btBall);*/
 
 		floorObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(floorBatch), 
 			floorMaterial, floorShape)); // static object
@@ -583,7 +596,6 @@ public:
 
         FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);
-        //testCamera.getViewFrustumMesh
         world->addObject(new Object(std::make_shared<Model>(
             std::make_shared<Meshes>(testCamera.getViewFrustum().createMesh()),
             brickMaterial)));
@@ -683,9 +695,9 @@ public:
 			batchBuilder.end();
 		}
 
-		/*Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
+		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 
-		btBall->setPosition(Position(
+		/*btBall->setPosition(Position(
 			endPoint,
 			btBall->getPosition().getForwardVector(),
 			btBall->getPosition().getUpVector()
@@ -695,9 +707,9 @@ public:
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		std::stringstream ss;
 
-		/*ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
+		ss << std::setprecision(2) << std::fixed << endPoint.x() << ", " << endPoint.y() 
 			<< ", " << endPoint.z();
-		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color::WHITE);*/
+		screenImage.drawAsciiText(*font, ss.str().c_str(), 50, 50, Color::WHITE);
 
 		ss.str("");
 		ss << "Fps: " << world->getActualFPS();
