@@ -56,21 +56,24 @@ const VertexArray& Mesh::getVertexArray()
 }
 	
 	
-/*void Batch::applyTransform(const Matrix4& matrix)
+void Mesh::applyTransform(const Matrix4& matrix)
 {
-MeshBuilder bb;
-bb.modify(this);
-float temp[3];
-bb.setCurrentVertex(0);
-for(int j=0; j < this->getVertexCount(); j++)
-{
-bb.getVertex3f( &temp[0], &temp[1], &temp[2] );
-Point3 point(temp);
-point = point.transform(matrix);
-bb.vertex3f(point.x(), point.y(), point.z());
+    delete this->vertexArray;
+    this->vertexArray = nullptr;
+
+    MeshBuilder bb;
+    bb.modify(this);
+    float temp[3];
+    bb.setCurrentVertex(0);
+    for(int j=0; j < this->getVertexCount(); j++)
+    {
+        bb.getVertex3f( &temp[0], &temp[1], &temp[2] );
+        Point3 point(temp);
+        point = point.transform(matrix);
+        bb.vertex3f(point.x(), point.y(), point.z());
+    }
+    bb.end();
 }
-bb.end();
-}*/
 	
 	
 const SphereCollisionShape& Meshes::getBoundingSphere()

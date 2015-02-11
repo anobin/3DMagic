@@ -126,6 +126,8 @@ public:
 	}
 
 	const VertexArray& getVertexArray();
+
+    void applyTransform(const Matrix4& matrix);
 	
 };
 
@@ -150,6 +152,11 @@ public:
     // used for debugging and developer tools
     Mesh& getBoundingSphereMesh();
 
+    inline void applyTransform(const Matrix4& matrix)
+    {
+        for (auto mesh : *this)
+            mesh->applyTransform(matrix);
+    }
 };
 
 

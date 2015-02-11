@@ -601,7 +601,7 @@ public:
             brickMaterial)));
 
 		// 3ds model
-		/*std::shared_ptr<Batches> chainBatches = resourceManager.get<Batches>("models/chainLink.3ds");
+		std::shared_ptr<Meshes> chainBatches = resourceManager.get<Meshes>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
 		chainBatches->applyTransform(scaleMatrix);
@@ -613,7 +613,7 @@ public:
 		chainObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*chainBatches), 
 			chainMaterial, chainShape));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
-		world->addObject(chainObject);*/
+		world->addObject(chainObject);
 
 
 

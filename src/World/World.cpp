@@ -243,10 +243,10 @@ void World::renderObjects()
 
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
-	//sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
 
     // only render objects that exist in the view frustum of the camera
-    auto viewFrustum = camera->getViewFrustum().transform(cameraModelMatrix);
+    /*auto viewFrustum = camera->getViewFrustum().transform(cameraModelMatrix);
     for (Object* o : this->objects)
     {
         auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
@@ -255,7 +255,7 @@ void World::renderObjects()
             sortedObjects.push_back(o);
         else
             continue;
-    }
+    }*/
 
 	Point3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
