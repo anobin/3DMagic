@@ -172,7 +172,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		case 0x1B:
 			exit(1);
 
-        case 'j':
+        /*case 'j':
             p = world.getCamera().getPosition();
             p = Position(
                 Point3(-p.getLocation().x(), p.getLocation().y(), -p.getLocation().z()),
@@ -182,7 +182,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.addObject(new Object(std::make_shared<Model>(
                 std::make_shared<Meshes>(world.getCamera().getViewFrustum().transform(matrix)->createMesh()),
                 bigSphereMaterial)));
-            break;
+            break;*/
 			
 		// w, forward
 		case 'w':
@@ -594,11 +594,11 @@ public:
 			}
 		}
 
-        FPCamera testCamera;
+        /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);
         world->addObject(new Object(std::make_shared<Model>(
             std::make_shared<Meshes>(testCamera.getViewFrustum().createMesh()),
-            brickMaterial)));
+            brickMaterial)));*/
 
 		// 3ds model
 		std::shared_ptr<Meshes> chainBatches = resourceManager.get<Meshes>("models/chainLink.3ds");

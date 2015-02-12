@@ -87,6 +87,8 @@ public:
 	inline Scalar z() const { return data[2]; }
 	inline Vector<3> withZ(Scalar z) const { return with(2, z); }
 
+    using BaseVector::operator*;
+
     inline Vector<3> crossProduct(const Vector<3> &v) const
     {
         return Vector<3>(
@@ -94,6 +96,10 @@ public:
 			-x()*v.z() + v.x()*z(),
 			x()*v.y() - v.x()*y()
 		);
+    }
+    inline Vector<3> operator*(const Vector<3>& v) const
+    {
+        return this->crossProduct(v);
     }
 
 	Vector<3> transform(const Matrix4& m) const;

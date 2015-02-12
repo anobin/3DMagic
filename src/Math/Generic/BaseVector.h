@@ -64,6 +64,10 @@ public:
 			ret.data[i] = data[i] + v.data[i];
 		return ret;
     }
+    inline T operator+(const T& v) const
+    {
+        return this->add(v);
+    }
 
     /// subtract a vector from this vector
     inline T subtract(const T& v) const 
@@ -73,6 +77,10 @@ public:
 			ret.data[i] = data[i] - v.data[i];
 		return ret;
     }
+    inline T operator-(const T& v) const
+    {
+        return this->subtract(v);
+    }
 
     /// scale this vector by a given factor
     inline T scale(Scalar factor) const
@@ -81,6 +89,10 @@ public:
 		for(int i=0; i < size; i++)
 			ret.data[i] = data[i] * factor;
 		return ret;
+    }
+    inline T operator*(Scalar factor) const
+    {
+        return this->scale(factor);
     }
 
     /// dot product another vector with this vector
@@ -121,6 +133,14 @@ public:
 		newV.data[component] = value;
 		return newV;
 	}
+
+    inline Scalar distanceTo(const T& v) const
+    {
+        Scalar distance = 0;
+        for (int i = 0; i < size; i++)
+            distance += pow(data[i] - v[i], 2);
+        return sqrt(distance);
+    }
 };
 
 

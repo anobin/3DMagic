@@ -48,7 +48,7 @@ protected:
     /// projection matrix for camera
     Matrix4 projectionMatrix;
 
-    std::shared_ptr<ViewFrustum> viewFrustum;
+    ViewFrustum viewFrustum;
     
 public:
     /// destructor
@@ -58,12 +58,13 @@ public:
         Scalar zMax )
     {
         projectionMatrix.createPerspectiveMatrix(fov, aspectRatio, zMin, zMax);
-        viewFrustum = std::make_shared<ViewFrustum>(fov, aspectRatio, zMin, zMax);
+        viewFrustum.setCamProperties(fov, aspectRatio, zMin, zMax);
     }
 
-    inline const ViewFrustum& getViewFrustum() const
+    inline ViewFrustum& getViewFrustum()
     {
-        return *this->viewFrustum;
+        viewFrustum.setPosition(this->getPosition());
+        return this->viewFrustum;
     }
     
     inline void setOrthographicProjection(Scalar xMin, Scalar xMax, Scalar yMin, 

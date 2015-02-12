@@ -7,197 +7,156 @@
 #include <Graphics\Mesh.h>
 #include <Graphics\MeshBuilder.h>
 
+
 namespace Magic3D
 { 
 
-class ViewPlane
+class Plane
 {
+    Vector3 normal;
+    float d;
+
 public:
-    Point3 topLeft;
-    Point3 topRight;
-    Point3 bottomLeft;
-    Point3 bottomRight;
+    inline Plane() {}
+
+    inline Plane(Vector3& topRight, Vector3& topLeft, Vector3& bottomLeft)
+    {
+        this->update(topRight, topLeft, bottomLeft);
+    }
+
+    void update(Vector3& topRight, Vector3& topLeft, Vector3& bottomLeft) 
+    {
+        Vector3 u, v;
+
+        u = topRight - topLeft;
+        v = bottomLeft - topLeft;
+
+        normal = (v * u).normalize();
+
+        d = -(normal.dotProduct(topLeft));
+    }
+
+    float distance(Vector3 &p) 
+    {
+        return (d + normal.dotProduct(p));
+    }
 };
 
+class Rectangle
+{
+public:
+    Vector3 topLeft;
+    Vector3 topRight;
+    Vector3 bottomLeft;
+    Vector3 bottomRight;
+
+    inline Rectangle() {}
+
+    inline Rectangle(Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft,
+        Vector3 bottomRight) : topLeft(topLeft), topRight(topRight),
+        bottomLeft(bottomLeft), bottomRight(bottomRight) {}
+
+    inline void update(Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft,
+        Vector3 bottomRight)
+    {
+        this->topLeft = topLeft;
+        this->topRight = topRight;
+        this->bottomLeft = bottomLeft;
+        this->bottomRight = bottomRight;
+    }
+
+    inline Scalar getHeight()
+    {
+        return topLeft.distanceTo(bottomLeft);
+    }
+
+    inline Scalar getWidth()
+    {
+        return topLeft.distanceTo(topRight);
+    }
+};
 
 class ViewFrustum
 {
+    Plane pl[6];
+
+    Rectangle nearRec;
+    Rectangle farRec;
+    Scalar zNear, zFar, ratio, angle;
+    Scalar nw, nh, fw, fh;
+
     enum {
-        NEARP = 0, FARP, TOP, LEFT, RIGHT, BOTTOM
+        TOP = 0,
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        NEARP,
+        FARP
     };
 
-    ViewPlane planes[6];
-
-    Matrix4 projectionMatrix;
-
-    Scalar fov;
-    Scalar aspectRatio;
-    Scalar zMin;
-    Scalar zMax;
-
 public:
-    // plane normals of planes need to point inward
-    ViewFrustum(Scalar fov, Scalar aspectRatio, Scalar zMin, Scalar zMax)
+    void setCamProperties(float angle, float ratio, float zNear, float zFar) 
     {
-        this->fov = fov;
-        this->aspectRatio = aspectRatio;
-        this->zMin = zMin;
-        this->zMax = zMax;
+        this->ratio = ratio;
+        this->angle = angle;
+        this->zNear = zNear;
+        this->zFar = zFar;
 
-        projectionMatrix.createPerspectiveMatrix(fov, aspectRatio, zMin, zMax);
-
-        Scalar fovRads = fov * M_PI / 360;
-
-        Scalar yMax = Scalar(zMin * tan(fovRads));
-        Scalar yMin = -yMax;
-        Scalar xMin = yMin * aspectRatio;
-        Scalar xMax = -xMin;
-
-        planes[NEARP].topLeft = Point3(xMax, yMax, zMin);
-        planes[NEARP].topRight = Point3(xMin, yMax, zMin);
-        planes[NEARP].bottomLeft = Point3(xMax, yMin, zMin);
-        planes[NEARP].bottomRight = Point3(xMin, yMin, zMin);
-
-        yMax = Scalar(zMax * tan(fovRads));
-        yMin = -yMax;
-        xMin = yMin * aspectRatio;
-        xMax = -xMin;
-
-        planes[FARP].topLeft = Point3(xMin, yMax, zMax);
-        planes[FARP].topRight = Point3(xMax, yMax, zMax);
-        planes[FARP].bottomLeft = Point3(xMin, yMin, zMax);
-        planes[FARP].bottomRight = Point3(xMax, yMin, zMax);
-
-        planes[TOP].topLeft = planes[NEARP].topRight;
-        planes[TOP].topRight = planes[NEARP].topLeft;
-        planes[TOP].bottomLeft = planes[FARP].topLeft;
-        planes[TOP].bottomRight = planes[FARP].topRight;
-
-        planes[LEFT].topLeft = planes[NEARP].topRight;
-        planes[LEFT].topRight = planes[FARP].topLeft;
-        planes[LEFT].bottomLeft = planes[NEARP].bottomRight;
-        planes[LEFT].bottomRight = planes[FARP].bottomLeft;
-
-        planes[RIGHT].topLeft = planes[FARP].topRight;
-        planes[RIGHT].topRight = planes[NEARP].topLeft;
-        planes[RIGHT].bottomLeft = planes[FARP].bottomRight;
-        planes[RIGHT].bottomRight = planes[NEARP].bottomLeft;
-
-        planes[BOTTOM].topLeft = planes[FARP].bottomLeft;
-        planes[BOTTOM].topRight = planes[FARP].bottomRight;
-        planes[BOTTOM].bottomLeft = planes[NEARP].bottomRight;
-        planes[BOTTOM].bottomRight = planes[NEARP].bottomLeft;
+        Scalar tang = (float)tan(angle* (M_PI/180.0f) * 0.5);
+        nh = zNear * tang;
+        nw = nh * ratio;
+        fh = zFar  * tang;
+        fw = fh * ratio;
     }
 
-    inline const Matrix4& getProjectionMatrix() const
+    void setPosition(const Position& pos) 
     {
-        return this->projectionMatrix;
+        Vector3 p(pos.getLocation().x(), pos.getLocation().y(), pos.getLocation().z());
+        Vector3 nc, fc, X, Y, Z;
+
+        Z = (pos.getForwardVector() * -1).normalize();
+
+        X = (pos.getUpVector() * Z).normalize();
+
+        Y = Z * X;
+
+        nc = p - Z * zNear;
+        fc = p - Z * zFar;
+
+        nearRec.update(
+            nc + Y * nh - X * nw, // top left
+            nc + Y * nh + X * nw, // top right
+            nc - Y * nh - X * nw, // bottom left
+            nc - Y * nh + X * nw  // bottom right
+        );
+
+        farRec.update(
+            fc + Y * fh - X * fw,
+            fc + Y * fh + X * fw,
+            fc - Y * fh - X * fw,
+            fc - Y * fh + X * fw
+        );
+
+        pl[TOP].update(nearRec.topRight, nearRec.topLeft, farRec.topLeft);
+        pl[BOTTOM].update(nearRec.bottomLeft, nearRec.bottomRight, farRec.bottomRight);
+        pl[LEFT].update(nearRec.topLeft, nearRec.bottomLeft, farRec.bottomLeft);
+        pl[RIGHT].update(nearRec.bottomRight, nearRec.topRight, farRec.bottomRight);
+        pl[NEARP].update(nearRec.topLeft, nearRec.topRight, nearRec.bottomRight);
+        pl[FARP].update(farRec.topRight, farRec.topLeft, farRec.bottomLeft);
     }
 
-    inline std::shared_ptr<ViewFrustum> transform(const Matrix4& matrix) const
+    bool sphereInFrustum(Vector3 &p, float raio) 
     {
-        auto newFrustum = std::make_shared<ViewFrustum>(
-                this->fov,
-                this->aspectRatio,
-                this->zMin,
-                this->zMax
-            );
+        float distance;
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) 
         {
-            ViewPlane& plane = newFrustum->planes[i];
-            plane.topLeft = plane.topLeft.transform(matrix);
-            plane.topRight = plane.topRight.transform(matrix);
-            plane.bottomLeft = plane.bottomLeft.transform(matrix);
-            plane.bottomRight = plane.bottomRight.transform(matrix);
-        }
-
-        return newFrustum;
-    }
-
-    std::shared_ptr<Mesh> createMesh() const
-    {
-        MeshBuilder mb;
-
-        auto mesh = std::make_shared<Mesh>();
-
-        mb.begin(6*6, 3, mesh.get());
-
-        for (int i = 0; i < 6; i++)
-        {
-            const ViewPlane& plane = this->planes[i];
-
-            // bottom left
-            mb.vertex3f(plane.bottomLeft);
-            mb.texCoord2f(0.0f, 1.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-            // top right
-            mb.vertex3f(plane.topRight);
-            mb.texCoord2f(1.0f, 0.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-            // top left
-            mb.vertex3f(plane.topLeft);
-            mb.texCoord2f(0.0f, 0.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-
-            // bottom right
-            mb.vertex3f(plane.bottomRight);
-            mb.texCoord2f(1.0f, 1.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-            // top right
-            mb.vertex3f(plane.topRight);
-            mb.texCoord2f(1.0f, 0.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-            // bottom left
-            mb.vertex3f(plane.bottomLeft);
-            mb.texCoord2f(0.0f, 1.0f);
-            mb.normal3f(0.0f, 1.0f, 0.0f);
-        }
-
-        mb.end();
-
-        return mesh;
-    }
-
-    inline bool containsSphere(const Point3& center, Scalar radius)
-    {
-        // check to see if the sphere is on the inside of all 6 planes
-        // TODO: optimize this logic
-        for (int i = 0; i < 6; i++)
-        {
-            auto plane = planes[i];
-
-            auto topLeft = plane.topLeft;
-            auto topRight = plane.topRight;
-            auto bottomLeft = plane.bottomLeft;
-
-            Vector3 v(
-                topLeft.x() - topRight.x(),
-                topLeft.y() - topRight.y(),
-                topLeft.z() - topRight.z()
-            );
-
-            Vector3 u(
-                bottomLeft.x() - topRight.x(),
-                bottomLeft.y() - topRight.y(),
-                bottomLeft.z() - topRight.z()
-            );
-
-            Vector3 n = v.crossProduct(u).normalize();
-            Scalar d = n.dotProduct(
-                Vector3(plane.bottomRight.x(), plane.bottomRight.y(), plane.bottomRight.z())
-            );
-
-            Scalar distance = n.dotProduct(
-                Vector3(center.x(), center.y(), center.z())
-            ) + d;
-
-            if (distance < -radius)
+            distance = pl[i].distance(p);
+            if (distance < -raio)
                 return false;
         }
         return true;
     }
-
 };
 
 

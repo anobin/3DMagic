@@ -233,29 +233,22 @@ void World::renderObjects()
     camera->getPosition().getCameraMatrix(view);
     const Matrix4& projection = camera->getProjectionMatrix();
 
-    Matrix4 cameraModelMatrix;
-    const Position& p = camera->getPosition();
-    // try to understand why the position needs to be changed like this
-    Position(
-        Point3(-p.getLocation().x(), p.getLocation().y(), -p.getLocation().z()),
-        Vector3(-p.getForwardVector().x(), p.getForwardVector().y(), -p.getForwardVector().z()),
-        p.getUpVector()).getTransformMatrix(cameraModelMatrix);
-
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
-	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+	//sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
 
     // only render objects that exist in the view frustum of the camera
-    /*auto viewFrustum = camera->getViewFrustum().transform(cameraModelMatrix);
+    auto viewFrustum = camera->getViewFrustum();
     for (Object* o : this->objects)
     {
         auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
         // TODO: add in bounding sphere offset for this to work correctly
-        if (viewFrustum->containsSphere(o->getPosition().getLocation(), sphere.getRadius()))
+        auto loc = o->getPosition().getLocation();
+        if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
             sortedObjects.push_back(o);
         else
             continue;
-    }*/
+    }
 
 	Point3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
@@ -306,11 +299,29 @@ void World::renderObjects()
 		{   
             renderMesh(*mesh, *material, model, view, projection, this->wireframeEnabled);
 		}
+	} // end of all objects
+
+    std::set<Object*>::iterator it2 = this->objects.begin();
+    for (; it2 != this->objects.end(); it2++)
+    {
+        // get object and entity
+        ob = (*it2);
+
+        const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
+        if (meshes == nullptr)
+            break;
+
+        // get mesh and material data
+        auto material = ob->getModel()->getMaterial();
+
+        // get model/world matrix for object (same for all meshes in object)
+        Matrix4 model;
+        ob->getPosition().getTransformMatrix(model);
 
         // render bounding sphere, if requested
         if (this->showBoundingSpheres)
             renderMesh(meshes->getBoundingSphereMesh(), *material, model, view, projection, true);
-	} // end of all objects
+    } // end of all objects
 
 	// Do the buffer Swap
     graphics.swapBuffers();
