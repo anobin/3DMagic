@@ -255,6 +255,24 @@ void World::renderObjects()
             continue;
     }
 
+    std::vector<std::shared_ptr<Object>> sortedStaticObjects;
+    sortedStaticObjects.reserve(this->staticObjectCount);
+    //sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+
+    // only render objects that exist in the view frustum of the camera
+    for (auto it : this->staticObjects)
+    {
+        for (std::shared_ptr<Object> o : *it.second)
+        {
+            auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
+            auto loc = sphere.getOffset();
+            if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
+                sortedStaticObjects.push_back(o);
+            else
+                continue;
+        }
+    }
+
 	Point3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
 		auto aTrans = a->getModel()->getMaterial()->transparent;
@@ -280,24 +298,30 @@ void World::renderObjects()
 		}
 	});
 
+    vertexCount = 0;
+
     // render static objects (aka scenery)
     Matrix4 identityMatrix;
-    for (auto it : this->staticObjects)
+    Material* material = nullptr;
+    for (auto ob : sortedStaticObjects)
     {
-        auto material = it.first;
-        setupMaterial(*material, identityMatrix, view, projection, this->wireframeEnabled);
-        for (auto object : *it.second)
+        if (material == nullptr || material != ob->getModel()->getMaterial().get())
         {
-            for (auto mesh : *object->getModel()->getMeshes())
-                renderMesh(*mesh);
+            if (material != nullptr)
+                tearDownMaterial(*material, this->wireframeEnabled);
+            material = ob->getModel()->getMaterial().get();
+            setupMaterial(*material, identityMatrix, view, projection, this->wireframeEnabled);
         }
-        tearDownMaterial(*material, this->wireframeEnabled);
+
+        for (auto mesh : *ob->getModel()->getMeshes())
+            renderMesh(*mesh);
     }
+    if (material != nullptr)
+        tearDownMaterial(*material, this->wireframeEnabled);
 
 	// render all objects
 	std::vector<Object*>::iterator it = sortedObjects.begin();
 	Object* ob;
-	vertexCount = 0;
 	for(; it != sortedObjects.end(); it++)
 	{
 	    // get object and entity

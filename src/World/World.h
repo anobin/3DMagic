@@ -49,6 +49,7 @@ private:
     std::set<Object*> objects;
 
     std::unordered_map<Material*, std::vector<std::shared_ptr<Object>>*> staticObjects;
+    int staticObjectCount;
     
     GraphicsSystem& graphics;
     
@@ -88,7 +89,7 @@ public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
-        light(NULL), wireframeEnabled(false), showBoundingSpheres(false){}
+        light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0) {}
     
 	inline void addObject(Object* object)
 	{
@@ -108,6 +109,7 @@ public:
         }
         else
             it->second->push_back(object);
+        staticObjectCount++;
     }
    
 	inline void removeObject(Object* object)
@@ -200,7 +202,7 @@ public:
 
 	inline int getObjectCount()
 	{
-		return this->objects.size();
+        return this->objects.size() + staticObjectCount;
 	}
     
 	inline float getRenderTimeElapsed()
