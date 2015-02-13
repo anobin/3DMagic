@@ -106,6 +106,15 @@ Mesh& Meshes::getBoundingSphereMesh()
             20,
             20
         );
+
+        auto sphere = this->getBoundingSphere();
+        Matrix4 moveMatrix;
+        moveMatrix.createTranslationMatrix(
+            sphere.getOffset().x(),
+            sphere.getOffset().y(),
+            sphere.getOffset().z()
+        );
+        this->boundingSphereMesh->applyTransform(moveMatrix);
     }
 
     return *this->boundingSphereMesh;

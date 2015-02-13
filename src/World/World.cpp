@@ -325,6 +325,17 @@ void World::renderObjects()
     // render bounding spheres, if requested
     if (this->showBoundingSpheres)
     {
+        for (auto it : this->staticObjects)
+        {
+            auto material = it.first;
+            setupMaterial(*material, identityMatrix, view, projection, true);
+            for (auto object : *it.second)
+            {
+                renderMesh(object->getModel()->getMeshes()->getBoundingSphereMesh());
+            }
+            tearDownMaterial(*material, true);
+        }
+
         std::set<Object*>::iterator it2 = this->objects.begin();
         for (; it2 != this->objects.end(); it2++)
         {
