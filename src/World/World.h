@@ -32,6 +32,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Time/StopWatch.h"
 
 #include <set>
+#include <unordered_map>
 
 
 namespace Magic3D
@@ -46,6 +47,8 @@ class World
 {
 private:
     std::set<Object*> objects;
+
+    std::unordered_map<Material*, std::vector<std::shared_ptr<Object>>*> staticObjects;
     
     GraphicsSystem& graphics;
     
@@ -75,8 +78,11 @@ private:
 
 	float renderTimeElapsed;
 
-    void renderMesh(Mesh& mesh, Material& material, const Matrix4& modelMatrix, 
+    void renderMesh(Mesh& mesh);
+
+    void setupMaterial(Material& material, const Matrix4& modelMatrix,
         const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe);
+    void tearDownMaterial(Material& material, bool wireframe);
     
 public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
@@ -89,6 +95,20 @@ public:
 		objects.insert(object);
 		physics.addBody(*object);
 	}
+
+    inline void addStaticObject(std::shared_ptr<Object> object)
+    {
+        auto material = object->getModel()->getMaterial().get();
+        auto it = this->staticObjects.find(object->getModel()->getMaterial().get());
+        if (it == this->staticObjects.end())
+        {
+            auto objectList = new std::vector<std::shared_ptr<Object>>();
+            objectList->push_back(object);
+            this->staticObjects.insert(std::make_pair(material, objectList));
+        }
+        else
+            it->second->push_back(object);
+    }
    
 	inline void removeObject(Object* object)
 	{

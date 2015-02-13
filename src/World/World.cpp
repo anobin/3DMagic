@@ -42,11 +42,10 @@ void World::stepPhysics()
             physics.stepSimulation(physicsStepTime, subSteps);
     }
 }
-    
+  
 
-void World::renderMesh(Mesh& mesh, Material& material, 
-    const Matrix4& modelMatrix, const Matrix4& viewMatrix, const Matrix4& projectionMatrix,
-    bool wireframe)
+void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
+    const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe)
 {
     auto gpuProgram = material.gpuProgram;
     MAGIC_ASSERT(gpuProgram != nullptr);
@@ -92,7 +91,7 @@ void World::renderMesh(Mesh& mesh, Material& material,
             gpuProgram->setUniformMatrix(u.varName.c_str(), 4, projectionMatrix.getArray());
             break;
 
-        // TODO: stop multiplying these matrices for every individual mesh
+            // TODO: stop multiplying these matrices for every individual mesh
         case GpuProgram::MODEL_VIEW_MATRIX:              // mat4
             temp4m.multiply(viewMatrix, modelMatrix);
             gpuProgram->setUniformMatrix(u.varName.c_str(), 4, temp4m.getArray());
@@ -196,11 +195,10 @@ void World::renderMesh(Mesh& mesh, Material& material,
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
     }
+}
 
-    // draw mesh
-    mesh.getVertexArray().draw(mesh.getPrimitive(), mesh.getVertexCount());
-    vertexCount += mesh.getVertexCount();
-
+void World::tearDownMaterial(Material& material, bool wireframe)
+{
     // disable depth lie if it was enabled
     if (material.depthBufferLie)
         glDisable(GL_POLYGON_OFFSET_FILL);
@@ -216,6 +214,13 @@ void World::renderMesh(Mesh& mesh, Material& material,
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_CULL_FACE);
     }
+}
+
+void World::renderMesh(Mesh& mesh)
+{
+    // draw mesh
+    mesh.getVertexArray().draw(mesh.getPrimitive(), mesh.getVertexCount());
+    vertexCount += mesh.getVertexCount();   
 }
     
 void World::renderObjects()
@@ -275,6 +280,20 @@ void World::renderObjects()
 		}
 	});
 
+    // render static objects (aka scenery)
+    Matrix4 identityMatrix;
+    for (auto it : this->staticObjects)
+    {
+        auto material = it.first;
+        setupMaterial(*material, identityMatrix, view, projection, this->wireframeEnabled);
+        for (auto object : *it.second)
+        {
+            for (auto mesh : *object->getModel()->getMeshes())
+                renderMesh(*mesh);
+        }
+        tearDownMaterial(*material, this->wireframeEnabled);
+    }
+
 	// render all objects
 	std::vector<Object*>::iterator it = sortedObjects.begin();
 	Object* ob;
@@ -295,33 +314,40 @@ void World::renderObjects()
         Matrix4 model;
         ob->getPosition().getTransformMatrix(model);
         
+        setupMaterial(*material, model, view, projection, this->wireframeEnabled);
 		for(const std::shared_ptr<Mesh> mesh : *meshes)
 		{   
-            renderMesh(*mesh, *material, model, view, projection, this->wireframeEnabled);
+            renderMesh(*mesh);
 		}
+        tearDownMaterial(*material, this->wireframeEnabled);
 	} // end of all objects
 
-    std::set<Object*>::iterator it2 = this->objects.begin();
-    for (; it2 != this->objects.end(); it2++)
+    // render bounding spheres, if requested
+    if (this->showBoundingSpheres)
     {
-        // get object and entity
-        ob = (*it2);
+        std::set<Object*>::iterator it2 = this->objects.begin();
+        for (; it2 != this->objects.end(); it2++)
+        {
+            // get object and entity
+            ob = (*it2);
 
-        const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
-        if (meshes == nullptr)
-            break;
+            const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
+            if (meshes == nullptr)
+                break;
 
-        // get mesh and material data
-        auto material = ob->getModel()->getMaterial();
+            // get mesh and material data
+            auto material = ob->getModel()->getMaterial();
 
-        // get model/world matrix for object (same for all meshes in object)
-        Matrix4 model;
-        ob->getPosition().getTransformMatrix(model);
+            // get model/world matrix for object (same for all meshes in object)
+            Matrix4 model;
+            ob->getPosition().getTransformMatrix(model);
 
-        // render bounding sphere, if requested
-        if (this->showBoundingSpheres)
-            renderMesh(meshes->getBoundingSphereMesh(), *material, model, view, projection, true);
-    } // end of all objects
+            // render bounding sphere
+            setupMaterial(*material, model, view, projection, true);
+            renderMesh(meshes->getBoundingSphereMesh());
+            tearDownMaterial(*material, true);
+        } // end of all objects
+    }
 
 	// Do the buffer Swap
     graphics.swapBuffers();

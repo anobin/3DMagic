@@ -20,6 +20,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 /** Generates a 3D environment used to test different features
  */
 
+#define NOMINMAX
+
 // 3DMagic includes
 #include <3DMagic.h>
 using namespace Magic3D;
@@ -48,6 +50,9 @@ using namespace Magic3D;
 using std::cout;
 using std::endl;
 using std::shared_ptr;
+
+#include <random>
+#include <chrono>
 
 // include freetype
 #include <ft2build.h>
@@ -570,7 +575,7 @@ public:
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
-		float wallWidth =40;
+		/*float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -587,12 +592,41 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				btBox = new Object(std::make_shared<Model>(std::make_shared<Meshes>(boxBatch), 
+				auto btBox = new Object(std::make_shared<Model>(std::make_shared<Meshes>(boxBatch), 
 					brickMaterial, brickShape), prop );
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}
+		}*/
+
+
+        std::minstd_rand0 randGen(
+            std::chrono::system_clock::now().time_since_epoch().count()
+        );
+
+        // arrange some trees as static scenery
+        auto baseTreeMesh = std::make_shared<Mesh>();
+        batchBuilder.buildBox(baseTreeMesh.get(), 2 * FOOT, 9 * FOOT, 2 * FOOT);
+        Scalar maxSize = ROOM_SIZE * 50;
+        for (int i = 0; i < 4000; i++)
+        {
+            Matrix4 matrix;
+            matrix.createTranslationMatrix(
+                (double(randGen()) / randGen.max()) * maxSize - maxSize/2, 
+                4.5*FOOT, 
+                (double(randGen()) / randGen.max()) * maxSize - maxSize/2
+            );
+
+            auto treeMesh = std::make_shared<Mesh>(*baseTreeMesh);
+            treeMesh->applyTransform(matrix);
+
+            auto treeModel = std::make_shared<Model>();
+            treeModel->setMeshes(std::make_shared<Meshes>(treeMesh));
+            treeModel->setMaterial(tinySphereMaterial);
+
+            auto ob = std::make_shared<Object>(treeModel);
+            world->addStaticObject(ob);
+        }
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);

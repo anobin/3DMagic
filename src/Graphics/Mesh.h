@@ -60,6 +60,7 @@ public:
 		int dataLen;
 
 		inline AttributeData() : data(NULL), dataLen(0) {}
+
 		inline ~AttributeData()
 		{
 			delete[] data;
@@ -106,6 +107,21 @@ public:
     /// Standard Constructor
 	inline Mesh(): attributeData(nullptr), vertexCount(0), 
 		attributeCount(0), vertexArray(nullptr) {}
+
+    inline Mesh(const Mesh& mesh) :
+        vertexCount(mesh.vertexCount),
+        attributeCount(mesh.attributeCount),
+        primitive(mesh.primitive),
+        vertexArray(nullptr), attributeData(nullptr)
+    {
+        this->allocate(vertexCount, attributeCount);
+        for (int i = 0; i < attributeCount; i++)
+        {
+            this->attributeData[i].allocate(vertexCount, mesh.attributeData[i].type);
+            memcpy(this->attributeData[i].data, mesh.attributeData[i].data,
+                mesh.attributeData[i].dataLen);
+        }
+    }
 
 	/// destructor
 	~Mesh();
