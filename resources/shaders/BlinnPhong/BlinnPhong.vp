@@ -1,0 +1,38 @@
+#version 120
+
+// per vertex attributes
+attribute vec4 inputPosition;
+attribute vec3 inputNormal;
+attribute vec2 inputTexCoord;
+
+// light position in view space
+uniform vec3 lightPosition;
+
+uniform mat4   mvpMatrix;
+uniform mat4   mvMatrix;
+//uniform mat3   normalMatrix;
+
+// output to next stage
+varying vec3 vNormal;
+varying vec2 vTexCoord;
+varying vec3 vViewDir;
+varying vec3 vLightDir;
+
+void main(void) 
+{ 
+    // set clip space position
+    gl_Position = mvpMatrix * inputPosition;
+
+    // get position in view space
+    vec4 position = mvMatrix * inputPosition;
+    
+    // Get surface normal in eye coordinates and pass along
+    vNormal = mat3(mvMatrix) * inputNormal;
+    
+    vLightDir = lightPosition - position.xyz;
+    
+    vViewDir = -position.xyz;
+    
+    // pass along texture coordinate
+    vTexCoord = inputTexCoord;
+}
