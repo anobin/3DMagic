@@ -161,7 +161,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
         case GpuProgram::LIGHT_LOCATION:                 // vec3
             MAGIC_THROW(light == NULL, "Material has the light location "
                 "auto-bound uniform set, but no light is set for the world.");
-            tempp3 = light->getLocation().transform(viewMatrix);
+            tempp3 = light->getLocation();// .transform(viewMatrix);
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
                 tempp3.y(), tempp3.z());
             break;

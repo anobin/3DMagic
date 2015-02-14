@@ -479,7 +479,8 @@ public:
 		// init shader
 		//shader = resourceManager.get<GpuProgram>("shaders/HemisphereTex.gpu.xml");
         //shader = resourceManager.get<GpuProgram>("shaders/Phong/Phong.gpu.xml");
-        shader = resourceManager.get<GpuProgram>("shaders/BlinnPhong/BlinnPhong.gpu.xml");
+        //shader = resourceManager.get<GpuProgram>("shaders/BlinnPhong/BlinnPhong.gpu.xml");
+        shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		sphereBatch = std::make_shared<Mesh>();
 		tinySphereBatch = std::make_shared<Mesh>();

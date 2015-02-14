@@ -1,0 +1,47 @@
+#version 120
+
+// per vertex attributes
+attribute vec4 inputPosition;   // vertex position in model space
+attribute vec3 inputNormal;     // vertex normal in model space
+attribute vec2 inputTexCoord;   // texture coordinate for vertex
+
+// light position in world space
+uniform vec3 lightPosition;
+// light attenuation distance, linear falloff assumed
+uniform float lightAttenDistance = 30.0;
+
+uniform mat4   mvpMatrix;   // transforms from model space to clip space
+uniform mat4   mvMatrix;    // transforms from model space to view space
+uniform mat4   vMatrix;     // transforms from world space to view space
+uniform mat4   mMatrix;     // transforms from model space to world space
+
+// output to next stage
+varying vec3 vNormal;       // normal in view space
+varying vec2 vTexCoord;     // texture coord
+varying vec3 vViewDir;      // vector from vertex to camera (in view space)
+varying vec3 vLightDir;     // vector from vertex to light (in view space) 
+varying float vLightFactor; // factor of light intensity (based on attenuation)
+
+void main(void) 
+{ 
+    // set clip space position
+    gl_Position = mvpMatrix * inputPosition;
+
+    // get position in view space
+    vec4 position = mvMatrix * inputPosition;
+    
+    // Get surface normal in view space and pass along
+    vNormal = mat3(mvMatrix) * inputNormal;
+     
+    vec4 lightPosition_viewSpace = vMatrix * vec4(lightPosition, 1.0);
+    vLightDir = lightPosition_viewSpace.xyz - position.xyz;
+      
+    vec4 inputPosition_worldSpace = mMatrix * inputPosition;
+    vLightFactor = max(1.0 - (distance(lightPosition.xyz, inputPosition_worldSpace.xyz) 
+        / lightAttenDistance), 0.0);
+    
+    vViewDir = -position.xyz;
+    
+    // pass along texture coordinate
+    vTexCoord = inputTexCoord;
+}

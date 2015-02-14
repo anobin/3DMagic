@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Material>
 	<!--<gpuProgram ref="shaders/HemisphereTex.gpu.xml" />-->
-	<gpuProgram ref="shaders/BlinnPhong/BlinnPhong.gpu.xml" />
+	<gpuProgram ref="shaders/Full/Full.gpu.xml" />
 	<texture ref="textures/singleBrick.tex.xml" />
 </Material>
