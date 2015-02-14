@@ -22,6 +22,19 @@ varying vec3 vViewDir;      // vector from vertex to camera (in view space)
 varying vec3 vLightDir;     // vector from vertex to light (in view space) 
 varying float vLightFactor; // factor of light intensity (based on attenuation)
 
+float calculateLightAttenFactor()
+{
+    if (lightAttenDistance != 0.0)
+    {
+        vec4 inputPosition_worldSpace = mMatrix * inputPosition;
+        float factor = 1.0 - (distance(lightPosition.xyz, inputPosition_worldSpace.xyz) 
+            / lightAttenDistance);
+        return max(factor, 0.0);
+    }
+    else
+        return 1.0;
+}
+
 void main(void) 
 { 
     // set clip space position
@@ -36,12 +49,12 @@ void main(void)
     vec4 lightPosition_viewSpace = vMatrix * vec4(lightPosition, 1.0);
     vLightDir = lightPosition_viewSpace.xyz - position.xyz;
       
-    vec4 inputPosition_worldSpace = mMatrix * inputPosition;
-    vLightFactor = max(1.0 - (distance(lightPosition.xyz, inputPosition_worldSpace.xyz) 
-        / lightAttenDistance), 0.0);
+    vLightFactor = calculateLightAttenFactor();
     
     vViewDir = -position.xyz;
     
     // pass along texture coordinate
     vTexCoord = inputTexCoord;
 }
+
+
