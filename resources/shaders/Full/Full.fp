@@ -9,8 +9,8 @@ uniform vec3 specularColor = vec3(0.7, 0.7, 0.7);
 uniform float specularPower = 128.0;
 
 // ambient color and factor
-uniform vec3 ambientColor = vec3(0.2, 0.2, 0.2);
-uniform float ambientFactor = 0.2;
+//uniform vec3 ambientColor = vec3(0.2, 0.2, 0.2);
+uniform float ambientFactor = 0.1;
 
 // input from previous stage
 varying vec3 vNormal;       // normal in view space
@@ -29,7 +29,7 @@ void main(void)
     
     vec4 diffuseColor = texture2D(textureMap, vTexCoord);
     
-    vec3 ambient = ambientColor * ambientFactor;
+    vec3 ambient = diffuseColor.rgb * ambientFactor * vLightFactor;
     vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * vLightFactor;
     vec3 specular = pow(max(dot(N,H), 0.0), specularPower) * specularColor * vLightFactor; 
     

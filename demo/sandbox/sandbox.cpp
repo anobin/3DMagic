@@ -448,7 +448,7 @@ public:
 		graphics.enableDepthTest();
 
 		static Color lightBlue(5, 230, 255);
-		graphics.setClearColor(lightBlue );
+		graphics.setClearColor(Color(0,0,0));
 
 		// init textures
 		auto stoneTex = resourceManager.get<Texture>("textures/bareConcrete.tex.xml");
