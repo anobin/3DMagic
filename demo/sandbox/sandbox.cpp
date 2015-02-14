@@ -477,7 +477,8 @@ public:
 		charTex = std::make_shared<Texture>(charImage);
 
 		// init shader
-		shader = resourceManager.get<GpuProgram>("shaders/HemisphereTex.gpu.xml");
+		//shader = resourceManager.get<GpuProgram>("shaders/HemisphereTex.gpu.xml");
+        shader = resourceManager.get<GpuProgram>("shaders/Phong/Phong.gpu.xml");
 
 		sphereBatch = std::make_shared<Mesh>();
 		tinySphereBatch = std::make_shared<Mesh>();
@@ -575,7 +576,7 @@ public:
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
-		/*float wallWidth =40;
+		float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -597,7 +598,7 @@ public:
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}*/
+		}
 
 
         std::minstd_rand0 randGen(

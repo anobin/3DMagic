@@ -43,7 +43,7 @@ protected:
 
 public:
 
-	inline DemoBase(): lightPos(0.0f, 1000.0f, 0.0f)
+	inline DemoBase(): lightPos(0.0f, 5.0f, 0.0f)
 	{
 		graphics.init();
 		graphics.setDisplaySize( 1280, 1024 );
