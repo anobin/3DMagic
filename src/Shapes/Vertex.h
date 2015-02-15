@@ -43,6 +43,11 @@ public:
         data = vec;
     }
 
+    inline void position(const Vector3& vec)
+    {
+        data = vec;
+    }
+
     inline Vector4& position()
     {
         return data;
@@ -123,6 +128,11 @@ public:
 
     inline Vertex(const AttrType& attr, const AttributeTypes&... attrTypes) :
         AttrType(attr), Vertex<AttributeTypes...>(attrTypes...)
+    {}
+
+    template<typename VectorType, typename... VectorTypes>
+    inline Vertex(const VectorType& vector, const VectorTypes&... vectors) :
+        AttrType(vector), Vertex<AttributeTypes...>(vectors...)
     {}
 
     static const int attributeCount = sizeof...(AttributeTypes) + 1;
