@@ -102,11 +102,13 @@ private:
 	}
 
 	void copyBatchIn();
+
+    std::shared_ptr<Mesh> visibleNormals;
 	
 public:
     /// Standard Constructor
 	inline Mesh(): attributeData(nullptr), vertexCount(0), 
-		attributeCount(0), vertexArray(nullptr) {}
+		attributeCount(0), vertexArray(nullptr), visibleNormals(nullptr) {}
 
     inline Mesh(const Mesh& mesh) :
         vertexCount(mesh.vertexCount),
@@ -140,6 +142,8 @@ public:
 	{
 		return this->primitive;
 	}
+
+    Mesh& getVisibleNormals();
 
 	const VertexArray& getVertexArray();
 

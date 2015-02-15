@@ -314,7 +314,10 @@ void World::renderObjects()
         }
 
         for (auto mesh : *ob->getModel()->getMeshes())
+        {
             renderMesh(*mesh);
+            renderMesh(mesh->getVisibleNormals());
+        }
     }
     if (material != nullptr)
         tearDownMaterial(*material, this->wireframeEnabled);

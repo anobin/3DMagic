@@ -49,6 +49,7 @@ void MeshBuilder::buildBox(Mesh* batch, float width, float height, float depth )
 	
 	// 6 points per side, 6 sides
 	this->begin(6*6, 3, batch);
+
 		
 	// top, 6 points
     normal3f	(0.0f, 1.0f, 0.0f);

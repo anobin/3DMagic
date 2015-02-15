@@ -120,6 +120,40 @@ Mesh& Meshes::getBoundingSphereMesh()
     return *this->boundingSphereMesh;
 }
 
+Mesh& Mesh::getVisibleNormals()
+{
+    if (this->visibleNormals == nullptr)
+    {
+        this->visibleNormals = std::make_shared<Mesh>();
+
+        MeshBuilder mb;
+        mb.begin(this->vertexCount * 2, 1, this->visibleNormals.get(),
+            VertexArray::Primitives::LINES);
+
+        MeshBuilder mr;
+        mr.modify(this);
+
+        for (int i = 0; i < this->vertexCount; i++)
+        {
+            Scalar x, y, z;
+            Scalar nx, ny, nz;
+
+            mr.setCurrentVertex(i);
+            mr.getVertex3f(&x, &y, &z);
+            mr.getNormal3f(&nx, &ny, &nz);
+
+            mb.vertex3f(x, y, z);
+            mb.vertex3f(x+nx, y+ny, z+nz);
+        }
+
+        mr.end();
+
+        mb.end();
+    }
+
+    return *this->visibleNormals;
+}
+
 	
 };
 

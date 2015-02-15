@@ -247,6 +247,12 @@ public:
 	    this->getAttribute4( this->getBuildData( GpuProgram::VERTEX ), 
 	        v1, v2, v3, &dummy );
 	}
+
+    inline void getNormal3f(float* v1, float* v2, float* v3)
+    {
+        this->getAttribute3(this->getBuildData(GpuProgram::NORMAL),
+            v1, v2, v3);
+    }
 	
 	inline void normal3f(float v1, float v2, float v3)
 	{

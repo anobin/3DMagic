@@ -8,7 +8,7 @@ attribute vec2 inputTexCoord;   // texture coordinate for vertex
 // light position in world space
 uniform vec3 lightPosition;
 // light attenuation distance, linear falloff assumed
-uniform float lightAttenDistance = 30.0;
+uniform float lightAttenDistance = 0.0;
 
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
 uniform mat4   mvMatrix;    // transforms from model space to view space
