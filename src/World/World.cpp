@@ -240,10 +240,10 @@ void World::renderObjects()
 
 	std::vector<Object*> sortedObjects;
 	sortedObjects.reserve(this->objects.size());
-	//sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+	sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
 
     // only render objects that exist in the view frustum of the camera
-    auto viewFrustum = camera->getViewFrustum();
+    /*auto viewFrustum = camera->getViewFrustum();
     for (Object* o : this->objects)
     {
         auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
@@ -253,14 +253,14 @@ void World::renderObjects()
             sortedObjects.push_back(o);
         else
             continue;
-    }
+    }*/
 
     std::vector<std::shared_ptr<Object>> sortedStaticObjects;
     sortedStaticObjects.reserve(this->staticObjectCount);
-    //sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
+    sortedObjects.insert(sortedObjects.begin(), this->objects.begin(), this->objects.end());
 
     // only render objects that exist in the view frustum of the camera
-    for (auto it : this->staticObjects)
+    /*for (auto it : this->staticObjects)
     {
         for (std::shared_ptr<Object> o : *it.second)
         {
@@ -271,7 +271,7 @@ void World::renderObjects()
             else
                 continue;
         }
-    }
+    }*/
 
 	Point3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
@@ -316,7 +316,7 @@ void World::renderObjects()
         for (auto mesh : *ob->getModel()->getMeshes())
         {
             renderMesh(*mesh);
-            renderMesh(mesh->getVisibleNormals());
+            //renderMesh(mesh->getVisibleNormals());
         }
     }
     if (material != nullptr)
@@ -350,7 +350,7 @@ void World::renderObjects()
 	} // end of all objects
 
     // render bounding spheres, if requested
-    if (this->showBoundingSpheres)
+    /*if (this->showBoundingSpheres)
     {
         for (auto it : this->staticObjects)
         {
@@ -385,7 +385,7 @@ void World::renderObjects()
             renderMesh(meshes->getBoundingSphereMesh());
             tearDownMaterial(*material, true);
         } // end of all objects
-    }
+    }*/
 
 	// Do the buffer Swap
     graphics.swapBuffers();

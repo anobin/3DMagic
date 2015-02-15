@@ -9,57 +9,77 @@
 namespace Magic3D
 {
 
-class PositionAttr
+class _PositionAttr
 {
+    Scalar* data;
 public:
-    Vector4 data;
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::VERTEX;
 
-    inline PositionAttr() {}
-
-    inline PositionAttr(Vector3 vec) : data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z, 1.0f) {}
-
-    inline PositionAttr(Vector4 vec) : data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z, Scalar w) : data(x, y, z, w) {}
-
-    inline PositionAttr(const PositionAttr& attr) : data(attr.data) {} 
+    inline _PositionAttr(Scalar* data) : data(data) {}
 
     inline void position(Scalar x, Scalar y, Scalar z)
     {
-        data = Vector4(x, y, z, 1);
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
+        data[3] = 1.0f;
     }
 
     inline void position(Scalar x, Scalar y, Scalar z, Scalar w)
     {
-        data = Vector4(x, y, z, w);
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
+        data[3] = w;
     }
 
     inline void position(const Vector4& vec)
     {
-        data = vec;
+        this->position(vec.x(), vec.y(), vec.z());
     }
 
     inline void position(const Vector3& vec)
     {
-        data = vec;
+        this->position(vec.x(), vec.y(), vec.z());
     }
 
-    inline Vector4& position()
+    inline const Vector4 position()
     {
-        return data;
+        return Vector4(this->data);
     }
+
+    inline const Scalar* getData() const
+    {
+        return this->data;
+    }
+};
+
+class PositionAttr : public _PositionAttr
+{
+    Vector4 data;
+public:
+    static const GpuProgram::AttributeType type = GpuProgram::AttributeType::VERTEX;
+
+    inline PositionAttr() : _PositionAttr(data.getData()){}
+
+    inline PositionAttr(Vector3 vec) : _PositionAttr(data.getData()), data(vec) {}
+
+    inline PositionAttr(Scalar x, Scalar y, Scalar z) : _PositionAttr(data.getData()), data(x, y, z, 1.0f) {}
+
+    inline PositionAttr(Vector4 vec) : _PositionAttr(data.getData()), data(vec) {}
+
+    inline PositionAttr(Scalar x, Scalar y, Scalar z, Scalar w) : _PositionAttr(data.getData()), data(x, y, z, w) {}
+
+    inline PositionAttr(const PositionAttr& attr) : _PositionAttr(data.getData()), data(attr.data) {}
 };
 
 
 class TexCoordAttr
 {
-public:
     Vector2 data;
 
+public:
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::TEX_COORD_0;
 
     inline TexCoordAttr() {}
@@ -82,13 +102,18 @@ public:
     {
         return data;
     }
+
+    inline const Scalar* getData() const
+    {
+        return this->data.getData();
+    }
 };
 
 
 class NormalAttr
 {
-public:
     Vector3 data;
+public:
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::NORMAL;
 
@@ -111,6 +136,11 @@ public:
     inline const Vector3& normal()
     {
         return data;
+    }
+
+    inline const Scalar* getData() const
+    {
+        return this->data.getData();
     }
 };
 

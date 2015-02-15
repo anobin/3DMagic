@@ -57,6 +57,11 @@ public:
         return this->data;
     }
 
+    inline Scalar* getData()
+    {
+        return this->data;
+    }
+
     inline Scalar operator[](int component) const
 	{
 		return data[component];

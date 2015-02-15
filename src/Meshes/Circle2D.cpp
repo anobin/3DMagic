@@ -38,18 +38,20 @@ namespace Magic3D
  * @param precisionAngle the angle between any two points on the edge of the
                         circle, the lower angle, the better looking
  */
-void MeshBuilder::build2DCircle(Mesh* batch, int x, int y, int radius, float precisionAngle )
+std::shared_ptr<Mesh> MeshBuilderPT::build2DCircle(int x, int y, int radius, float precisionAngle)
 {
 	
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// points using a TRIANGLE FAN
 	int edges = int(360.0f/precisionAngle);
-	this->begin(1 + edges, 2, batch, VertexArray::Primitives::TRIANGLE_FAN);
+	MeshBuilderPT mb(1 + edges, VertexArray::Primitives::TRIANGLE_FAN);
 	
 	// center
-	texCoord2f(0.5f, 0.5f);
-	vertex3f((float)x, (float)y, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x, (float)y, 0.0f),
+        TexCoordAttr(0.5f, 0.5f)
+    );
 	
 	// draw verticies around the center
 	float theta = (float)(precisionAngle * M_PI / 180.0f);
@@ -72,12 +74,14 @@ void MeshBuilder::build2DCircle(Mesh* batch, int x, int y, int radius, float pre
 			vx = (float)(x1 + (r * cos(float(i)*theta)));
 			vy = (float)(y1 + (r * sin(float(i)*theta)));
 		}
-		texCoord2f((float)(0.5f + 0.5f * ((vx-x1)/r)), (float)(0.5f + 0.5f * ((vy-y1)/r)));
-		vertex3f(vx, vy, 0.0f);
+        mb.addVertex(
+            PositionAttr(vx, vy, 0.0f),
+            TexCoordAttr((float)(0.5f + 0.5f * ((vx - x1) / r)), (float)(0.5f + 0.5f * ((vy - y1) / r)))
+        );
 	}
 
 	// end vertex data
-	this->end();
+    return mb.build();
 }
 
 };

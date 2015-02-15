@@ -56,7 +56,7 @@ const VertexArray& Mesh::getVertexArray()
 }
 	
 	
-void Mesh::applyTransform(const Matrix4& matrix)
+/*void Mesh::applyTransform(const Matrix4& matrix)
 {
     delete this->vertexArray;
     this->vertexArray = nullptr;
@@ -73,10 +73,10 @@ void Mesh::applyTransform(const Matrix4& matrix)
         bb.vertex3f(point.x(), point.y(), point.z());
     }
     bb.end();
-}
+}*/
 	
 	
-const SphereCollisionShape& Meshes::getBoundingSphere()
+/*const SphereCollisionShape& Meshes::getBoundingSphere()
 {
     // lazy init
     if (this->boundingSphere == nullptr)
@@ -86,10 +86,10 @@ const SphereCollisionShape& Meshes::getBoundingSphere()
     }
 
     return (*this->boundingSphere);
-}
+}*/
 	
 
-Mesh& Meshes::getBoundingSphereMesh()
+/*Mesh& Meshes::getBoundingSphereMesh()
 {
     // lazy init
     if (this->boundingSphereMesh == nullptr)
@@ -118,9 +118,9 @@ Mesh& Meshes::getBoundingSphereMesh()
     }
 
     return *this->boundingSphereMesh;
-}
+}*/
 
-Mesh& Mesh::getVisibleNormals()
+/*Mesh& Mesh::getVisibleNormals()
 {
     if (this->visibleNormals == nullptr)
     {
@@ -152,7 +152,7 @@ Mesh& Mesh::getVisibleNormals()
     }
 
     return *this->visibleNormals;
-}
+}*/
 
 	
 };

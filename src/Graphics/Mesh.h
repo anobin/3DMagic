@@ -39,7 +39,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Magic3D
 {
-    
+
+template<typename... AttrTypes>
 class MeshBuilder;
 
 /** Contains the attribute data for a batch of vertices as well as properties,
@@ -75,7 +76,8 @@ public:
 		}
 	};
 
-private:	  
+private:	
+    template<typename... AttrTypes>
 	friend class MeshBuilder;
 
 	/// list of attribute data
@@ -133,7 +135,7 @@ private:
         ];
         memcpy(
             &this->attributeData[attributeIndex].data[compCount*vertexIndex],
-            vector.getData(),
+            vector,
             sizeof(Scalar)*compCount
             );
 
@@ -173,7 +175,7 @@ public:
             this->fillInAttr(
                 0,
                 i,
-                vertices[i].AttrTypes::data...
+                vertices[i].AttrTypes::getData()...
             );
         }
     }
@@ -196,11 +198,11 @@ public:
 		return this->primitive;
 	}
 
-    Mesh& getVisibleNormals();
+    //Mesh& getVisibleNormals();
 
 	const VertexArray& getVertexArray();
 
-    void applyTransform(const Matrix4& matrix);
+    //void applyTransform(const Matrix4& matrix);
 	
 };
 
@@ -220,16 +222,16 @@ public:
 		this->push_back(mesh);
 	}
 
-    const SphereCollisionShape& getBoundingSphere();
+    //const SphereCollisionShape& getBoundingSphere();
 
     // used for debugging and developer tools
-    Mesh& getBoundingSphereMesh();
+    //Mesh& getBoundingSphereMesh();
 
-    inline void applyTransform(const Matrix4& matrix)
+    /*inline void applyTransform(const Matrix4& matrix)
     {
         for (auto mesh : *this)
             mesh->applyTransform(matrix);
-    }
+    }*/
 };
 
 

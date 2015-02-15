@@ -35,7 +35,7 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-std::shared_ptr<Mesh> MeshBuilder::buildBox(float width, float height, float depth)
+std::shared_ptr<Mesh> MeshBuilderPTN::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;

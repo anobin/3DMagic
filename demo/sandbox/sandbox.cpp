@@ -118,7 +118,6 @@ bool moveRight = false;
 bool releaseWater = false;
 
 // builders
-MeshBuilder batchBuilder;
 MaterialBuilder materialBuilder;
 
 // 3ds stuff
@@ -482,20 +481,14 @@ public:
         //shader = resourceManager.get<GpuProgram>("shaders/BlinnPhong/BlinnPhong.gpu.xml");
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
-		sphereBatch = std::make_shared<Mesh>();
-		tinySphereBatch = std::make_shared<Mesh>();
-		bigSphereBatch = std::make_shared<Mesh>();
-		floorBatch = std::make_shared<Mesh>();
-		boxBatch = std::make_shared<Mesh>();
-
 		// init batches
-		batchBuilder.buildSphere(sphereBatch.get(), 2*FOOT, 55, 32);
-		batchBuilder.buildSphere(tinySphereBatch.get(), 1*FOOT, 4, 4);
-        bigSphereBatch = batchBuilder.buildBox(3, 3, 3);
-		batchBuilder.buildFlatSurface(floorBatch.get(), ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+        sphereBatch = MeshBuilderPTN::buildSphere(2 * FOOT, 55, 32);
+		tinySphereBatch = MeshBuilderPTN::buildSphere(1*FOOT, 4, 4);
+        bigSphereBatch = MeshBuilderPTN::buildBox(3, 3, 3);
+		floorBatch = MeshBuilderPTN::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-        boxBatch = batchBuilder.buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
+        boxBatch = MeshBuilderPTN::buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -529,9 +522,8 @@ public:
 		auto program2D = resourceManager.get<GpuProgram>("shaders/GpuProgram2D.xml");
 
 		// circle in middle of screen
-		std::shared_ptr<Mesh> circle2D = std::make_shared<Mesh>();
 		//batchBuilder.build2DCircle(circle2D, 150, 150, 300, 5);
-		batchBuilder.build2DRectangle(circle2D.get(), 0, 0, 300, 300);
+		auto circle2D = MeshBuilderPT::build2DRectangle(0, 0, 300, 300);
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
@@ -555,8 +547,7 @@ public:
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
 
-		auto logoBatch = std::make_shared<Mesh>();
-		batchBuilder.build2DRectangle(logoBatch.get(), 200, 0, 173, 50);
+		auto logoBatch = MeshBuilderPT::build2DRectangle(200, 0, 173, 50);
 
 		Object* logoObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(logoBatch), 
 			logo2DMaterial));
@@ -578,7 +569,7 @@ public:
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
-		/*float wallWidth =40;
+		float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -600,7 +591,7 @@ public:
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}*/
+		}
 
 
         std::minstd_rand0 randGen(
@@ -608,7 +599,7 @@ public:
         );
 
         // arrange some trees as static scenery
-        auto baseTreeMesh = batchBuilder.buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
+        /*auto baseTreeMesh = batchBuilder.buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 4000; i++)
         {
@@ -628,7 +619,7 @@ public:
 
             auto ob = std::make_shared<Object>(treeModel);
             world->addStaticObject(ob);
-        }
+        }*/
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);
@@ -640,14 +631,14 @@ public:
 		std::shared_ptr<Meshes> chainBatches = resourceManager.get<Meshes>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
-		chainBatches->applyTransform(scaleMatrix);
+		//chainBatches->applyTransform(scaleMatrix);
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
-		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
+		//auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
 		chainObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*chainBatches), 
-			chainMaterial, chainShape));
+			chainMaterial/*, chainShape*/));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
 
@@ -703,33 +694,6 @@ public:
 			lightPos.getLocation().withY(lightPos.getLocation().y()+change)
 		);*/
     
-    
-		// fun stuff
-		float c1, c2, c3;
-		static float acc = 0;
-		float c;
-		if (fun)
-		{
-			if ( rand()%2 && acc < 3)
-				c = 1.0f;
-			else if (acc > -3)
-				c = -0.3f;
-			else
-				c = 0.3f;
-			acc += c;
-			batchBuilder.modify(boxBatch.get());
-			for (int i=0; i < boxBatch->getVertexCount(); i++)
-			{
-				batchBuilder.getVertex3f(&c1, &c2, &c3);
-            
-				batchBuilder.vertex3f(
-					c1<0?c1-c:c1+c, 
-					c2<0?c2-c:c2+c, 
-					c3<0?c3-c:c3+c
-				);
-			}
-			batchBuilder.end();
-		}
 
 		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 

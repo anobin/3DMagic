@@ -35,7 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-void MeshBuilder::buildSphere(Mesh* batch, float radius, int slices, int stacks)
+std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
     GLfloat dtheta = 2.0f * (GLfloat)(M_PI) / (GLfloat) slices;
@@ -45,7 +45,7 @@ void MeshBuilder::buildSphere(Mesh* batch, float radius, int slices, int stacks)
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    this->begin(slices * stacks * 6, 3, batch);
+    MeshBuilderPTN mb(slices * stacks * 6);
     
 	for (i = 0; i < stacks; i++) 
 	{
@@ -126,9 +126,11 @@ void MeshBuilder::buildSphere(Mesh* batch, float radius, int slices, int stacks)
 		
 			for (int k=0; k < 3; k++)
 			{
-				texCoord2f(vTexture[k][0], vTexture[k][1]);
-				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				vertex3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+                mb.addVertex(
+                    PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
+                    TexCoordAttr(vTexture[k][0], vTexture[k][1]),
+                    NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
+                );
 			}
 			
 			// Rearrange for next triangle
@@ -142,14 +144,16 @@ void MeshBuilder::buildSphere(Mesh* batch, float radius, int slices, int stacks)
 					
 			for (int k=0; k < 3; k++)
 			{
-				texCoord2f(vTexture[k][0], vTexture[k][1]);
-				normal3f(vNormal[k][0], vNormal[k][1], vNormal[k][2]);
-				vertex3f(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+                mb.addVertex(
+                    PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
+                    TexCoordAttr(vTexture[k][0], vTexture[k][1]),
+                    NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
+                );
 			}			
 		}
         t -= dt;
 	}
-	this->end();
+    return mb.build();
 }	
 	
 	

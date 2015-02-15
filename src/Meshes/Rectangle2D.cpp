@@ -34,39 +34,51 @@ namespace Magic3D
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-void MeshBuilder::build2DRectangle(Mesh* batch, int x, int y, int width, int height)
+std::shared_ptr<Mesh> MeshBuilderPT::build2DRectangle(int x, int y, int width, int height)
 {	
 	// since this is a 2D model, we leave all z coords at 0
 	
 	// 6 points using a TRIANGLE FAN
-	this->begin(6, 2, batch);
+	MeshBuilderPT mb(6, VertexArray::Primitives::TRIANGLE_FAN);
 	
 	// bottom right
-	texCoord2f(1.0f, 1.0f);
-	vertex3f((float)x+width, (float)y, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x + width, (float)y, 0.0f),
+        TexCoordAttr(1.0f, 1.0f)
+    );
 
 	// top right
-	texCoord2f(1.0f, 0.0f);
-	vertex3f((float)x+width, (float)y+height, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x + width, (float)y + height, 0.0f),
+        TexCoordAttr(1.0f, 0.0f)
+    );
 
 	// top left
-	texCoord2f(0.0f, 0.0f);
-	vertex3f((float)x, (float)y+height, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x, (float)y + height, 0.0f),
+        TexCoordAttr(0.0f, 0.0f)
+    );
 	
 	// bottom right
-	texCoord2f(1.0f, 1.0f);
-	vertex3f((float)x+width, (float)y, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x + width, (float)y, 0.0f),
+        TexCoordAttr(1.0f, 1.0f)
+    );
 
 	// top left
-	texCoord2f(0.0f, 0.0f);
-	vertex3f((float)x, (float)y+height, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x, (float)y + height, 0.0f),
+        TexCoordAttr(0.0f, 0.0f)
+    );
 
 	// bottom left
-	texCoord2f(0.0f, 1.0f);
-	vertex3f((float)x, (float)y, 0.0f);
+    mb.addVertex(
+        PositionAttr((float)x, (float)y, 0.0f),
+        TexCoordAttr(0.0f, 1.0f)
+    );
 	
 	// end vertex data
-	this->end();
+    return mb.build();
 }
 
 

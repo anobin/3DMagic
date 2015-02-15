@@ -30,7 +30,7 @@ namespace Magic3D
 {
     
 /// default constructor
-TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
+/*TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
     shape(NULL)
 {
     MeshBuilder bb;
@@ -62,7 +62,7 @@ TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
     
     // build physics shape from mesh data
     this->shape = new btBvhTriangleMeshShape(&mesh, true);
-}
+}*/
     
 /// destructor
 TriangleMeshCollisionShape::~TriangleMeshCollisionShape()

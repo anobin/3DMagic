@@ -34,10 +34,10 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
- void MeshBuilder::buildFlatSurface(Mesh* batch, float width, float height, int slices, 
+std::shared_ptr<Mesh> MeshBuilderPTN::buildFlatSurface(float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-    this->begin(slices*stacks*6, 3, batch);
+    MeshBuilder mb(slices*stacks*6);
 	
 	float x = -width/2;
 	float z = -height/2;
@@ -60,34 +60,46 @@ namespace Magic3D
 	for (int i=0,j=0;;)
 	{
 		// top left
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*i, texY*j);
-		vertex3f(x, 0.0f, z);
+        mb.addVertex(
+            PositionAttr(x, 0.0f, z),
+            TexCoordAttr(texX*i, texY*j),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 		
 		// bottom left
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*i, texY*(j+1));
-		vertex3f(x, 0.0f, z+zStep);
+        mb.addVertex(
+            PositionAttr(x, 0.0f, z + zStep),
+            TexCoordAttr(texX*i, texY*(j + 1)),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 	
 		// top right
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*(i+1), texY*j);
-		vertex3f(x+xStep, 0.0f, z);
+        mb.addVertex(
+            PositionAttr(x + xStep, 0.0f, z),
+            TexCoordAttr(texX*(i + 1), texY*j),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 		
 		// top right
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*(i+1), texY*j);
-		vertex3f(x+xStep, 0.0f, z);
+        mb.addVertex(
+            PositionAttr(x + xStep, 0.0f, z),
+            TexCoordAttr(texX*(i + 1), texY*j),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 
 		// bottom left
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*i, texY*(j+1));
-		vertex3f(x, 0.0f, z+zStep);
+        mb.addVertex(
+            PositionAttr(x, 0.0f, z + zStep),
+            TexCoordAttr(texX*i, texY*(j + 1)),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 
 		// bottom right
-		normal3f(0.0f, 1.0f, 0.0f);
-		texCoord2f(texX*(i+1), texY*(j+1));
-		vertex3f(x+xStep, 0.0f, z+zStep);
+        mb.addVertex(
+            PositionAttr(x + xStep, 0.0f, z + zStep),
+            TexCoordAttr(texX*(i + 1), texY*(j + 1)),
+            NormalAttr(0.0f, 1.0f, 0.0f)
+        );
 		
 		i++;
 		if (i < slices)
@@ -103,7 +115,7 @@ namespace Magic3D
 		}	
 	}
 	
-	this->end();
+    return mb.build();
 }
 	
 	

@@ -18,41 +18,46 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
 	std::shared_ptr<Meshes> meshes = std::make_shared<Meshes>();
 
 	// Loop through all the meshes
-	MeshBuilder bb;
+    MeshBuilderPTN bb;
 	int i;
 	Lib3dsMesh * mesh;
 	Point3 p;
 	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
 	{
 	    // start the batch
-		std::shared_ptr<Mesh> batch = std::make_shared<Mesh>();
-		bb.begin((int)mesh->faces*3, 3, batch.get());
+		bb.reset((int)mesh->faces*3);
 	    
-	    // set normals
+	    // get normals
 	    float* normals = new float[mesh->faces*3*3];
         lib3ds_mesh_calculate_normals(mesh, (float(*)[3])normals);
-        bb.normal3fv(normals, mesh->faces*3);
-        delete normals;
     
         // Loop through every face, setting the three vertices
         for(unsigned int cur_face = 0; cur_face < mesh->faces;cur_face++)
         {
             Lib3dsFace * face = &mesh->faceL[cur_face];
             for(unsigned int j = 0;j < 3;j++)
-            {   
-                p = Point3(
-					mesh->pointL[face->points[ j ]].pos[0],
-					mesh->pointL[face->points[ j ]].pos[1],
-					mesh->pointL[face->points[ j ]].pos[2]
-				);
-                bb.vertex3f( p.x(), p.y(), p.z() );
-                bb.texCoord2f( 0.0f, 0.0f );
+            { 
+
+                bb.addVertex(
+                    Vector3(
+                        mesh->pointL[face->points[j]].pos[0],
+                        mesh->pointL[face->points[j]].pos[1],
+                        mesh->pointL[face->points[j]].pos[2]
+                    ),
+                    Vector2(0.0f, 0.0f), // TODO: set correct tex coords
+                    Vector3(
+                        normals[(cur_face*3*3)+(j*3)+0],
+                        normals[(cur_face*3*3)+(j*3)+1],
+                        normals[(cur_face*3*3)+(j*3)+2]
+                    )
+                );
             }
         }
+
+        delete normals;
         
-        // end current batch
-        bb.end();
-		meshes->push_back(batch);
+        // end current mesh
+		meshes->push_back(bb.build());
 	}
 
 	lib3ds_file_free(file);
