@@ -118,6 +118,14 @@ public:
 
 	inline Vector(const Scalar data[4]): BaseVector(data) {}
 
+    inline Vector(const Vector3& vec)
+    {
+        data[0] = vec.x();
+        data[1] = vec.y();
+        data[2] = vec.z();
+        data[3] = 1.0f;
+    }
+
 	inline Vector(Scalar x, Scalar y, Scalar z, Scalar w)
 	{
 		data[0] = x;

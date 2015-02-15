@@ -52,6 +52,11 @@ protected:
     
 public:
 
+    inline const Scalar* getData() const
+    {
+        return this->data;
+    }
+
     inline Scalar operator[](int component) const
 	{
 		return data[component];

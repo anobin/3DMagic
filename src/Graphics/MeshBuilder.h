@@ -431,7 +431,7 @@ public:
      * @param height the height of the box
      * @param depth the depth of the box
      */
-	void buildBox(Mesh* mesh, float width, float height, float depth );
+	static std::shared_ptr<Mesh> buildBox(float width, float height, float depth );
 	
 	/** Build a 2D circle mesh
      * @param x the x coordinate of the center

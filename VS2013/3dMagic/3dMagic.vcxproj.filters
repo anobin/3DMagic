@@ -70,6 +70,9 @@
     <Filter Include="Source Files\Time">
       <UniqueIdentifier>{4a8084d9-0892-4212-b81c-bcfe136d3847}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shapes">
+      <UniqueIdentifier>{6713ff10-420a-4b18-9814-5b486bf14e2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cameras\Camera.cpp">
@@ -460,6 +463,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Cameras\ViewFrustum.h">
       <Filter>Source Files\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Shapes\Triangle.h">
+      <Filter>Source Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Shapes\Vertex.h">
+      <Filter>Source Files\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

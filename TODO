@@ -9,6 +9,13 @@
 - change builders to use cascade pattern and build objects themselves
 - generally try to remove mutation of objects, especially required mutation for basic creation
 - get rid of c strings and c methods for strings and files
+- change mesh interface to be easier
+- change mesh storage to not replicate vertices if possible
+- introduce a unified shape api (For mesh, collision hull, etc).
+- add logic to auto-calculate normals
+- add logic to auto-calculate tangents
+- add shadow mapping to full shader
+- add normal mapping to full shader
 
 ## Rendering Performance
 - add configurable frustrum culling

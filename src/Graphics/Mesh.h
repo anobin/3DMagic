@@ -31,6 +31,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Texture.h"
 #include <Shaders/GpuProgram.h>
 #include <CollisionShapes\SphereCollisionShape.h>
+#include <Shapes\Vertex.h>
 
 #include <vector>
 #include <memory>
@@ -104,6 +105,40 @@ private:
 	void copyBatchIn();
 
     std::shared_ptr<Mesh> visibleNormals;
+
+    inline void allocateAttrs(int index)
+    {
+        return; // on purpose
+    }
+
+    template<typename... AttrTypeIds>
+    inline void allocateAttrs(int index, GpuProgram::AttributeType id, AttrTypeIds... ids)
+    {
+        this->attributeData[index].allocate(this->vertexCount, id);
+
+        allocateAttrs(++index, ids...);
+    }
+
+    inline void fillInAttr(int attributeIndex, int vertexIndex)
+    {
+        return; // on purpose
+    }
+
+    template<typename VectorType, typename... VectorTypes>
+    inline void fillInAttr(int attributeIndex, int vertexIndex, VectorType vector,
+        VectorTypes... vectors)
+    {
+        int compCount = GpuProgram::attributeTypeCompCount[
+            (int)this->attributeData[attributeIndex].type
+        ];
+        memcpy(
+            &this->attributeData[attributeIndex].data[compCount*vertexIndex],
+            vector.getData(),
+            sizeof(Scalar)*compCount
+            );
+
+        fillInAttr(++attributeIndex, vertexIndex, vectors...);
+    }
 	
 public:
     /// Standard Constructor
@@ -122,6 +157,24 @@ public:
             this->attributeData[i].allocate(vertexCount, mesh.attributeData[i].type);
             memcpy(this->attributeData[i].data, mesh.attributeData[i].data,
                 mesh.attributeData[i].dataLen);
+        }
+    }
+
+    template<typename... AttrTypes>
+    inline Mesh(const std::vector<Vertex<AttrTypes...>>& vertices, VertexArray::Primitives primitive) : 
+        vertexArray(nullptr), attributeData(nullptr), primitive(primitive)
+    {
+        this->allocate(vertices.size(), Vertex<AttrTypes...>::attributeCount);
+        
+        this->allocateAttrs(0, AttrTypes::type...);
+
+        for (unsigned int i = 0; i < vertices.size(); i++)
+        {
+            this->fillInAttr(
+                0,
+                i,
+                vertices[i].AttrTypes::data...
+            );
         }
     }
 

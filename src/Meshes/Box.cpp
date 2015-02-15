@@ -25,6 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <Graphics/MeshBuilder.h>
+#include <Shapes/Vertex.h>
 
 namespace Magic3D
 {
@@ -34,144 +35,211 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-void MeshBuilder::buildBox(Mesh* batch, float width, float height, float depth )
+std::shared_ptr<Mesh> MeshBuilder::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;
 	height = height/2;
 	depth = depth/2;
-	
-	// remeber to always construct models around the origin, a transform
-	// matrix will be used on the graphics hardware to push them into
-	// the right positions. Also don't try to reduce the number of vertices
-	// by using something other than triangles, you'll screw up the lightening
-	// becuase some points require normals in two different directions
-	
-	// 6 points per side, 6 sides
-	this->begin(6*6, 3, batch);
 
+    std::vector<Vertex<NormalAttr, TexCoordAttr, PositionAttr>> vertices;
+    vertices.reserve(36);
+
+	// 6 points per side, 6 sides
 		
 	// top, 6 points
-    normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(-width, height, -depth); // top left
-    normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, height, depth); // bottom left
-    normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
-    normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, height, depth); // bottom left
-    normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, height, depth); // bottom right
-	normal3f	(0.0f, 1.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(-width, height, -depth)
+    )); // top left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, height, depth)
+    )); //  bottom left*/
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(width, height, -depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, height, depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(width, height, depth)
+    )); //  bottom right
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 1.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(width, height, -depth)
+    )); //  top right
     
     // bottom, 6 points
-    normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(-width, -height, -depth); // top left
-	normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, -height, -depth); // top right
-    normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom left
-    normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom left
-	normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, -height, -depth); // top right
-    normal3f	(0.0f, -1.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(width, -height, depth); // bottom right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(-width, -height, -depth)
+    )); //  top left
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, -height, -depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(-width, -height, depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(-width, -height, depth)
+    )); //  bottom left
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, -height, -depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, -1.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(width, -height, depth)
+    )); //  bottom right
 
     // left side, 6 points
-    normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(-width, height, -depth); // top left
-    normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, -height, -depth); // bottom left
-    normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(-width, height, depth); // top right
-    normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, -height, -depth); // bottom left
-    normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom right
-	normal3f	(-1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(-width, height, depth); // top right
+    vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(-width, height, -depth)
+    )); //  top left
+    vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, -height, -depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(-width, height, depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, -height, -depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(-width, -height, depth)
+    )); //  bottom right
+	vertices.push_back(makeVertex(
+        NormalAttr(-1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(-width, height, depth)
+    )); //  top right
     
     // right side, 6 points
-    normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top left
-	normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, height, depth); // top right
-    normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, -height, -depth); // bottom left
-    normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, -height, -depth); // bottom left
-	normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, height, depth); // top right
-	normal3f	(1.0f, 0.0f, 0.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(width, -height, depth); // bottom right
+    vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(width, height, -depth)
+    )); //  top left
+	vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, height, depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(width, -height, -depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(width, -height, -depth)
+    )); //  bottom left
+	vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, height, depth)
+    )); //  top right
+	vertices.push_back(makeVertex(
+        NormalAttr(1.0f, 0.0f, 0.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(width, -height, depth)
+    )); //  bottom right
 	
 	// front, 6 points
-    normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(-width, height, -depth); // top left
-    normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
-	normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, -depth); // bottom left
-    normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(-width, -height, -depth); // bottom left
-	normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(width, height, -depth); // top right
-	normal3f	(0.0f, 0.0f, -1.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(width, -height, -depth); // bottom right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(-width, height, -depth)
+    )); //  top left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, height, -depth)
+    )); //  top right
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(-width, -height, -depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(-width, -height, -depth)
+    )); //  bottom left
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(width, height, -depth)
+    )); //  top right
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, -1.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(width, -height, -depth)
+    )); //  bottom right
 	
     // back, 6 points
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(0.0f, 0.0f);
-    vertex3f	(-width, height, depth); // top left
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom left
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, depth); // top right
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(0.0f, 1.0f);
-    vertex3f	(-width, -height, depth); // bottom left
-	normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(1.0f, 1.0f);
-    vertex3f	(width, -height, depth); // bottom right
-    normal3f	(0.0f, 0.0f, 1.0f);
-    texCoord2f	(1.0f, 0.0f);
-    vertex3f	(width, height, depth); // top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(0.0f, 0.0f),
+        PositionAttr(-width, height, depth)
+    )); //  top left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, -height, depth)
+    )); //  bottom left
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(width, height, depth)
+    )); //  top right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(0.0f, 1.0f),
+        PositionAttr(-width, -height, depth)
+    )); //  bottom left
+	vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(1.0f, 1.0f),
+        PositionAttr(width, -height, depth)
+    )); //  bottom right
+    vertices.push_back(makeVertex(
+        NormalAttr(0.0f, 0.0f, 1.0f),
+        TexCoordAttr(1.0f, 0.0f),
+        PositionAttr(width, height, depth)
+    )); //  top right
 	
-	this->end();
+    return std::make_shared<Mesh>(vertices, VertexArray::Primitives::TRIANGLES);
 }
 	
 	

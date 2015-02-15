@@ -491,11 +491,11 @@ public:
 		// init batches
 		batchBuilder.buildSphere(sphereBatch.get(), 2*FOOT, 55, 32);
 		batchBuilder.buildSphere(tinySphereBatch.get(), 1*FOOT, 4, 4);
-		batchBuilder.buildBox(bigSphereBatch.get(), 3, 3, 3);
+        bigSphereBatch = batchBuilder.buildBox(3, 3, 3);
 		batchBuilder.buildFlatSurface(floorBatch.get(), ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-		batchBuilder.buildBox(boxBatch.get(), 6*INCH*scale, 3*INCH*scale, 3*INCH*scale );
+        boxBatch = batchBuilder.buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -608,8 +608,7 @@ public:
         );
 
         // arrange some trees as static scenery
-        auto baseTreeMesh = std::make_shared<Mesh>();
-        batchBuilder.buildBox(baseTreeMesh.get(), 2 * FOOT, 9 * FOOT, 2 * FOOT);
+        auto baseTreeMesh = batchBuilder.buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 4000; i++)
         {

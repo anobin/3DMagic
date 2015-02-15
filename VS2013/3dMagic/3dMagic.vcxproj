@@ -132,6 +132,8 @@
     <ClInclude Include="..\..\src\Resources\TextResource.h" />
     <ClInclude Include="..\..\src\Shaders\GpuProgram.h" />
     <ClInclude Include="..\..\src\Shaders\Shader.h" />
+    <ClInclude Include="..\..\src\Shapes\Triangle.h" />
+    <ClInclude Include="..\..\src\Shapes\Vertex.h" />
     <ClInclude Include="..\..\src\Time\StopWatch.h" />
     <ClInclude Include="..\..\src\Util\Character.h" />
     <ClInclude Include="..\..\src\Util\Color.h" />
