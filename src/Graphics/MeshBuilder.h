@@ -62,17 +62,21 @@ public:
         primitive(primitive)
     {}
 
-    inline void reset(VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
+    inline MeshBuilder<AttrTypes...>& reset(VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
     {
         this->primitive = primitive;
         this->vertices.clear();
+
+        return *this;
     }
 
-    inline void reset(int vertexCount, VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
+    inline MeshBuilder<AttrTypes...>& reset(int vertexCount, VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
     {
         this->primitive = primitive;
         this->vertices.clear();
         this->vertices.reserve(vertexCount);
+
+        return *this;
     }
 	
     inline unsigned int vertexCount()
@@ -89,6 +93,14 @@ public:
     inline void addVertex(const VectorOrAttrTypes&... vectorsOrAttrs)
     {
         this->vertices.push_back(Vertex<AttrTypes...>(vectorsOrAttrs...));
+    }
+
+    inline void positionTransform(const Matrix4& matrix)
+    {
+        for (Vertex<AttrTypes...>& vertex : this->vertices)
+        {
+            vertex.position(Vector3(vertex.position().getData()).transform(matrix));
+        }
     }
 
     // TODO: make this more efficient
@@ -178,7 +190,7 @@ public:
      * @param slices the number of squares on width
      * @param stacks the number of squares on height
      */
-    static std::shared_ptr<Mesh> buildSphere(float radius, int slices, int stacks);
+    MeshBuilder<AttrTypes...>& buildSphere(float radius, int slices, int stacks);
     
 };
 

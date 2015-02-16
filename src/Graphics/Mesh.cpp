@@ -92,7 +92,8 @@ Mesh& Meshes::getBoundingSphereMesh()
         // TODO: use some scalable detail based on the radius
         // TODO: apply a transform for the offset of the bounding sphere to
         //       every vertex of mesh
-        this->boundingSphereMesh = MeshBuilderPTN::buildSphere(
+        MeshBuilderPTN mb;
+        mb.buildSphere(
             this->getBoundingSphere().getRadius(),
             20,
             20
@@ -105,7 +106,9 @@ Mesh& Meshes::getBoundingSphereMesh()
             sphere.getOffset().y(),
             sphere.getOffset().z()
         );
-        this->boundingSphereMesh = this->boundingSphereMesh->applyTransform(moveMatrix);
+        mb.positionTransform(moveMatrix);
+
+        this->boundingSphereMesh = mb.build();
     }
 
     return *this->boundingSphereMesh;

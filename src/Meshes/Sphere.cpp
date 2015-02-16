@@ -35,7 +35,8 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int stacks)
+MeshBuilderPTN& MeshBuilderPTN::buildSphere(
+    float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
     GLfloat dtheta = 2.0f * (GLfloat)(M_PI) / (GLfloat) slices;
@@ -45,7 +46,7 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int 
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    MeshBuilderPTN mb(slices * stacks * 6);
+    this->vertices.reserve(slices * stacks * 6);
     
 	for (i = 0; i < stacks; i++) 
 	{
@@ -126,7 +127,7 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int 
 		
 			for (int k=0; k < 3; k++)
 			{
-                mb.addVertex(
+                this->addVertex(
                     PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
                     TexCoordAttr(vTexture[k][0], vTexture[k][1]),
                     NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
@@ -144,7 +145,7 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int 
 					
 			for (int k=0; k < 3; k++)
 			{
-                mb.addVertex(
+                this->addVertex(
                     PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
                     TexCoordAttr(vTexture[k][0], vTexture[k][1]),
                     NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
@@ -154,9 +155,9 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int 
         t -= dt;
 	}
 
-    //mb.calculateNormals();
+    //calculateNormals();
 
-    return mb.build();
+    return *this;
 }	
 	
 	

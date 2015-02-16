@@ -486,8 +486,9 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        sphereBatch = MeshBuilderPTN::buildSphere(20 * FOOT, 55, 32);
-		tinySphereBatch = MeshBuilderPTN::buildSphere(1*FOOT, 4, 4);
+        MeshBuilderPTN mb;
+        sphereBatch = mb.buildSphere(20 * FOOT, 55, 32).build();
+		tinySphereBatch = mb.reset().buildSphere(1*FOOT, 4, 4).build();
         bigSphereBatch = MeshBuilderPTN::buildBox(3, 3, 3);
 		floorBatch = MeshBuilderPTN::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
