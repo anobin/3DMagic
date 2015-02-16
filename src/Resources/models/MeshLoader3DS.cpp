@@ -44,7 +44,10 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
                         mesh->pointL[face->points[j]].pos[1],
                         mesh->pointL[face->points[j]].pos[2]
                     ),
-                    Vector2(0.0f, 0.0f), // TODO: set correct tex coords
+                    Vector2(
+                        mesh->texelL[face->points[j]][0],
+                        mesh->texelL[face->points[j]][1]
+                    ),
                     Vector3(
                         normals[(cur_face*3*3)+(j*3)+0],
                         normals[(cur_face*3*3)+(j*3)+1],

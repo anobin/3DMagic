@@ -649,11 +649,12 @@ public:
         chainBatches = chainBatches->applyTransform(scaleMatrix);
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
-		materialBuilder.setTexture(charTex);
+        materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
+        materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/plastic.normals.tex.xml"));
 		materialBuilder.end();
-		//auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
+		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
 		chainObject = new Object(std::make_shared<Model>(chainBatches, 
-			chainMaterial/*, chainShape*/));
+			chainMaterial, chainShape));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
 
