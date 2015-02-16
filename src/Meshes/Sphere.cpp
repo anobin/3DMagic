@@ -35,7 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-MeshBuilderPTN& MeshBuilderPTN::buildSphere(
+MeshBuilderPTNT& MeshBuilderPTNT::buildSphere(
     float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
@@ -155,7 +155,7 @@ MeshBuilderPTN& MeshBuilderPTN::buildSphere(
         t -= dt;
 	}
 
-    //calculateNormals();
+    this->calculateTangents();
 
     return *this;
 }	

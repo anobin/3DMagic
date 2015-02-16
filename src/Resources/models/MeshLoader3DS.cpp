@@ -18,7 +18,7 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
 	std::shared_ptr<Meshes> meshes = std::make_shared<Meshes>();
 
 	// Loop through all the meshes
-    MeshBuilderPTN bb;
+    MeshBuilderPTNT bb;
 	int i;
 	Lib3dsMesh * mesh;
 	Point3 p;
@@ -57,6 +57,7 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
         delete normals;
 
         bb.calculateNormals();
+        bb.calculateTangents();
         
         // end current mesh
 		meshes->push_back(bb.build());

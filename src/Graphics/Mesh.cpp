@@ -78,7 +78,7 @@ Mesh& Meshes::getBoundingSphereMesh()
         // TODO: use some scalable detail based on the radius
         // TODO: apply a transform for the offset of the bounding sphere to
         //       every vertex of mesh
-        MeshBuilderPTN mb;
+        MeshBuilderPTNT mb;
         mb.buildSphere(
             this->getBoundingSphere().getRadius(),
             20,
@@ -104,7 +104,7 @@ Mesh& Mesh::getVisibleNormals()
 {
     if (this->visibleNormals == nullptr)
     {
-        MeshBuilder<PositionAttr> mb(this->vertexCount*2, VertexArray::Primitives::LINES);
+        MeshBuilder<PositionAttr> mb(this->vertexCount*4, VertexArray::Primitives::LINES);
         for (int i = 0; i < this->vertexCount; i++)
         {
             auto vertex = this->getVertex(i);
@@ -114,6 +114,13 @@ Mesh& Mesh::getVisibleNormals()
                 vertex.position().x() + vertex.normal().x(),
                 vertex.position().y() + vertex.normal().y(),
                 vertex.position().z() + vertex.normal().z()
+            ));
+
+            mb.addVertex(vertex.position());
+            mb.addVertex(Vector3(
+                vertex.position().x() + vertex.tangent().x(),
+                vertex.position().y() + vertex.tangent().y(),
+                vertex.position().z() + vertex.tangent().z()
             ));
         }
 
@@ -126,7 +133,7 @@ Mesh& Mesh::getVisibleNormals()
 
 std::shared_ptr<Mesh> Mesh::applyTransform(const Matrix4& matrix) const
 {
-    MeshBuilderPTN mb(this->vertexCount, this->primitive);
+    MeshBuilderPTNT mb(this->vertexCount, this->primitive);
     for (int j = 0; j < this->getVertexCount(); j++)
     {
         auto vertex = this->getVertex(j);

@@ -35,7 +35,7 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-MeshBuilderPTN& MeshBuilderPTN::buildBox(float width, float height, float depth)
+MeshBuilderPTNT& MeshBuilderPTNT::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;
@@ -49,196 +49,161 @@ MeshBuilderPTN& MeshBuilderPTN::buildBox(float width, float height, float depth)
 	// top, 6 points
     this->addVertex(
         PositionAttr(-width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); // top left
     this->addVertex(
         PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left*/
     this->addVertex(
         PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom right
 	this->addVertex(
         PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, 1.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
     
     // bottom, 6 points
     this->addVertex(
         PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top left
 	this->addVertex(
         PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
 	this->addVertex(
         PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, -1.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom right
 
     // left side, 6 points
     this->addVertex(
         PositionAttr(-width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top left
     this->addVertex(
         PositionAttr(-width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(-width, height, depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(-width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom right
 	this->addVertex(
         PositionAttr(-width, height, depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(-1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
     
     // right side, 6 points
     this->addVertex(
         PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top left
 	this->addVertex(
         PositionAttr(width, height, depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
 	this->addVertex(
         PositionAttr(width, height, depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
 	this->addVertex(
         PositionAttr(width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(1.0f, 0.0f, 0.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom right
 	
 	// front, 6 points
     this->addVertex(
         PositionAttr(-width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top left
     this->addVertex(
         PositionAttr(width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
 	this->addVertex(
         PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom left
 	this->addVertex(
         PositionAttr(width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top right
 	this->addVertex(
         PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, -1.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom right
 	
     // back, 6 points
     this->addVertex(
         PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(0.0f, 0.0f)
     ); //  top left
     this->addVertex(
         PositionAttr(-width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left
     this->addVertex(
         PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
     this->addVertex(
         PositionAttr(-width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(0.0f, 1.0f)
     ); //  bottom left
 	this->addVertex(
         PositionAttr(width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(1.0f, 1.0f)
     ); //  bottom right
     this->addVertex(
         PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 0.0f),
-        NormalAttr(0.0f, 0.0f, 1.0f)
+        TexCoordAttr(1.0f, 0.0f)
     ); //  top right
 	
     this->calculateNormals();
+    this->calculateTangents();
 
     return *this;
 }

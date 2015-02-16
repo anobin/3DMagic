@@ -147,6 +147,46 @@ public:
 };
 
 
+class TangentAttr
+{
+    Vector3 data;
+public:
+
+    static const GpuProgram::AttributeType type = GpuProgram::AttributeType::TANGENT;
+
+    inline TangentAttr() {}
+
+    inline TangentAttr(const Vector3& vec) : data(vec) {}
+
+    inline TangentAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z) {}
+
+    inline void tangent(Scalar x, Scalar y, Scalar z)
+    {
+        data = Vector3(x, y, z);
+    }
+
+    inline void tangent(const Vector3& vec)
+    {
+        data = vec;
+    }
+
+    inline Vector3& tangent()
+    {
+        return data;
+    }
+
+    inline const Vector3& tangent() const
+    {
+        return data;
+    }
+
+    inline const Scalar* getData() const
+    {
+        return this->data.getData();
+    }
+};
+
+
 
 template<typename... AttributeTypes> class Vertex {};
 
@@ -177,6 +217,7 @@ Vertex<AttributeTypes...> makeVertex(AttributeTypes... types)
 }
 
 typedef Vertex<PositionAttr, TexCoordAttr, NormalAttr> VertexPTN;
+typedef Vertex<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr> VertexPTNT;
 
 };
 

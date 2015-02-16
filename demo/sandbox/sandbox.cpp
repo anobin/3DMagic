@@ -486,11 +486,11 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        MeshBuilderPTN mb;
+        MeshBuilderPTNT mb;
         sphereBatch = mb.buildSphere(20 * FOOT, 55, 32).build();
 		tinySphereBatch = mb.reset().buildSphere(1*FOOT, 4, 4).build();
         bigSphereBatch = mb.reset().buildBox(3, 3, 3).build();
-		floorBatch = MeshBuilderPTN::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+		floorBatch = MeshBuilderPTNT::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
         boxBatch = mb.reset().buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale).build();

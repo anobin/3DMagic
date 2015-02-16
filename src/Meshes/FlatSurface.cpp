@@ -34,10 +34,10 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-std::shared_ptr<Mesh> MeshBuilderPTN::buildFlatSurface(float width, float height, int slices, 
+std::shared_ptr<Mesh> MeshBuilderPTNT::buildFlatSurface(float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-    MeshBuilder mb(slices*stacks*6);
+    MeshBuilderPTNT mb(slices*stacks*6);
 	
 	float x = -width/2;
 	float z = -height/2;
@@ -114,6 +114,9 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildFlatSurface(float width, float height
 			z += zStep;
 		}	
 	}
+
+    mb.calculateNormals();
+    mb.calculateTangents();
 	
     return mb.build();
 }

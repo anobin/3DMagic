@@ -144,6 +144,66 @@ public:
         }
     }
 
+    inline void calculateTangents()
+    {
+        std::unordered_map<std::string, Vector3> map;
+
+        std::stringstream ss;
+        ss << std::setprecision(2);
+
+        // calculate normals for unique positions
+        for (unsigned int i = 0; i < this->vertices.size(); i += 3)
+        {
+            Vector2 points[] = {
+                this->vertices[i].texCoord(),
+                this->vertices[i + 1].texCoord(),
+                this->vertices[i + 2].texCoord()
+            };
+
+            Vector4 pointsPos[] = {
+                this->vertices[i].position(),
+                this->vertices[i + 1].position(),
+                this->vertices[i + 2].position()
+            };
+
+            Vector4 BA = pointsPos[1] - pointsPos[0];
+            Vector4 CA = pointsPos[2] - pointsPos[0];
+
+            Vector2 tBA = points[1] - points[0];
+            Vector2 tCA = points[2] - points[0];
+            Scalar area = (tBA.x() * tCA.y()) - (tBA.y() * tCA.x());
+
+            Vector3 faceTangent;
+
+            if (area != 0.0f)
+            {
+                Scalar delta = 1.0f / area;
+                faceTangent = Vector3(
+                    delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
+                    delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
+                    delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
+                );
+            }
+
+            for (Vector4 point : pointsPos)
+            {
+                ss.str("");
+                ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
+                map[ss.str()] = map[ss.str()] + faceTangent;
+            }
+        }
+
+        // set calculated normals on vertices
+        for (Vertex<AttrTypes...>& vertex : this->vertices)
+        {
+            Vector4 point = vertex.position();
+            ss.str("");
+            ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
+            vertex.tangent(map[ss.str()].normalize());
+        }
+
+    }
+
     inline Vertex<AttrTypes...>& getVertex(int index)
     {
         return this->vertices[index];
@@ -197,6 +257,7 @@ public:
 };
 
 typedef MeshBuilder<PositionAttr, TexCoordAttr, NormalAttr> MeshBuilderPTN;
+typedef MeshBuilder<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr> MeshBuilderPTNT;
 typedef MeshBuilder<PositionAttr, TexCoordAttr> MeshBuilderPT;
 
 

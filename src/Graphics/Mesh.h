@@ -194,22 +194,30 @@ public:
 	}
 
     // TODO: change to work for all vertex types
-    inline const VertexPTN getVertex(int index) const
+    inline const VertexPTNT getVertex(int index) const
     {
         if (this->attributeCount == 2)
         {
             return VertexPTN(
                 PositionAttr(&this->attributeData[0].data[index * 4]),
-                TexCoordAttr(&this->attributeData[1].data[index * 2]),
-                NormalAttr()
+                TexCoordAttr(&this->attributeData[1].data[index * 2])
             );
         }
-        else
+        else if (this->attributeCount == 3)
         {
             return VertexPTN(
                 PositionAttr(&this->attributeData[0].data[index * 4]),
                 TexCoordAttr(&this->attributeData[1].data[index * 2]),
                 NormalAttr(&this->attributeData[2].data[index * 3])
+            );
+        }
+        else
+        {
+            return VertexPTNT(
+                PositionAttr(&this->attributeData[0].data[index * 4]),
+                TexCoordAttr(&this->attributeData[1].data[index * 2]),
+                NormalAttr(&this->attributeData[2].data[index * 3]),
+                TangentAttr(&this->attributeData[3].data[index * 3])
                 );
         }
     }
