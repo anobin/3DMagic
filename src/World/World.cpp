@@ -315,7 +315,8 @@ void World::renderObjects()
         for (auto mesh : *ob->getModel()->getMeshes())
         {
             renderMesh(*mesh);
-            renderMesh(mesh->getVisibleNormals());
+            if (showNormals)
+                renderMesh(mesh->getVisibleNormals());
         }
     }
     if (material != nullptr)
@@ -344,6 +345,8 @@ void World::renderObjects()
 		for(const std::shared_ptr<Mesh> mesh : *meshes)
 		{   
             renderMesh(*mesh);
+            if (showNormals)
+                renderMesh(mesh->getVisibleNormals());
 		}
         tearDownMaterial(*material, this->wireframeEnabled);
 	} // end of all objects
@@ -355,9 +358,9 @@ void World::renderObjects()
         {
             auto material = it.first;
             setupMaterial(*material, identityMatrix, view, projection, true);
-            for (auto object : *it.second)
+            for (int i = 0; i < it.second->size(); i++)
             {
-                renderMesh(object->getModel()->getMeshes()->getBoundingSphereMesh());
+                renderMesh(it.second->at(i)->getModel()->getMeshes()->getBoundingSphereMesh());
             }
             tearDownMaterial(*material, true);
         }

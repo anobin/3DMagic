@@ -20,6 +20,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_MESH_BUILDER_H
 #define MAGIC3D_MESH_BUILDER_H
 
+#include <sstream>
+#include <iomanip>
+
 #include "../Exceptions/MagicException.h"
 #include <Shaders\GpuProgram.h>
 #include "VertexArray.h"
@@ -31,6 +34,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <vector>
 #include <Shapes\Vertex.h>
+#include <Shapes\Triangle.h>
 
 namespace Magic3D
 {
@@ -85,6 +89,45 @@ public:
     inline void addVertex(const VectorOrAttrTypes&... vectorsOrAttrs)
     {
         this->vertices.push_back(Vertex<AttrTypes...>(vectorsOrAttrs...));
+    }
+
+    // TODO: make this more efficient
+    // TODO: make this only accessible when a normal and a position attribute is included
+    // TODO: limit this to triangle primitive
+    // TODO: switch mesh storage to indexed list to avoid comparison precision
+    inline void calculateNormals()
+    {
+        std::unordered_map<std::string, Vector3> map;
+
+        std::stringstream ss;
+        ss << std::setprecision(2);
+
+        // calculate normals for unique positions
+        for (unsigned int i = 0; i < this->vertices.size(); i += 3)
+        {
+            Vector4 points[] = {
+                this->vertices[i].position(),
+                this->vertices[i + 1].position(),
+                this->vertices[i + 2].position()
+            };
+            Vector3 faceNormal = Triangle(points[0], points[1], points[2]).normal;
+
+            for (Vector4 point : points)
+            {
+                ss.str("");
+                ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
+                map[ss.str()] = map[ss.str()] + faceNormal;
+            }
+        }
+
+        // set calculated normals on vertices
+        for (Vertex<AttrTypes...>& vertex : this->vertices)
+        {
+            Vector4 point = vertex.position();
+            ss.str("");
+            ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
+            vertex.normal(map[ss.str()].normalize());
+        }
     }
 
     inline Vertex<AttrTypes...>& getVertex(int index)

@@ -77,6 +77,8 @@ private:
 
     bool showBoundingSpheres;
 
+    bool showNormals;
+
 	float renderTimeElapsed;
 
     void renderMesh(Mesh& mesh);
@@ -89,7 +91,8 @@ public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
-        light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0) {}
+        light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
+        showNormals(false) {}
     
 	inline void addObject(Object* object)
 	{
@@ -218,6 +221,16 @@ public:
     inline bool getShowBoundingSpheres()
     {
         return this->showBoundingSpheres;
+    }
+
+    inline void setShowNormals(bool show)
+    {
+        this->showNormals = show;
+    }
+
+    inline bool isShowNormals()
+    {
+        return this->showNormals;
     }
 
     inline Camera& getCamera()

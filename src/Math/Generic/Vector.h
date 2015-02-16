@@ -20,6 +20,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_VECTOR_GENERIC_H
 #define MAGIC3D_VECTOR_GENERIC_H
 
+#include <functional>
+
 // for Scalar
 #include "MathTypes.h"
 
@@ -144,6 +146,15 @@ public:
 	inline Vector<4> withW(Scalar w) const { return with(3, w); }
 
     Vector<4> transform(const Matrix4& m) const;
+
+    inline operator Vector3() const
+    {
+        return Vector3(
+            x() / w(),
+            y() / w(),
+            z() / w()
+        );
+    }
 };
 typedef Vector<4> Vector4;
 

@@ -55,6 +55,8 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
         }
 
         delete normals;
+
+        bb.calculateNormals();
         
         // end current mesh
 		meshes->push_back(bb.build());

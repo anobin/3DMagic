@@ -153,6 +153,9 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildSphere(float radius, int slices, int 
 		}
         t -= dt;
 	}
+
+    //mb.calculateNormals();
+
     return mb.build();
 }	
 	

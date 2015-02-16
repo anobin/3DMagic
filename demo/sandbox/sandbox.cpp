@@ -289,6 +289,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		    world.setWireFrame(wireframe);
             break;
 
+        case 'n':
+            world.setShowNormals(!world.isShowNormals());
+            break;
+
         case 'b':
             world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
             break;
@@ -470,7 +474,7 @@ public:
 			font->setChar(c);
 		}
 
-		charImage.clear(Color(Color::PINK.getRed(), Color::PINK.getGreen(), Color::PINK.getBlue(), 125));
+		charImage.clear(Color(Color::PINK.getRed(), Color::PINK.getGreen(), Color::PINK.getBlue(), 255));
 		//charImage.copyIn(font->getChar('Q').getBitmap().bitmap);
 		charImage.drawAsciiText(*font, "Hola!", 10, 10, Color(255, 0, 0, 255));
 		charTex = std::make_shared<Texture>(charImage);
@@ -482,7 +486,7 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        sphereBatch = MeshBuilderPTN::buildSphere(2 * FOOT, 55, 32);
+        sphereBatch = MeshBuilderPTN::buildSphere(20 * FOOT, 55, 32);
 		tinySphereBatch = MeshBuilderPTN::buildSphere(1*FOOT, 4, 4);
         bigSphereBatch = MeshBuilderPTN::buildBox(3, 3, 3);
 		floorBatch = MeshBuilderPTN::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
@@ -495,7 +499,7 @@ public:
 		materialBuilder.begin(sphereMaterial.get());
 		materialBuilder.setGpuProgram(shader);
 		materialBuilder.setTexture(charTex);
-		materialBuilder.setTransparentFlag(true);
+		//materialBuilder.setTransparentFlag(true);
 		materialBuilder.end();
 
 		tinySphereMaterial = std::make_shared<Material>();
@@ -507,7 +511,7 @@ public:
 		bigSphereMaterial = std::make_shared<Material>();
 		materialBuilder.expand(bigSphereMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
-		materialBuilder.setTransparentFlag(true);
+		//materialBuilder.setTransparentFlag(true);
 		materialBuilder.end();
 
 		floorMaterial = std::make_shared<Material>();
@@ -569,7 +573,7 @@ public:
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
-		float wallWidth =40;
+		/*float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -591,7 +595,7 @@ public:
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}
+		}*/
 
 
         std::minstd_rand0 randGen(

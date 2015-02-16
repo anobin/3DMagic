@@ -42,204 +42,205 @@ std::shared_ptr<Mesh> MeshBuilderPTN::buildBox(float width, float height, float 
 	height = height/2;
 	depth = depth/2;
 
-    std::vector<VertexPTN> vertices;
-    vertices.reserve(36);
+    MeshBuilderPTN mb(36);
 
 	// 6 points per side, 6 sides
 		
 	// top, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); // top left
-    vertices.push_back(makeVertex(
+    ); // top left
+    mb.addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); //  bottom left*/
-    vertices.push_back(makeVertex(
+    ); //  bottom left*/
+    mb.addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); //  bottom right
-	vertices.push_back(makeVertex(
+    ); //  bottom right
+	mb.addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
-    )); //  top right
+    ); //  top right
     
     // bottom, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  top left
-	vertices.push_back(makeVertex(
+    ); //  top left
+	mb.addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  bottom left
-	vertices.push_back(makeVertex(
+    ); //  bottom left
+	mb.addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
-    )); //  bottom right
+    ); //  bottom right
 
     // left side, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  top left
-    vertices.push_back(makeVertex(
+    ); //  top left
+    mb.addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  bottom right
-	vertices.push_back(makeVertex(
+    ); //  bottom right
+	mb.addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
-    )); //  top right
+    ); //  top right
     
     // right side, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  top left
-	vertices.push_back(makeVertex(
+    ); //  top left
+	mb.addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  bottom left
-	vertices.push_back(makeVertex(
+    ); //  bottom left
+	mb.addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  top right
-	vertices.push_back(makeVertex(
+    ); //  top right
+	mb.addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
-    )); //  bottom right
+    ); //  bottom right
 	
 	// front, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  top left
-    vertices.push_back(makeVertex(
+    ); //  top left
+    mb.addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  top right
-	vertices.push_back(makeVertex(
+    ); //  top right
+	mb.addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  bottom left
-	vertices.push_back(makeVertex(
+    ); //  bottom left
+	mb.addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  top right
-	vertices.push_back(makeVertex(
+    ); //  top right
+	mb.addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
-    )); //  bottom right
+    ); //  bottom right
 	
     // back, 6 points
-    vertices.push_back(makeVertex(
+    mb.addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  top left
-    vertices.push_back(makeVertex(
+    ); //  top left
+    mb.addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  bottom left
-    vertices.push_back(makeVertex(
+    ); //  bottom left
+    mb.addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  top right
-    vertices.push_back(makeVertex(
+    ); //  top right
+    mb.addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  bottom left
-	vertices.push_back(makeVertex(
+    ); //  bottom left
+	mb.addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  bottom right
-    vertices.push_back(makeVertex(
+    ); //  bottom right
+    mb.addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
-    )); //  top right
+    ); //  top right
 	
-    return std::make_shared<Mesh>(vertices, VertexArray::Primitives::TRIANGLES);
+    mb.calculateNormals();
+
+    return mb.build();
 }
 	
 	
