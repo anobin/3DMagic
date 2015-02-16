@@ -3,4 +3,5 @@
 	<!--<gpuProgram ref="shaders/HemisphereTex.gpu.xml" />-->
 	<gpuProgram ref="shaders/Full/Full.gpu.xml" />
 	<texture ref="textures/singleBrick.tex.xml" />
+	<normalMap ref="textures/singleBrick.normals.tex.xml" />
 </Material>

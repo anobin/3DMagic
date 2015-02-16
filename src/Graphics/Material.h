@@ -54,6 +54,8 @@ protected:
     std::shared_ptr<Texture> textures[8];
     
     float depthBufferLie;
+
+    std::shared_ptr<Texture> normalMap;
     
     inline void allocate()
     {

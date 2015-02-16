@@ -1,7 +1,12 @@
 #version 120
 
+precision highp float;
+
 // diffuse texture map
 uniform sampler2D textureMap;
+
+uniform sampler2D normalMap;
+uniform float normalMapping = 0;
 
 // specular color
 uniform vec3 specularColor = vec3(0.7, 0.7, 0.7);
@@ -16,14 +21,30 @@ uniform float ambientFactor = 0.1;
 varying vec3 vNormal;       // normal in view space
 varying vec2 vTexCoord;     // texture coord
 varying vec3 vViewDir;      // vector from vertex to camera (in view space)
-varying vec3 vLightDir;     // vector from vertex to light (in view space) 
+varying vec3 vViewDirN;      // vector from vertex to camera for normal map (in view space)
+varying vec3 vLightDir;     // vector from vertex to light (in view space)
+varying vec3 vLightDirN;     // vector from vertex to light for normal map (in view space)
 varying float vLightFactor; // factor of light intensity (based on attenuation)
 
 void main(void)
 {
-    vec3 N = normalize(vNormal);
-    vec3 L = normalize(vLightDir);
-    vec3 V = normalize(vViewDir);
+    vec3 N, L, V;
+    
+    if (normalMapping != 0)
+    {
+        N = normalize(texture2D(normalMap, vTexCoord).rgb * 2.0 - vec3(1.0));
+        L = normalize(vLightDirN);
+        V = normalize(vViewDirN); 
+    }
+    else
+    {
+        N = normalize(vNormal);
+        L = normalize(vLightDir);
+        V = normalize(vViewDir); 
+    }
+    
+    
+    
     
     vec3 H = normalize(L + V);
     

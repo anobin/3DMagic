@@ -79,6 +79,8 @@ private:
 
     bool showNormals;
 
+    bool useNormalMaps;
+
 	float renderTimeElapsed;
 
     void renderMesh(Mesh& mesh);
@@ -92,7 +94,7 @@ public:
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
-        showNormals(false) {}
+        showNormals(false), useNormalMaps(true) {}
     
 	inline void addObject(Object* object)
 	{
@@ -231,6 +233,15 @@ public:
     inline bool isShowNormals()
     {
         return this->showNormals;
+    }
+
+    inline void setUseNormalMaps(bool use)
+    {
+        this->useNormalMaps = use;
+    }
+    inline bool isUseNormalMaps()
+    {
+        return this->useNormalMaps;
     }
 
     inline Camera& getCamera()

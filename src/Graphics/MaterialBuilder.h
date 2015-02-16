@@ -83,6 +83,11 @@ public:
         MAGIC_THROW(material == NULL, "Tried to modify material without calling begin().");
         material->depthBufferLie = lie;
     }
+
+    inline void setNormalMap(std::shared_ptr<Texture> tex)
+    {
+        material->normalMap = tex;
+    }
     
     void end();
     

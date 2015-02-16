@@ -302,6 +302,7 @@ class GpuProgramParser
 		uniformMap.insert(std::make_pair("TEXTURE0", GpuProgram::AutoUniformType::TEXTURE0));
 		uniformMap.insert(std::make_pair("LIGHT_LOCATION", GpuProgram::AutoUniformType::LIGHT_LOCATION));
 		uniformMap.insert(std::make_pair("FLAT_PROJECTION", GpuProgram::AutoUniformType::FLAT_PROJECTION));
+        uniformMap.insert(std::make_pair("NORMAL_MAP", GpuProgram::AutoUniformType::NORMAL_MAP));
 
 	}
 
@@ -409,11 +410,19 @@ inline std::shared_ptr<Material> ResourceManager::_get<Material>(const std::stri
 	auto textureRef = programNode->FirstChildElement("texture")->Attribute("ref");
 	auto texture = this->get<Texture>(textureRef);
 
+    auto normalMapNode = programNode->FirstChildElement("normalMap");
+    std::shared_ptr<Texture> normalMap = nullptr;
+    if (normalMapNode != nullptr)
+    {
+        normalMap = this->get<Texture>(normalMapNode->Attribute("ref"));
+    }
+
 	auto material = std::make_shared<Material>();
 	MaterialBuilder builder;
 	builder.begin(material.get());
 	builder.setGpuProgram(gpuProgram);
 	builder.setTexture(texture);
+    builder.setNormalMap(normalMap);
 	builder.end();
 
 	return material;

@@ -26,6 +26,7 @@
 
 ## fix
 - fix resource exists method to actually check if file exists
+- fix tangent calculation, seems to have some issues; look at the twisting specular highlight when normal mapping
 
 ## Primary
 - integrate lua script support 

@@ -4,11 +4,12 @@
 attribute vec4 inputPosition;   // vertex position in model space
 attribute vec3 inputNormal;     // vertex normal in model space
 attribute vec2 inputTexCoord;   // texture coordinate for vertex
+attribute vec3 inputTangent;    // vertex tangent in model space
 
 // light position in world space
 uniform vec3 lightPosition;
 // light attenuation distance, linear falloff assumed
-uniform float lightAttenDistance = 0.0;
+uniform float lightAttenDistance = 100.0;
 
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
 uniform mat4   mvMatrix;    // transforms from model space to view space
@@ -19,7 +20,9 @@ uniform mat4   mMatrix;     // transforms from model space to world space
 varying vec3 vNormal;       // normal in view space
 varying vec2 vTexCoord;     // texture coord
 varying vec3 vViewDir;      // vector from vertex to camera (in view space)
-varying vec3 vLightDir;     // vector from vertex to light (in view space) 
+varying vec3 vViewDirN;      // vector from vertex to camera for normal map (in view space)
+varying vec3 vLightDir;     // vector from vertex to light (in view space)
+varying vec3 vLightDirN;     // vector from vertex to light for normal map (in view space)
 varying float vLightFactor; // factor of light intensity (based on attenuation)
 
 float calculateLightAttenFactor()
@@ -45,13 +48,21 @@ void main(void)
     
     // Get surface normal in view space and pass along
     vNormal = mat3(mvMatrix) * inputNormal;
+    
+    vec3 N = normalize(vNormal);
+    vec3 T = normalize(mat3(mvMatrix) * inputTangent);
+    vec3 B = cross(N, T);
      
     vec4 lightPosition_viewSpace = vMatrix * vec4(lightPosition, 1.0);
-    vLightDir = lightPosition_viewSpace.xyz - position.xyz;
+    vec3 L = lightPosition_viewSpace.xyz - position.xyz;
+    vLightDir = L;
+    vLightDirN = normalize(vec3(dot(L,T), dot(L,B), dot(L,N)));
       
     vLightFactor = calculateLightAttenFactor();
     
-    vViewDir = -position.xyz;
+    vec3 V = -position.xyz;
+    vViewDir = V;
+    vViewDirN = normalize(vec3(dot(V,T), dot(V,B), dot(V,N)));
     
     // pass along texture coordinate
     vTexCoord = inputTexCoord;

@@ -15,6 +15,10 @@
 		<name>inputTexCoord</name>
 		<type>TEX_COORD_0</type>
 	</attribute>
+	<attribute>
+		<name>inputTangent</name>
+		<type>TANGENT</type>
+	</attribute>
 	
 	<uniform>
 		<name>mvMatrix</name>
@@ -31,6 +35,10 @@
 	<uniform>
 		<name>mvpMatrix</name>
 		<value ref="MODEL_VIEW_PROJECTION_MATRIX" />
+	</uniform>
+	<uniform>
+		<name>normalMap</name>
+		<value ref="NORMAL_MAP" />
 	</uniform>
 	<uniform>
 		<name>textureMap</name>

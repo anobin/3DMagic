@@ -293,6 +293,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.setShowNormals(!world.isShowNormals());
             break;
 
+        case 'm':
+            world.setUseNormalMaps(!world.isUseNormalMaps());
+            break;
+
         case 'b':
             world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
             break;
@@ -505,8 +509,9 @@ public:
 
 		tinySphereMaterial = std::make_shared<Material>();
 		materialBuilder.expand(tinySphereMaterial.get(), *sphereMaterial);
-		materialBuilder.setTexture(blueTex);
+        materialBuilder.setTexture(resourceManager.get<Texture>("textures/bricks.tex.xml"));
 		materialBuilder.setTransparentFlag(false);
+        materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/bricks.normals.tex.xml"));
 		materialBuilder.end();
 
 		bigSphereMaterial = std::make_shared<Material>();
@@ -519,6 +524,7 @@ public:
 		materialBuilder.expand(floorMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(stoneTex);
 		materialBuilder.setTransparentFlag(false);
+        materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/bareConcrete.normals.tex.xml"));
 		materialBuilder.end();
 
 		auto brickMaterial = resourceManager.get<Material>("materials/Brick.xml");
@@ -574,7 +580,7 @@ public:
 
 		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
 
-		/*float wallWidth =40;
+		float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -596,7 +602,7 @@ public:
 				btBox->setLocation( Point3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}*/
+		}
 
 
         std::minstd_rand0 randGen(

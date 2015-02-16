@@ -99,6 +99,7 @@ public:
         TEXTURE7,                       // sampler2D
         LIGHT_LOCATION,                 // vec3
 		FLAT_PROJECTION,				// mat4
+        NORMAL_MAP,                     // sampler2D
         MAX_AUTO_UNIFORM_TYPE
     };
 
@@ -310,12 +311,13 @@ public:
             throw_MagicException("Could not bind matrix uniform for shader");    
     }
     
-    inline void setTexture( const char* name, Texture* tex)
+    inline void setTexture( const char* name, Texture* tex, int index)
     {
+        glActiveTexture(GL_TEXTURE0 + index);
         tex->bind();
         GLint id = glGetUniformLocation(this->programId, name);
         MAGIC_THROW( id < 0, "Tried to set a uniform that is not present in shader." );
-        glUniform1i( id, 0 );
+        glUniform1i( id, index );
     
         if (glGetError() != GL_NO_ERROR)
             throw_MagicException("Could not bind texture uniform for shader");
