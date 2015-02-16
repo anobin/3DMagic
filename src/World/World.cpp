@@ -121,7 +121,10 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
         case GpuProgram::TEXTURE0:                       // sampler2D
             MAGIC_THROW(material.textures[0] == NULL, "Material has auto-bound "
                 "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[0].get(), 0);
+            if (this->useTextures)
+                gpuProgram->setTexture(u.varName.c_str(), material.textures[0].get(), 0);
+            else
+                gpuProgram->setTexture(u.varName.c_str(), fallbackTexture.get(), 0);
             break;
         case GpuProgram::TEXTURE1:                       // sampler2D
             MAGIC_THROW(material.textures[1] == NULL, "Material has auto-bound "

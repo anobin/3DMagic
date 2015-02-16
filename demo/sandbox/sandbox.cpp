@@ -297,6 +297,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.setUseNormalMaps(!world.isUseNormalMaps());
             break;
 
+        case 't':
+            world.setUseTextures(!world.isUseTextures());
+            break;
+
         case 'b':
             world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
             break;

@@ -81,7 +81,11 @@ private:
 
     bool useNormalMaps;
 
+    bool useTextures;
+
 	float renderTimeElapsed;
+
+    std::shared_ptr<Texture> fallbackTexture;
 
     void renderMesh(Mesh& mesh);
 
@@ -94,7 +98,12 @@ public:
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
-        showNormals(false), useNormalMaps(true) {}
+        showNormals(false), useNormalMaps(true), useTextures(true) 
+    {
+        Image fallbackImage(1, 1, 4, Color::WHITE);
+        fallbackTexture = std::make_shared<Texture>(fallbackImage);
+        fallbackTexture->setWrapMode(Texture::CLAMP_TO_EDGE);
+    }
     
 	inline void addObject(Object* object)
 	{
@@ -242,6 +251,15 @@ public:
     inline bool isUseNormalMaps()
     {
         return this->useNormalMaps;
+    }
+
+    inline void setUseTextures(bool use)
+    {
+        this->useTextures = use;
+    }
+    inline bool isUseTextures()
+    {
+        return this->useTextures;
     }
 
     inline Camera& getCamera()
