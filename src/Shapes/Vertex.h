@@ -9,29 +9,35 @@
 namespace Magic3D
 {
 
-class _PositionAttr
+class PositionAttr
 {
-    Scalar* data;
+    Vector4 data;
 public:
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::VERTEX;
 
-    inline _PositionAttr(Scalar* data) : data(data) {}
+    inline PositionAttr() {}
+
+    inline PositionAttr(const Scalar* data) : data(data) {}
+
+    inline PositionAttr(const Vector3& vec) : data(vec) {}
+
+    inline PositionAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z, 1.0f) {}
+
+    inline PositionAttr(const Vector4& vec) : data(vec) {}
+
+    inline PositionAttr(Scalar x, Scalar y, Scalar z, Scalar w) : data(x, y, z, w) {}
+
+    inline PositionAttr(const PositionAttr& attr) : data(attr.data) {}
 
     inline void position(Scalar x, Scalar y, Scalar z)
     {
-        data[0] = x;
-        data[1] = y;
-        data[2] = z;
-        data[3] = 1.0f;
+        this->position(x, y, z, 1.0f);
     }
 
     inline void position(Scalar x, Scalar y, Scalar z, Scalar w)
     {
-        data[0] = x;
-        data[1] = y;
-        data[2] = z;
-        data[3] = w;
+        this->data = Vector4(x, y, z, w);
     }
 
     inline void position(const Vector4& vec)
@@ -44,34 +50,20 @@ public:
         this->position(vec.x(), vec.y(), vec.z());
     }
 
-    inline const Vector4 position()
+    inline Vector4& position()
     {
-        return Vector4(this->data);
+        return this->data;
+    }
+
+    inline const Vector4& position() const
+    {
+        return this->data;
     }
 
     inline const Scalar* getData() const
     {
-        return this->data;
+        return this->data.getData();
     }
-};
-
-class PositionAttr : public _PositionAttr
-{
-    Vector4 data;
-public:
-    static const GpuProgram::AttributeType type = GpuProgram::AttributeType::VERTEX;
-
-    inline PositionAttr() : _PositionAttr(data.getData()){}
-
-    inline PositionAttr(Vector3 vec) : _PositionAttr(data.getData()), data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z) : _PositionAttr(data.getData()), data(x, y, z, 1.0f) {}
-
-    inline PositionAttr(Vector4 vec) : _PositionAttr(data.getData()), data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z, Scalar w) : _PositionAttr(data.getData()), data(x, y, z, w) {}
-
-    inline PositionAttr(const PositionAttr& attr) : _PositionAttr(data.getData()), data(attr.data) {}
 };
 
 
@@ -99,6 +91,11 @@ public:
     }
 
     inline Vector2& texCoord()
+    {
+        return data;
+    }
+
+    inline const Vector2& texCoord() const
     {
         return data;
     }
@@ -133,7 +130,12 @@ public:
         data = vec;
     }
 
-    inline const Vector3& normal()
+    inline Vector3& normal()
+    {
+        return data;
+    }
+
+    inline const Vector3& normal() const
     {
         return data;
     }

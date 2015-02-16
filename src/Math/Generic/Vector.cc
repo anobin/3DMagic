@@ -43,3 +43,18 @@ Vector<3> Vector<3>::rotate(const Matrix3& m) const
     v.data[2] = m.get(0,2) * x() + m.get(1,2) * y() + m.get(2,2) * z();
 	return v;
 }
+
+Vector<4> Vector<4>::transform(const Matrix4 &m) const
+{
+    Vector<4> ret;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            ret.data[i] += m.get(i, j) * this->data[j];
+        }
+    }
+
+    return ret;
+}

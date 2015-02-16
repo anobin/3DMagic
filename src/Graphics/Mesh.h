@@ -193,16 +193,37 @@ public:
 	    return vertexCount;
 	}
 
+    // TODO: change to work for all vertex types
+    inline const VertexPTN getVertex(int index) const
+    {
+        if (this->attributeCount == 2)
+        {
+            return VertexPTN(
+                PositionAttr(&this->attributeData[0].data[index * 4]),
+                TexCoordAttr(&this->attributeData[1].data[index * 2]),
+                NormalAttr()
+            );
+        }
+        else
+        {
+            return VertexPTN(
+                PositionAttr(&this->attributeData[0].data[index * 4]),
+                TexCoordAttr(&this->attributeData[1].data[index * 2]),
+                NormalAttr(&this->attributeData[2].data[index * 3])
+                );
+        }
+    }
+
 	inline VertexArray::Primitives getPrimitive() const
 	{
 		return this->primitive;
 	}
 
-    //Mesh& getVisibleNormals();
+    Mesh& getVisibleNormals();
 
 	const VertexArray& getVertexArray();
 
-    //void applyTransform(const Matrix4& matrix);
+    std::shared_ptr<Mesh> applyTransform(const Matrix4& matrix) const;
 	
 };
 
@@ -222,16 +243,18 @@ public:
 		this->push_back(mesh);
 	}
 
-    //const SphereCollisionShape& getBoundingSphere();
+    const SphereCollisionShape& getBoundingSphere();
 
     // used for debugging and developer tools
-    //Mesh& getBoundingSphereMesh();
+    Mesh& getBoundingSphereMesh();
 
-    /*inline void applyTransform(const Matrix4& matrix)
+    inline std::shared_ptr<Meshes> applyTransform(const Matrix4& matrix) const
     {
+        auto meshes = std::make_shared<Meshes>();
         for (auto mesh : *this)
-            mesh->applyTransform(matrix);
-    }*/
+            meshes->push_back(mesh->applyTransform(matrix));
+        return meshes;
+    }
 };
 
 

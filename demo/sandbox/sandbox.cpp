@@ -599,7 +599,7 @@ public:
         );
 
         // arrange some trees as static scenery
-        /*auto baseTreeMesh = batchBuilder.buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
+        auto baseTreeMesh = MeshBuilderPTN::buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 4000; i++)
         {
@@ -610,8 +610,7 @@ public:
                 (double(randGen()) / randGen.max()) * maxSize - maxSize/2
             );
 
-            auto treeMesh = std::make_shared<Mesh>(*baseTreeMesh);
-            treeMesh->applyTransform(matrix);
+            auto treeMesh = baseTreeMesh->applyTransform(matrix);
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(std::make_shared<Meshes>(treeMesh));
@@ -619,7 +618,7 @@ public:
 
             auto ob = std::make_shared<Object>(treeModel);
             world->addStaticObject(ob);
-        }*/
+        }
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);
@@ -631,13 +630,13 @@ public:
 		std::shared_ptr<Meshes> chainBatches = resourceManager.get<Meshes>("models/chainLink.3ds");
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
-		//chainBatches->applyTransform(scaleMatrix);
+        chainBatches = chainBatches->applyTransform(scaleMatrix);
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(charTex);
 		materialBuilder.end();
 		//auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
-		chainObject = new Object(std::make_shared<Model>(std::make_shared<Meshes>(*chainBatches), 
+		chainObject = new Object(std::make_shared<Model>(chainBatches, 
 			chainMaterial/*, chainShape*/));
 		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);

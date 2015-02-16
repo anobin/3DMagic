@@ -52,7 +52,7 @@ protected:
 
 public:
     /// default constructor
-    //TriangleMeshCollisionShape(Meshes& batches);
+    TriangleMeshCollisionShape(Meshes& batches);
     
     /// destructor
     virtual ~TriangleMeshCollisionShape();

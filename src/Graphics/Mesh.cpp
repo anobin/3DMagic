@@ -56,27 +56,20 @@ const VertexArray& Mesh::getVertexArray()
 }
 	
 	
-/*void Mesh::applyTransform(const Matrix4& matrix)
+std::shared_ptr<Mesh> Mesh::applyTransform(const Matrix4& matrix) const
 {
-    delete this->vertexArray;
-    this->vertexArray = nullptr;
-
-    MeshBuilder bb;
-    bb.modify(this);
-    float temp[3];
-    bb.setCurrentVertex(0);
+    MeshBuilderPTN mb(this->vertexCount, this->primitive);
     for(int j=0; j < this->getVertexCount(); j++)
     {
-        bb.getVertex3f( &temp[0], &temp[1], &temp[2] );
-        Point3 point(temp);
-        point = point.transform(matrix);
-        bb.vertex3f(point.x(), point.y(), point.z());
+        auto vertex = this->getVertex(j);
+        vertex.position(Vector3(vertex.position().getData()).transform(matrix));
+        mb.addVertex(vertex);
     }
-    bb.end();
-}*/
+    return mb.build();
+}
 	
 	
-/*const SphereCollisionShape& Meshes::getBoundingSphere()
+const SphereCollisionShape& Meshes::getBoundingSphere()
 {
     // lazy init
     if (this->boundingSphere == nullptr)
@@ -86,22 +79,20 @@ const VertexArray& Mesh::getVertexArray()
     }
 
     return (*this->boundingSphere);
-}*/
+}
 	
 
-/*Mesh& Meshes::getBoundingSphereMesh()
+Mesh& Meshes::getBoundingSphereMesh()
 {
     // lazy init
     if (this->boundingSphereMesh == nullptr)
     {
         this->boundingSphereMesh = std::make_shared<Mesh>();
-        MeshBuilder mb;
 
         // TODO: use some scalable detail based on the radius
         // TODO: apply a transform for the offset of the bounding sphere to
         //       every vertex of mesh
-        mb.buildSphere(
-            this->boundingSphereMesh.get(),
+        this->boundingSphereMesh = MeshBuilderPTN::buildSphere(
             this->getBoundingSphere().getRadius(),
             20,
             20
@@ -114,45 +105,34 @@ const VertexArray& Mesh::getVertexArray()
             sphere.getOffset().y(),
             sphere.getOffset().z()
         );
-        this->boundingSphereMesh->applyTransform(moveMatrix);
+        this->boundingSphereMesh = this->boundingSphereMesh->applyTransform(moveMatrix);
     }
 
     return *this->boundingSphereMesh;
-}*/
+}
 
-/*Mesh& Mesh::getVisibleNormals()
+Mesh& Mesh::getVisibleNormals()
 {
     if (this->visibleNormals == nullptr)
     {
-        this->visibleNormals = std::make_shared<Mesh>();
-
-        MeshBuilder mb;
-        mb.begin(this->vertexCount * 2, 1, this->visibleNormals.get(),
-            VertexArray::Primitives::LINES);
-
-        MeshBuilder mr;
-        mr.modify(this);
-
+        MeshBuilder<PositionAttr> mb(this->vertexCount*2, VertexArray::Primitives::LINES);
         for (int i = 0; i < this->vertexCount; i++)
         {
-            Scalar x, y, z;
-            Scalar nx, ny, nz;
+            auto vertex = this->getVertex(i);
 
-            mr.setCurrentVertex(i);
-            mr.getVertex3f(&x, &y, &z);
-            mr.getNormal3f(&nx, &ny, &nz);
-
-            mb.vertex3f(x, y, z);
-            mb.vertex3f(x+nx, y+ny, z+nz);
+            mb.addVertex(vertex.position());
+            mb.addVertex(Vector3(
+                vertex.position().x() + vertex.normal().x(),
+                vertex.position().y() + vertex.normal().y(),
+                vertex.position().z() + vertex.normal().z()
+            ));
         }
 
-        mr.end();
-
-        mb.end();
+        this->visibleNormals = mb.build();
     }
 
     return *this->visibleNormals;
-}*/
+}
 
 	
 };

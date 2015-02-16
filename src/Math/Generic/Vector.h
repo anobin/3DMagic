@@ -142,6 +142,8 @@ public:
 	inline Vector<4> withZ(Scalar z) const { return with(2, z); }
 	inline Scalar w() const { return data[3]; }
 	inline Vector<4> withW(Scalar w) const { return with(3, w); }
+
+    Vector<4> transform(const Matrix4& m) const;
 };
 typedef Vector<4> Vector4;
 

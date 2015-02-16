@@ -30,40 +30,32 @@ namespace Magic3D
 {
     
 /// default constructor
-/*TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
+TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
     shape(NULL)
-{
-    MeshBuilder bb;
-    float temp[3][3];
-    
+{    
     // go through all batches and add all vertices
     // and add triangles to physics mesh
-    for(auto batch : batches)
+    for(auto mesh : batches)
     {
-		bb.modify(batch.get());
-        for(int j=0; j < batch->getVertexCount(); j+=3)
+        for(int j=0; j < mesh->getVertexCount(); j+=3)
         {
             // get three vertices for triangle
-            bb.setCurrentVertex(j);
-            bb.getVertex3f( &temp[0][0], &temp[0][1], &temp[0][2] );
-            bb.setCurrentVertex(j+1);
-            bb.getVertex3f( &temp[1][0], &temp[1][1], &temp[1][2] );
-            bb.setCurrentVertex(j+2);
-            bb.getVertex3f( &temp[2][0], &temp[2][1], &temp[2][2] );
+            auto a = mesh->getVertex(j).position();
+            auto b = mesh->getVertex(j+1).position();
+            auto c = mesh->getVertex(j+2).position();
             
             // add triangle to mesh
-            mesh.addTriangle( btVector3(temp[0][0], temp[0][1], temp[0][2]),
-                btVector3(temp[1][0], temp[1][1], temp[1][2]),
-                btVector3(temp[2][0], temp[2][1], temp[2][2]), true
+            this->mesh.addTriangle( btVector3(a.x(), a.y(), a.z()),
+                btVector3(b.x(), b.y(), b.z()),
+                btVector3(c.x(), c.y(), c.z()), true
             );
         }
-        bb.end();
     }
     
     // build physics shape from mesh data
     this->shape = new btBvhTriangleMeshShape(&mesh, true);
-}*/
-    
+}
+  
 /// destructor
 TriangleMeshCollisionShape::~TriangleMeshCollisionShape()
 {
