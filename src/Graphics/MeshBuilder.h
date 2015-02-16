@@ -95,12 +95,14 @@ public:
         this->vertices.push_back(Vertex<AttrTypes...>(vectorsOrAttrs...));
     }
 
-    inline void positionTransform(const Matrix4& matrix)
+    inline MeshBuilder<AttrTypes...>& positionTransform(const Matrix4& matrix)
     {
         for (Vertex<AttrTypes...>& vertex : this->vertices)
         {
             vertex.position(Vector3(vertex.position().getData()).transform(matrix));
         }
+
+        return *this;
     }
 
     // TODO: make this more efficient
@@ -157,7 +159,7 @@ public:
      * @param height the height of the box
      * @param depth the depth of the box
      */
-	static std::shared_ptr<Mesh> buildBox(float width, float height, float depth);
+    MeshBuilder<AttrTypes...>& buildBox(float width, float height, float depth);
 	
 	/** Build a 2D circle mesh
      * @param x the x coordinate of the center

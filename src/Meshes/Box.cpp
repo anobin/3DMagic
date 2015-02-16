@@ -35,212 +35,212 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-std::shared_ptr<Mesh> MeshBuilderPTN::buildBox(float width, float height, float depth)
+MeshBuilderPTN& MeshBuilderPTN::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;
 	height = height/2;
 	depth = depth/2;
 
-    MeshBuilderPTN mb(36);
+    this->vertices.reserve(36);
 
 	// 6 points per side, 6 sides
 		
 	// top, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); // top left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); //  bottom left*/
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); //  bottom right
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 1.0f, 0.0f)
     ); //  top right
     
     // bottom, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  top left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  bottom left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, -1.0f, 0.0f)
     ); //  bottom right
 
     // left side, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  top left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  bottom right
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(-1.0f, 0.0f, 0.0f)
     ); //  top right
     
     // right side, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  top left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  bottom left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  top right
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(1.0f, 0.0f, 0.0f)
     ); //  bottom right
 	
 	// front, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, -depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  top left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  top right
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, -depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  bottom left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, height, -depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  top right
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, -height, -depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, -1.0f)
     ); //  bottom right
 	
     // back, 6 points
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, height, depth),
         TexCoordAttr(0.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  top left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  bottom left
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  top right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(-width, -height, depth),
         TexCoordAttr(0.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  bottom left
-	mb.addVertex(
+	this->addVertex(
         PositionAttr(width, -height, depth),
         TexCoordAttr(1.0f, 1.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  bottom right
-    mb.addVertex(
+    this->addVertex(
         PositionAttr(width, height, depth),
         TexCoordAttr(1.0f, 0.0f),
         NormalAttr(0.0f, 0.0f, 1.0f)
     ); //  top right
 	
-    mb.calculateNormals();
+    this->calculateNormals();
 
-    return mb.build();
+    return *this;
 }
 	
 	

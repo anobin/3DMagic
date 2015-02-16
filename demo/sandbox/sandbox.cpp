@@ -489,11 +489,11 @@ public:
         MeshBuilderPTN mb;
         sphereBatch = mb.buildSphere(20 * FOOT, 55, 32).build();
 		tinySphereBatch = mb.reset().buildSphere(1*FOOT, 4, 4).build();
-        bigSphereBatch = MeshBuilderPTN::buildBox(3, 3, 3);
+        bigSphereBatch = mb.reset().buildBox(3, 3, 3).build();
 		floorBatch = MeshBuilderPTN::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-        boxBatch = MeshBuilderPTN::buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
+        boxBatch = mb.reset().buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale).build();
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -604,7 +604,7 @@ public:
         );
 
         // arrange some trees as static scenery
-        auto baseTreeMesh = MeshBuilderPTN::buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
+        mb.reset().buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 4000; i++)
         {
@@ -615,7 +615,8 @@ public:
                 (double(randGen()) / randGen.max()) * maxSize - maxSize/2
             );
 
-            auto treeMesh = baseTreeMesh->applyTransform(matrix);
+            auto treeMesh = mb.positionTransform(matrix).build();
+            mb.positionTransform(matrix.inverse());
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(std::make_shared<Meshes>(treeMesh));

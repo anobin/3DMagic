@@ -55,20 +55,6 @@ const VertexArray& Mesh::getVertexArray()
 	return *this->vertexArray;
 }
 	
-	
-std::shared_ptr<Mesh> Mesh::applyTransform(const Matrix4& matrix) const
-{
-    MeshBuilderPTN mb(this->vertexCount, this->primitive);
-    for(int j=0; j < this->getVertexCount(); j++)
-    {
-        auto vertex = this->getVertex(j);
-        vertex.position(Vector3(vertex.position().getData()).transform(matrix));
-        mb.addVertex(vertex);
-    }
-    return mb.build();
-}
-	
-	
 const SphereCollisionShape& Meshes::getBoundingSphere()
 {
     // lazy init
@@ -135,6 +121,19 @@ Mesh& Mesh::getVisibleNormals()
     }
 
     return *this->visibleNormals;
+}
+
+
+std::shared_ptr<Mesh> Mesh::applyTransform(const Matrix4& matrix) const
+{
+    MeshBuilderPTN mb(this->vertexCount, this->primitive);
+    for (int j = 0; j < this->getVertexCount(); j++)
+    {
+        auto vertex = this->getVertex(j);
+        vertex.position(Vector3(vertex.position().getData()).transform(matrix));
+        mb.addVertex(vertex);
+    }
+    return mb.build();
 }
 
 	
