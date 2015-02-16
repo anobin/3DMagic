@@ -104,7 +104,7 @@ Mesh& Mesh::getVisibleNormals()
 {
     if (this->visibleNormals == nullptr)
     {
-        MeshBuilder<PositionAttr> mb(this->vertexCount*4, VertexArray::Primitives::LINES);
+        MeshBuilder<PositionAttr> mb(this->vertexCount*6, VertexArray::Primitives::LINES);
         for (int i = 0; i < this->vertexCount; i++)
         {
             auto vertex = this->getVertex(i);
@@ -121,6 +121,15 @@ Mesh& Mesh::getVisibleNormals()
                 vertex.position().x() + vertex.tangent().x(),
                 vertex.position().y() + vertex.tangent().y(),
                 vertex.position().z() + vertex.tangent().z()
+            ));
+
+            Vector3 biTangent = vertex.normal() * vertex.tangent();
+
+            mb.addVertex(vertex.position());
+            mb.addVertex(Vector3(
+                vertex.position().x() + biTangent.x(),
+                vertex.position().y() + biTangent.y(),
+                vertex.position().z() + biTangent.z()
             ));
         }
 
