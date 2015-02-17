@@ -1,5 +1,7 @@
 #version 120
 
+precision highp float;
+
 // per vertex attributes
 attribute vec4 inputPosition;   // vertex position in model space
 attribute vec3 inputNormal;     // vertex normal in model space
@@ -9,7 +11,8 @@ attribute vec3 inputTangent;    // vertex tangent in model space
 // light position in world space
 uniform vec3 lightPosition;
 // light attenuation distance, linear falloff assumed
-uniform float lightAttenDistance = 100.0;
+uniform float lightMaxDistance = 40.0;
+uniform int lightDecayFunc = 0;
 
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
 uniform mat4   mvMatrix;    // transforms from model space to view space
@@ -27,11 +30,29 @@ varying float vLightFactor; // factor of light intensity (based on attenuation)
 
 float calculateLightAttenFactor()
 {
-    if (lightAttenDistance != 0.0)
+    // light travels forever if atten distance is 0
+    if (lightMaxDistance != 0.0)
     {
         vec4 inputPosition_worldSpace = mMatrix * inputPosition;
-        float factor = 1.0 - (distance(lightPosition.xyz, inputPosition_worldSpace.xyz) 
-            / lightAttenDistance);
+        float distance = distance(lightPosition.xyz, inputPosition_worldSpace.xyz);
+        float factor;
+        
+        if (lightDecayFunc == 1) // None
+        {
+            factor = 1.0;
+            if (distance > lightMaxDistance)
+                factor = 0.0;
+        }
+        else if (lightDecayFunc == 2) // Linear
+        {
+            factor = 1.0 - (distance / lightMaxDistance);
+        }
+        else //if (lightDecayFunc == 0) // Exponential
+        {
+            // exponential decay gets to less than 0.01 at -5
+            factor = exp(-(distance / lightMaxDistance) * 5.0);
+        }
+        
         return max(factor, 0.0);
     }
     else
