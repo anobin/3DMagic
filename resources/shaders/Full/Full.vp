@@ -10,9 +10,6 @@ attribute vec3 inputTangent;    // vertex tangent in model space
 
 // light position in world space
 uniform vec3 lightPosition;
-// light attenuation distance, linear falloff assumed
-uniform float lightMaxDistance = 40.0;
-uniform int lightDecayFunc = 0;
 
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
 uniform mat4   mvMatrix;    // transforms from model space to view space
@@ -27,42 +24,15 @@ varying vec3 vViewDirN;      // vector from vertex to camera for normal map (in 
 varying vec3 vLightDir;     // vector from vertex to light (in view space)
 varying vec3 vLightDirN;     // vector from vertex to light for normal map (in view space)
 varying float vLightFactor; // factor of light intensity (based on attenuation)
-
-float calculateLightAttenFactor()
-{
-    // light travels forever if atten distance is 0
-    if (lightMaxDistance != 0.0)
-    {
-        vec4 inputPosition_worldSpace = mMatrix * inputPosition;
-        float distance = distance(lightPosition.xyz, inputPosition_worldSpace.xyz);
-        float factor;
-        
-        if (lightDecayFunc == 1) // None
-        {
-            factor = 1.0;
-            if (distance > lightMaxDistance)
-                factor = 0.0;
-        }
-        else if (lightDecayFunc == 2) // Linear
-        {
-            factor = 1.0 - (distance / lightMaxDistance);
-        }
-        else //if (lightDecayFunc == 0) // Exponential
-        {
-            // exponential decay gets to less than 0.01 at -5
-            factor = exp(-(distance / lightMaxDistance) * 5.0);
-        }
-        
-        return max(factor, 0.0);
-    }
-    else
-        return 1.0;
-}
+varying vec4 vPositionWorldSpace; // position vector in world space
 
 void main(void) 
 { 
     // set clip space position
     gl_Position = mvpMatrix * inputPosition;
+    
+    // get position in world space and pass along
+    vPositionWorldSpace = mMatrix * inputPosition;
 
     // get position in view space
     vec4 position = mvMatrix * inputPosition;
@@ -78,8 +48,6 @@ void main(void)
     vec3 L = lightPosition_viewSpace.xyz - position.xyz;
     vLightDir = L;
     vLightDirN = normalize(vec3(dot(L,T), dot(L,B), dot(L,N)));
-      
-    vLightFactor = calculateLightAttenFactor();
     
     vec3 V = -position.xyz;
     vViewDir = V;
