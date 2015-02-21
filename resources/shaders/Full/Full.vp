@@ -23,7 +23,6 @@ varying vec3 vViewDir;      // vector from vertex to camera (in view space)
 varying vec3 vViewDirN;      // vector from vertex to camera for normal map (in view space)
 varying vec3 vLightDir;     // vector from vertex to light (in view space)
 varying vec3 vLightDirN;     // vector from vertex to light for normal map (in view space)
-varying float vLightFactor; // factor of light intensity (based on attenuation)
 varying vec4 vPositionWorldSpace; // position vector in world space
 
 void main(void) 

@@ -10,19 +10,16 @@ uniform float normalMapping = 0;
 
 // specular color
 uniform vec3 specularColor = vec3(0.7, 0.7, 0.7);
-// specular power (sharpness of highlight)
+// specular power (sharpness of highlight), shininess
 uniform float specularPower = 128.0;
 
-// ambient color and factor
-//uniform vec3 ambientColor = vec3(0.2, 0.2, 0.2);
+// ambient factor
 uniform float ambientFactor = 0.1;
 
 // light position in world space
 uniform vec3 lightPosition;
-// light max distance
-uniform float lightMaxDistance = 40.0;
-// light decay mode
-uniform int lightDecayFunc = 0;
+uniform float lightAttenuationFactor = 0.1; // higher values make light reach less
+uniform float lightIntensity = 3.0;
 
 // input from previous stage
 varying vec3 vNormal;       // normal in view space
@@ -35,32 +32,8 @@ varying vec4 vPositionWorldSpace; // position vector in world space
 
 float calculateLightAttenFactor()
 {
-    // light travels forever if atten distance is 0
-    if (lightMaxDistance != 0.0)
-    {
-        float distance = distance(lightPosition.xyz, vPositionWorldSpace.xyz);
-        float factor;
-        
-        if (lightDecayFunc == 1) // None
-        {
-            factor = 1.0;
-            if (distance > lightMaxDistance)
-                factor = 0.0;
-        }
-        else if (lightDecayFunc == 2) // Linear
-        {
-            factor = 1.0 - (distance / lightMaxDistance);
-        }
-        else //if (lightDecayFunc == 0) // Exponential
-        {
-            // exponential decay gets to less than 0.01 at -5
-            factor = exp(-(distance / lightMaxDistance) * 5.0);
-        }
-        
-        return max(factor, 0.0);
-    }
-    else
-        return 1.0;
+    float distance = distance(lightPosition.xyz, vPositionWorldSpace.xyz);
+    return 1.0 / (1.0 + lightAttenuationFactor * pow(distance,2));
 }
 
 void main(void)
@@ -81,7 +54,7 @@ void main(void)
     }
     
     
-    float lightFactor = calculateLightAttenFactor();
+    float lightFactor = calculateLightAttenFactor() * lightIntensity;
     
     vec3 H = normalize(L + V);
     
