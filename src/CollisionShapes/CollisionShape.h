@@ -27,7 +27,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <Math/Vector.h>
-#include <Math/Point.h>
 
 // include bullet physics
 #include <btBulletDynamicsCommon.h>
@@ -56,17 +55,17 @@ protected:
     /// get the bullet physics collison shape
     virtual btCollisionShape* getShape() = 0;
 
-	Point3 offset;
+	Vector3 offset;
 
 	/// constructor specifying an offset in local space, defaults to origin
-	inline CollisionShape(Point3 offset = Point3()): offset(offset) {}
+	inline CollisionShape(Vector3 offset = Vector3()): offset(offset) {}
 
 public:
     
     /// destructor
     virtual ~CollisionShape();
 
-    inline const Point3& getOffset()
+    inline const Vector3& getOffset()
     {
         return this->offset;
     }

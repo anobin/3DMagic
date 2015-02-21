@@ -38,7 +38,7 @@ std::shared_ptr<SphereCollisionShape> CollisionShape::getBoundingSphere()
     this->getShape()->getBoundingSphere(bt_center, bt_radius);
     
     return std::make_shared<SphereCollisionShape>((Scalar)bt_radius,
-        Point3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
+        Vector3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
 }
     
     

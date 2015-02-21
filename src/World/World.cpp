@@ -75,7 +75,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
     Matrix4 temp4m;
     Matrix4 temp4m2;
     Matrix3 temp3m;
-    Point3 tempp3;
+    Vector3 tempp3;
     for (unsigned int i = 0; i < gpuProgram->autoUniforms.size(); i++)
     {
         GpuProgram::AutoUniform& u = *gpuProgram->autoUniforms[i];
@@ -284,7 +284,7 @@ void World::renderObjects()
         }
     }
 
-	Point3 loc = camera->getPosition().getLocation();
+	Vector3 loc = camera->getPosition().getLocation();
 	std::sort(sortedObjects.begin(), sortedObjects.end(), [&](Object* a, Object* b) -> bool {
 		auto aTrans = a->getModel()->getMaterial()->transparent;
 		auto bTrans = b->getModel()->getMaterial()->transparent;
@@ -370,7 +370,7 @@ void World::renderObjects()
         {
             auto material = it.first;
             setupMaterial(*material, identityMatrix, view, projection, true);
-            for (int i = 0; i < it.second->size(); i++)
+            for (unsigned int i = 0; i < it.second->size(); i++)
             {
                 renderMesh(it.second->at(i)->getModel()->getMeshes()->getBoundingSphereMesh());
             }

@@ -30,7 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 void Position::getTransformMatrix(Matrix4& out) const
 {
     // get local x axis
-    Vector3 xAxis = up.crossProduct(forward);
+    Vector3 xAxis = up * forward;
 
     // fill in x axis, first column
     out.set(0,0,xAxis.x());
@@ -61,7 +61,7 @@ void Position::getTransformMatrix(Matrix4& out) const
 void Position::getRotationMatrix(Matrix3& out) const
 {
     // get local x axis
-    Vector3 xAxis = up.crossProduct(forward);
+    Vector3 xAxis = up * forward;
 
     // fill in x axis, first column
     out.set(0,0,xAxis.x());
@@ -86,7 +86,7 @@ void Position::getCameraMatrix(Matrix4& out) const
     Vector3 z(-forward.x(), -forward.y(), -forward.z());
 
     // get x vector
-    Vector3 x = up.crossProduct(z);
+    Vector3 x = up * z;
 
     // matrix is transposed (rows instead of columns)
     #define MAGIC3D_A(row,col,value)  out.set(col,row,value)
@@ -146,10 +146,10 @@ void Position::normalize()
     // we normalize in reference to the forward vector
     
     // get x axis
-    Vector3 cross = forward.crossProduct(up);
+    Vector3 cross = forward * up;
     
     // recalculate up vector
-    up = cross.crossProduct(forward);
+    up = cross * forward;
     
     // normalize both vectors too
     up = up.normalize();

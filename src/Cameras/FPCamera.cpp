@@ -70,7 +70,7 @@ const Position& FPCamera::getPosition() const
 }
     
 
-void FPCamera::lookat( const Point3& point )
+void FPCamera::lookat( const Vector3& point )
 {
     // Three conditions for first-person view:
     // 1) up.y is always positive, we don't stand on our head
@@ -78,7 +78,7 @@ void FPCamera::lookat( const Point3& point )
     // 3) facing.y is always 0, we only face in the xz plane
     
     // get references
-    const Point3& location = position.getLocation();
+    const Vector3& location = position.getLocation();
     Vector3 wUp(0,1,0);
     
     // calc new forward from location and point to look at
@@ -91,13 +91,13 @@ void FPCamera::lookat( const Point3& point )
     
     // calc cross vector from forward and world up vectors
     // this ensures that cross.y is 0
-	Vector3 cross = wUp.crossProduct(forward).normalize();
+	Vector3 cross = (wUp * forward).normalize();
     
     // calc new local up vector, now that the other two vectors are good
-    Vector3 up = forward.crossProduct(cross);
+    Vector3 up = forward * cross;
     
     // use world up and our cross vector to calculate facing
-    this->facing = cross.crossProduct(wUp);
+    this->facing = cross * wUp;
 
 	this->position = Position(location, forward, up);
 }

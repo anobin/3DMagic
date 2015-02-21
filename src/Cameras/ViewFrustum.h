@@ -1,7 +1,6 @@
 #ifndef MAGIC3D_VIEW_FRUSTUM_H
 #define MAGIC3D_VIEW_FRUSTUM_H
 
-#include <Math\Point.h>
 #include <Math\Matrix4.h>
 #include <memory>
 #include <Graphics\Mesh.h>

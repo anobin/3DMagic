@@ -63,18 +63,18 @@ void PhysicsSystem::deinit()
 }
     
 
-btVector3 createBtVector(const Point3& inputPoint)
+btVector3 createBtVector(const Vector3& inputPoint)
 {
 	return btVector3(inputPoint.x(), inputPoint.y(), inputPoint.z());
 }
 
-Point3 createPoint(const btVector3& inputVector)
+Vector3 createPoint(const btVector3& inputVector)
 {
-	return Point3(inputVector.getX(), inputVector.getY(), inputVector.getZ());
+	return Vector3(inputVector.getX(), inputVector.getY(), inputVector.getZ());
 }
 
 // TODO: return a complex ray object, not just a hitpoint
-Point3 PhysicsSystem::createRay(const Point3& startPoint, const Vector3& direction, Scalar maxLength) const
+Vector3 PhysicsSystem::createRay(const Vector3& startPoint, const Vector3& direction, Scalar maxLength) const
 {
 	btVector3 start = createBtVector(startPoint);
 	btVector3 end = createBtVector(startPoint.translate(direction, maxLength));

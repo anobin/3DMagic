@@ -57,11 +57,16 @@ public:
 		data[1] = y;
 	}
 
-	inline Scalar x() const { return data[0]; }
-	inline Vector<2> withX(Scalar x) const { return with(0, x); }
-	inline Scalar y() const { return data[1]; }
-	inline Vector<2> withY(Scalar y) const { return with(1, y); }
+    inline void set(Scalar x, Scalar y)
+    {
+        data[0] = x;
+        data[1] = y;
+    }
 
+	inline Scalar x() const { return data[0]; }
+    inline void x(Scalar x) { data[0] = x; }
+	inline Scalar y() const { return data[1]; }
+    inline void y(Scalar y) { data[1] = y; }
 };
 typedef Vector<2> Vector2;
 
@@ -82,26 +87,53 @@ public:
 		data[2] = z;
 	}
 
-	inline Scalar x() const { return data[0]; }
-	inline Vector<3> withX(Scalar x) const { return with(0, x); }
-	inline Scalar y() const { return data[1]; }
-	inline Vector<3> withY(Scalar y) const { return with(1, y); }
-	inline Scalar z() const { return data[2]; }
-	inline Vector<3> withZ(Scalar z) const { return with(2, z); }
+    inline void set(Scalar x, Scalar y, Scalar z)
+    {
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
+    }
+
+    inline Scalar x() const { return data[0]; }
+    inline void x(Scalar x) { data[0] = x; }
+    inline Scalar y() const { return data[1]; }
+    inline void y(Scalar y) { data[1] = y; }
+    inline Scalar z() const { return data[2]; }
+    inline void z(Scalar z) { data[2] = z; }
+
+    inline bool isAtOrigin()
+    {
+        return (x() == 0) && (y() == 0) && (z() == 0);
+    }
 
     using BaseVector::operator*;
 
-    inline Vector<3> crossProduct(const Vector<3> &v) const
-    {
-        return Vector<3>(
-			y()*v.z() - v.y()*z(),
-			-x()*v.z() + v.x()*z(),
-			x()*v.y() - v.x()*y()
-		);
-    }
     inline Vector<3> operator*(const Vector<3>& v) const
     {
-        return this->crossProduct(v);
+        return Vector<3>(
+            y()*v.z() - v.y()*z(),
+            -x()*v.z() + v.x()*z(),
+            x()*v.y() - v.x()*y()
+        );
+    }
+    inline Vector<3> operator*=(const Vector<3>& v)
+    {
+        this->set(
+            y()*v.z() - v.y()*z(),
+            -x()*v.z() + v.x()*z(),
+            x()*v.y() - v.x()*y()
+        );
+    }
+
+    using BaseVector::translate;
+
+    inline Vector<3> translate(Scalar x, Scalar y, Scalar z) const
+    {
+        return Vector<3>(
+            this->x() + x,
+            this->y() + y,
+            this->z() + z
+            );
     }
 
 	Vector<3> transform(const Matrix4& m) const;
@@ -136,14 +168,22 @@ public:
 		data[3] = w;
 	}
 
-	inline Scalar x() const { return data[0]; }
-	inline Vector<4> withX(Scalar x) const { return with(0, x); }
-	inline Scalar y() const { return data[1]; }
-	inline Vector<4> withY(Scalar y) const { return with(1, y); }
-	inline Scalar z() const { return data[2]; }
-	inline Vector<4> withZ(Scalar z) const { return with(2, z); }
-	inline Scalar w() const { return data[3]; }
-	inline Vector<4> withW(Scalar w) const { return with(3, w); }
+    inline void set(Scalar x, Scalar y, Scalar z, Scalar w)
+    {
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
+        data[3] = w;
+    }
+
+    inline Scalar x() const { return data[0]; }
+    inline void x(Scalar x) { data[0] = x; }
+    inline Scalar y() const { return data[1]; }
+    inline void y(Scalar y) { data[1] = y; }
+    inline Scalar z() const { return data[2]; }
+    inline void z(Scalar z) { data[2] = z; }
+    inline Scalar w() const { return data[3]; }
+    inline void w(Scalar w) { data[3] = w; }
 
     Vector<4> transform(const Matrix4& m) const;
 

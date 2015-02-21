@@ -145,7 +145,7 @@ float change = -1.0f;
  */
 void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& world)
 {
-	Point3 origin;
+	Vector3 origin;
 	Vector3 forward;
 	Vector3 side;
 	Vector3 up;
@@ -165,7 +165,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 				wireframe = false;
 			else
 				wireframe = true;*/
-			camera.setLocation( Point3(0.0f, 6.0f * FOOT, 20.0f * FOOT) );
+			camera.setLocation( Vector3(0.0f, 6.0f * FOOT, 20.0f * FOOT) );
 			//camera.getPosition().getForwardVector().set(0.0f, 0.0f, -1.0f);
 			//camera.getPosition().getUpVector().set(0.0f, 1.0f, 0.0f);
 			
@@ -229,10 +229,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		    prop.mass = 1;
 			t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(bigSphereBatch), 
 				bigSphereMaterial, bigSphereShape), prop );
-			t->setLocation(Point3(0.0f, 5.0f, 0.0f));
+			t->setLocation(Vector3(0.0f, 5.0f, 0.0f));
 			world.addObject(t);
 			
-			camera.lookat( Point3(0, 30, 0) );
+			camera.lookat( Vector3(0, 30, 0) );
 			
 			break;
 		case 'h':
@@ -603,14 +603,14 @@ public:
 					continue;
 				auto btBox = new Object(std::make_shared<Model>(std::make_shared<Meshes>(boxBatch), 
 					brickMaterial, brickShape), prop );
-				btBox->setLocation( Point3(w, h, zOffset) );
+				btBox->setLocation( Vector3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
 		}
 
 
         std::minstd_rand0 randGen(
-            std::chrono::system_clock::now().time_since_epoch().count()
+            (unsigned int)std::chrono::system_clock::now().time_since_epoch().count()
         );
 
         // arrange some trees as static scenery
@@ -620,9 +620,9 @@ public:
         {
             Matrix4 matrix;
             matrix.createTranslationMatrix(
-                (double(randGen()) / randGen.max()) * maxSize - maxSize/2, 
+                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2, 
                 4.5*FOOT, 
-                (double(randGen()) / randGen.max()) * maxSize - maxSize/2
+                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2
             );
 
             auto treeMesh = mb.positionTransform(matrix).build();
@@ -655,13 +655,13 @@ public:
 		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
 		chainObject = new Object(std::make_shared<Model>(chainBatches, 
 			chainMaterial, chainShape));
-		chainObject->setLocation(Point3(0.0f, 5.0f, 0.0f));
+		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
 
 
 
 		// set eye level
-		camera.setLocation(Point3(0.0f, 6 * FOOT, ROOM_SIZE));
+		camera.setLocation(Vector3(0.0f, 6 * FOOT, ROOM_SIZE));
 		camera.setStepSpeed( FOOT );
 		camera.setStrafeSpeed( FOOT );
 
@@ -694,7 +694,7 @@ public:
 				prop.mass = 0.1f;
 				Object* t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(tinySphereBatch), 
 					tinySphereMaterial, tinySphereShape), prop);
-				t->setLocation(Point3(0, 10.0f, 0));
+				t->setLocation(Vector3(0, 10.0f, 0));
 				world->addObject(t);
             
 				t->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
@@ -711,7 +711,7 @@ public:
 		);*/
     
 
-		Point3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
+		Vector3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 
 		/*btBall->setPosition(Position(
 			endPoint,

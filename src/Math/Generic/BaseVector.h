@@ -62,47 +62,69 @@ public:
         return this->data;
     }
 
-    inline Scalar operator[](int component) const
+    inline const Scalar& operator[](int component) const
 	{
 		return data[component];
 	}
 
-    inline T add(const T& v) const
+    inline Scalar& operator[](int component)
     {
-        T ret;
-		for(int i=0; i < size; i++)
-			ret.data[i] = data[i] + v.data[i];
-		return ret;
+        return data[component];
     }
+
+    inline T translate(const T& direction, Scalar distance) const
+    {
+        T newPoint;
+        for (int i = 0; i < size; i++)
+            newPoint.data[i] = data[i] + (direction[i] * distance);
+        return newPoint;
+    }
+
+    inline Scalar distanceTo(const T& p) const
+    {
+        Scalar distance = 0;
+        for (int i = 0; i < size; i++)
+            distance += pow(data[i] - p[i], 2);
+        return sqrt(distance);
+    }
+
     inline T operator+(const T& v) const
     {
-        return this->add(v);
+        T ret;
+        for (int i = 0; i < size; i++)
+            ret.data[i] = data[i] + v.data[i];
+        return ret;
+    }
+    inline void operator+=(const T& v)
+    {
+        for (int i = 0; i < size; i++)
+            data[i] += v.data[i];
     }
 
-    /// subtract a vector from this vector
-    inline T subtract(const T& v) const 
-    {
-        T ret;
-		for(int i=0; i < size; i++)
-			ret.data[i] = data[i] - v.data[i];
-		return ret;
-    }
     inline T operator-(const T& v) const
     {
-        return this->subtract(v);
+        T ret;
+        for (int i = 0; i < size; i++)
+            ret.data[i] = data[i] - v.data[i];
+        return ret;
+    }
+    inline void operator-=(const T& v)
+    {
+        for (int i = 0; i < size; i++)
+           data[i] -= v.data[i];
     }
 
-    /// scale this vector by a given factor
-    inline T scale(Scalar factor) const
-    {
-        T ret;
-		for(int i=0; i < size; i++)
-			ret.data[i] = data[i] * factor;
-		return ret;
-    }
     inline T operator*(Scalar factor) const
     {
-        return this->scale(factor);
+        T ret;
+        for (int i = 0; i < size; i++)
+            ret.data[i] = data[i] * factor;
+        return ret;
+    }
+    inline void operator*=(Scalar factor)
+    {
+        for (int i = 0; i < size; i++)
+            data[i] *= factor;
     }
 
     /// dot product another vector with this vector
@@ -132,24 +154,7 @@ public:
     /// normalize this vector (turn into unit vector)
     inline T normalize() const
     {
-        return this->scale(Scalar(1.0) / this->getLength());
-    }
-
-	inline T with(int component, Scalar value) const
-	{
-		T newV;
-		for (int i=0; i < size; i++)
-			newV.data[i] = data[i];
-		newV.data[component] = value;
-		return newV;
-	}
-
-    inline Scalar distanceTo(const T& v) const
-    {
-        Scalar distance = 0;
-        for (int i = 0; i < size; i++)
-            distance += pow(data[i] - v[i], 2);
-        return sqrt(distance);
+        return (*this) * (Scalar(1.0) / this->getLength());
     }
 };
 

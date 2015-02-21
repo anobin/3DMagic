@@ -219,12 +219,6 @@
     <ClCompile Include="..\..\src\Math\Vector.cc">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Math\Generic\Point.cc">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\Point.cpp">
-      <Filter>Source Files\Math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\TextResource.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
@@ -344,17 +338,11 @@
     <ClInclude Include="..\..\src\Math\Matrix4.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Math\Point.h">
-      <Filter>Source Files\Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Math\Position.h">
       <Filter>Source Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Math\Vector.h">
       <Filter>Source Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Math\Generic\BasePoint.h">
-      <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Math\Generic\BaseVector.h">
       <Filter>Source Files\Math\Generic</Filter>
@@ -366,9 +354,6 @@
       <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Math\Generic\Matrix4.h">
-      <Filter>Source Files\Math\Generic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Math\Generic\Point.h">
       <Filter>Source Files\Math\Generic</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Math\Generic\Position.h">

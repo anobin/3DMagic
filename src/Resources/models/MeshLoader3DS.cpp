@@ -3,7 +3,6 @@
 #include <string.h>
 #include <lib3ds/mesh.h>
 #include <Graphics/MeshBuilder.h>
-#include <Math/Point.h>
 
 namespace Magic3D
 {
@@ -21,7 +20,7 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
     MeshBuilderPTNT bb;
 	int i;
 	Lib3dsMesh * mesh;
-	Point3 p;
+	Vector3 p;
 	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
 	{
 	    // start the batch

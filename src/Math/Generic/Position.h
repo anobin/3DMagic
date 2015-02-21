@@ -34,7 +34,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 // for math classes
 #include "Matrix3.h"
 #include "Matrix4.h"
-#include "Point.h"
 #include "Vector.h"
 
 /** Represents a 3D position using a location and directional vectors. 
@@ -45,7 +44,7 @@ class Position
 {
 private:
     /// location
-    Point3 location;
+    Vector3 location;
     /// forward vector
     Vector3 forward;
     /// up vector
@@ -59,7 +58,7 @@ public:
     inline Position(Scalar x, Scalar y, Scalar z): location(x,y,z), 
         forward(0,0,-1), up(0,1,0) {}
 
-	inline Position(const Point3& location, const Vector3& forward, 
+	inline Position(const Vector3& location, const Vector3& forward, 
 		const Vector3& up): location(location), forward(forward), up(up)
 	{
 		this->normalize(); // normalize to set the correct up vector
@@ -78,12 +77,12 @@ public:
     }
 
     /// get location
-    inline const Point3 &getLocation() const {return location;}
+    inline const Vector3 &getLocation() const {return location;}
 
     /// get location
-    inline Point3 &getLocation() {return location;}
+    inline Vector3 &getLocation() {return location;}
 
-	inline void setLocation(const Point3& location) 
+	inline void setLocation(const Vector3& location) 
 	{
 		this->location = location;
 	}
@@ -107,7 +106,7 @@ public:
     inline const Vector3 &getLocalYAxis() const {return up;}
 
     /// get the local x axis
-    inline Vector3 getLocalXAxis() const {return up.crossProduct(forward);}
+    inline Vector3 getLocalXAxis() const {return up * forward;}
     
     /// translate the location along the orthonormal axis in real world coordinates
     inline void translate(Scalar x, Scalar y, Scalar z)

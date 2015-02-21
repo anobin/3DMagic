@@ -29,8 +29,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "MathTypes.h"
 // vector types
 #include "Vector.h"
-// point types
-#include "Point.h"
 // matrix types
 #include "Matrix3.h"
 #include "Matrix4.h"

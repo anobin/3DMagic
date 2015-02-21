@@ -52,7 +52,7 @@ private:
     
 public:
     inline FPCamera(): stepSpeed(1.0f), strafeSpeed(0.5f), 
-		position(Point3(0,0,0), Vector3(0,0,-1), Vector3(0,1,0))
+		position(Vector3(0,0,0), Vector3(0,0,-1), Vector3(0,1,0))
     {
         facing = position.getForwardVector();
     }
@@ -92,18 +92,18 @@ public:
     
     virtual const Position& getPosition() const;
     
-    inline void setLocation( const Point3& location)
+    inline void setLocation( const Vector3& location)
     {
 		position.setLocation(location);
     }
     
-    void lookat( const Point3& point );
+    void lookat( const Vector3& point );
     
     inline void elevate( float a )
     {
-		position.setLocation(
-			position.getLocation().withY(position.getLocation().y()+a)
-		);
+        Vector3 loc = position.getLocation();
+        loc.y(position.getLocation().y() + a);
+		position.setLocation(loc);
     }
     
 };   

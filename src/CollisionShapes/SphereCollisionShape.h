@@ -50,7 +50,7 @@ protected:
 
 public:
     /// default constructor
-    inline SphereCollisionShape(Scalar radius, Point3 offset = Point3()): CollisionShape(offset), 
+    inline SphereCollisionShape(Scalar radius, Vector3 offset = Vector3()): CollisionShape(offset), 
 		radius(radius), shape((btScalar)radius) {}
     
     /// destructor

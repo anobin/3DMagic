@@ -131,7 +131,7 @@ public:
 	virtual ~Object();
 	
 	/// shortcut for setting just the location
-	inline void setLocation(const Point3& location)
+	inline void setLocation(const Vector3& location)
 	{
 		this->position.setLocation(location);
 		this->syncPositionToPhysics();
