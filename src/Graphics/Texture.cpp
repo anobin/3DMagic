@@ -34,15 +34,15 @@ namespace Magic3D
  * @param image the image to build this texture around.
  * @param generateMipmaps whether to generate mipmaps or not
  */
-Texture::Texture(const Image& image, bool generateMipmaps)
+    Texture::Texture(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
 {
     // generate texture id
 	glGenTextures(1, &tid);
 	
-    this->set(image, generateMipmaps);
+    this->set(image, removeGammaCorrection, generateMipmaps);
 }
 
-void Texture::set(const Image& image, bool generateMipmaps)
+    void Texture::set(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
 {
     // bind to our state
 	glBindTexture(GL_TEXTURE_2D, tid);
@@ -57,22 +57,28 @@ void Texture::set(const Image& image, bool generateMipmaps)
 	{
 	    case 1:
 	        format = GL_RED;
-			internalFormat = GL_COMPRESSED_RED;
+			internalFormat = GL_RED;
 			break;
 			
 		case 2:
 		    format = GL_RG;
-			internalFormat = GL_COMPRESSED_RG;
+			internalFormat = GL_RG;
 			break;
 			
 		case 3:
 		    format = GL_RGB;
-			internalFormat = GL_COMPRESSED_RGB;
+            if (removeGammaCorrection)
+			    internalFormat = GL_SRGB;
+            else
+                internalFormat = GL_RGB;
 			break;
 			
 		case 4:
 		    format = GL_RGBA;
-			internalFormat = GL_COMPRESSED_RGBA;
+            if (removeGammaCorrection)
+			    internalFormat = GL_SRGB_ALPHA;
+            else
+                internalFormat = GL_RGBA;
 			break;
 			
 		default:
@@ -82,11 +88,7 @@ void Texture::set(const Image& image, bool generateMipmaps)
 	// unpack data into graphics memory
 	glTexImage2D(GL_TEXTURE_2D,			// 2D image data 
 				 0, 					// base mipmap level
-#ifdef MAGIC3D_USE_UNCOMPRESSED_TEXTURES
-                 format,
-#else
 				 internalFormat,	    // the graphics memory format we want it in
-#endif
 				 image.getWidth(),			// width of image
 				 image.getHeight(),		    // height of image
 				 0,					    // this parameter is always 0. :?

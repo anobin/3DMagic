@@ -2,6 +2,7 @@
 <Texture>
 	<image ref="images/plastic_normals.tga" />
 	<wrapMode>REPEAT</wrapMode>
+	<removeGammaCorrection>false</removeGammaCorrection>
 	<fallback>
 		<Color name="WHITE" />
 	</fallback>

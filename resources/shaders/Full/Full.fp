@@ -14,12 +14,14 @@ uniform vec3 specularColor = vec3(0.7, 0.7, 0.7);
 uniform float specularPower = 128.0;
 
 // ambient factor
-uniform float ambientFactor = 0.1;
+uniform float ambientFactor = 0.05;
 
 // light position in world space
 uniform vec3 lightPosition;
 uniform float lightAttenuationFactor = 0.1; // higher values make light reach less
 uniform float lightIntensity = 3.0;
+
+uniform vec3 gammaCorrectionFactor = vec3(1.0/2.2);
 
 // input from previous stage
 varying vec3 vNormal;       // normal in view space
@@ -64,5 +66,6 @@ void main(void)
     vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * lightFactor;
     vec3 specular = pow(max(dot(N,H), 0.0), specularPower) * specularColor * lightFactor; 
     
-    gl_FragColor = vec4(ambient + diffuse + specular, diffuseColor.a);
+    vec3 color = ambient + diffuse + specular;
+    gl_FragColor = vec4(pow(color,gammaCorrectionFactor), diffuseColor.a);
 }

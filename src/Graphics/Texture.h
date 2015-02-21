@@ -81,7 +81,7 @@ public:
 	 * @param image the image to build this texture around.
 	 * @param generateMipmaps whether to generate mipmaps or not
 	 */
-	Texture(const Image& image, bool generateMipmaps = false);
+	Texture(const Image& image, bool removeGammaCorrection = true, bool generateMipmaps = false);
 	
 	/// copy constructor
 	inline Texture(const Texture& copy)
@@ -93,7 +93,7 @@ public:
 	/// destructor
 	virtual ~Texture();
 
-    void set(const Image& image, bool generateMipmaps = false);
+    void set(const Image& image, bool removeGammaCorrection = true, bool generateMipmaps = false);
 	
 	/// bind this texture to be the current texture state
 	inline void bind()

@@ -267,7 +267,16 @@ inline std::shared_ptr<Texture> ResourceManager::_get<Texture>(const std::string
 		image = std::make_shared<Image>(1, 1, color.getChannelCount(), color);
 	}
 
-	auto texture = std::make_shared<Texture>(*image);
+    bool removeGammaCorrection = true;
+    auto gammaNode = textureNode->FirstChildElement("removeGammaCorrection");
+    if (gammaNode != nullptr)
+    {
+        auto gammaVal = gammaNode->GetText();
+        if (gammaVal != nullptr && std::string(gammaVal) == "false")
+            removeGammaCorrection = false;
+    }
+
+    auto texture = std::make_shared<Texture>(*image, removeGammaCorrection);
 	
 	// TODO: parse wrap mode and other texture properties
 
