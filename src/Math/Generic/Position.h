@@ -43,11 +43,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 class Position
 {
 private:
-    /// location
     Vector3 location;
-    /// forward vector
+
     Vector3 forward;
-    /// up vector
     Vector3 up;
     
 public:
@@ -76,36 +74,15 @@ public:
         up = copy.up;
     }
 
-    /// get location
-    inline const Vector3 &getLocation() const {return location;}
+    inline const Vector3& getLocation() const {return location;}
+    inline void setLocation(const Vector3& v) { this->location = v; }
 
-    /// get location
-    inline Vector3 &getLocation() {return location;}
+    inline const Vector3& getForwardVector() const {return forward;}
+    inline const Vector3& getUpVector() const {return up;}
+    inline Vector3 getRightVector() const { return up * forward; }
 
-	inline void setLocation(const Vector3& location) 
-	{
-		this->location = location;
-	}
-
-    /// get forward vector
-    inline const Vector3 &getForwardVector() const {return forward;}
-
-    /// get forward vector
-    inline Vector3 &getForwardVector() {return forward;}
-
-    /// get up vector
-    inline const Vector3 &getUpVector() const {return up;}
-
-    /// get up vector
-    inline Vector3 &getUpVector() {return up;}
-
-    /// get the local z axis
     inline const Vector3 &getLocalZAxis() const {return forward;}
-
-    /// get the local y axis
     inline const Vector3 &getLocalYAxis() const {return up;}
-
-    /// get the local x axis
     inline Vector3 getLocalXAxis() const {return up * forward;}
     
     /// translate the location along the orthonormal axis in real world coordinates

@@ -49,8 +49,8 @@ const Position& FPCamera::getPosition() const
     position.rotateLocal(y / 180.0f * ((float)M_PI), Vector3(1.0f, 0.0f, 0.0f));
 
     // check Y-axis bounds
-    Vector3& forward = position.getForwardVector();
-    Vector3& up = position.getUpVector();
+    const Vector3& forward = position.getForwardVector();
+    const Vector3& up = position.getUpVector();
     // enforce bounds by never allowing the up (Y-axis) vector to go negative
     // correct one degree at time
     while (up.y() < 0)

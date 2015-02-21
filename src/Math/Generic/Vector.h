@@ -62,6 +62,11 @@ public:
         data[0] = x;
         data[1] = y;
     }
+    inline void set(const Vector<2>& v)
+    {
+        data[0] = v[0];
+        data[1] = v[1];
+    }
 
 	inline Scalar x() const { return data[0]; }
     inline void x(Scalar x) { data[0] = x; }
@@ -92,6 +97,12 @@ public:
         data[0] = x;
         data[1] = y;
         data[2] = z;
+    }
+    inline void set(const Vector<3>& v)
+    {
+        data[0] = v[0];
+        data[1] = v[1];
+        data[2] = v[2];
     }
 
     inline Scalar x() const { return data[0]; }
@@ -174,6 +185,13 @@ public:
         data[1] = y;
         data[2] = z;
         data[3] = w;
+    }
+    inline void set(const Vector<4>& v)
+    {
+        data[0] = v[0];
+        data[1] = v[1];
+        data[2] = v[2];
+        data[3] = v[3];
     }
 
     inline Scalar x() const { return data[0]; }

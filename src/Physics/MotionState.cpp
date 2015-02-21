@@ -42,7 +42,7 @@ MotionState::~MotionState()
 void MotionState::getWorldTransform(btTransform &worldTrans) const
 {
 	// set the location/origin
-	Vector3& l = this->position->getLocation();
+	const Vector3& l = this->position->getLocation();
 	worldTrans.setOrigin (btVector3(l.x(), l.y(), l.z()));
 	
 	// set the basis/rotational matrix
@@ -51,8 +51,8 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
     
 	btMatrix3x3 matrix;
     Vector3 xAxis = this->position->getLocalXAxis();
-    Vector3& up = this->position->getUpVector();
-    Vector3& forward = this->position->getForwardVector();
+    const Vector3& up = this->position->getUpVector();
+    const Vector3& forward = this->position->getForwardVector();
 
     matrix.setValue (
     
