@@ -9,17 +9,17 @@ uniform sampler2D normalMap;
 uniform float normalMapping = 0;
 
 // specular color
-uniform vec3 specularColor = vec3(0.7, 0.7, 0.7);
+uniform vec3 specularColor;
 // specular power (sharpness of highlight), shininess
 uniform float specularPower = 128.0;
 
 // ambient factor
-uniform float ambientFactor = 0.01;
+uniform float ambientFactor;
 
 // light position in world space
 uniform vec3 lightPosition;
-uniform float lightAttenuationFactor = 0.3; // higher values make light reach less
-uniform float lightIntensity = 1.0;
+uniform float lightAttenuationFactor;
+uniform float lightIntensity;
 
 uniform vec3 gammaCorrectionFactor = vec3(1.0/2.2);
 

@@ -30,6 +30,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Physics/PhysicsSystem.h"
 #include "../Objects/Object.h"
 #include "../Time/StopWatch.h"
+#include <Lights\Light.h>
 
 #include <set>
 #include <unordered_map>
@@ -71,7 +72,7 @@ private:
     
     Camera* camera;
     
-    Position* light;
+    Light light;
     
     bool wireframeEnabled;
 
@@ -97,7 +98,7 @@ public:
     inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
-        light(NULL), wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
+        wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
         showNormals(false), useNormalMaps(true), useTextures(true) 
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
@@ -141,9 +142,9 @@ public:
 		this->camera = camera;
 	}
    
-	inline void setLight(Position* light)
+	inline Light& getLight()
 	{
-		this->light = light;
+        return light;
 	}
    
 	inline void setTargetFPS(int fps)

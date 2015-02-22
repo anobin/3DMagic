@@ -44,6 +44,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Graphics/MaterialBuilder.h"
 #include "Graphics/Material.h"
 #include "Graphics/Mesh.h"
+#include "Lights/Light.h"
 
 // time
 #include "Time/StopWatch.h"

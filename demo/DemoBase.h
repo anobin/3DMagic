@@ -39,11 +39,10 @@ protected:
 	PhysicsSystem physics;
 	EventSystem events;
 	FPCamera camera;
-	Position lightPos;
 
 public:
 
-	inline DemoBase(): lightPos(0.0f, 5.0f, 0.0f)
+	inline DemoBase()
 	{
 		graphics.init();
 		graphics.setDisplaySize( 1280, 1024 );
@@ -53,7 +52,7 @@ public:
 	
 		world = new World(&graphics, &physics);
 		world->setCamera(&camera);
-		world->setLight(&lightPos);
+        world->getLight().position.setLocation(Vector3(0, 5, 0));
 
 		events.init();
 	}
