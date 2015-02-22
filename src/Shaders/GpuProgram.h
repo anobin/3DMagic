@@ -99,7 +99,7 @@ public:
         TEXTURE7,                       // sampler2D
         SHININESS,                      // float
         SPECULAR_COLOR,                 // vec3
-        LIGHT_LOCATION,                 // vec3
+        LIGHT_LOCATION,                 // vec4
         LIGHT_DIRECTION,                // vec3
         LIGHT_INTENSITY,                // float
         LIGHT_ATTENUATION_FACTOR,       // float

@@ -171,10 +171,10 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 material.specularColor.getChannel(2, true)
                 );
             break;
-        case GpuProgram::LIGHT_LOCATION:                 // vec3
+        case GpuProgram::LIGHT_LOCATION:                 // vec4
             tempp3 = light.position.getLocation();
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
-                tempp3.y(), tempp3.z());
+                tempp3.y(), tempp3.z(), 1.0f);
             break;
         case GpuProgram::LIGHT_DIRECTION:                 // vec3
             tempp3 = light.position.getForwardVector();

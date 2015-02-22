@@ -17,7 +17,7 @@ uniform float specularPower;
 uniform float ambientFactor;
 
 // light position in world space
-uniform vec3 lightPosition;
+uniform vec4 lightPosition;
 uniform float lightAttenuationFactor;
 uniform float lightIntensity;
 uniform vec3 lightColor;
