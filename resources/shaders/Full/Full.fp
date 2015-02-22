@@ -20,6 +20,7 @@ uniform float ambientFactor;
 uniform vec3 lightPosition;
 uniform float lightAttenuationFactor;
 uniform float lightIntensity;
+uniform vec3 lightColor;
 
 uniform vec3 gammaCorrectionFactor = vec3(1.0/2.2);
 
@@ -62,9 +63,9 @@ void main(void)
     
     vec4 diffuseColor = texture2D(textureMap, vTexCoord);
     
-    vec3 ambient = diffuseColor.rgb * ambientFactor * lightFactor;
-    vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * lightFactor;
-    vec3 specular = pow(max(dot(N,H), 0.0), specularPower) * specularColor * lightFactor; 
+    vec3 ambient = diffuseColor.rgb * lightColor.rgb * ambientFactor * lightFactor;
+    vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * lightColor.rgb * lightFactor;
+    vec3 specular = pow(max(dot(N,H), 0.0), specularPower) * specularColor * lightColor.rgb * lightFactor; 
     
     vec3 color = ambient + diffuse + specular;
     gl_FragColor = vec4(pow(color,gammaCorrectionFactor), diffuseColor.a);

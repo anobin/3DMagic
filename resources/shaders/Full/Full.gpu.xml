@@ -62,6 +62,10 @@
 		<value ref="LIGHT_LOCATION" />
 	</uniform>
 	<uniform>
+		<name>lightColor</name>
+		<value ref="LIGHT_COLOR" />
+	</uniform>
+	<uniform>
 		<name>lightIntensity</name>
 		<value ref="LIGHT_INTENSITY" />
 	</uniform>
