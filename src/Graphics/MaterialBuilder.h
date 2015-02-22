@@ -93,6 +93,11 @@ public:
     {
         material->shininess = shininess;
     }
+
+    inline void setSpecularColor(Color color)
+    {
+        material->specularColor = color;
+    }
     
     void end();
     

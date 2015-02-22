@@ -18,15 +18,11 @@ public:
     Scalar attenuationFactor;
 
     Scalar ambientFactor;
-    Scalar diffuseFactor;
-    Scalar specularFactor;
 
     Color lightColor;
-    Color specularColor;
 
     Light() : intensity(1.0f), attenuationFactor(0.3f), ambientFactor(0.01f),
-        diffuseFactor(1.0f), specularFactor(1.0f), lightColor(Color::WHITE),
-        specularColor(0.7f, 0.7f, 0.7f) {}
+        lightColor(Color::WHITE) {}
 };
 
 

@@ -98,15 +98,13 @@ public:
         TEXTURE6,                       // sampler2D
         TEXTURE7,                       // sampler2D
         SHININESS,                      // float
+        SPECULAR_COLOR,                 // vec3
         LIGHT_LOCATION,                 // vec3
         LIGHT_DIRECTION,                // vec3
         LIGHT_INTENSITY,                // float
         LIGHT_ATTENUATION_FACTOR,       // float
         LIGHT_AMBIENT_FACTOR,           // float
-        LIGHT_DIFFUSE_FACTOR,           // float
-        LIGHT_SPECULAR_FACTOR,          // float
         LIGHT_COLOR,                    // vec3
-        LIGHT_SPECULAR_COLOR,           // vec3
 		FLAT_PROJECTION,				// mat4
         NORMAL_MAP,                     // sampler2D
         MAX_AUTO_UNIFORM_TYPE

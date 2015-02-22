@@ -20,6 +20,7 @@
 		<type>TANGENT</type>
 	</attribute>
 	
+	<!-- matricies for transforming points between coordinate spaces (model, world, view, clip) -->
 	<uniform>
 		<name>mvMatrix</name>
 		<value ref="MODEL_VIEW_MATRIX" />
@@ -36,21 +37,26 @@
 		<name>mvpMatrix</name>
 		<value ref="MODEL_VIEW_PROJECTION_MATRIX" />
 	</uniform>
-	<uniform>
-		<name>normalMap</name>
-		<value ref="NORMAL_MAP" />
-	</uniform>
 	
+	<!-- material properties -->
 	<uniform>
 		<name>specularPower</name>
 		<value ref="SHININESS" />
 	</uniform>
 	<uniform>
+		<name>specularColor</name>
+		<value ref="SPECULAR_COLOR" />
+	</uniform>
+	<uniform>
 		<name>textureMap</name>
 		<value ref="TEXTURE0" />
 	</uniform>
+	<uniform>
+		<name>normalMap</name>
+		<value ref="NORMAL_MAP" />
+	</uniform>
 	
-	
+	<!-- light properties -->
 	<uniform>
 		<name>lightPosition</name>
 		<value ref="LIGHT_LOCATION" />
@@ -66,10 +72,6 @@
 	<uniform>
 		<name>ambientFactor</name>
 		<value ref="LIGHT_AMBIENT_FACTOR" />
-	</uniform>
-	<uniform>
-		<name>specularColor</name>
-		<value ref="LIGHT_SPECULAR_COLOR" />
 	</uniform>
 	
 </GpuProgram>

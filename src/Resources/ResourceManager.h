@@ -310,15 +310,13 @@ class GpuProgramParser
 		uniformMap.insert(std::make_pair("FPS", GpuProgram::AutoUniformType::FPS));
 		uniformMap.insert(std::make_pair("TEXTURE0", GpuProgram::AutoUniformType::TEXTURE0));
         uniformMap.insert(std::make_pair("SHININESS", GpuProgram::AutoUniformType::SHININESS));
+        uniformMap.insert(std::make_pair("SPECULAR_COLOR", GpuProgram::AutoUniformType::SPECULAR_COLOR));
 		uniformMap.insert(std::make_pair("LIGHT_LOCATION", GpuProgram::AutoUniformType::LIGHT_LOCATION));
         uniformMap.insert(std::make_pair("LIGHT_DIRECTION", GpuProgram::AutoUniformType::LIGHT_DIRECTION));
         uniformMap.insert(std::make_pair("LIGHT_INTENSITY", GpuProgram::AutoUniformType::LIGHT_INTENSITY));
         uniformMap.insert(std::make_pair("LIGHT_ATTENUATION_FACTOR", GpuProgram::AutoUniformType::LIGHT_ATTENUATION_FACTOR));
         uniformMap.insert(std::make_pair("LIGHT_AMBIENT_FACTOR", GpuProgram::AutoUniformType::LIGHT_AMBIENT_FACTOR));
-        uniformMap.insert(std::make_pair("LIGHT_DIFFUSE_FACTOR", GpuProgram::AutoUniformType::LIGHT_DIFFUSE_FACTOR));
-        uniformMap.insert(std::make_pair("LIGHT_SPECULAR_FACTOR", GpuProgram::AutoUniformType::LIGHT_SPECULAR_FACTOR));
         uniformMap.insert(std::make_pair("LIGHT_COLOR", GpuProgram::AutoUniformType::LIGHT_COLOR));
-        uniformMap.insert(std::make_pair("LIGHT_SPECULAR_COLOR", GpuProgram::AutoUniformType::LIGHT_SPECULAR_COLOR));
 		uniformMap.insert(std::make_pair("FLAT_PROJECTION", GpuProgram::AutoUniformType::FLAT_PROJECTION));
         uniformMap.insert(std::make_pair("NORMAL_MAP", GpuProgram::AutoUniformType::NORMAL_MAP));
 

@@ -164,6 +164,13 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
         case GpuProgram::SHININESS:                 // float
             gpuProgram->setUniformf(u.varName.c_str(), material.shininess);
             break;
+        case GpuProgram::SPECULAR_COLOR:                  // vec3
+            gpuProgram->setUniformf(u.varName.c_str(),
+                material.specularColor.getChannel(0, true),
+                material.specularColor.getChannel(1, true),
+                material.specularColor.getChannel(2, true)
+                );
+            break;
         case GpuProgram::LIGHT_LOCATION:                 // vec3
             tempp3 = light.position.getLocation();
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
@@ -183,25 +190,12 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
         case GpuProgram::LIGHT_AMBIENT_FACTOR:                 // float
             gpuProgram->setUniformf(u.varName.c_str(), this->light.ambientFactor);
             break;
-        case GpuProgram::LIGHT_DIFFUSE_FACTOR:                 // float
-            gpuProgram->setUniformf(u.varName.c_str(), this->light.diffuseFactor);
-            break;
-        case GpuProgram::LIGHT_SPECULAR_FACTOR:                 // float
-            gpuProgram->setUniformf(u.varName.c_str(), this->light.specularFactor);
-            break;
         case GpuProgram::LIGHT_COLOR:                           // vec3
             gpuProgram->setUniformf(u.varName.c_str(), 
                 light.lightColor.getChannel(0, true),
                 light.lightColor.getChannel(1, true),
                 light.lightColor.getChannel(2, true)
             );
-            break;
-        case GpuProgram::LIGHT_SPECULAR_COLOR:                  // vec3
-            gpuProgram->setUniformf(u.varName.c_str(),
-                light.specularColor.getChannel(0, true),
-                light.specularColor.getChannel(1, true),
-                light.specularColor.getChannel(2, true)
-                );
             break;
         case GpuProgram::FLAT_PROJECTION:   // mat4
             temp4m.createOrthographicMatrix(0, (Scalar)this->graphics.getDisplayWidth(),

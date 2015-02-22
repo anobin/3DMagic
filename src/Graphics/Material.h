@@ -58,6 +58,8 @@ protected:
     std::shared_ptr<Texture> normalMap;
 
     Scalar shininess;
+
+    Color specularColor;
     
     inline void allocate()
     {
@@ -70,13 +72,14 @@ protected:
     
 public:
     inline Material(): gpuProgram(NULL), transparent(false),
-        depthBufferLie(0), shininess(128.0f)
+        depthBufferLie(0), shininess(128.0f), specularColor(0.7f, 0.7f, 0.7f)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;
     }
 
-	inline Material(const Material& m): gpuProgram(m.gpuProgram), transparent(m.transparent)
+	inline Material(const Material& m): gpuProgram(m.gpuProgram), transparent(m.transparent),
+        shininess(m.shininess), specularColor(m.specularColor)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = m.textures[i];
