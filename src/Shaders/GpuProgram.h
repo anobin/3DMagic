@@ -97,6 +97,7 @@ public:
         TEXTURE5,                       // sampler2D
         TEXTURE6,                       // sampler2D
         TEXTURE7,                       // sampler2D
+        SHININESS,                      // float
         LIGHT_LOCATION,                 // vec3
         LIGHT_DIRECTION,                // vec3
         LIGHT_INTENSITY,                // float

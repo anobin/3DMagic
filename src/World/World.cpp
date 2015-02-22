@@ -161,6 +161,9 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 "texture set, but no texture set for the index.");
             gpuProgram->setTexture(u.varName.c_str(), material.textures[7].get(), 7);
             break;
+        case GpuProgram::SHININESS:                 // float
+            gpuProgram->setUniformf(u.varName.c_str(), material.shininess);
+            break;
         case GpuProgram::LIGHT_LOCATION:                 // vec3
             tempp3 = light.position.getLocation();
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),

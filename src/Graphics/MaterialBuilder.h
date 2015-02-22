@@ -88,6 +88,11 @@ public:
     {
         material->normalMap = tex;
     }
+
+    inline void setShininess(Scalar shininess)
+    {
+        material->shininess = shininess;
+    }
     
     void end();
     

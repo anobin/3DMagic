@@ -495,7 +495,7 @@ public:
 
 		// init batches
         MeshBuilderPTNT mb;
-        sphereBatch = mb.buildSphere(20 * FOOT, 55, 32).build();
+        sphereBatch = mb.buildSphere(2 * FOOT, 55, 32).build();
 		tinySphereBatch = mb.reset().buildSphere(1*FOOT, 4, 4).build();
         bigSphereBatch = mb.reset().buildBox(3, 3, 3).build();
 		floorBatch = MeshBuilderPTNT::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 

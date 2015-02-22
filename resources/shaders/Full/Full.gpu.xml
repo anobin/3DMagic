@@ -40,6 +40,11 @@
 		<name>normalMap</name>
 		<value ref="NORMAL_MAP" />
 	</uniform>
+	
+	<uniform>
+		<name>specularPower</name>
+		<value ref="SHININESS" />
+	</uniform>
 	<uniform>
 		<name>textureMap</name>
 		<value ref="TEXTURE0" />

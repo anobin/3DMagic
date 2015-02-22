@@ -56,6 +56,8 @@ protected:
     float depthBufferLie;
 
     std::shared_ptr<Texture> normalMap;
+
+    Scalar shininess;
     
     inline void allocate()
     {
@@ -68,7 +70,7 @@ protected:
     
 public:
     inline Material(): gpuProgram(NULL), transparent(false),
-		depthBufferLie(0)
+        depthBufferLie(0), shininess(128.0f)
     {
         for(int i=0; i < 8; i++)
             this->textures[i] = NULL;

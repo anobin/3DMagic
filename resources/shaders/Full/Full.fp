@@ -11,7 +11,7 @@ uniform float normalMapping = 0;
 // specular color
 uniform vec3 specularColor;
 // specular power (sharpness of highlight), shininess
-uniform float specularPower = 128.0;
+uniform float specularPower;
 
 // ambient factor
 uniform float ambientFactor;
