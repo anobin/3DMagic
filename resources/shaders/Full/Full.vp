@@ -8,52 +8,24 @@ attribute vec3 inputNormal;     // vertex normal in model space
 attribute vec2 inputTexCoord;   // texture coordinate for vertex
 attribute vec3 inputTangent;    // vertex tangent in model space
 
-// light position in world space
-uniform vec4 lightPosition;
-
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
-uniform mat4   mvMatrix;    // transforms from model space to view space
-uniform mat4   vMatrix;     // transforms from world space to view space
-uniform mat4   mMatrix;     // transforms from model space to world space
 
 // output to next stage
-varying vec3 vNormal;       // normal in view space
-varying vec2 vTexCoord;     // texture coord
-varying vec3 vViewDir;      // vector from vertex to camera (in view space)
-varying vec3 vViewDirN;      // vector from vertex to camera for normal map (in view space)
-varying vec3 vLightDir;     // vector from vertex to light (in view space)
-varying vec3 vLightDirN;     // vector from vertex to light for normal map (in view space)
-varying vec4 vPositionWorldSpace; // position vector in world space
+varying vec4 fragPosition;
+varying vec3 fragNormal;
+varying vec3 fragTangent;
+varying vec2 fragTexCoord;
 
 void main(void) 
 { 
+    // just pass along attributes 
+    fragPosition = inputPosition;
+    fragNormal = inputNormal;
+    fragTexCoord = inputTexCoord;
+    fragTangent = inputTangent;
+
     // set clip space position
     gl_Position = mvpMatrix * inputPosition;
-    
-    // get position in world space and pass along
-    vPositionWorldSpace = mMatrix * inputPosition;
-
-    // get position in view space
-    vec4 position = mvMatrix * inputPosition;
-    
-    // Get surface normal in view space and pass along
-    vNormal = mat3(mvMatrix) * inputNormal;
-    
-    vec3 N = normalize(vNormal);
-    vec3 T = normalize(mat3(mvMatrix) * inputTangent);
-    vec3 B = cross(N, T);
-     
-    vec4 lightPosition_viewSpace = vMatrix * vec4(lightPosition.xyz, 1.0);
-    vec3 L = lightPosition_viewSpace.xyz - position.xyz;
-    vLightDir = L;
-    vLightDirN = normalize(vec3(dot(L,T), dot(L,B), dot(L,N)));
-    
-    vec3 V = -position.xyz;
-    vViewDir = V;
-    vViewDirN = normalize(vec3(dot(V,T), dot(V,B), dot(V,N)));
-    
-    // pass along texture coordinate
-    vTexCoord = inputTexCoord;
 }
 
 

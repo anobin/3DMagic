@@ -393,7 +393,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			
 			prop.mass = 100;
 			t = new Object(std::make_shared<Model>(std::make_shared<Meshes>(sphereBatch), 
-				sphereMaterial, sphereShape), prop);
+                floorMaterial, sphereShape), prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->applyForce(Vector3(p.getForwardVector().x()*speed, 
