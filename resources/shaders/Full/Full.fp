@@ -42,6 +42,10 @@ in VS_OUT
 
 float calculateLightAttenFactor()
 {
+    // location-less (directional) lighting has no attenuation
+    if (light.position.w == 0.0)
+        return 1.0;
+
     // check for outside of cone
     if (light.angle > 0.0)
     {
@@ -68,6 +72,12 @@ void main(void)
         (transforms.mvMatrix * fragment.position).xyz
     );
     vec3 V = normalize(-(transforms.mvMatrix * fragment.position).xyz); 
+    
+    // location-less (directional) lighting
+    if (light.position.w == 0.0)
+    {
+        L = normalize( (mat3(transforms.vMatrix) * light.direction).xyz );
+    }
     
     // recalculate vectors for normal mapping (if enabled)
     if (normalMapping != 0)

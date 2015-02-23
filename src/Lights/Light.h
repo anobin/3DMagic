@@ -13,6 +13,7 @@ class Light
 {
 public:
     Vector3 location;
+    bool locationLess;
     Vector3 direction;
     Scalar angle;
 
@@ -25,6 +26,7 @@ public:
 
     Light() :
         location(0, 0, 0),
+        locationLess(false),
         direction(0, 1, 0),
         angle(-1.0f),
         intensity(1.0f), 

@@ -117,6 +117,7 @@ bool moveLeft = false;
 bool moveRight = false;
 bool releaseWater = false;
 bool flashlightMode = false;
+bool directionLessMode = false;
 
 // builders
 MaterialBuilder materialBuilder;
@@ -310,6 +311,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             flashlightMode = !flashlightMode;
             break;
 
+        case 'l':
+            directionLessMode = true;
+            break;
+
         default:
             break;
         
@@ -463,8 +468,7 @@ public:
 
 		graphics.enableDepthTest();
 
-		static Color lightBlue(5, 230, 255);
-		graphics.setClearColor(Color(0,0,0));
+		graphics.setClearColor(Color::BLACK);
 
 		// init textures
 		auto stoneTex = resourceManager.get<Texture>("textures/bareConcrete.tex.xml");
@@ -715,7 +719,15 @@ public:
 			lightPos.getLocation().withY(lightPos.getLocation().y()+change)
 		);*/
     
-        if (flashlightMode)
+        if (directionLessMode)
+        {
+            graphics.setClearColor(Color(5, 230, 255));
+            Light& light = world->getLight();
+            light.locationLess = true;
+            light.direction = Vector3(0, 1, 0);
+            light.ambientFactor = 0.2;
+        }
+        else if (flashlightMode)
         {
             Light& light = world->getLight();
             const Position& pos = camera.getPosition();

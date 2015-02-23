@@ -76,6 +76,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
     Matrix4 temp4m2;
     Matrix3 temp3m;
     Vector3 tempp3;
+    Scalar tempf;
     for (unsigned int i = 0; i < gpuProgram->autoUniforms.size(); i++)
     {
         GpuProgram::AutoUniform& u = *gpuProgram->autoUniforms[i];
@@ -147,8 +148,11 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
 
         case GpuProgram::LIGHT_LOCATION:                 // vec4
             tempp3 = light.location;
+            tempf = 1.0f;
+            if (light.locationLess)
+                tempf = 0.0f;
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
-                tempp3.y(), tempp3.z(), 1.0f);
+                tempp3.y(), tempp3.z(), tempf);
             break;
         case GpuProgram::LIGHT_DIRECTION:                 // vec3
             tempp3 = light.direction;
