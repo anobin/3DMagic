@@ -116,6 +116,7 @@ bool moveBack = false;
 bool moveLeft = false;
 bool moveRight = false;
 bool releaseWater = false;
+bool flashlightMode = false;
 
 // builders
 MaterialBuilder materialBuilder;
@@ -303,6 +304,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 
         case 'b':
             world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
+            break;
+
+        case 'f':
+            flashlightMode = !flashlightMode;
             break;
 
         default:
@@ -710,6 +715,25 @@ public:
 			lightPos.getLocation().withY(lightPos.getLocation().y()+change)
 		);*/
     
+        if (flashlightMode)
+        {
+            Light& light = world->getLight();
+            const Position& pos = camera.getPosition();
+
+            light.angle = 15.0f;
+
+            // move location down and to right and forward
+            Vector3 loc = pos.getLocation();
+            loc = loc
+                - pos.getRightVector() * (0.5*FOOT)
+                - pos.getUpVector() * (1 * FOOT)
+                + pos.getForwardVector() * (1 * FOOT);
+            light.location = loc;
+
+            // set focus point 20 feet in front of view
+            Vector3 focusPoint = pos.getLocation() + (pos.getForwardVector() * (20 * FOOT));
+            light.direction = (focusPoint - light.location).normalize();
+        }
 
 		Vector3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);
 
