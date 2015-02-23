@@ -115,9 +115,6 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
             gpuProgram->setUniformMatrix(u.varName.c_str(), 3, temp3m.getArray());
             break;
 
-        case GpuProgram::FPS:                            // int
-            gpuProgram->setUniformiv(u.varName.c_str(), 1, &this->actualFPS);
-            break;
         case GpuProgram::TEXTURE0:                       // sampler2D
             MAGIC_THROW(material.textures[0] == NULL, "Material has auto-bound "
                 "texture set, but no texture set for the index.");
@@ -126,40 +123,14 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
             else
                 gpuProgram->setTexture(u.varName.c_str(), fallbackTexture.get(), 0);
             break;
-        case GpuProgram::TEXTURE1:                       // sampler2D
-            MAGIC_THROW(material.textures[1] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[1].get(), 1);
-            break;
-        case GpuProgram::TEXTURE2:                       // sampler2D
-            MAGIC_THROW(material.textures[2] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[2].get(), 2);
-            break;
-        case GpuProgram::TEXTURE3:                       // sampler2D
-            MAGIC_THROW(material.textures[3] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[3].get(), 3);
-            break;
-        case GpuProgram::TEXTURE4:                       // sampler2D
-            MAGIC_THROW(material.textures[4] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[4].get(), 4);
-            break;
-        case GpuProgram::TEXTURE5:                       // sampler2D
-            MAGIC_THROW(material.textures[5] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[5].get(), 5);
-            break;
-        case GpuProgram::TEXTURE6:                       // sampler2D
-            MAGIC_THROW(material.textures[6] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[6].get(), 6);
-            break;
-        case GpuProgram::TEXTURE7:                       // sampler2D
-            MAGIC_THROW(material.textures[7] == NULL, "Material has auto-bound "
-                "texture set, but no texture set for the index.");
-            gpuProgram->setTexture(u.varName.c_str(), material.textures[7].get(), 7);
+        case GpuProgram::NORMAL_MAP:                       // sampler2D
+            if (material.normalMap != nullptr && this->useNormalMaps)
+            {
+                gpuProgram->setTexture(u.varName.c_str(), material.normalMap.get(), 8);
+                gpuProgram->setUniformf("normalMapping", 1.0f);
+            }
+            else
+                gpuProgram->setUniformf("normalMapping", 0.0f);
             break;
         case GpuProgram::SHININESS:                 // float
             gpuProgram->setUniformf(u.varName.c_str(), material.shininess);
@@ -171,6 +142,9 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 material.specularColor.getChannel(2, true)
                 );
             break;
+
+
+
         case GpuProgram::LIGHT_LOCATION:                 // vec4
             tempp3 = light.position.getLocation();
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
@@ -202,15 +176,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 0, (Scalar)this->graphics.getDisplayHeight(), -1.0, 1.0);
             gpuProgram->setUniformMatrix(u.varName.c_str(), 4, temp4m.getArray());
             break;
-        case GpuProgram::NORMAL_MAP:                       // sampler2D
-            if (material.normalMap != nullptr && this->useNormalMaps)
-            {
-                gpuProgram->setTexture(u.varName.c_str(), material.normalMap.get(), 8);
-                gpuProgram->setUniformf("normalMapping", 1.0f);
-            }
-            else
-                gpuProgram->setUniformf("normalMapping", 0.0f);
-            break;
+        
         default:
             MAGIC_ASSERT(false);
             break;

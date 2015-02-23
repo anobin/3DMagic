@@ -2,21 +2,17 @@
 
 precision highp float;
 
-uniform mat4   mvpMatrix;   // transforms from model space to clip space
 uniform mat4   mvMatrix;    // transforms from model space to view space
 uniform mat4   vMatrix;     // transforms from world space to view space
 uniform mat4   mMatrix;     // transforms from model space to world space
 
-// diffuse texture map
 uniform sampler2D textureMap;
-
 uniform sampler2D normalMap;
-uniform float normalMapping = 0;
-
-// specular color
-uniform vec3 specularColor;
-// specular power (sharpness of highlight), shininess
-uniform float specularPower;
+uniform float normalMapping;
+uniform struct Material {
+    vec3 specularColor;
+    float specularPower;
+} material;
 
 // ambient factor
 uniform float ambientFactor;
@@ -75,7 +71,7 @@ void main(void)
     
     vec3 ambient = diffuseColor.rgb * lightColor.rgb * ambientFactor * lightFactor;
     vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * lightColor.rgb * lightFactor;
-    vec3 specular = pow(max(dot(N,H), 0.0), specularPower) * specularColor * lightColor.rgb * lightFactor; 
+    vec3 specular = pow(max(dot(N,H), 0.0), material.specularPower) * material.specularColor * lightColor.rgb * lightFactor; 
     
     vec3 color = ambient + diffuse + specular;
     gl_FragColor = vec4(pow(color,gammaCorrectionFactor), diffuseColor.a);

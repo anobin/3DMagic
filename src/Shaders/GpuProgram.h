@@ -80,6 +80,7 @@ public:
 
 	enum AutoUniformType
     {
+        // transforms
         MODEL_MATRIX,                   // mat4
         VIEW_MATRIX,                    // mat4
         PROJECTION_MATRIX,              // mat4
@@ -88,25 +89,22 @@ public:
         MODEL_PROJECTION_MATRIX,        // mat4
         MODEL_VIEW_PROJECTION_MATRIX,   // mat4
         NORMAL_MATRIX,                  // mat3
-        FPS,                            // int
+        FLAT_PROJECTION,				// mat4
+
+        // material properties
         TEXTURE0,                       // sampler2D
-        TEXTURE1,                       // sampler2D
-        TEXTURE2,                       // sampler2D
-        TEXTURE3,                       // sampler2D
-        TEXTURE4,                       // sampler2D
-        TEXTURE5,                       // sampler2D
-        TEXTURE6,                       // sampler2D
-        TEXTURE7,                       // sampler2D
+        NORMAL_MAP,                     // sampler2D
         SHININESS,                      // float
         SPECULAR_COLOR,                 // vec3
+
+        // light properties
         LIGHT_LOCATION,                 // vec4
         LIGHT_DIRECTION,                // vec3
         LIGHT_INTENSITY,                // float
         LIGHT_ATTENUATION_FACTOR,       // float
         LIGHT_AMBIENT_FACTOR,           // float
         LIGHT_COLOR,                    // vec3
-		FLAT_PROJECTION,				// mat4
-        NORMAL_MAP,                     // sampler2D
+        
         MAX_AUTO_UNIFORM_TYPE
     };
 

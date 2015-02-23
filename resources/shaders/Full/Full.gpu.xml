@@ -40,11 +40,11 @@
 	
 	<!-- material properties -->
 	<uniform>
-		<name>specularPower</name>
+		<name>material.specularPower</name>
 		<value ref="SHININESS" />
 	</uniform>
 	<uniform>
-		<name>specularColor</name>
+		<name>material.specularColor</name>
 		<value ref="SPECULAR_COLOR" />
 	</uniform>
 	<uniform>
