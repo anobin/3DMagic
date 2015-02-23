@@ -98,8 +98,9 @@ public:
         SPECULAR_COLOR,                 // vec3
 
         // light properties
-        LIGHT_LOCATION,                 // vec4
+        LIGHT_LOCATION,                 // vec3
         LIGHT_DIRECTION,                // vec3
+        LIGHT_ANGLE,                    // float
         LIGHT_INTENSITY,                // float
         LIGHT_ATTENUATION_FACTOR,       // float
         LIGHT_AMBIENT_FACTOR,           // float

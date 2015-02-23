@@ -146,14 +146,17 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
 
 
         case GpuProgram::LIGHT_LOCATION:                 // vec4
-            tempp3 = light.position.getLocation();
+            tempp3 = light.location;
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
                 tempp3.y(), tempp3.z(), 1.0f);
             break;
         case GpuProgram::LIGHT_DIRECTION:                 // vec3
-            tempp3 = light.position.getForwardVector();
+            tempp3 = light.direction;
             gpuProgram->setUniformf(u.varName.c_str(), tempp3.x(),
                 tempp3.y(), tempp3.z());
+            break;
+        case GpuProgram::LIGHT_ANGLE:                 // float
+            gpuProgram->setUniformf(u.varName.c_str(), this->light.angle);
             break;
         case GpuProgram::LIGHT_INTENSITY:                 // float
             gpuProgram->setUniformf(u.varName.c_str(), this->light.intensity);

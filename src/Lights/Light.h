@@ -12,7 +12,9 @@ namespace Magic3D
 class Light
 {
 public:
-    Position position;
+    Vector3 location;
+    Vector3 direction;
+    Scalar angle;
 
     Scalar intensity;
     Scalar attenuationFactor;
@@ -21,8 +23,15 @@ public:
 
     Color lightColor;
 
-    Light() : intensity(1.0f), attenuationFactor(0.3f), ambientFactor(0.01f),
-        lightColor(Color::WHITE) {}
+    Light() :
+        location(0, 0, 0),
+        direction(0, 1, 0),
+        angle(-1.0f),
+        intensity(1.0f), 
+        attenuationFactor(0.3f), 
+        ambientFactor(0.01f),
+        lightColor(Color::WHITE) 
+    {}
 };
 
 

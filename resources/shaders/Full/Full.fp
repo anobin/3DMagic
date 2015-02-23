@@ -25,6 +25,8 @@ uniform struct Light
     float intensity;
     vec3 color;
     float ambientFactor;
+    vec3 direction;
+    float angle;
 } light;
 
 uniform vec3 gammaCorrectionFactor = vec3(1.0/2.2);
@@ -40,6 +42,19 @@ in VS_OUT
 
 float calculateLightAttenFactor()
 {
+    // check for outside of cone
+    if (light.angle > 0.0)
+    {
+        vec3 L = normalize(
+            light.position.xyz - 
+            (transforms.mMatrix * fragment.position).xyz
+        );    
+    
+        float lightToSurfaceAngle = degrees(acos(dot(-L, normalize(light.direction))));
+        if(lightToSurfaceAngle > light.angle)
+            return 0.0;
+    }
+
     vec3 worldPos = (transforms.mMatrix * fragment.position).xyz;
     float distance = distance(light.position.xyz, worldPos.xyz);
     return 1.0 / (1.0 + light.attenuationFactor * pow(distance,2));

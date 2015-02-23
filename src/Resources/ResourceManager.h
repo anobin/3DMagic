@@ -312,6 +312,7 @@ class GpuProgramParser
         uniformMap.insert(std::make_pair("SPECULAR_COLOR", GpuProgram::AutoUniformType::SPECULAR_COLOR));
 		uniformMap.insert(std::make_pair("LIGHT_LOCATION", GpuProgram::AutoUniformType::LIGHT_LOCATION));
         uniformMap.insert(std::make_pair("LIGHT_DIRECTION", GpuProgram::AutoUniformType::LIGHT_DIRECTION));
+        uniformMap.insert(std::make_pair("LIGHT_ANGLE", GpuProgram::AutoUniformType::LIGHT_ANGLE));
         uniformMap.insert(std::make_pair("LIGHT_INTENSITY", GpuProgram::AutoUniformType::LIGHT_INTENSITY));
         uniformMap.insert(std::make_pair("LIGHT_ATTENUATION_FACTOR", GpuProgram::AutoUniformType::LIGHT_ATTENUATION_FACTOR));
         uniformMap.insert(std::make_pair("LIGHT_AMBIENT_FACTOR", GpuProgram::AutoUniformType::LIGHT_AMBIENT_FACTOR));

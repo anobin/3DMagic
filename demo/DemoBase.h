@@ -52,7 +52,11 @@ public:
 	
 		world = new World(&graphics, &physics);
 		world->setCamera(&camera);
-        world->getLight().position.setLocation(Vector3(0, 5, 0));
+        world->getLight().location = Vector3(0, 5, 0);
+
+        /*Light& light = world->getLight();
+        light.direction = Vector3(0, -1, 0);
+        light.angle = 45.0f;*/
 
 		events.init();
 	}
