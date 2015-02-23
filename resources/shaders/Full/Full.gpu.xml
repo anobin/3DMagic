@@ -22,19 +22,19 @@
 	
 	<!-- matricies for transforming points between coordinate spaces (model, world, view, clip) -->
 	<uniform>
-		<name>mvMatrix</name>
+		<name>transforms.mvMatrix</name>
 		<value ref="MODEL_VIEW_MATRIX" />
 	</uniform>
 	<uniform>
-		<name>vMatrix</name>
+		<name>transforms.vMatrix</name>
 		<value ref="VIEW_MATRIX" />
 	</uniform>
 	<uniform>
-		<name>mMatrix</name>
+		<name>transforms.mMatrix</name>
 		<value ref="MODEL_MATRIX" />
 	</uniform>
 	<uniform>
-		<name>mvpMatrix</name>
+		<name>transforms.mvpMatrix</name>
 		<value ref="MODEL_VIEW_PROJECTION_MATRIX" />
 	</uniform>
 	

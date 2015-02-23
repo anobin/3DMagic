@@ -8,7 +8,10 @@ in vec3 inputNormal;     // vertex normal in model space
 in vec2 inputTexCoord;   // texture coordinate for vertex
 in vec3 inputTangent;    // vertex tangent in model space
 
-uniform mat4   mvpMatrix;   // transforms from model space to clip space
+uniform struct Transforms
+{
+    mat4   mvpMatrix;   // transforms from model space to clip space
+} transforms;
 
 // output to next stage
 out VS_OUT
@@ -28,7 +31,7 @@ void main(void)
     vs_out.tangent = inputTangent;
 
     // set clip space position
-    gl_Position = mvpMatrix * inputPosition;
+    gl_Position = transforms.mvpMatrix * inputPosition;
 }
 
 

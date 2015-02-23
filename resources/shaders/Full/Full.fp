@@ -2,9 +2,12 @@
 
 precision highp float;
 
-uniform mat4   mvMatrix;    // transforms from model space to view space
-uniform mat4   vMatrix;     // transforms from world space to view space
-uniform mat4   mMatrix;     // transforms from model space to world space
+uniform struct Transforms
+{
+    mat4   mvMatrix;    // transforms from model space to view space
+    mat4   vMatrix;     // transforms from world space to view space
+    mat4   mMatrix;     // transforms from model space to world space
+} transforms;
 
 uniform sampler2D textureMap;
 uniform sampler2D normalMap;
@@ -37,23 +40,24 @@ in VS_OUT
 
 float calculateLightAttenFactor()
 {
-    vec3 worldPos = (mMatrix * fs_in.position).xyz;
+    vec3 worldPos = (transforms.mMatrix * fs_in.position).xyz;
     float distance = distance(light.position.xyz, worldPos.xyz);
     return 1.0 / (1.0 + light.attenuationFactor * pow(distance,2));
 }
 
 void main(void)
 {
-    vec3 N = normalize(mat3(mvMatrix) * fs_in.normal);
+    vec3 N = normalize(mat3(transforms.mvMatrix) * fs_in.normal);
     vec3 L = normalize(
-        (vMatrix * vec4(light.position.xyz, 1.0)).xyz - (mvMatrix * fs_in.position).xyz
+        (transforms.vMatrix * vec4(light.position.xyz, 1.0)).xyz - 
+        (transforms.mvMatrix * fs_in.position).xyz
     );
-    vec3 V = normalize(-(mvMatrix * fs_in.position).xyz); 
+    vec3 V = normalize(-(transforms.mvMatrix * fs_in.position).xyz); 
     
     // recalculate vectors for normal mapping (if enabled)
     if (normalMapping != 0)
     {
-        vec3 T = normalize(mat3(mvMatrix) * fs_in.tangent);
+        vec3 T = normalize(mat3(transforms.mvMatrix) * fs_in.tangent);
         vec3 B = cross(N, T);
     
         L = normalize(vec3(dot(L,T), dot(L,B), dot(L,N)));
