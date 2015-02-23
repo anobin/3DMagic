@@ -36,35 +36,35 @@ in VS_OUT
     vec3 normal;        // normal vector in model space
     vec3 tangent;       // tangent vector in model space
     vec2 texCoord;      // texture coordinate
-} fs_in;
+} fragment;
 
 float calculateLightAttenFactor()
 {
-    vec3 worldPos = (transforms.mMatrix * fs_in.position).xyz;
+    vec3 worldPos = (transforms.mMatrix * fragment.position).xyz;
     float distance = distance(light.position.xyz, worldPos.xyz);
     return 1.0 / (1.0 + light.attenuationFactor * pow(distance,2));
 }
 
 void main(void)
 {
-    vec3 N = normalize(mat3(transforms.mvMatrix) * fs_in.normal);
+    vec3 N = normalize(mat3(transforms.mvMatrix) * fragment.normal);
     vec3 L = normalize(
         (transforms.vMatrix * vec4(light.position.xyz, 1.0)).xyz - 
-        (transforms.mvMatrix * fs_in.position).xyz
+        (transforms.mvMatrix * fragment.position).xyz
     );
-    vec3 V = normalize(-(transforms.mvMatrix * fs_in.position).xyz); 
+    vec3 V = normalize(-(transforms.mvMatrix * fragment.position).xyz); 
     
     // recalculate vectors for normal mapping (if enabled)
     if (normalMapping != 0)
     {
-        vec3 T = normalize(mat3(transforms.mvMatrix) * fs_in.tangent);
+        vec3 T = normalize(mat3(transforms.mvMatrix) * fragment.tangent);
         vec3 B = cross(N, T);
     
         L = normalize(vec3(dot(L,T), dot(L,B), dot(L,N)));
         V = normalize(vec3(dot(V,T), dot(V,B), dot(V,N)));
         
         // calculate real normal from normal map
-        N = normalize(texture2D(normalMap, fs_in.texCoord).rgb * 2.0 - vec3(1.0));
+        N = normalize(texture2D(normalMap, fragment.texCoord).rgb * 2.0 - vec3(1.0));
     }
     
     
@@ -72,7 +72,7 @@ void main(void)
     
     vec3 H = normalize(L + V);
     
-    vec4 diffuseColor = texture2D(textureMap, fs_in.texCoord);
+    vec4 diffuseColor = texture2D(textureMap, fragment.texCoord);
     
     vec3 ambient = diffuseColor.rgb * light.color.rgb * light.ambientFactor * lightFactor;
     vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * light.color.rgb * lightFactor;
