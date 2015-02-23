@@ -4,14 +4,14 @@ precision highp float;
 
 uniform struct Transforms
 {
-    mat4   mvMatrix;    // transforms from model space to view space
-    mat4   vMatrix;     // transforms from world space to view space
-    mat4   mMatrix;     // transforms from model space to world space
+    mat4   mvMatrix;        // transforms from model space to view space
+    mat4   vMatrix;         // transforms from world space to view space
+    mat4   mMatrix;         // transforms from model space to world space
 } transforms;
 
 uniform sampler2D textureMap;
 uniform sampler2D normalMap;
-uniform float normalMapping;
+uniform float normalMapping = 0.0;
 uniform struct Material 
 {
     vec3 specularColor;
@@ -20,14 +20,17 @@ uniform struct Material
 
 uniform struct Light
 {
-    vec4 position;
-    float attenuationFactor;
-    float intensity;
-    vec3 color;
-    float ambientFactor;
-    vec3 direction;
-    float angle;
+    vec4    position;
+    float   attenuationFactor;
+    float   intensity;
+    vec3    color;
+    float   ambientFactor;
+    vec3    direction;
+    float   angle;
+    mat4    shadowMatrix;    // transforms from model space to light view space
 } light;
+uniform sampler2DShadow shadowMap; // depth buffer from light's viewpoint
+uniform float shadowMapping = 0.0;
 
 uniform vec3 gammaCorrectionFactor = vec3(1.0/2.2);
 
@@ -81,7 +84,7 @@ void main(void)
     }
     
     // recalculate vectors for normal mapping (if enabled)
-    if (normalMapping != 0)
+    if (normalMapping != 0.0)
     {
         vec3 T = normalize(mat3(transforms.mvMatrix) * fragment.tangent);
         vec3 B = cross(N, T);
@@ -93,6 +96,11 @@ void main(void)
         N = normalize(texture2D(normalMap, fragment.texCoord).rgb * 2.0 - vec3(1.0));
     }
     
+    float shadowFactor = 1.0f;
+    if (shadowMapping != 0.0)
+    {
+        shadowFactor = textureProj(shadowMap, light.shadowMatrix * fragment.position);
+    }
     
     float lightFactor = calculateLightAttenFactor() * light.intensity;
     
@@ -101,9 +109,10 @@ void main(void)
     vec4 diffuseColor = texture2D(textureMap, fragment.texCoord);
     
     vec3 ambient = diffuseColor.rgb * light.color.rgb * light.ambientFactor * lightFactor;
-    vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * light.color.rgb * lightFactor;
+    vec3 diffuse = max(dot(N,L), 0.0) * diffuseColor.rgb * light.color.rgb * lightFactor * 
+        shadowFactor;
     vec3 specular = pow(max(dot(N,H), 0.0), material.specularPower) * material.specularColor * 
-        light.color.rgb * lightFactor; 
+        light.color.rgb * lightFactor * shadowFactor; 
     
     vec3 color = ambient + diffuse + specular;
     gl_FragColor = vec4(pow(color,gammaCorrectionFactor), diffuseColor.a);

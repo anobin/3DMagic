@@ -178,6 +178,11 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 light.lightColor.getChannel(2, true)
             );
             break;
+        case GpuProgram::SHADOW_MATRIX:
+        case GpuProgram::SHADOW_MAP:
+            gpuProgram->setUniformf("shadowMapping", 0.0f);
+            break;
+
         case GpuProgram::FLAT_PROJECTION:   // mat4
             temp4m.createOrthographicMatrix(0, (Scalar)this->graphics.getDisplayWidth(),
                 0, (Scalar)this->graphics.getDisplayHeight(), -1.0, 1.0);

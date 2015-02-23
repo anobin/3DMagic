@@ -85,5 +85,13 @@
 		<name>light.angle</name>
 		<value ref="LIGHT_ANGLE" />
 	</uniform>
+	<uniform>
+		<name>light.shadowMatrix</name>
+		<value ref="SHADOW_MATRIX" />
+	</uniform>
+	<uniform>
+		<name>shadowMap</name>
+		<value ref="SHADOW_MAP" />
+	</uniform>
 	
 </GpuProgram>
