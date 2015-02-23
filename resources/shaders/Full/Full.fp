@@ -47,6 +47,7 @@ float calculateLightAttenFactor()
         return 1.0;
 
     // check for outside of cone
+    float atten = 1.0;
     if (light.angle > 0.0)
     {
         vec3 L = normalize(
@@ -55,13 +56,13 @@ float calculateLightAttenFactor()
         );    
     
         float lightToSurfaceAngle = degrees(acos(dot(-L, normalize(light.direction))));
-        if(lightToSurfaceAngle > light.angle)
-            return 0.0;
+        atten = max(0.0, 1.0 - (lightToSurfaceAngle / light.angle));
     }
 
     vec3 worldPos = (transforms.mMatrix * fragment.position).xyz;
     float distance = distance(light.position.xyz, worldPos.xyz);
-    return 1.0 / (1.0 + light.attenuationFactor * pow(distance,2));
+    atten *= 1.0 / (1.0 + light.attenuationFactor * pow(distance,2));
+    return atten;
 }
 
 void main(void)
