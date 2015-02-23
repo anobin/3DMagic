@@ -1,28 +1,31 @@
-#version 120
+#version 420 core
 
 precision highp float;
 
 // per vertex attributes
-attribute vec4 inputPosition;   // vertex position in model space
-attribute vec3 inputNormal;     // vertex normal in model space
-attribute vec2 inputTexCoord;   // texture coordinate for vertex
-attribute vec3 inputTangent;    // vertex tangent in model space
+in vec4 inputPosition;   // vertex position in model space
+in vec3 inputNormal;     // vertex normal in model space
+in vec2 inputTexCoord;   // texture coordinate for vertex
+in vec3 inputTangent;    // vertex tangent in model space
 
 uniform mat4   mvpMatrix;   // transforms from model space to clip space
 
 // output to next stage
-varying vec4 fragPosition;
-varying vec3 fragNormal;
-varying vec3 fragTangent;
-varying vec2 fragTexCoord;
+out VS_OUT
+{
+    vec4 position;      // position of fragment in model space
+    vec3 normal;        // normal vector in model space
+    vec3 tangent;       // tangent vector in model space
+    vec2 texCoord;      // texture coordinate
+} vs_out;
 
 void main(void) 
 { 
     // just pass along attributes 
-    fragPosition = inputPosition;
-    fragNormal = inputNormal;
-    fragTexCoord = inputTexCoord;
-    fragTangent = inputTangent;
+    vs_out.position = inputPosition;
+    vs_out.normal = inputNormal;
+    vs_out.texCoord = inputTexCoord;
+    vs_out.tangent = inputTangent;
 
     // set clip space position
     gl_Position = mvpMatrix * inputPosition;
