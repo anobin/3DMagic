@@ -58,23 +58,23 @@
 	
 	<!-- light properties -->
 	<uniform>
-		<name>lightPosition</name>
+		<name>light.position</name>
 		<value ref="LIGHT_LOCATION" />
 	</uniform>
 	<uniform>
-		<name>lightColor</name>
+		<name>light.color</name>
 		<value ref="LIGHT_COLOR" />
 	</uniform>
 	<uniform>
-		<name>lightIntensity</name>
+		<name>light.intensity</name>
 		<value ref="LIGHT_INTENSITY" />
 	</uniform>
 	<uniform>
-		<name>lightAttenuationFactor</name>
+		<name>light.attenuationFactor</name>
 		<value ref="LIGHT_ATTENUATION_FACTOR" />
 	</uniform>
 	<uniform>
-		<name>ambientFactor</name>
+		<name>light.ambientFactor</name>
 		<value ref="LIGHT_AMBIENT_FACTOR" />
 	</uniform>
 	
