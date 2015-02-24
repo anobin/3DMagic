@@ -32,6 +32,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Time/StopWatch.h"
 #include <Lights\Light.h>
 
+#include <Resources\ResourceManager.h>
+
 #include <set>
 #include <unordered_map>
 
@@ -88,14 +90,21 @@ private:
 
     std::shared_ptr<Texture> fallbackTexture;
 
+    std::shared_ptr<GpuProgram> shadowPassProgram;
+    std::shared_ptr<Material> shadowPassMaterial;
+
+    GLuint shadowFBO;
+
     void renderMesh(Mesh& mesh);
 
     void setupMaterial(Material& material, const Matrix4& modelMatrix,
-        const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe);
+        const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe,
+        Matrix4* shadowMatrix = nullptr, std::shared_ptr<Texture> shadowMap = nullptr);
     void tearDownMaterial(Material& material, bool wireframe);
     
 public:
-    inline World( GraphicsSystem* graphics, PhysicsSystem* physics):
+    inline World( GraphicsSystem* graphics, PhysicsSystem* physics, 
+        ResourceManager& manager):
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
@@ -104,6 +113,15 @@ public:
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
         fallbackTexture->setWrapMode(Texture::CLAMP_TO_EDGE);
+
+        this->shadowPassProgram = manager.get<GpuProgram>("shaders/Full/ShadowMapPass.gpu.xml");
+        this->shadowPassMaterial = std::make_shared<Material>();
+        MaterialBuilder b;
+        b.begin(this->shadowPassMaterial.get());
+        b.setGpuProgram(this->shadowPassProgram);
+        b.end();
+
+        glGenFramebuffers(1, &shadowFBO);
     }
     
 	inline void addObject(Object* object)

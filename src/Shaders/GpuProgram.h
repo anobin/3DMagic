@@ -107,7 +107,7 @@ public:
         LIGHT_COLOR,                    // vec3
         SHADOW_MATRIX,                  // mat4
         SHADOW_MAP,                     // sampler2DShadow
-        
+
         MAX_AUTO_UNIFORM_TYPE
     };
 

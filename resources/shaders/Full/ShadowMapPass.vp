@@ -1,0 +1,11 @@
+#version 120
+
+attribute vec4 inputPosition;   // vertex position in model space
+
+uniform mat4   mvpMatrix;   // transforms from model space to clip space
+
+void main(void)
+{
+    // just pass along the position in clip space
+    gl_Position = mvpMatrix * inputPosition;
+}

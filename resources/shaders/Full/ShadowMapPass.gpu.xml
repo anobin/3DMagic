@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<GpuProgram>
+	<vertexShader ref="shaders/Full/ShadowMapPass.vp" />
+	<fragmentShader ref="shaders/Full/ShadowMapPass.fp" />
+	
+	<attribute>
+		<name>inputPosition</name>
+		<type>VERTEX</type>
+	</attribute>
+
+	<uniform>
+		<name>mvpMatrix</name>
+		<value ref="MODEL_VIEW_PROJECTION_MATRIX" />
+	</uniform>
+	
+</GpuProgram>

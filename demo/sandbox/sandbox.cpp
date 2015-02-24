@@ -458,11 +458,10 @@ class Sandbox : public DemoBase
 
 public:
 
+    Sandbox() : DemoBase(resourceManager) {}
+
 	void setup()
 	{
-		resourceManager.addResourceDir("../../../../resources/");
-		resourceManager.addResourceDir("../../../../../resources/");
-
 		// bullet setup
 		physics.setGravity(0,-9.8f*METER,0);
 
@@ -821,6 +820,8 @@ public:
  */
 int main(int argc, char* argv[])
 {
+    resourceManager.addResourceDir("../../../../resources/");
+    resourceManager.addResourceDir("../../../../../resources/");
 	
 	Sandbox sandbox;
 

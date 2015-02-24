@@ -45,7 +45,8 @@ void World::stepPhysics()
   
 
 void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
-    const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe)
+    const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe,
+    Matrix4* shadowMatrix, std::shared_ptr<Texture> shadowMap)
 {
     auto gpuProgram = material.gpuProgram;
     MAGIC_ASSERT(gpuProgram != nullptr);
@@ -178,17 +179,30 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
                 light.lightColor.getChannel(2, true)
             );
             break;
-        case GpuProgram::SHADOW_MATRIX:
-        case GpuProgram::SHADOW_MAP:
-            gpuProgram->setUniformf("shadowMapping", 0.0f);
-            break;
 
         case GpuProgram::FLAT_PROJECTION:   // mat4
             temp4m.createOrthographicMatrix(0, (Scalar)this->graphics.getDisplayWidth(),
                 0, (Scalar)this->graphics.getDisplayHeight(), -1.0, 1.0);
             gpuProgram->setUniformMatrix(u.varName.c_str(), 4, temp4m.getArray());
             break;
-        
+
+        case GpuProgram::SHADOW_MATRIX:   // mat4
+            if (shadowMatrix != nullptr)
+            {
+                temp4m.multiply(*shadowMatrix, modelMatrix);
+                gpuProgram->setUniformMatrix(u.varName.c_str(), 4, temp4m.getArray());
+            }
+            break;
+        case GpuProgram::SHADOW_MAP:    // sampler2D
+            if (shadowMap != nullptr)
+            {
+                gpuProgram->setTexture(u.varName.c_str(), shadowMap.get(), 9);
+                gpuProgram->setUniformf("shadowMapping", 1.0f);
+            }
+            else
+                gpuProgram->setUniformf("shadowMapping", 0.0f);
+            break;
+
         default:
             MAGIC_ASSERT(false);
             break;
@@ -318,9 +332,95 @@ void World::renderObjects()
 
     vertexCount = 0;
 
-    // render static objects (aka scenery)
+
+
+
+
+
+    // generate shadow map with shadows cast by static objects
+    auto shadowTex = std::make_shared<Texture>();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
+
+    glGenTextures(1, &shadowTex->tid);
+    
+    glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
+    glTexStorage2D(GL_TEXTURE_2D, 11, GL_DEPTH_COMPONENT32F, 4096, 4096);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
+
+    
+    FPCamera lightCamera;
+    lightCamera.setLocation(this->light.location);
+    lightCamera.lookat(this->light.direction * 20);
+
+    lightCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, 1.0f, 200.0f);
+
+    Matrix4 lightViewMatrix;
+    lightCamera.getPosition().getCameraMatrix(lightViewMatrix);
+    /*lightViewMatrix.setColumn(0, Vector4(0.577, -0.333, 0.577, 0));
+    lightViewMatrix.setColumn(1, Vector4(0, 0.666, 0.577, 0));
+    lightViewMatrix.setColumn(2, Vector4(-0.577, -0.333, 0.577, 0));
+    lightViewMatrix.setColumn(3, Vector4(0, 0, -34.641, 1));*/
+    const Matrix4& lightProjectionMatrix = lightCamera.getProjectionMatrix();
+
     Matrix4 identityMatrix;
-    Material* material = nullptr;
+    Material* material = this->shadowPassMaterial.get();
+
+    glViewport(0, 0, 4096, 4096);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(4.0f, 4.0f);
+
+    setupMaterial(*material, identityMatrix, lightViewMatrix, lightProjectionMatrix, false);
+
+    static const GLenum buffs[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, buffs);
+    static const GLfloat zero[] = { 0.0f };
+    glClearBufferfv(GL_COLOR, 0, zero);
+
+    static const GLfloat ones[] = { 1.0f };
+    glClearBufferfv(GL_DEPTH, 0, ones);
+
+    for (auto it : this->staticObjects)
+    {
+        for (std::shared_ptr<Object> ob : *it.second)
+        {
+            for (auto mesh : *ob->getModel()->getMeshes())
+            {
+                renderMesh(*mesh);
+            }
+        }
+    }
+    tearDownMaterial(*material, false);
+
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, graphics.getDisplayWidth(), graphics.getDisplayHeight());
+
+
+    Matrix4 scaleBiasMatrix;
+    scaleBiasMatrix.setColumn(0, Vector4(0.5f, 0.0f, 0.0f, 0.0f));
+    scaleBiasMatrix.setColumn(1, Vector4(0.0f, 0.5f, 0.0f, 0.0f));
+    scaleBiasMatrix.setColumn(2, Vector4(0.0f, 0.0f, 0.5f, 0.0f));
+    scaleBiasMatrix.setColumn(3, Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+
+
+    Matrix4 shadowMatrix;
+    shadowMatrix.multiply(scaleBiasMatrix, lightProjectionMatrix);
+    shadowMatrix.multiply(lightViewMatrix);
+
+
+
+
+
+
+
+    // render static objects (aka scenery)
+    material = nullptr;
     for (auto ob : sortedStaticObjects)
     {
         if (material == nullptr || material != ob->getModel()->getMaterial().get())
@@ -328,7 +428,8 @@ void World::renderObjects()
             if (material != nullptr)
                 tearDownMaterial(*material, this->wireframeEnabled);
             material = ob->getModel()->getMaterial().get();
-            setupMaterial(*material, identityMatrix, view, projection, this->wireframeEnabled);
+            setupMaterial(*material, identityMatrix, view, projection, this->wireframeEnabled, 
+                &shadowMatrix, shadowTex);
         }
 
         for (auto mesh : *ob->getModel()->getMeshes())
@@ -360,7 +461,8 @@ void World::renderObjects()
         Matrix4 model;
         ob->getPosition().getTransformMatrix(model);
         
-        setupMaterial(*material, model, view, projection, this->wireframeEnabled);
+        setupMaterial(*material, model, view, projection, this->wireframeEnabled,
+            &shadowMatrix, shadowTex);
 		for(const std::shared_ptr<Mesh> mesh : *meshes)
 		{   
             renderMesh(*mesh);

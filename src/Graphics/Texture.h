@@ -68,7 +68,7 @@ public:
         REPEAT = GL_REPEAT
 	};
 	
-private:
+public:
 	/// id of texture on graphics memory
 	GLuint tid;
 	

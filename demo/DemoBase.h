@@ -42,7 +42,7 @@ protected:
 
 public:
 
-	inline DemoBase()
+	inline DemoBase(ResourceManager manager)
 	{
 		graphics.init();
 		graphics.setDisplaySize( 1280, 1024 );
@@ -50,7 +50,7 @@ public:
 	
 		physics.init();
 	
-		world = new World(&graphics, &physics);
+		world = new World(&graphics, &physics, manager);
 		world->setCamera(&camera);
         world->getLight().location = Vector3(0, 5, 0);
 
