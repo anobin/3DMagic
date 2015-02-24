@@ -335,83 +335,80 @@ void World::renderObjects()
 
 
 
-
-
-    // generate shadow map with shadows cast by static objects
-    auto shadowTex = std::make_shared<Texture>();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
-
-    glGenTextures(1, &shadowTex->tid);
-    
-    glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
-    glTexStorage2D(GL_TEXTURE_2D, 11, GL_DEPTH_COMPONENT32F, 4096, 4096);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
-
-    
-    FPCamera lightCamera;
-    lightCamera.setLocation(this->light.location);
-    lightCamera.lookat(this->light.direction * 20);
-
-    lightCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, 1.0f, 200.0f);
-
-    Matrix4 lightViewMatrix;
-    lightCamera.getPosition().getCameraMatrix(lightViewMatrix);
-    /*lightViewMatrix.setColumn(0, Vector4(0.577, -0.333, 0.577, 0));
-    lightViewMatrix.setColumn(1, Vector4(0, 0.666, 0.577, 0));
-    lightViewMatrix.setColumn(2, Vector4(-0.577, -0.333, 0.577, 0));
-    lightViewMatrix.setColumn(3, Vector4(0, 0, -34.641, 1));*/
-    const Matrix4& lightProjectionMatrix = lightCamera.getProjectionMatrix();
-
-    Matrix4 identityMatrix;
-    Material* material = this->shadowPassMaterial.get();
-
-    glViewport(0, 0, 4096, 4096);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(4.0f, 4.0f);
-
-    setupMaterial(*material, identityMatrix, lightViewMatrix, lightProjectionMatrix, false);
-
-    static const GLenum buffs[] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, buffs);
-    static const GLfloat zero[] = { 0.0f };
-    glClearBufferfv(GL_COLOR, 0, zero);
-
-    static const GLfloat ones[] = { 1.0f };
-    glClearBufferfv(GL_DEPTH, 0, ones);
-
-    for (auto it : this->staticObjects)
+    std::shared_ptr<Texture> shadowTex = nullptr;
+    Matrix4 shadowMatrix;
+    if (this->light.canCastShadows)
     {
-        for (std::shared_ptr<Object> ob : *it.second)
+        // generate shadow map with shadows cast by static objects
+        shadowTex = std::make_shared<Texture>();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
+
+        glGenTextures(1, &shadowTex->tid);
+
+        glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
+        glTexStorage2D(GL_TEXTURE_2D, 11, GL_DEPTH_COMPONENT32F, 4096, 4096);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
+
+
+        FPCamera lightCamera;
+        lightCamera.setLocation(this->light.location);
+        lightCamera.lookat(this->light.direction * 20);
+
+        lightCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, 1.0f, 200.0f);
+
+        Matrix4 lightViewMatrix;
+        lightCamera.getPosition().getCameraMatrix(lightViewMatrix);
+        const Matrix4& lightProjectionMatrix = lightCamera.getProjectionMatrix();
+
+        Matrix4 identityMatrix;
+        Material* material = this->shadowPassMaterial.get();
+
+        glViewport(0, 0, 4096, 4096);
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(4.0f, 4.0f);
+
+        setupMaterial(*material, identityMatrix, lightViewMatrix, lightProjectionMatrix, false);
+
+        static const GLenum buffs[] = { GL_COLOR_ATTACHMENT0 };
+        glDrawBuffers(1, buffs);
+        static const GLfloat zero[] = { 0.0f };
+        glClearBufferfv(GL_COLOR, 0, zero);
+
+        static const GLfloat ones[] = { 1.0f };
+        glClearBufferfv(GL_DEPTH, 0, ones);
+
+        for (auto it : this->staticObjects)
         {
-            for (auto mesh : *ob->getModel()->getMeshes())
+            for (std::shared_ptr<Object> ob : *it.second)
             {
-                renderMesh(*mesh);
+                for (auto mesh : *ob->getModel()->getMeshes())
+                {
+                    renderMesh(*mesh);
+                }
             }
         }
+        tearDownMaterial(*material, false);
+
+        glDisable(GL_POLYGON_OFFSET_FILL);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, graphics.getDisplayWidth(), graphics.getDisplayHeight());
+
+
+        Matrix4 scaleBiasMatrix;
+        scaleBiasMatrix.setColumn(0, Vector4(0.5f, 0.0f, 0.0f, 0.0f));
+        scaleBiasMatrix.setColumn(1, Vector4(0.0f, 0.5f, 0.0f, 0.0f));
+        scaleBiasMatrix.setColumn(2, Vector4(0.0f, 0.0f, 0.5f, 0.0f));
+        scaleBiasMatrix.setColumn(3, Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+
+        shadowMatrix.multiply(scaleBiasMatrix, lightProjectionMatrix);
+        shadowMatrix.multiply(lightViewMatrix);
     }
-    tearDownMaterial(*material, false);
-
-    glDisable(GL_POLYGON_OFFSET_FILL);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, graphics.getDisplayWidth(), graphics.getDisplayHeight());
-
-
-    Matrix4 scaleBiasMatrix;
-    scaleBiasMatrix.setColumn(0, Vector4(0.5f, 0.0f, 0.0f, 0.0f));
-    scaleBiasMatrix.setColumn(1, Vector4(0.0f, 0.5f, 0.0f, 0.0f));
-    scaleBiasMatrix.setColumn(2, Vector4(0.0f, 0.0f, 0.5f, 0.0f));
-    scaleBiasMatrix.setColumn(3, Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-
-
-    Matrix4 shadowMatrix;
-    shadowMatrix.multiply(scaleBiasMatrix, lightProjectionMatrix);
-    shadowMatrix.multiply(lightViewMatrix);
 
 
 
@@ -420,7 +417,8 @@ void World::renderObjects()
 
 
     // render static objects (aka scenery)
-    material = nullptr;
+    Matrix4 identityMatrix;
+    Material* material = nullptr;
     for (auto ob : sortedStaticObjects)
     {
         if (material == nullptr || material != ob->getModel()->getMaterial().get())

@@ -744,6 +744,8 @@ public:
             // set focus point 20 feet in front of view
             Vector3 focusPoint = pos.getLocation() + (pos.getForwardVector() * (20 * FOOT));
             light.direction = (focusPoint - light.location).normalize();
+
+            light.canCastShadows = true;
         }
 
 		Vector3 endPoint = physics.createRay(camera.getPosition().getLocation(), camera.getPosition().getForwardVector(), 1000);

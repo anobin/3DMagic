@@ -24,6 +24,8 @@ public:
 
     Color lightColor;
 
+    bool canCastShadows;
+
     Light() :
         location(0, 0, 0),
         locationLess(false),
@@ -32,7 +34,8 @@ public:
         intensity(1.0f), 
         attenuationFactor(0.3f), 
         ambientFactor(0.01f),
-        lightColor(Color::WHITE) 
+        lightColor(Color::WHITE),
+        canCastShadows(false)
     {}
 };
 
