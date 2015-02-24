@@ -321,8 +321,6 @@ class GpuProgramParser
         uniformMap.insert(std::make_pair("SHADOW_MAP", GpuProgram::AutoUniformType::SHADOW_MAP));
 		uniformMap.insert(std::make_pair("FLAT_PROJECTION", GpuProgram::AutoUniformType::FLAT_PROJECTION));
         uniformMap.insert(std::make_pair("NORMAL_MAP", GpuProgram::AutoUniformType::NORMAL_MAP));
-        uniformMap.insert(std::make_pair("SHADOW_MATRIX", GpuProgram::AutoUniformType::SHADOW_MATRIX));
-        uniformMap.insert(std::make_pair("SHADOW_MAP", GpuProgram::AutoUniformType::SHADOW_MAP));
 
 	}
 
