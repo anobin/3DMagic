@@ -393,6 +393,26 @@ void World::renderObjects()
         }
         tearDownMaterial(*material, false);
 
+
+        for (Object* ob : this->objects)
+        {
+            const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
+            if (meshes == nullptr)
+                continue;
+
+            // get model/world matrix for object (same for all meshes in object)
+            Matrix4 model;
+            ob->getPosition().getTransformMatrix(model);
+
+            setupMaterial(*material, model, lightViewMatrix, lightProjectionMatrix, false);
+            for (const std::shared_ptr<Mesh> mesh : *meshes)
+            {
+                renderMesh(*mesh);
+            }
+            tearDownMaterial(*material, false);
+        }
+
+
         glDisable(GL_POLYGON_OFFSET_FILL);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, graphics.getDisplayWidth(), graphics.getDisplayHeight());
@@ -448,7 +468,7 @@ void World::renderObjects()
 	    
 		const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
 		if (meshes == nullptr)
-			break;
+			continue;
 
         // get mesh and material data
 		auto material = ob->getModel()->getMaterial();
