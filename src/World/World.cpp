@@ -23,6 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <World/World.h>
 #include <Cameras/FPCamera.h>
 #include <Shaders\GpuProgram.h>
+#include <Util\Units.h>
 
 namespace Magic3D
 {
@@ -358,9 +359,9 @@ void World::renderObjects()
 
         FPCamera lightCamera;
         lightCamera.setLocation(this->light.location);
-        lightCamera.lookat(this->light.direction * 20);
+        lightCamera.lookat(this->light.direction + this->light.location);
 
-        lightCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, 1.0f, 200.0f);
+        lightCamera.setPerspectiveProjection(30.0f, 1.0f, INCH, 1000*FOOT);
 
         Matrix4 lightViewMatrix;
         lightCamera.getPosition().getCameraMatrix(lightViewMatrix);
