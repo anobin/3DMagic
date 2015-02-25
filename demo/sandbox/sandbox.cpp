@@ -125,7 +125,7 @@ MaterialBuilder materialBuilder;
 // 3ds stuff
 Mesh* chainMeshes;
 Texture* chainTex;
-Object* chainObject;
+std::shared_ptr<Object> chainObject;
 
 //FT_Face face;
 StaticFont* font;
@@ -655,16 +655,18 @@ public:
 		Matrix4 scaleMatrix;
 		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
         chainBatches = chainBatches->applyTransform(scaleMatrix);
+        scaleMatrix.createTranslationMatrix(0, 5, 0);
+        chainBatches = chainBatches->applyTransform(scaleMatrix);
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
         materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
         materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/plastic.normals.tex.xml"));
 		materialBuilder.end();
 		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(*chainBatches);
-		chainObject = new Object(std::make_shared<Model>(chainBatches, 
+		chainObject = std::make_shared<Object>(std::make_shared<Model>(chainBatches, 
 			chainMaterial, chainShape));
 		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
-		world->addObject(chainObject);
+		world->addStaticObject(chainObject);
 
 
 
