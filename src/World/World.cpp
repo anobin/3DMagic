@@ -195,7 +195,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
             }
             break;
         case GpuProgram::SHADOW_MAP:    // sampler2D
-            if (shadowMap != nullptr)
+            if (shadowMap != nullptr && this->light.canCastShadows)
             {
                 gpuProgram->setTexture(u.varName.c_str(), shadowMap.get(), 9);
                 gpuProgram->setUniformf("shadowMapping", 1.0f);
@@ -336,26 +336,10 @@ void World::renderObjects()
 
 
 
-    std::shared_ptr<Texture> shadowTex = nullptr;
     Matrix4 shadowMatrix;
     if (this->light.canCastShadows)
     {
-        // generate shadow map with shadows cast by static objects
-        shadowTex = std::make_shared<Texture>();
-
         glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
-
-        glGenTextures(1, &shadowTex->tid);
-
-        glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
-        glTexStorage2D(GL_TEXTURE_2D, 11, GL_DEPTH_COMPONENT32F, 4096, 4096);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
-
 
         FPCamera lightCamera;
         if (this->light.locationLess)
@@ -392,10 +376,7 @@ void World::renderObjects()
 
         setupMaterial(*material, identityMatrix, lightViewMatrix, lightProjectionMatrix, false);
 
-        static const GLenum buffs[] = { GL_COLOR_ATTACHMENT0 };
-        glDrawBuffers(1, buffs);
-        static const GLfloat zero[] = { 0.0f };
-        glClearBufferfv(GL_COLOR, 0, zero);
+        glDrawBuffer(GL_NONE);
 
         static const GLfloat ones[] = { 1.0f };
         glClearBufferfv(GL_DEPTH, 0, ones);

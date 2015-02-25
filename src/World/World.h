@@ -94,6 +94,7 @@ private:
     std::shared_ptr<Material> shadowPassMaterial;
 
     GLuint shadowFBO;
+    std::shared_ptr<Texture> shadowTex;
 
     void renderMesh(Mesh& mesh);
 
@@ -122,6 +123,23 @@ public:
         b.end();
 
         glGenFramebuffers(1, &shadowFBO);
+
+        shadowTex = std::make_shared<Texture>();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
+
+        glGenTextures(1, &shadowTex->tid);
+
+        glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, 4096, 4096);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     
 	inline void addObject(Object* object)
