@@ -358,10 +358,26 @@ void World::renderObjects()
 
 
         FPCamera lightCamera;
-        lightCamera.setLocation(this->light.location);
-        lightCamera.lookat(this->light.direction + this->light.location);
+        if (this->light.locationLess)
+        {
+            lightCamera.setLocation(
+                this->camera->getPosition().getLocation() +
+                (this->light.direction * 10 * FOOT)
+            );
+            lightCamera.lookat(this->camera->getPosition().getLocation());
 
-        lightCamera.setPerspectiveProjection(30.0f, 1.0f, INCH, 1000*FOOT);
+            lightCamera.setOrthographicProjection(
+                -100*FOOT, 100*FOOT, 
+                -100*FOOT, 100*FOOT, 
+                -100*FOOT, 100*FOOT);
+        }
+        else
+        {
+            lightCamera.setLocation(this->light.location);
+            lightCamera.lookat(this->light.direction + this->light.location);
+
+            lightCamera.setPerspectiveProjection(30.0f, 1.0f, INCH, 1000 * FOOT);
+        }
 
         Matrix4 lightViewMatrix;
         lightCamera.getPosition().getCameraMatrix(lightViewMatrix);

@@ -723,8 +723,9 @@ public:
             graphics.setClearColor(Color(5, 230, 255));
             Light& light = world->getLight();
             light.locationLess = true;
-            light.direction = Vector3(0, 1, 0);
+            light.direction = Vector3(0, 1, 1.5).normalize();
             light.ambientFactor = 0.2;
+            light.canCastShadows = true;
         }
         else if (flashlightMode)
         {
