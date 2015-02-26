@@ -29,12 +29,16 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 	
+Texture::Texture()
+{
+    glGenTextures(1, &tid);
+}
 
 /** Standard constructor
  * @param image the image to build this texture around.
  * @param generateMipmaps whether to generate mipmaps or not
  */
-    Texture::Texture(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
+Texture::Texture(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
 {
     // generate texture id
 	glGenTextures(1, &tid);
@@ -42,7 +46,7 @@ namespace Magic3D
     this->set(image, removeGammaCorrection, generateMipmaps);
 }
 
-    void Texture::set(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
+void Texture::set(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
 {
     // bind to our state
 	glBindTexture(GL_TEXTURE_2D, tid);
@@ -103,7 +107,7 @@ namespace Magic3D
 	{
 		// if there is no mipmap, then set the min filter to something that
 		// will work without a mipmap
-		this->setMinFilter(Texture::MIN_LINEAR);
+		this->setMinFilter(Texture::MinFilters::LINEAR);
 	}
 }
 	

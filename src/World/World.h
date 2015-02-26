@@ -113,7 +113,7 @@ public:
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
-        fallbackTexture->setWrapMode(Texture::CLAMP_TO_EDGE);
+        fallbackTexture->setWrapMode(Texture::WrapModes::CLAMP_TO_EDGE);
 
         this->shadowPassProgram = manager.get<GpuProgram>("shaders/Full/ShadowMapPass.gpu.xml");
         this->shadowPassMaterial = std::make_shared<Material>();
@@ -122,23 +122,17 @@ public:
         b.setGpuProgram(this->shadowPassProgram);
         b.end();
 
-        glGenFramebuffers(1, &shadowFBO);
-
         shadowTex = std::make_shared<Texture>();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
-
-        glGenTextures(1, &shadowTex->tid);
-
-        glBindTexture(GL_TEXTURE_2D, shadowTex->tid);
+        shadowTex->bind();
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, 4096, 4096);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->tid, 0);
-
+        shadowTex->setMinFilter(Texture::MinFilters::LINEAR);
+        shadowTex->setMagFilter(Texture::MagFilters::LINEAR);
+        shadowTex->setCompareMode(Texture::CompareModes::COMPARE_REF_TO_TEXTURE);
+        shadowTex->setCompareFunc(Texture::CompareFuncs::LEQUAL);
+        
+        glGenFramebuffers(1, &shadowFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex->getID(), 0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     

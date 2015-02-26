@@ -47,36 +47,51 @@ class Texture
 {
 public:
 	/// the types of minification filters
-	enum MinFilters {
-		MIN_NEAREST = GL_NEAREST,
-		MIN_LINEAR = GL_LINEAR,
+	enum class MinFilters {
+		NEAREST = GL_NEAREST,
+		LINEAR = GL_LINEAR,
 		NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST,
 		LINEAR_MIPMAP_NEAREST = GL_LINEAR_MIPMAP_NEAREST,
 		NEAREST_MIPMAP_LINEAR = GL_NEAREST_MIPMAP_LINEAR,
 		LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
 	};
 	/// the types of magnification filters
-	enum MagFilters {
-		MAG_NEAREST = GL_NEAREST,
-		MAG_LINEAR = GL_LINEAR
+	enum class MagFilters {
+		NEAREST = GL_NEAREST,
+		LINEAR = GL_LINEAR
 	};
 	/// the edge wrap modes
-	enum WrapModes {
+	enum class WrapModes {
 		CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE, 
 		CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER,
         MIRRORED_REPEAT = GL_MIRRORED_REPEAT,
         REPEAT = GL_REPEAT
 	};
+    // the compare modes
+    enum class CompareModes {
+        COMPARE_REF_TO_TEXTURE = GL_COMPARE_REF_TO_TEXTURE
+    };
+    // the compare functions
+    enum class CompareFuncs {
+        LEQUAL = GL_LEQUAL,
+        GEQUAL = GL_GEQUAL,
+        LESS = GL_LESS,
+        GREATER = GL_GREATER,
+        EQUAL = GL_EQUAL,
+        NOTEQUAL = GL_NOTEQUAL,
+        ALWAYS = GL_ALWAYS,
+        NEVER = GL_NEVER
+    };
+
 	
-public:
+private:
 	/// id of texture on graphics memory
 	GLuint tid;
 	
-	/// default constructor
-	inline Texture(): tid(0) {}
-	
 public:
 	
+    Texture();
+
 	/** Standard constructor
 	 * @param image the image to build this texture around.
 	 * @param generateMipmaps whether to generate mipmaps or not
@@ -124,22 +139,26 @@ public:
 	 * @param filter the filter to use
 	 */
 	inline void setMinFilter(MinFilters filter)
-	{ this->setParameter(GL_TEXTURE_MIN_FILTER, filter); }
+	{ this->setParameter(GL_TEXTURE_MIN_FILTER, (int)filter); }
 
 	/** Set the magnification filter to use
 	 * @param filter the filter to use
 	 */
 	inline void setMagFilter(MagFilters filter)
-	{ this->setParameter(GL_TEXTURE_MAG_FILTER, filter); }
+	{ this->setParameter(GL_TEXTURE_MAG_FILTER, (int)filter); }
 	
 	/** Set the texture wrap mode for both s and t coords
 	 * @param mode the wrap mode to set
 	 */
 	inline void setWrapMode(WrapModes mode)
-	{ this->setParameter( GL_TEXTURE_WRAP_S, mode);
-	  this->setParameter( GL_TEXTURE_WRAP_T, mode); }
+	{ this->setParameter( GL_TEXTURE_WRAP_S, (int)mode);
+	  this->setParameter( GL_TEXTURE_WRAP_T, (int)mode); }
 
+    inline void setCompareMode(CompareModes mode)
+    { this->setParameter(GL_TEXTURE_COMPARE_MODE, (int)mode); }
 
+    inline void setCompareFunc(CompareFuncs func)
+    { this->setParameter(GL_TEXTURE_COMPARE_FUNC, (int)func); }
 };
 
 

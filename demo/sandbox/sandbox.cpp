@@ -476,7 +476,7 @@ public:
 
 		Image blueImage( 1, 1, 4, Color(31, 97, 240, 255) );
 		auto blueTex = std::make_shared<Texture>(blueImage);
-        blueTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+        blueTex->setWrapMode(Texture::WrapModes::CLAMP_TO_EDGE);
 
 		shared_ptr<FontResource> dejavuResource = resourceManager.get<FontResource>
 			( "fonts/dejavu/DejaVuSerif-Italic.ttf" );
@@ -551,7 +551,7 @@ public:
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
 		screenTex = std::make_shared<Texture>(screenImage);
-		screenTex->setWrapMode(Texture::CLAMP_TO_EDGE);
+		screenTex->setWrapMode(Texture::WrapModes::CLAMP_TO_EDGE);
 
 		auto circle2DMaterial = std::make_shared<Material>();
 		materialBuilder.begin(circle2DMaterial.get());
