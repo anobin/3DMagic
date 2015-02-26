@@ -29,16 +29,21 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
 	
-Texture::Texture()
+Texture::Texture(GLenum internalFormat, unsigned int width, unsigned int height) :
+    width(width), height(height)
 {
     glGenTextures(1, &tid);
+
+    this->bind();
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
 }
 
 /** Standard constructor
  * @param image the image to build this texture around.
  * @param generateMipmaps whether to generate mipmaps or not
  */
-Texture::Texture(const Image& image, bool removeGammaCorrection, bool generateMipmaps)
+Texture::Texture(const Image& image, bool removeGammaCorrection, bool generateMipmaps) :
+    width(image.getWidth()), height(image.getHeight())
 {
     // generate texture id
 	glGenTextures(1, &tid);

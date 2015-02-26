@@ -122,9 +122,7 @@ public:
         b.setGpuProgram(this->shadowPassProgram);
         b.end();
 
-        shadowTex = std::make_shared<Texture>();
-        shadowTex->bind();
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT32F, 4096, 4096);
+        shadowTex = std::make_shared<Texture>(GL_DEPTH_COMPONENT32F, 4096, 4096);
         shadowTex->setMinFilter(Texture::MinFilters::LINEAR);
         shadowTex->setMagFilter(Texture::MagFilters::LINEAR);
         shadowTex->setCompareMode(Texture::CompareModes::COMPARE_REF_TO_TEXTURE);

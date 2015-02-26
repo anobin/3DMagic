@@ -87,10 +87,13 @@ public:
 private:
 	/// id of texture on graphics memory
 	GLuint tid;
+
+    unsigned int width;
+    unsigned int height;
 	
 public:
 	
-    Texture();
+    Texture(GLenum internalFormat, unsigned int width, unsigned int height);
 
 	/** Standard constructor
 	 * @param image the image to build this texture around.
@@ -159,6 +162,9 @@ public:
 
     inline void setCompareFunc(CompareFuncs func)
     { this->setParameter(GL_TEXTURE_COMPARE_FUNC, (int)func); }
+
+    inline unsigned int getWidth() { return this->width; }
+    inline unsigned int getHeight() { return this->height; }
 };
 
 
