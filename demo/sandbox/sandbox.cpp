@@ -307,6 +307,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.setShowBoundingSpheres(!world.getShowBoundingSpheres());
             break;
 
+        case 'v':
+            world.setCastShadows(!world.isCastShadows());
+            break;
+
         case 'f':
             flashlightMode = !flashlightMode;
             break;

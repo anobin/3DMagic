@@ -86,6 +86,8 @@ private:
 
     bool useTextures;
 
+    bool castShadows;
+
 	float renderTimeElapsed;
 
     std::shared_ptr<Texture> fallbackTexture;
@@ -109,7 +111,7 @@ public:
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
-        showNormals(false), useNormalMaps(true), useTextures(true) 
+        showNormals(false), useNormalMaps(true), useTextures(true), castShadows(true)
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
@@ -289,6 +291,15 @@ public:
     inline bool isUseTextures()
     {
         return this->useTextures;
+    }
+
+    inline void setCastShadows(bool cast)
+    {
+        this->castShadows = cast;
+    }
+    inline bool isCastShadows()
+    {
+        return this->castShadows;
     }
 
     inline Camera& getCamera()

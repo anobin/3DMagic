@@ -195,7 +195,7 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
             }
             break;
         case GpuProgram::SHADOW_MAP:    // sampler2D
-            if (shadowMap != nullptr && this->light.canCastShadows)
+            if (shadowMap != nullptr && this->light.canCastShadows && this->castShadows)
             {
                 gpuProgram->setTexture(u.varName.c_str(), shadowMap.get(), 9);
                 gpuProgram->setUniformf("shadowMapping", 1.0f);
@@ -337,7 +337,7 @@ void World::renderObjects()
 
 
     Matrix4 shadowMatrix;
-    if (this->light.canCastShadows)
+    if (this->light.canCastShadows && this->castShadows)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
 
