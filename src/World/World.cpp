@@ -375,7 +375,7 @@ void World::renderObjects()
         Matrix4 identityMatrix;
         Material* material = this->shadowPassMaterial.get();
 
-        glViewport(0, 0, 4096, 4096);
+        glViewport(0, 0, this->shadowTex->getWidth(), this->shadowTex->getHeight());
         glEnable(GL_POLYGON_OFFSET_FILL);
         glPolygonOffset(4.0f, 4.0f);
 
