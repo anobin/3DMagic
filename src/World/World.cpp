@@ -342,7 +342,7 @@ void World::renderObjects()
         glBindFramebuffer(GL_FRAMEBUFFER, this->shadowFBO);
 
         FPCamera lightCamera;
-        if (this->light.locationLess)
+        if (this->light.locationLess) // directional
         {
             lightCamera.setLocation(
                 this->camera->getPosition().getLocation() +
@@ -355,12 +355,17 @@ void World::renderObjects()
                 -100*FOOT, 100*FOOT, 
                 -100*FOOT, 100*FOOT);
         }
-        else
+        else if (this->light.angle > 0.0f) // spot light
         {
             lightCamera.setLocation(this->light.location);
             lightCamera.lookat(this->light.direction + this->light.location);
 
             lightCamera.setPerspectiveProjection(30.0f, 1.0f, INCH, 1000 * FOOT);
+        }
+        else // point light
+        { 
+            // shadows from point lights not supported yet
+            throw_MagicException("Point Lights that cast shadows are not yet supported");
         }
 
         Matrix4 lightViewMatrix;
