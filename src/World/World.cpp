@@ -360,7 +360,7 @@ void World::renderObjects()
             lightCamera.setLocation(this->light.location);
             lightCamera.lookat(this->light.direction + this->light.location);
 
-            lightCamera.setPerspectiveProjection(30.0f, 1.0f, INCH, 1000 * FOOT);
+            lightCamera.setPerspectiveProjection(light.angle*2, 1.0f, INCH, 1000 * FOOT);
         }
         else // point light
         { 
