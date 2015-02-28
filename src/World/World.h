@@ -88,6 +88,8 @@ private:
 
     bool castShadows;
 
+    bool showSpecularHighlight;
+
 	float renderTimeElapsed;
 
     std::shared_ptr<Texture> fallbackTexture;
@@ -111,7 +113,8 @@ public:
         graphics(*graphics), physics(*physics), fps(60), physicsStepTime(1.0f/60.0f),
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
-        showNormals(false), useNormalMaps(true), useTextures(true), castShadows(true)
+        showNormals(false), useNormalMaps(true), useTextures(true), castShadows(true),
+        showSpecularHighlight(true)
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
@@ -300,6 +303,15 @@ public:
     inline bool isCastShadows()
     {
         return this->castShadows;
+    }
+
+    inline bool getShowSpecularHighlight()
+    {
+        return this->showSpecularHighlight;
+    }
+    inline void setShowSpecularHighlight(bool show)
+    {
+        this->showSpecularHighlight = show;
     }
 
     inline Camera& getCamera()

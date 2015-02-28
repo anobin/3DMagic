@@ -311,6 +311,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.setCastShadows(!world.isCastShadows());
             break;
 
+        case 'y':
+            world.setShowSpecularHighlight(!world.getShowSpecularHighlight());
+            break;
+
         case 'f':
             flashlightMode = !flashlightMode;
             break;

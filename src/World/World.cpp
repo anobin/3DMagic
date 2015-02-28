@@ -139,11 +139,16 @@ void World::setupMaterial(Material& material, const Matrix4& modelMatrix,
             gpuProgram->setUniformf(u.varName.c_str(), material.shininess);
             break;
         case GpuProgram::SPECULAR_COLOR:                  // vec3
-            gpuProgram->setUniformf(u.varName.c_str(),
-                material.specularColor.getChannel(0, true),
-                material.specularColor.getChannel(1, true),
-                material.specularColor.getChannel(2, true)
-                );
+            if (this->showSpecularHighlight)
+            {
+                gpuProgram->setUniformf(u.varName.c_str(),
+                    material.specularColor.getChannel(0, true),
+                    material.specularColor.getChannel(1, true),
+                    material.specularColor.getChannel(2, true)
+                    );
+            }
+            else
+                gpuProgram->setUniformf(u.varName.c_str(), 0.0f, 0.0f, 0.0f);
             break;
 
 
