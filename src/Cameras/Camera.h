@@ -27,8 +27,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../Math/Matrix4.h"
 #include "../Math/Position.h"
-#include <Graphics\Mesh.h>
-#include <Graphics\MeshBuilder.h>
 
 #include <memory>
 

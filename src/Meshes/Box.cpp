@@ -24,7 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 #include <Shapes/Vertex.h>
 
 namespace Magic3D
@@ -35,7 +35,7 @@ namespace Magic3D
  * @param height the height of the box
  * @param depth the depth of the box
  */
-MeshBuilderPTNT& MeshBuilderPTNT::buildBox(float width, float height, float depth)
+TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;

@@ -26,7 +26,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 
 namespace Magic3D
 {
@@ -38,7 +38,7 @@ namespace Magic3D
  * @param precisionAngle the angle between any two points on the edge of the
                         circle, the lower angle, the better looking
  */
-std::shared_ptr<Mesh> MeshBuilderPT::build2DCircle(int x, int y, int radius, float precisionAngle)
+/*std::shared_ptr<TriangleMesh> MeshBuilderPT::build2DCircle(int x, int y, int radius, float precisionAngle)
 {
 	
 	// since this is a 2D model, we leave all z coords at 0
@@ -82,7 +82,7 @@ std::shared_ptr<Mesh> MeshBuilderPT::build2DCircle(int x, int y, int radius, flo
 
 	// end vertex data
     return mb.build();
-}
+}*/
 
 };
 

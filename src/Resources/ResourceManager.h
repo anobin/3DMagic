@@ -36,15 +36,14 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <memory>
 #include <fstream>
-#include "MeshLoader.h"
 #include <vector>
-#include <Graphics\Mesh.h>
 #include <tinyxml2.h>
 #include <Util/Color.h>
 #include <Graphics\Material.h>
 #include <Graphics\MaterialBuilder.h>
 #include <CollisionShapes\CollisionShape.h>
 #include <CollisionShapes\BoxCollisionShape.h>
+#include "ModelLoader.h"
 
 
 namespace Magic3D
@@ -176,10 +175,10 @@ inline std::shared_ptr<FontResource> ResourceManager::_get<FontResource>(const s
 }
 
 template<>
-inline std::shared_ptr<Meshes> ResourceManager::_get<Meshes>(const std::string& fullPath)
+inline std::shared_ptr<Model> ResourceManager::_get<Model>(const std::string& fullPath)
 {
 	std::string ext = fullPath.substr(fullPath.find_last_of(".")+1);
-	return MeshLoaders::getSingleton().get(ext)->getMeshes(fullPath);
+	return ModelLoaders::getSingleton().get(ext)->getModel(fullPath);
 }
 
 template<>

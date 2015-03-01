@@ -24,6 +24,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Cameras/FPCamera.h>
 #include <Shaders\GpuProgram.h>
 #include <Util\Units.h>
+#include <Mesh\TriangleMesh.h>
+#include <CollisionShapes\SphereCollisionShape.h>
 
 namespace Magic3D
 {
@@ -255,10 +257,10 @@ void World::tearDownMaterial(Material& material, bool wireframe)
     }
 }
 
-void World::renderMesh(Mesh& mesh)
+void World::renderMesh(TriangleMesh& mesh)
 {
     // draw mesh
-    mesh.getVertexArray().draw(mesh.getPrimitive(), mesh.getVertexCount());
+    mesh.getVertexArray().draw(VertexArray::TRIANGLES, mesh.getVertexCount());
     vertexCount += mesh.getVertexCount();   
 }
     
@@ -285,7 +287,7 @@ void World::renderObjects()
     auto viewFrustum = camera->getViewFrustum();
     for (Object* o : this->objects)
     {
-        auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
+        auto& sphere = o->getModel()->getGraphicalBoundingSphere();
         // TODO: add in bounding sphere offset for this to work correctly
         auto loc = o->getPosition().getLocation();
         if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
@@ -302,7 +304,7 @@ void World::renderObjects()
     {
         for (std::shared_ptr<Object> o : *it.second)
         {
-            auto sphere = o->getModel()->getMeshes()->getBoundingSphere();
+            auto sphere = o->getModel()->getGraphicalBoundingSphere();
             auto loc = sphere.getOffset();
             if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
                 sortedStaticObjects.push_back(o);
@@ -395,7 +397,7 @@ void World::renderObjects()
         {
             for (std::shared_ptr<Object> ob : *it.second)
             {
-                for (auto mesh : *ob->getModel()->getMeshes())
+                for (auto mesh : ob->getModel()->getMeshes())
                 {
                     renderMesh(*mesh);
                 }
@@ -406,16 +408,14 @@ void World::renderObjects()
 
         for (Object* ob : this->objects)
         {
-            const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
-            if (meshes == nullptr)
-                continue;
+            const auto& meshes = ob->getModel()->getMeshes();
 
             // get model/world matrix for object (same for all meshes in object)
             Matrix4 model;
             ob->getPosition().getTransformMatrix(model);
 
             setupMaterial(*material, model, lightViewMatrix, lightProjectionMatrix, false);
-            for (const std::shared_ptr<Mesh> mesh : *meshes)
+            for (const std::shared_ptr<TriangleMesh> mesh : meshes)
             {
                 renderMesh(*mesh);
             }
@@ -458,11 +458,11 @@ void World::renderObjects()
                 &shadowMatrix, shadowTex);
         }
 
-        for (auto mesh : *ob->getModel()->getMeshes())
+        for (auto mesh : ob->getModel()->getMeshes())
         {
             renderMesh(*mesh);
-            if (showNormals)
-                renderMesh(mesh->getVisibleNormals());
+            /*if (showNormals)
+                renderMesh(mesh->getVisibleNormals());*/
         }
     }
     if (material != nullptr)
@@ -476,9 +476,7 @@ void World::renderObjects()
 	    // get object and entity
 	    ob = (*it);
 	    
-		const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
-		if (meshes == nullptr)
-			continue;
+		const auto& meshes = ob->getModel()->getMeshes();
 
         // get mesh and material data
 		auto material = ob->getModel()->getMaterial();
@@ -489,17 +487,17 @@ void World::renderObjects()
         
         setupMaterial(*material, model, view, projection, this->wireframeEnabled,
             &shadowMatrix, shadowTex);
-		for(const std::shared_ptr<Mesh> mesh : *meshes)
+		for(const auto mesh : meshes)
 		{   
             renderMesh(*mesh);
-            if (showNormals)
-                renderMesh(mesh->getVisibleNormals());
+            /*if (showNormals)
+                renderMesh(mesh->getVisibleNormals());*/
 		}
         tearDownMaterial(*material, this->wireframeEnabled);
 	} // end of all objects
 
     // render bounding spheres, if requested
-    if (this->showBoundingSpheres)
+    /*if (this->showBoundingSpheres)
     {
         for (auto it : this->staticObjects)
         {
@@ -507,7 +505,7 @@ void World::renderObjects()
             setupMaterial(*material, identityMatrix, view, projection, true);
             for (unsigned int i = 0; i < it.second->size(); i++)
             {
-                renderMesh(it.second->at(i)->getModel()->getMeshes()->getBoundingSphereMesh());
+                renderMesh(it.second.at(i)->getModel()->getBoundingSphereMesh());
             }
             tearDownMaterial(*material, true);
         }
@@ -534,7 +532,7 @@ void World::renderObjects()
             renderMesh(meshes->getBoundingSphereMesh());
             tearDownMaterial(*material, true);
         } // end of all objects
-    }
+    }*/
 
 	// Do the buffer Swap
     graphics.swapBuffers();

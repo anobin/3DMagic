@@ -1,23 +1,23 @@
 
-#include "MeshLoader3DS.h"
+#include "ModelLoader3DS.h"
 #include <string.h>
 #include <lib3ds/mesh.h>
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 
 namespace Magic3D
 {
 
 
-std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
+std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
 {	
 	Lib3dsFile* file = lib3ds_file_load(path.c_str());
 	if (!file)
 		throw_MagicException("Could not load model file");
 
-	std::shared_ptr<Meshes> meshes = std::make_shared<Meshes>();
+    std::vector<std::shared_ptr<TriangleMesh>> meshes;
 
 	// Loop through all the meshes
-    MeshBuilderPTNT bb;
+    TriangleMeshBuilderPTNT bb(10);
 	int i;
 	Lib3dsMesh * mesh;
 	Vector3 p;
@@ -62,12 +62,14 @@ std::shared_ptr<Meshes> MeshLoader3DS::getMeshes(const std::string& path) const
         bb.calculateTangents();
         
         // end current mesh
-		meshes->push_back(bb.build());
+		meshes.push_back(bb.build());
 	}
 
 	lib3ds_file_free(file);
 
-	return meshes;
+    auto model = std::make_shared<Model>();
+    model->setMeshes(meshes);
+    return model;
 }
 	
 	

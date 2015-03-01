@@ -29,7 +29,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "../Util/Color.h"
 #include "../Graphics/Texture.h"
 #include "../Exceptions/MagicException.h"
-#include "../Graphics/Mesh.h"
 #include "../Graphics/Material.h"
 #include <CollisionShapes\CollisionShape.h>
 #include <Physics\MotionState.h>

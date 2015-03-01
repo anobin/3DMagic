@@ -20,40 +20,72 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAGIC3D_MODEL_H
 #define MAGIC3D_MODEL_H
 
-#include <Graphics\Mesh.h>
+#include <Mesh\TriangleMesh.h>
 #include <CollisionShapes\BoxCollisionShape.h>
+#include <CollisionShapes\TriangleMeshCollisionShape.h>
 #include <Graphics\Material.h>
 
 #include <set>
+#include <vector>
 
 namespace Magic3D
 {
 
 
-class Model
+class Model : public Resource
 {
 protected:
-	std::shared_ptr<Meshes> meshes;
+	std::vector<std::shared_ptr<TriangleMesh>> meshes;
 	std::shared_ptr<CollisionShape> collisionShape;
 	std::shared_ptr<Material> material;
+
+    std::shared_ptr<SphereCollisionShape> graphicalBoundingSphere;
 	
 public:
 	inline Model() {}
 
 	inline Model(
-		std::shared_ptr<Meshes> meshes,
+        std::vector<std::shared_ptr<TriangleMesh>> meshes,
 		std::shared_ptr<Material> material,
 		std::shared_ptr<CollisionShape> collisionShape = nullptr
-		): meshes(meshes), collisionShape(collisionShape), material(material) {}
+		): meshes(meshes), collisionShape(collisionShape), material(material) 
+    {
+        TriangleMeshCollisionShape realShape(meshes);
+        this->graphicalBoundingSphere = realShape.getBoundingSphere();
+    }
 
-	inline std::shared_ptr<Meshes> getMeshes()
+    inline Model(
+        std::shared_ptr<TriangleMesh> mesh,
+        std::shared_ptr<Material> material,
+        std::shared_ptr<CollisionShape> collisionShape = nullptr
+        ) : collisionShape(collisionShape), material(material) 
+    {
+        this->meshes.push_back(mesh);
+
+        TriangleMeshCollisionShape realShape(meshes);
+        this->graphicalBoundingSphere = realShape.getBoundingSphere();
+    }
+
+    inline std::vector<std::shared_ptr<TriangleMesh>>& getMeshes()
 	{
 		return this->meshes;
 	}
-	inline void setMeshes(std::shared_ptr<Meshes> meshes)
+    inline void setMeshes(const std::vector<std::shared_ptr<TriangleMesh>>& meshes)
 	{
 		this->meshes = meshes;
+        
+        TriangleMeshCollisionShape realShape(meshes);
+        this->graphicalBoundingSphere = realShape.getBoundingSphere();
 	}
+    inline void setMeshes(std::shared_ptr<TriangleMesh> mesh)
+    {
+        meshes.clear();
+        meshes.push_back(mesh);
+
+        TriangleMeshCollisionShape realShape(meshes);
+        this->graphicalBoundingSphere = realShape.getBoundingSphere();
+    }
+
 	inline std::shared_ptr<CollisionShape> getCollisionShape()
 	{
 		return this->collisionShape;
@@ -70,6 +102,11 @@ public:
 	{
 		this->material = material;
 	}
+
+    inline const SphereCollisionShape& getGraphicalBoundingSphere()
+    {
+        return *this->graphicalBoundingSphere;
+    }
 
 };
 

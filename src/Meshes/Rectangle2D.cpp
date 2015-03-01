@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 
 namespace Magic3D
 {
@@ -34,12 +34,12 @@ namespace Magic3D
  * @param width the width of the rectangle
  * @param height the height of the rectangle
  */
-std::shared_ptr<Mesh> MeshBuilderPT::build2DRectangle(int x, int y, int width, int height)
+std::shared_ptr<TriangleMesh> TriangleMeshBuilderPT::build2DRectangle(int x, int y, int width, int height)
 {	
 	// since this is a 2D model, we leave all z coords at 0
 	
-	// 6 points using a TRIANGLE FAN
-	MeshBuilderPT mb(6, VertexArray::Primitives::TRIANGLE_FAN);
+	// 6 points
+	TriangleMeshBuilderPT mb(6);
 	
 	// bottom right
     mb.addVertex(

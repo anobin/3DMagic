@@ -40,10 +40,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 // graphics
 #include "Graphics/Texture.h"
-#include "Graphics/MeshBuilder.h"
+#include "Mesh/TriangleMeshBuilder.h"
 #include "Graphics/MaterialBuilder.h"
 #include "Graphics/Material.h"
-#include "Graphics/Mesh.h"
 #include "Lights/Light.h"
 
 // time

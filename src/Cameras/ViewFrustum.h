@@ -3,8 +3,6 @@
 
 #include <Math\Matrix4.h>
 #include <memory>
-#include <Graphics\Mesh.h>
-#include <Graphics\MeshBuilder.h>
 
 
 namespace Magic3D

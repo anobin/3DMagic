@@ -64,6 +64,29 @@ public:
 		TEXTURE_BUFFER = GL_TEXTURE_BUFFER,
 		UNIFORM_BUFFER = GL_UNIFORM_BUFFER
 	};
+
+    /// the possible usage types for a buffer
+    enum UsageTypes
+    {
+        // modified once, used infrequently, set by app, used by gl draw methods
+        STREAM_DRAW = GL_STREAM_DRAW,
+        // modified once, used infrequently, set by gl, used to return to app
+        STREAM_READ = GL_STREAM_READ,
+        // modified once, used infrequently, set by gl, used by gl draw methods
+        STREAM_COPY = GL_STREAM_COPY,
+        // modified once, used often, set by app, used by gl draw methods
+        STATIC_DRAW = GL_STATIC_DRAW,
+        // modified once, used often, set by gl, used to return to app
+        STATIC_READ = GL_STATIC_READ,
+        // modified once, used often, set by gl, used by gl draw methods
+        STATIC_COPY = GL_STATIC_COPY,
+        // modified often, used often, set by app, used by gl draw methods
+        DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
+        // modified often, used often, set by gl, used to return to app
+        DYNAMIC_READ = GL_DYNAMIC_READ,
+        // modified often, used often, set by gl, used by gl draw methods
+        DYNAMIC_COPY = GL_DYNAMIC_COPY
+    };
 	
 	friend class VertexArray;
 	
@@ -150,31 +173,10 @@ private: // all static stuff to maintain buffer bindings go here
 private:
 	/// openGL id for buffer
 	GLuint bufferId;
+
+    inline Buffer(const Buffer& buffer) {} // copy constructor not allowed
 	
 public:
-	/// the possible usage types for a buffer
-	enum UsageTypes
-	{
-		// modified once, used infrequently, set by app, used by gl draw methods
-		STREAM_DRAW = GL_STREAM_DRAW, 
-		// modified once, used infrequently, set by gl, used to return to app
-		STREAM_READ = GL_STREAM_READ, 
-		// modified once, used infrequently, set by gl, used by gl draw methods
-		STREAM_COPY = GL_STREAM_COPY, 
-		// modified once, used often, set by app, used by gl draw methods
-        STATIC_DRAW = GL_STATIC_DRAW, 
-        // modified once, used often, set by gl, used to return to app
-        STATIC_READ = GL_STATIC_READ,
-        // modified once, used often, set by gl, used by gl draw methods
-        STATIC_COPY = GL_STATIC_COPY,
-        // modified often, used often, set by app, used by gl draw methods
-        DYNAMIC_DRAW = GL_DYNAMIC_DRAW, 
-        // modified often, used often, set by gl, used to return to app
-        DYNAMIC_READ = GL_DYNAMIC_READ,
-        // modified often, used often, set by gl, used by gl draw methods
-        DYNAMIC_COPY = GL_DYNAMIC_COPY
-	};
-	
 	/// default constructor
 	inline Buffer()
 	{
@@ -195,11 +197,20 @@ public:
 		allocate(size, data, usage);
 	}
 
+    inline Buffer(Buffer&& buffer)
+    {
+        this->bufferId = buffer.bufferId;
+        buffer.bufferId = 0;
+    }
+
 	/// destructor
 	inline ~Buffer()
 	{
-		Buffer::unBindBuffer(bufferId);
-		glDeleteBuffers(1, &bufferId);
+        if (this->bufferId != 0)
+        {
+            Buffer::unBindBuffer(bufferId);
+            glDeleteBuffers(1, &bufferId);
+        }
 	}
 	
 	/** bind the buffer to a binding point to allow for

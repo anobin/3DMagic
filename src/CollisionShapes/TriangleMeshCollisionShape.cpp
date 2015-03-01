@@ -24,25 +24,24 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 #include <CollisionShapes/TriangleMeshCollisionShape.h>
-#include <Graphics/MeshBuilder.h>
 
 namespace Magic3D
 {
     
 /// default constructor
-TriangleMeshCollisionShape::TriangleMeshCollisionShape(Meshes& batches):
-    shape(NULL)
+TriangleMeshCollisionShape::TriangleMeshCollisionShape(const std::vector<std::shared_ptr<TriangleMesh>>& batches) :
+shape(NULL)
 {    
     // go through all batches and add all vertices
     // and add triangles to physics mesh
     for(auto mesh : batches)
     {
-        for(int j=0; j < mesh->getVertexCount(); j+=3)
+        for(unsigned int j=0; j < mesh->getVertexCount(); j+=3)
         {
             // get three vertices for triangle
-            auto a = mesh->getVertex(j).position();
-            auto b = mesh->getVertex(j+1).position();
-            auto c = mesh->getVertex(j+2).position();
+            Vector3 a(mesh->getAttributeData(j, GpuProgram::AttributeType::VERTEX));
+            Vector3 b(mesh->getAttributeData(j+1, GpuProgram::AttributeType::VERTEX));
+            Vector3 c(mesh->getAttributeData(j+2, GpuProgram::AttributeType::VERTEX));
             
             // add triangle to mesh
             this->mesh.addTriangle( btVector3(a.x(), a.y(), a.z()),

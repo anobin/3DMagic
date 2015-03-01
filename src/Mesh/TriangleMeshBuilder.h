@@ -1,84 +1,56 @@
-/* 
-Copyright (c) 2011 Andrew Keating
 
-This file is part of 3DMagic.
+#ifndef MAGIC3D_TRIANGLE_MESH_BUILDER_H
+#define MAGIC3D_TRIANGLE_MESH_BUILDER_H
 
-3DMagic is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-3DMagic is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-#ifndef MAGIC3D_MESH_BUILDER_H
-#define MAGIC3D_MESH_BUILDER_H
 
 #include <sstream>
 #include <iomanip>
 
 #include "../Exceptions/MagicException.h"
 #include <Shaders\GpuProgram.h>
-#include "VertexArray.h"
 #include "../Util/Color.h"
 #include "../Math/Math.h"
 #include "../Util/magic_throw.h"
 #include "../Util/magic_assert.h"
-#include <Graphics\Mesh.h>
-
-#include <vector>
+#include <Mesh\TriangleMesh.h>
 #include <Shapes\Vertex.h>
 #include <Shapes\Triangle.h>
+
+#include <vector>
 
 namespace Magic3D
 {
 
 template<typename... AttrTypes>
-class MeshBuilder
+class TriangleMeshBuilder
 {
-private:	
+private:
     // TODO: change to directly set data in mesh and not require it to be copied
     std::vector<Vertex<AttrTypes...>> vertices;
-    VertexArray::Primitives primitive;
 
 public:
-	/** Standard Constructor
-	 */
-    inline MeshBuilder(int vertexCount, 
-        VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES) :
-        primitive(primitive)
+    /** Standard Constructor
+    */
+    inline TriangleMeshBuilder(int vertexCount)
     {
         this->vertices.reserve(vertexCount);
     }
-	
-    // less efficient constructor
-    inline MeshBuilder(VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES) :
-        primitive(primitive)
-    {}
 
-    inline MeshBuilder<AttrTypes...>& reset(VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
+    inline TriangleMeshBuilder<AttrTypes...>& reset()
     {
-        this->primitive = primitive;
         this->vertices.clear();
 
         return *this;
     }
 
-    inline MeshBuilder<AttrTypes...>& reset(int vertexCount, VertexArray::Primitives primitive = VertexArray::Primitives::TRIANGLES)
+    inline TriangleMeshBuilder<AttrTypes...>& reset(int vertexCount)
     {
-        this->primitive = primitive;
         this->vertices.clear();
         this->vertices.reserve(vertexCount);
 
         return *this;
     }
-	
+
     inline unsigned int vertexCount()
     {
         return vertexCount;
@@ -95,7 +67,7 @@ public:
         this->vertices.push_back(Vertex<AttrTypes...>(vectorsOrAttrs...));
     }
 
-    inline MeshBuilder<AttrTypes...>& positionTransform(const Matrix4& matrix)
+    inline TriangleMeshBuilder<AttrTypes...>& positionTransform(const Matrix4& matrix)
     {
         for (Vertex<AttrTypes...>& vertex : this->vertices)
         {
@@ -182,7 +154,7 @@ public:
                     delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
                     delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
                     delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
-                );
+                    );
             }
 
             for (Vector4 point : pointsPos)
@@ -208,78 +180,112 @@ public:
     {
         return this->vertices[index];
     }
-	
-    inline std::shared_ptr<Mesh> build()
+
+    private:
+        template<typename... AttrTypeEnums>
+        void collectTypes(std::set<GpuProgram::AttributeType>& types, 
+            GpuProgram::AttributeType type,
+            AttrTypeEnums... moreTypes)
+        {
+            types.insert(type);
+
+            collectTypes(types, moreTypes...);
+        }
+        void collectTypes(std::set<GpuProgram::AttributeType>& types)
+        {
+            return; // on purpose
+        }
+
+        template<typename AttrType, typename... AttrTypes>
+        void fillVertex(TriangleMesh& mesh, unsigned int vertexIndex, 
+            AttrType& attr,
+            AttrTypes... moreAttrs)
+        {
+            mesh.setAttributeData(vertexIndex, attr.type, attr.getData());
+
+            fillVertex(mesh, vertexIndex, moreAttrs...);
+        }
+        void fillVertex(TriangleMesh& mesh, unsigned int vertexIndex)
+        {
+            return; // on purpose
+        }
+
+    public:
+   
+    std::shared_ptr<TriangleMesh> build()
     {
-        return std::make_shared<Mesh>(vertices, primitive);
+        std::set<GpuProgram::AttributeType> types;
+        collectTypes(types, AttrTypes::type...);
+
+        auto mesh = std::make_shared<TriangleMesh>(
+            this->vertices.size(),
+            types
+            );
+
+        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        {
+            auto& vertex = this->vertices[i];
+
+            fillVertex(*mesh, i, (AttrTypes&)vertex...);
+        }
+
+        return mesh;
     }
-	
-	/** Build a box mesh
-     * @param width the width of the box
-     * @param height the height of the box
-     * @param depth the depth of the box
-     */
-    MeshBuilder<AttrTypes...>& buildBox(float width, float height, float depth);
-	
-	/** Build a 2D circle mesh
-     * @param x the x coordinate of the center
-     * @param y the y coordinate of the center
-     * @param radius the radius of the circle
-     * @param precisionAngle the angle between any two points on the edge of the
-                            circle, the lower angle, the better looking
-     */
-    static std::shared_ptr<Mesh> build2DCircle(int x, int y, int radius, float precisionAngle);
-	
-	/** Build a flat surface
-     * @param width the width of the surface
-     * @param height the height of the surface
-     * @param slices the number of squares on width
-     * @param stacks the number of squares on height
-     */
-    static std::shared_ptr<Mesh> buildFlatSurface(float width, float height, int slices,
+
+    /** Build a box mesh
+    * @param width the width of the box
+    * @param height the height of the box
+    * @param depth the depth of the box
+    */
+    TriangleMeshBuilder<AttrTypes...>& buildBox(float width, float height, float depth);
+
+    /** Build a 2D circle mesh
+    * @param x the x coordinate of the center
+    * @param y the y coordinate of the center
+    * @param radius the radius of the circle
+    * @param precisionAngle the angle between any two points on the edge of the
+    circle, the lower angle, the better looking
+    */
+    static std::shared_ptr<TriangleMesh> build2DCircle(int x, int y, int radius, float precisionAngle);
+
+    /** Build a flat surface
+    * @param width the width of the surface
+    * @param height the height of the surface
+    * @param slices the number of squares on width
+    * @param stacks the number of squares on height
+    */
+    static std::shared_ptr<TriangleMesh> buildFlatSurface(float width, float height, int slices,
         int stacks, bool texRepeat, float texPerX, float texPerY);
 
     /** Build 2D rectangle
-     * @param x the upper-left x coordinate of the rectangle
-     * @param y the upper-left y coordinate of the rectangle
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
-     */
-    static std::shared_ptr<Mesh> build2DRectangle(int x, int y, int width, int height);
-    
+    * @param x the upper-left x coordinate of the rectangle
+    * @param y the upper-left y coordinate of the rectangle
+    * @param width the width of the rectangle
+    * @param height the height of the rectangle
+    */
+    static std::shared_ptr<TriangleMesh> build2DRectangle(int x, int y, int width, int height);
+
     /** Build sphere
-     * @param radius the radius of the sphere
-     * @param slices the number of squares on width
-     * @param stacks the number of squares on height
-     */
-    MeshBuilder<AttrTypes...>& buildSphere(float radius, int slices, int stacks);
-    
-};
-
-typedef MeshBuilder<PositionAttr, TexCoordAttr, NormalAttr> MeshBuilderPTN;
-typedef MeshBuilder<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr> MeshBuilderPTNT;
-typedef MeshBuilder<PositionAttr, TexCoordAttr> MeshBuilderPT;
-
+    * @param radius the radius of the sphere
+    * @param slices the number of squares on width
+    * @param stacks the number of squares on height
+    */
+    TriangleMeshBuilder<AttrTypes...>& buildSphere(float radius, int slices, int stacks);
 
 };
+
+typedef TriangleMeshBuilder<PositionAttr, TexCoordAttr, NormalAttr> TriangleMeshBuilderPTN;
+typedef TriangleMeshBuilder<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr> TriangleMeshBuilderPTNT;
+typedef TriangleMeshBuilder<PositionAttr, TexCoordAttr> TriangleMeshBuilderPT;
+
+
+};
+
+
+
+
 
 
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

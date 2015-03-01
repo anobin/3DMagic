@@ -23,7 +23,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
  * @author Andrew Keating
  */
 
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 
 namespace Magic3D
 {
@@ -34,10 +34,10 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-std::shared_ptr<Mesh> MeshBuilderPTNT::buildFlatSurface(float width, float height, int slices, 
+std::shared_ptr<TriangleMesh> TriangleMeshBuilderPTNT::buildFlatSurface(float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-    MeshBuilderPTNT mb(slices*stacks*6);
+    TriangleMeshBuilderPTNT mb(slices*stacks*6);
 	
 	float x = -width/2;
 	float z = -height/2;

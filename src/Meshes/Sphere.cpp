@@ -25,7 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <Graphics/MeshBuilder.h>
+#include <Mesh/TriangleMeshBuilder.h>
 
 namespace Magic3D
 {
@@ -35,7 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-MeshBuilderPTNT& MeshBuilderPTNT::buildSphere(
+TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildSphere(
     float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;

@@ -6,7 +6,7 @@
 #ifndef MAGIC3D_MODEL_3DS_RESOURCE_H
 #define MAGIC3D_MODEL_3DS_RESOURCE_H
 
-#include "../MeshLoader.h"
+#include "../ModelLoader.h"
 #include "../../Exceptions/MagicException.h"
 #include <lib3ds/file.h>
 #include "../../Math/Matrix4.h"
@@ -16,10 +16,10 @@ namespace Magic3D
 
 /** Represents a single .3ds model resource
  */
-class MeshLoader3DS : public MeshLoader
+class ModelLoader3DS : public ModelLoader
 {
 public:
-	virtual std::shared_ptr<Meshes> getMeshes(const std::string& path) const;
+	virtual std::shared_ptr<Model> getModel(const std::string& path) const;
 
 };
 
