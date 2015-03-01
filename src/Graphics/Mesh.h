@@ -57,22 +57,12 @@ public:
 		/// auto-bound attribute type for data
 		GpuProgram::AttributeType type;
 		/// current data in batch
-		float* data;
-		/// current length of data (in bytes)
-		int dataLen;
+		std::vector<float> data;
 
-		inline AttributeData() : data(NULL), dataLen(0) {}
-
-		inline ~AttributeData()
-		{
-			delete[] data;
-		}
 		inline void allocate(int vertexCount, GpuProgram::AttributeType type)
 		{
-			delete[] data;
 			this->type = type;
-			this->dataLen = vertexCount * GpuProgram::attributeTypeCompCount[(int)type] * sizeof(float);
-			this->data = new float[vertexCount * GpuProgram::attributeTypeCompCount[(int)type]];
+            this->data.resize(vertexCount * GpuProgram::attributeTypeCompCount[(int)type]);
 		}
 	};
 
@@ -157,8 +147,8 @@ public:
         for (int i = 0; i < attributeCount; i++)
         {
             this->attributeData[i].allocate(vertexCount, mesh.attributeData[i].type);
-            memcpy(this->attributeData[i].data, mesh.attributeData[i].data,
-                mesh.attributeData[i].dataLen);
+            memcpy(&this->attributeData[i].data[0], &mesh.attributeData[i].data[0],
+                mesh.attributeData[i].data.size() * sizeof(float));
         }
     }
 

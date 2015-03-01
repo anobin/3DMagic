@@ -43,7 +43,7 @@ const VertexArray& Mesh::getVertexArray()
     for (int i=0; i < this->attributeCount; i++)
     {
         Mesh::AttributeData& d = this->attributeData[i];
-        d.buffer.allocate( d.dataLen, d.data, Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
+        d.buffer.allocate( d.data.size() * sizeof(float), &d.data[0], Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
 		this->vertexArray->setAttributeArray(
 			(int)d.type,
 			GpuProgram::attributeTypeCompCount[(int)d.type],
