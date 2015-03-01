@@ -71,13 +71,10 @@ private:
 	friend class MeshBuilder;
 
 	/// list of attribute data
-	AttributeData* attributeData;
+	std::vector<AttributeData> attributeData;
 	
 	/// number of verticies in mesh
 	int vertexCount;
-	
-	/// number of attributes
-	int attributeCount;
 
 	VertexArray::Primitives primitive;
 
@@ -85,13 +82,9 @@ private:
 
 	inline void allocate(int vertexCount, int attributeCount)
 	{
-		// free any previous data in batch
-		delete[] this->attributeData;
-
 		// setup mesh
 		this->vertexCount = vertexCount;
-		this->attributeCount = attributeCount;
-		this->attributeData = new AttributeData[attributeCount];
+        this->attributeData.resize(attributeCount);
 	}
 
 	void copyBatchIn();
@@ -134,27 +127,11 @@ private:
 	
 public:
     /// Standard Constructor
-	inline Mesh(): attributeData(nullptr), vertexCount(0), 
-		attributeCount(0), vertexArray(nullptr), visibleNormals(nullptr) {}
-
-    inline Mesh(const Mesh& mesh) :
-        vertexCount(mesh.vertexCount),
-        attributeCount(mesh.attributeCount),
-        primitive(mesh.primitive),
-        vertexArray(nullptr), attributeData(nullptr)
-    {
-        this->allocate(vertexCount, attributeCount);
-        for (int i = 0; i < attributeCount; i++)
-        {
-            this->attributeData[i].allocate(vertexCount, mesh.attributeData[i].type);
-            memcpy(&this->attributeData[i].data[0], &mesh.attributeData[i].data[0],
-                mesh.attributeData[i].data.size() * sizeof(float));
-        }
-    }
+	inline Mesh(): vertexCount(0), vertexArray(nullptr), visibleNormals(nullptr) {}
 
     template<typename... AttrTypes>
     inline Mesh(const std::vector<Vertex<AttrTypes...>>& vertices, VertexArray::Primitives primitive) : 
-        vertexArray(nullptr), attributeData(nullptr), primitive(primitive)
+        vertexArray(nullptr), primitive(primitive)
     {
         this->allocate(vertices.size(), Vertex<AttrTypes...>::attributeCount);
         
@@ -175,7 +152,7 @@ public:
 	
 	inline int getAttributeCount() const
 	{
-	    return attributeCount;
+        return this->attributeData.size();
 	}
 	
 	inline int getVertexCount() const
@@ -186,14 +163,14 @@ public:
     // TODO: change to work for all vertex types
     inline const VertexPTNT getVertex(int index) const
     {
-        if (this->attributeCount == 2)
+        if (this->getAttributeCount() == 2)
         {
             return VertexPTN(
                 PositionAttr(&this->attributeData[0].data[index * 4]),
                 TexCoordAttr(&this->attributeData[1].data[index * 2])
             );
         }
-        else if (this->attributeCount == 3)
+        else if (this->getAttributeCount() == 3)
         {
             return VertexPTN(
                 PositionAttr(&this->attributeData[0].data[index * 4]),

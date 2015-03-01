@@ -27,7 +27,6 @@ namespace Magic3D
 /// destructor
 Mesh::~Mesh()
 {
-	delete[] attributeData;
 	delete vertexArray;
 }
 
@@ -40,7 +39,7 @@ const VertexArray& Mesh::getVertexArray()
     
     // go through all attributes in batch and copy data into video
     // memory buffer
-    for (int i=0; i < this->attributeCount; i++)
+    for (int i=0; i < this->attributeData.size(); i++)
     {
         Mesh::AttributeData& d = this->attributeData[i];
         d.buffer.allocate( d.data.size() * sizeof(float), &d.data[0], Buffer::STATIC_DRAW ); // TODO: determine if this should be static draw
