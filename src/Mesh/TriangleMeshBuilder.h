@@ -117,6 +117,8 @@ public:
             map[face.indices[2]] = map[face.indices[2]] + faceNormal;
         }
 
+        // TODO: merge normals for different points that are at the same location
+
         // set calculated normals on vertices
         for (unsigned int i = 0; i < this->vertices.size(); i++)
         {
