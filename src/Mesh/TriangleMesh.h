@@ -18,6 +18,15 @@ public:
     struct Face
     {
         unsigned int indices[3];
+
+        inline Face() : Face(0, 0, 0) {}
+
+        inline Face(unsigned int a, unsigned int b, unsigned int c)
+        {
+            indices[0] = a;
+            indices[1] = b;
+            indices[2] = c;
+        }
     };
 
 private:
@@ -121,6 +130,11 @@ public:
             throw_MagicException("out of bounds");
 
         return &this->faces[faceIndex];
+    }
+
+    inline unsigned int getFaceCount()
+    {
+        return this->faces.size();
     }
 
     inline const VertexArray& getVertexArray()

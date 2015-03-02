@@ -28,25 +28,36 @@ private:
     // TODO: change to directly set data in mesh and not require it to be copied
     std::vector<Vertex<AttrTypes...>> vertices;
 
+    std::vector<TriangleMesh::Face> faces;
+
 public:
     /** Standard Constructor
     */
-    inline TriangleMeshBuilder(int vertexCount)
+    inline TriangleMeshBuilder(int vertexCount, int faceCount = 0)
     {
         this->vertices.reserve(vertexCount);
+        if (faceCount == 0)
+            faceCount = vertexCount / 3;
+        this->faces.reserve(faceCount);
     }
 
     inline TriangleMeshBuilder<AttrTypes...>& reset()
     {
         this->vertices.clear();
+        this->faces.clear();
 
         return *this;
     }
 
-    inline TriangleMeshBuilder<AttrTypes...>& reset(int vertexCount)
+    inline TriangleMeshBuilder<AttrTypes...>& reset(int vertexCount, int faceCount = 0)
     {
         this->vertices.clear();
         this->vertices.reserve(vertexCount);
+
+        if (faceCount == 0)
+            faceCount = vertexCount / 3;
+        this->faces.clear();
+        this->faces.reserve(faceCount);
 
         return *this;
     }
@@ -65,6 +76,16 @@ public:
     inline void addVertex(const VectorOrAttrTypes&... vectorsOrAttrs)
     {
         this->vertices.push_back(Vertex<AttrTypes...>(vectorsOrAttrs...));
+    }
+
+    inline void addFace(const TriangleMesh::Face& face)
+    {
+        this->faces.push_back(face);
+    }
+
+    inline void addFace(unsigned int a, unsigned int b, unsigned int c)
+    {
+        this->faces.push_back(TriangleMesh::Face(a, b, c));
     }
 
     inline TriangleMeshBuilder<AttrTypes...>& positionTransform(const Matrix4& matrix)
@@ -230,12 +251,21 @@ public:
             fillVertex(*mesh, i, (AttrTypes&)vertex...);
         }
 
-        std::vector<unsigned int> indices(this->vertices.size(), 0);
-        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        // generate face data if none was set
+        // TODO: remove this when all generators changed
+        if (this->faces.size() == 0)
         {
-            indices[i] = i;
+            for (unsigned int i = 0; i < (this->vertices.size() / 3); i++)
+            {
+                this->faces.push_back(TriangleMesh::Face(
+                    i * 3,
+                    i * 3 + 1,
+                    i * 3 + 2
+                    ));
+            }
         }
-        mesh->setFaceData(0, (TriangleMesh::Face*)&indices[0], this->vertices.size() / 3);
+
+        mesh->setFaceData(0, &this->faces[0], this->faces.size());
 
         return mesh;
     }
