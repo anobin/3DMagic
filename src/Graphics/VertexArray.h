@@ -199,6 +199,15 @@ public:
 			throw_MagicException("Failed to draw");
 	}
 
+    inline void drawIndexed(Primitives primitive, unsigned int vertexCount, 
+        const unsigned int* vertexIndices) const
+    {
+        this->bind();
+        glDrawElements(primitive, vertexCount, GL_UNSIGNED_INT, vertexIndices);
+        this->unBind();
+        if (glGetError() != GL_NO_ERROR)
+            throw_MagicException("Failed to draw");
+    }
 
 };
 

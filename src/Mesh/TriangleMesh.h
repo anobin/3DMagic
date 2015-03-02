@@ -14,6 +14,13 @@ namespace Magic3D
 
 class TriangleMesh
 {
+public:
+    struct Face
+    {
+        unsigned int indices[3];
+    };
+
+private:
     // attributes for vertices (on main memory)
     std::map<GpuProgram::AttributeType, std::vector<Scalar>> attributes;
 
@@ -22,13 +29,15 @@ class TriangleMesh
     // vertex array for vertices
     VertexArray vertexArray;
 
+    std::vector<Face> faces;
+
     unsigned int vertexCount;
     bool outOfSync;
 
 public:
-    TriangleMesh(unsigned int vertexCount, 
+    TriangleMesh(unsigned int vertexCount, unsigned int faceCount,
         const std::set<GpuProgram::AttributeType>& attributeTypes):
-        vertexCount(vertexCount), outOfSync(true)
+        vertexCount(vertexCount), faces(faceCount), outOfSync(true)
     {
         // allocate all space needed for attribute data on main memory and gpu memory
         for (GpuProgram::AttributeType type : attributeTypes)
@@ -92,6 +101,26 @@ public:
 
         return &this->attributes.find(type)->second[
             vertexIndex*GpuProgram::attributeTypeCompCount[(int)type]];
+    }
+
+    inline void setFaceData(unsigned int faceIndex, const Face* data, unsigned int count)
+    {
+        if ((faceIndex + count) > this->faces.size())
+            throw_MagicException("out of bounds");
+
+        memcpy(
+            &this->faces[faceIndex],
+            data,
+            sizeof(Face) * count
+        );
+    }
+
+    inline const Face* getFaceData(unsigned int faceIndex)
+    {
+        if (faceIndex >= this->faces.size())
+            throw_MagicException("out of bounds");
+
+        return &this->faces[faceIndex];
     }
 
     inline const VertexArray& getVertexArray()

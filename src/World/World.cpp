@@ -260,7 +260,11 @@ void World::tearDownMaterial(Material& material, bool wireframe)
 void World::renderMesh(TriangleMesh& mesh)
 {
     // draw mesh
-    mesh.getVertexArray().draw(VertexArray::TRIANGLES, mesh.getVertexCount());
+    mesh.getVertexArray().drawIndexed(
+        VertexArray::TRIANGLES, 
+        mesh.getVertexCount(),
+        (unsigned int*)mesh.getFaceData(0)
+    );
     vertexCount += mesh.getVertexCount();   
 }
     

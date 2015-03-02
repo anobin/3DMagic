@@ -219,6 +219,7 @@ public:
 
         auto mesh = std::make_shared<TriangleMesh>(
             this->vertices.size(),
+            this->vertices.size() / 3,
             types
             );
 
@@ -228,6 +229,13 @@ public:
 
             fillVertex(*mesh, i, (AttrTypes&)vertex...);
         }
+
+        std::vector<unsigned int> indices(this->vertices.size(), 0);
+        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        {
+            indices[i] = i;
+        }
+        mesh->setFaceData(0, (TriangleMesh::Face*)&indices[0], this->vertices.size() / 3);
 
         return mesh;
     }
