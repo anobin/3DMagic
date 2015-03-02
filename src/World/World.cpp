@@ -262,7 +262,7 @@ void World::renderMesh(TriangleMesh& mesh)
     // draw mesh
     mesh.getVertexArray().drawIndexed(
         VertexArray::TRIANGLES, 
-        mesh.getVertexCount(),
+        mesh.getFaceCount() * 3,
         (unsigned int*)mesh.getFaceData(0)
     );
     vertexCount += mesh.getVertexCount();   

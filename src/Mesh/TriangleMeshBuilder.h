@@ -98,6 +98,32 @@ public:
         return *this;
     }
 
+    inline void calaculateNormalsFromFaces()
+    {
+        std::unordered_map<unsigned int, Vector3> map;
+
+        // calculate normals for unique positions
+        for (TriangleMesh::Face& face : this->faces)
+        {
+            Vector4 points[] = {
+                this->vertices[face.indices[0]].position(),
+                this->vertices[face.indices[1]].position(),
+                this->vertices[face.indices[2]].position()
+            };
+            Vector3 faceNormal = Triangle(points[0], points[1], points[2]).normal;
+
+            map[face.indices[0]] = map[face.indices[0]] + faceNormal;
+            map[face.indices[1]] = map[face.indices[1]] + faceNormal;
+            map[face.indices[2]] = map[face.indices[2]] + faceNormal;
+        }
+
+        // set calculated normals on vertices
+        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        {
+            vertices[i].normal(map[i].normalize());
+        }
+    }
+
     // TODO: make this more efficient
     // TODO: make this only accessible when a normal and a position attribute is included
     // TODO: limit this to triangle primitive
@@ -134,6 +160,56 @@ public:
             ss.str("");
             ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
             vertex.normal(map[ss.str()].normalize());
+        }
+    }
+
+    inline void calculateTangentsFromFaces()
+    {
+        std::unordered_map<unsigned int, Vector3> map;
+
+        // calculate normals for unique positions
+        for (TriangleMesh::Face& face : this->faces)
+        {
+            Vector2 points[] = {
+                this->vertices[face.indices[0]].texCoord(),
+                this->vertices[face.indices[1]].texCoord(),
+                this->vertices[face.indices[2]].texCoord()
+            };
+
+            Vector4 pointsPos[] = {
+                this->vertices[face.indices[0]].position(),
+                this->vertices[face.indices[1]].position(),
+                this->vertices[face.indices[2]].position()
+            };
+
+            Vector4 BA = pointsPos[1] - pointsPos[0];
+            Vector4 CA = pointsPos[2] - pointsPos[0];
+
+            Vector2 tBA = points[1] - points[0];
+            Vector2 tCA = points[2] - points[0];
+            Scalar area = (tBA.x() * tCA.y()) - (tBA.y() * tCA.x());
+
+            Vector3 faceTangent;
+
+            if (area != 0.0f)
+            {
+                Scalar delta = 1.0f / area;
+                faceTangent = Vector3(
+                    delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
+                    delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
+                    delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
+                    );
+            }
+
+            map[face.indices[0]] = map[face.indices[0]] + faceTangent;
+            map[face.indices[1]] = map[face.indices[1]] + faceTangent;
+            map[face.indices[2]] = map[face.indices[2]] + faceTangent;
+        }
+
+        // set calculated normals on vertices
+        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        {
+            vertices[i].tangent(map[i].normalize());
         }
     }
 
@@ -238,9 +314,13 @@ public:
         std::set<GpuProgram::AttributeType> types;
         collectTypes(types, AttrTypes::type...);
 
+        unsigned int faceCount = this->faces.size();
+        if (faceCount == 0)
+            faceCount = this->vertices.size() / 3;
+
         auto mesh = std::make_shared<TriangleMesh>(
             this->vertices.size(),
-            this->vertices.size() / 3,
+            faceCount,
             types
             );
 
@@ -255,7 +335,7 @@ public:
         // TODO: remove this when all generators changed
         if (this->faces.size() == 0)
         {
-            for (unsigned int i = 0; i < (this->vertices.size() / 3); i++)
+            for (unsigned int i = 0; i < faceCount; i++)
             {
                 this->faces.push_back(TriangleMesh::Face(
                     i * 3,

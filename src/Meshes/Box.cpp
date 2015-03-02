@@ -42,168 +42,98 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
 	height = height/2;
 	depth = depth/2;
 
-    this->vertices.reserve(36);
+    // 8 points is minimum for positions, but need 4 more for proper texture mapping
+    this->vertices.reserve(12);
+    this->faces.reserve(12);
 
-	// 6 points per side, 6 sides
-		
-	// top, 6 points
-    this->addVertex(
-        PositionAttr(-width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); // top left
-    this->addVertex(
-        PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left*/
-    this->addVertex(
-        PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom right
-	this->addVertex(
-        PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
-    
-    // bottom, 6 points
-    this->addVertex(
-        PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top left
-	this->addVertex(
-        PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-	this->addVertex(
-        PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom right
+    enum {
+        TOP_LEFT = 0,
+        TOP_RIGHT,
+        LEFT_TOP,
+        MID_TOP_LEFT,
+        MID_TOP_RIGHT,
+        RIGHT_TOP,
+        LEFT_BOT,
+        MID_BOT_LEFT,
+        MID_BOT_RIGHT,
+        RIGHT_BOT,
+        BOT_LEFT,
+        BOT_RIGHT
+    };
 
-    // left side, 6 points
-    this->addVertex(
-        PositionAttr(-width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top left
-    this->addVertex(
-        PositionAttr(-width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(-width, height, depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(-width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(-width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom right
-	this->addVertex(
-        PositionAttr(-width, height, depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
+    Scalar third = 1.0f / 3.0f;
+    Scalar twoThirds = 2.0f / 3.0f;
+
+    VertexPTNT points[12];
+
+    points[TOP_LEFT].position(-width, height, -depth);
+    points[TOP_LEFT].texCoord(third, 0);
+
+    points[TOP_RIGHT].position(width, height, -depth);
+    points[TOP_RIGHT].texCoord(twoThirds, 0);
+
+    points[LEFT_TOP].position(-width, height, -depth);
+    points[LEFT_TOP].texCoord(0, third);
+
+    points[MID_TOP_LEFT].position(-width, height, depth);
+    points[MID_TOP_LEFT].texCoord(third, third);
+
+    points[MID_TOP_RIGHT].position(width, height, depth);
+    points[MID_TOP_RIGHT].texCoord(twoThirds, third);
+
+    points[RIGHT_TOP].position(width, height, -depth);
+    points[RIGHT_TOP].texCoord(1, third);
+
+    points[LEFT_BOT].position(-width, -height, -depth);
+    points[LEFT_BOT].texCoord(0, twoThirds);
+
+    points[MID_BOT_LEFT].position(-width, -height, depth);
+    points[MID_BOT_LEFT].texCoord(third, twoThirds);
+
+    points[MID_BOT_RIGHT].position(width, -height, depth);
+    points[MID_BOT_RIGHT].texCoord(twoThirds, twoThirds);
+
+    points[RIGHT_BOT].position(width, -height, -depth);
+    points[RIGHT_BOT].texCoord(1, twoThirds);
+
+    points[BOT_LEFT].position(-width, -height, -depth);
+    points[BOT_LEFT].texCoord(third, 1);
+
+    points[BOT_RIGHT].position(width, -height, -depth);
+    points[BOT_RIGHT].texCoord(twoThirds, 1);
+
+    for (VertexPTNT vertex : points)
+        this->vertices.push_back(vertex);
+
     
-    // right side, 6 points
-    this->addVertex(
-        PositionAttr(width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top left
-	this->addVertex(
-        PositionAttr(width, height, depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-	this->addVertex(
-        PositionAttr(width, height, depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-	this->addVertex(
-        PositionAttr(width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom right
+	// 6 sides, 2 triangles per each
+
+	// top
+    this->addFace(TOP_LEFT, MID_TOP_LEFT, TOP_RIGHT);
+    this->addFace(MID_TOP_LEFT, MID_TOP_RIGHT, TOP_RIGHT);
+    
+    // bottom
+    this->addFace(BOT_LEFT, BOT_RIGHT, MID_BOT_LEFT);
+    this->addFace(MID_BOT_LEFT, BOT_RIGHT, MID_BOT_RIGHT);
+
+    // left side
+    this->addFace(LEFT_TOP, LEFT_BOT, MID_TOP_LEFT);
+    this->addFace(LEFT_BOT, MID_BOT_LEFT, MID_TOP_LEFT);
+    
+    // right side
+    this->addFace(RIGHT_TOP, MID_TOP_RIGHT, RIGHT_BOT);
+    this->addFace(RIGHT_BOT, MID_TOP_RIGHT, MID_BOT_RIGHT);
 	
-	// front, 6 points
-    this->addVertex(
-        PositionAttr(-width, height, -depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top left
-    this->addVertex(
-        PositionAttr(width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-	this->addVertex(
-        PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(-width, -height, -depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom left
-	this->addVertex(
-        PositionAttr(width, height, -depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top right
-	this->addVertex(
-        PositionAttr(width, -height, -depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom right
+    // front
+    this->addFace(MID_TOP_LEFT, MID_BOT_LEFT, MID_TOP_RIGHT);
+    this->addFace(MID_TOP_RIGHT, MID_BOT_LEFT, MID_BOT_RIGHT);
+
+	// back
+    this->addFace(LEFT_TOP, RIGHT_TOP, LEFT_BOT);
+    this->addFace(LEFT_BOT, RIGHT_TOP, RIGHT_BOT);
 	
-    // back, 6 points
-    this->addVertex(
-        PositionAttr(-width, height, depth),
-        TexCoordAttr(0.0f, 0.0f)
-    ); //  top left
-    this->addVertex(
-        PositionAttr(-width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left
-    this->addVertex(
-        PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
-    this->addVertex(
-        PositionAttr(-width, -height, depth),
-        TexCoordAttr(0.0f, 1.0f)
-    ); //  bottom left
-	this->addVertex(
-        PositionAttr(width, -height, depth),
-        TexCoordAttr(1.0f, 1.0f)
-    ); //  bottom right
-    this->addVertex(
-        PositionAttr(width, height, depth),
-        TexCoordAttr(1.0f, 0.0f)
-    ); //  top right
-	
-    this->calculateNormals();
-    this->calculateTangents();
+    this->calaculateNormalsFromFaces();
+    this->calculateTangentsFromFaces();
 
     return *this;
 }
