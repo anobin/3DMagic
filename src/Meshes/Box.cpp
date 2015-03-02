@@ -42,12 +42,14 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
 	height = height/2;
 	depth = depth/2;
 
-    // 8 points is minimum for positions, but need 4 more for proper texture mapping
-    this->vertices.reserve(12);
+    // 8 points is minimum for positions, but need 6 more for proper texture mapping
+    this->vertices.reserve(14);
     this->faces.reserve(12);
 
     enum {
-        TOP_LEFT = 0,
+        BACK_LEFT = 0,
+        BACK_RIGHT,
+        TOP_LEFT,
         TOP_RIGHT,
         LEFT_TOP,
         MID_TOP_LEFT,
@@ -64,37 +66,43 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     Scalar third = 1.0f / 3.0f;
     Scalar twoThirds = 2.0f / 3.0f;
 
-    VertexPTNT points[12];
+    VertexPTNT points[14];
+
+    points[BACK_LEFT].position(-width, -height, -depth);
+    points[BACK_LEFT].texCoord(third, 0);
+
+    points[BACK_RIGHT].position(width, -height, -depth);
+    points[BACK_RIGHT].texCoord(twoThirds, 0);
 
     points[TOP_LEFT].position(-width, height, -depth);
-    points[TOP_LEFT].texCoord(third, 0);
+    points[TOP_LEFT].texCoord(third, 0.25f);
 
     points[TOP_RIGHT].position(width, height, -depth);
-    points[TOP_RIGHT].texCoord(twoThirds, 0);
+    points[TOP_RIGHT].texCoord(twoThirds, 0.25f);
 
     points[LEFT_TOP].position(-width, height, -depth);
-    points[LEFT_TOP].texCoord(0, third);
+    points[LEFT_TOP].texCoord(0, 0.5f);
 
     points[MID_TOP_LEFT].position(-width, height, depth);
-    points[MID_TOP_LEFT].texCoord(third, third);
+    points[MID_TOP_LEFT].texCoord(third, 0.5f);
 
     points[MID_TOP_RIGHT].position(width, height, depth);
-    points[MID_TOP_RIGHT].texCoord(twoThirds, third);
+    points[MID_TOP_RIGHT].texCoord(twoThirds, 0.5f);
 
     points[RIGHT_TOP].position(width, height, -depth);
-    points[RIGHT_TOP].texCoord(1, third);
+    points[RIGHT_TOP].texCoord(1, 0.5f);
 
     points[LEFT_BOT].position(-width, -height, -depth);
-    points[LEFT_BOT].texCoord(0, twoThirds);
+    points[LEFT_BOT].texCoord(0, 0.75f);
 
     points[MID_BOT_LEFT].position(-width, -height, depth);
-    points[MID_BOT_LEFT].texCoord(third, twoThirds);
+    points[MID_BOT_LEFT].texCoord(third, 0.75f);
 
     points[MID_BOT_RIGHT].position(width, -height, depth);
-    points[MID_BOT_RIGHT].texCoord(twoThirds, twoThirds);
+    points[MID_BOT_RIGHT].texCoord(twoThirds, 0.75f);
 
     points[RIGHT_BOT].position(width, -height, -depth);
-    points[RIGHT_BOT].texCoord(1, twoThirds);
+    points[RIGHT_BOT].texCoord(1, 0.75f);
 
     points[BOT_LEFT].position(-width, -height, -depth);
     points[BOT_LEFT].texCoord(third, 1);
@@ -129,8 +137,8 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     this->addFace(MID_TOP_RIGHT, MID_BOT_LEFT, MID_BOT_RIGHT);
 
 	// back
-    this->addFace(LEFT_TOP, RIGHT_TOP, LEFT_BOT);
-    this->addFace(LEFT_BOT, RIGHT_TOP, RIGHT_BOT);
+    this->addFace(TOP_LEFT, TOP_RIGHT, BACK_LEFT);
+    this->addFace(BACK_LEFT, TOP_RIGHT, BACK_RIGHT);
 	
     this->calaculateNormalsFromFaces();
     this->calculateTangentsFromFaces();
