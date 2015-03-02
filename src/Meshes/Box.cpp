@@ -69,16 +69,16 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     VertexPTNT points[14];
 
     points[BACK_LEFT].position(-width, -height, -depth);
-    points[BACK_LEFT].texCoord(third, 0);
+    points[BACK_LEFT].texCoord(third, 1);
 
     points[BACK_RIGHT].position(width, -height, -depth);
-    points[BACK_RIGHT].texCoord(twoThirds, 0);
+    points[BACK_RIGHT].texCoord(twoThirds, 1);
 
     points[TOP_LEFT].position(-width, height, -depth);
-    points[TOP_LEFT].texCoord(third, 0.25f);
+    points[TOP_LEFT].texCoord(third, 0.75f);
 
     points[TOP_RIGHT].position(width, height, -depth);
-    points[TOP_RIGHT].texCoord(twoThirds, 0.25f);
+    points[TOP_RIGHT].texCoord(twoThirds, 0.75f);
 
     points[LEFT_TOP].position(-width, height, -depth);
     points[LEFT_TOP].texCoord(0, 0.5f);
@@ -93,22 +93,22 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     points[RIGHT_TOP].texCoord(1, 0.5f);
 
     points[LEFT_BOT].position(-width, -height, -depth);
-    points[LEFT_BOT].texCoord(0, 0.75f);
+    points[LEFT_BOT].texCoord(0, 0.25f);
 
     points[MID_BOT_LEFT].position(-width, -height, depth);
-    points[MID_BOT_LEFT].texCoord(third, 0.75f);
+    points[MID_BOT_LEFT].texCoord(third, 0.25f);
 
     points[MID_BOT_RIGHT].position(width, -height, depth);
-    points[MID_BOT_RIGHT].texCoord(twoThirds, 0.75f);
+    points[MID_BOT_RIGHT].texCoord(twoThirds, 0.25f);
 
     points[RIGHT_BOT].position(width, -height, -depth);
-    points[RIGHT_BOT].texCoord(1, 0.75f);
+    points[RIGHT_BOT].texCoord(1, 0.25f);
 
     points[BOT_LEFT].position(-width, -height, -depth);
-    points[BOT_LEFT].texCoord(third, 1);
+    points[BOT_LEFT].texCoord(third, 0);
 
     points[BOT_RIGHT].position(width, -height, -depth);
-    points[BOT_RIGHT].texCoord(twoThirds, 1);
+    points[BOT_RIGHT].texCoord(twoThirds, 0);
 
     for (VertexPTNT vertex : points)
         this->vertices.push_back(vertex);

@@ -231,7 +231,13 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 		    prop.mass = 1;
 			t = new Object(std::make_shared<Model>(bigSphereBatch, 
 				bigSphereMaterial, bigSphereShape), prop );
-			t->setLocation(Vector3(0.0f, 5.0f, 0.0f));
+            t->setPosition(
+                Position(
+                    Vector3(0.0f, 5.0f, 0.0f), 
+                    Vector3(0, 0, 1), 
+                    Vector3(0, 1, 0)
+                )
+            );
 			world.addObject(t);
 			
 			camera.lookat( Vector3(0, 30, 0) );
