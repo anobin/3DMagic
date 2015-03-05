@@ -23,43 +23,38 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
 	Vector3 p;
 	for(mesh = file->meshes, i=0;mesh != NULL;mesh = mesh->next, i++)
 	{
+        MAGIC_THROW(mesh->points != mesh->texels,
+            "Can only load meshes that have the same number of points and texels");
+
 	    // start the batch
-		bb.reset((int)mesh->faces*3);
-	    
-	    // get normals
-	    float* normals = new float[mesh->faces*3*3];
-        lib3ds_mesh_calculate_normals(mesh, (float(*)[3])normals);
+		bb.reset(mesh->points, mesh->faces);
     
+        for (unsigned int i = 0; i < mesh->points; i++)
+        {
+
+            bb.addVertex(
+                Vector3(
+                    mesh->pointL[i].pos[0],
+                    mesh->pointL[i].pos[1],
+                    mesh->pointL[i].pos[2]
+                ),
+                Vector2(
+                    mesh->texelL[i][0],
+                    mesh->texelL[i][1]
+                )
+            );
+        }
+
         // Loop through every face, setting the three vertices
         for(unsigned int cur_face = 0; cur_face < mesh->faces;cur_face++)
         {
-            Lib3dsFace * face = &mesh->faceL[cur_face];
-            for(unsigned int j = 0;j < 3;j++)
-            { 
-
-                bb.addVertex(
-                    Vector3(
-                        mesh->pointL[face->points[j]].pos[0],
-                        mesh->pointL[face->points[j]].pos[1],
-                        mesh->pointL[face->points[j]].pos[2]
-                    ),
-                    Vector2(
-                        mesh->texelL[face->points[j]][0],
-                        mesh->texelL[face->points[j]][1]
-                    ),
-                    Vector3(
-                        normals[(cur_face*3*3)+(j*3)+0],
-                        normals[(cur_face*3*3)+(j*3)+1],
-                        normals[(cur_face*3*3)+(j*3)+2]
-                    )
-                );
-            }
+            Lib3dsFace* face = &mesh->faceL[cur_face];
+            
+            bb.addFace(face->points[0], face->points[1], face->points[2]);
         }
 
-        delete normals;
-
-        bb.calculateNormals();
-        bb.calculateTangents();
+        bb.calculateDuplicateVertices();
+        bb.calculateNormalsAndTangents();
         
         // end current mesh
 		meshes.push_back(bb.build());
