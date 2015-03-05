@@ -1,3 +1,12 @@
+## Mesh Handling
+- add methods and resource options:
+	- to merge identical vertices (identical in all ways)
+	- to recalculate normals
+		- need threshold for "same position" and angle between different normals
+	- to recalculate tangents (following after normals calc)
+- add ability to merge meshes (and then recalculate normals)
+
+
 ## Refactor
 - flesh out ray test method
 - update parts of code for C++11

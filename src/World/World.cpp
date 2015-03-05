@@ -467,9 +467,9 @@ void World::renderObjects()
             renderMesh(*mesh);
             if (showNormals)
             {
-                mesh->getNormalsMesh().getVertexArray().draw(
+                mesh->getNormalsMesh(this->normalsLength).getVertexArray().draw(
                     VertexArray::LINES,
-                    mesh->getNormalsMesh().getVertexCount()
+                    mesh->getNormalsMesh(this->normalsLength).getVertexCount()
                 );
             }
         }
@@ -501,9 +501,9 @@ void World::renderObjects()
             renderMesh(*mesh);
             if (showNormals && mesh->hasType(GpuProgram::AttributeType::NORMAL))
             {
-                mesh->getNormalsMesh().getVertexArray().draw(
+                mesh->getNormalsMesh(this->normalsLength).getVertexArray().draw(
                     VertexArray::LINES,
-                    mesh->getNormalsMesh().getVertexCount()
+                    mesh->getNormalsMesh(this->normalsLength).getVertexCount()
                     );
             }
 		}

@@ -53,6 +53,7 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
             bb.addFace(face->points[0], face->points[1], face->points[2]);
         }
 
+        // TODO: add options on how these are done and thresholds
         bb.calculateDuplicateVertices();
         bb.calculateNormalsAndTangents();
         

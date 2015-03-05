@@ -299,6 +299,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 
         case 'n':
             world.setShowNormals(!world.isShowNormals());
+            world.setNormalsLength(5 * INCH);
             break;
 
         case 'm':

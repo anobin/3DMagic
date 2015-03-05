@@ -81,6 +81,7 @@ private:
     bool showBoundingSpheres;
 
     bool showNormals;
+    Scalar normalsLength;
 
     bool useNormalMaps;
 
@@ -114,7 +115,7 @@ public:
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
         showNormals(false), useNormalMaps(true), useTextures(true), castShadows(true),
-        showSpecularHighlight(true)
+        showSpecularHighlight(true), normalsLength(1.0f)
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
@@ -312,6 +313,11 @@ public:
     inline void setShowSpecularHighlight(bool show)
     {
         this->showSpecularHighlight = show;
+    }
+
+    inline void setNormalsLength(Scalar length)
+    {
+        this->normalsLength = length;
     }
 
     inline Camera& getCamera()

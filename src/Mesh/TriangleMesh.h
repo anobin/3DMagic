@@ -165,9 +165,10 @@ public:
 
     // TODO: stop mis-using the triangle mesh to store a lines mesh
     std::shared_ptr<TriangleMesh> normalsMesh;
-    inline TriangleMesh& getNormalsMesh()
+    Scalar normalsLength;
+    inline TriangleMesh& getNormalsMesh(Scalar length)
     {
-        if (normalsMesh != 0)
+        if (normalsMesh != nullptr && this->normalsLength == length)
             return *normalsMesh;
 
         std::set<GpuProgram::AttributeType> types;
@@ -179,7 +180,7 @@ public:
             Vector4 pos(this->getAttributeData(i, GpuProgram::AttributeType::VERTEX));
             Vector3 normal(this->getAttributeData(i, GpuProgram::AttributeType::NORMAL));
 
-            Vector4 endPoint = pos + normal.normalize();
+            Vector4 endPoint = pos + (normal.normalize() * length);
             endPoint.w(1.0f);
 
             normalsMesh->setAttributeData(
@@ -194,6 +195,7 @@ public:
             );
         }
 
+        this->normalsLength = length;
         return *normalsMesh;
     }
 
