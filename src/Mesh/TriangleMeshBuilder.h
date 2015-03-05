@@ -126,7 +126,7 @@ public:
         return *this;
     }
 
-    inline void calaculateNormalsFromFaces()
+    inline void calculateNormalsAndTangents()
     {
         // calculate normals for unique positions
         for (TriangleMesh::Face& face : this->faces)
@@ -140,19 +140,45 @@ public:
             a.normal(a.normal() + faceNormal);
             b.normal(b.normal() + faceNormal);
             c.normal(c.normal() + faceNormal);
+
+            Vector4 BA = b.position() - a.position();
+            Vector4 CA = c.position() - a.position();
+
+            Vector2 tBA = b.texCoord() - a.texCoord();
+            Vector2 tCA = c.texCoord() - a.texCoord();
+            Scalar area = (tBA.x() * tCA.y()) - (tBA.y() * tCA.x());
+
+            Vector3 faceTangent;
+
+            if (area != 0.0f)
+            {
+                Scalar delta = 1.0f / area;
+                faceTangent = Vector3(
+                    delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
+                    delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
+                    delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
+                    );
+            }
+
+            a.tangent(a.tangent() + faceTangent);
+            b.tangent(b.tangent() + faceTangent);
+            c.tangent(c.tangent() + faceTangent);
         }
 
         // merge normals for different points that are at the same location
         for (auto& list : this->duplicateVertexIndices)
         {
             Vector3 joinedNormal;
+            Vector3 joinedTangent;
             for (unsigned int index : list)
             {
                 joinedNormal += this->vertices[index].normal();
+                joinedTangent += this->vertices[index].tangent();
             }
             for (unsigned int index : list)
             {
                 this->vertices[index].normal(joinedNormal);
+                this->vertices[index].tangent(joinedTangent);
             }
         }
 
@@ -160,6 +186,7 @@ public:
         for (unsigned int i = 0; i < this->vertices.size(); i++)
         {
             vertices[i].normal(vertices[i].normal().normalize());
+            vertices[i].tangent(vertices[i].tangent().normalize());
         }
     }
 
@@ -199,56 +226,6 @@ public:
             ss.str("");
             ss << point.x() << "-" << point.y() << "-" << point.z() << "-" << point.w();
             vertex.normal(map[ss.str()].normalize());
-        }
-    }
-
-    inline void calculateTangentsFromFaces()
-    {
-        std::unordered_map<unsigned int, Vector3> map;
-
-        // calculate normals for unique positions
-        for (TriangleMesh::Face& face : this->faces)
-        {
-            Vector2 points[] = {
-                this->vertices[face.indices[0]].texCoord(),
-                this->vertices[face.indices[1]].texCoord(),
-                this->vertices[face.indices[2]].texCoord()
-            };
-
-            Vector4 pointsPos[] = {
-                this->vertices[face.indices[0]].position(),
-                this->vertices[face.indices[1]].position(),
-                this->vertices[face.indices[2]].position()
-            };
-
-            Vector4 BA = pointsPos[1] - pointsPos[0];
-            Vector4 CA = pointsPos[2] - pointsPos[0];
-
-            Vector2 tBA = points[1] - points[0];
-            Vector2 tCA = points[2] - points[0];
-            Scalar area = (tBA.x() * tCA.y()) - (tBA.y() * tCA.x());
-
-            Vector3 faceTangent;
-
-            if (area != 0.0f)
-            {
-                Scalar delta = 1.0f / area;
-                faceTangent = Vector3(
-                    delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
-                    delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
-                    delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
-                    );
-            }
-
-            map[face.indices[0]] = map[face.indices[0]] + faceTangent;
-            map[face.indices[1]] = map[face.indices[1]] + faceTangent;
-            map[face.indices[2]] = map[face.indices[2]] + faceTangent;
-        }
-
-        // set calculated normals on vertices
-        for (unsigned int i = 0; i < this->vertices.size(); i++)
-        {
-            vertices[i].tangent(map[i].normalize());
         }
     }
 

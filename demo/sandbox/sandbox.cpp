@@ -542,9 +542,12 @@ public:
 
 		bigSphereMaterial = std::make_shared<Material>();
 		materialBuilder.expand(bigSphereMaterial.get(), *sphereMaterial);
-        materialBuilder.setTexture(resourceManager.get<Texture>("textures/ColoredCubeMap.tex.xml"));
-        materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/ColoredCubeMap.normals.tex.xml"));
+        //materialBuilder.setTexture(resourceManager.get<Texture>("textures/ColoredCubeMap.tex.xml"));
+        //materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/ColoredCubeMap.normals.tex.xml"));
 		//materialBuilder.setTransparentFlag(true);
+        materialBuilder.setTexture(resourceManager.get<Texture>("textures/bricks.tex.xml"));
+        materialBuilder.setTransparentFlag(false);
+        materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/bricks.normals.tex.xml"));
 		materialBuilder.end();
 
 		floorMaterial = std::make_shared<Material>();

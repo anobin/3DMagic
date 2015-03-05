@@ -146,8 +146,7 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     this->addFace(TOP_LEFT, TOP_RIGHT, BACK_LEFT);
     this->addFace(BACK_LEFT, TOP_RIGHT, BACK_RIGHT);
 	
-    this->calaculateNormalsFromFaces();
-    this->calculateTangentsFromFaces();
+    this->calculateNormalsAndTangents();
 
     return *this;
 }
