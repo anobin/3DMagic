@@ -5,6 +5,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <functional>
 
 #include "../Exceptions/MagicException.h"
 #include <Shaders\GpuProgram.h>
@@ -124,6 +125,49 @@ public:
         }
 
         return *this;
+    }
+
+    inline void calculateDuplicateVertices()
+    {
+        // TODO: define hash function and equals on Vector4 directly
+        std::unordered_map<
+            Vector4, 
+            std::vector<unsigned int>,
+            std::function<int(const Vector4&)>,
+            std::function<bool(const Vector4&, const Vector4&)>
+        > map(
+            this->vertices.size(),
+            [&](const Vector4& vec) -> int 
+            { 
+                return
+                    std::hash<Scalar>()(vec.x()) ^
+                    std::hash<Scalar>()(vec.y()) ^
+                    std::hash<Scalar>()(vec.z()) ^
+                    std::hash<Scalar>()(vec.w());
+            },
+            [&](const Vector4& a, const Vector4& b) -> bool
+            {
+                return
+                    a.x() == b.x() &&
+                    a.y() == b.y() &&
+                    a.z() == b.z() &&
+                    a.w() == b.w();
+            }
+        );
+
+        for (unsigned int i = 0; i < this->vertices.size(); i++)
+        {
+            auto& vert = this->vertices[i];
+            map[vert.position()].push_back(i);
+        }
+
+        for (auto it : map)
+        {
+            if (it.second.size() > 1)
+            {
+                this->duplicateVertexIndices.push_back(it.second);
+            }
+        }
     }
 
     inline void calculateNormalsAndTangents()

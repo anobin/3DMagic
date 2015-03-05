@@ -63,12 +63,6 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
         BOT_RIGHT
     };
 
-    // register vertices that have the same position, but different tex coords
-    this->addDuplicateVertexIndices(LEFT_TOP, TOP_LEFT);
-    this->addDuplicateVertexIndices(RIGHT_TOP, TOP_RIGHT);
-    this->addDuplicateVertexIndices(LEFT_BOT, BOT_LEFT, BACK_LEFT);
-    this->addDuplicateVertexIndices(RIGHT_BOT, BOT_RIGHT, BACK_RIGHT);
-
     Scalar third = 1.0f / 3.0f;
     Scalar twoThirds = 2.0f / 3.0f;
 
@@ -146,6 +140,13 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     this->addFace(TOP_LEFT, TOP_RIGHT, BACK_LEFT);
     this->addFace(BACK_LEFT, TOP_RIGHT, BACK_RIGHT);
 	
+    // register vertices that have the same position, but different tex coords
+    this->addDuplicateVertexIndices(LEFT_TOP, TOP_LEFT);
+    this->addDuplicateVertexIndices(RIGHT_TOP, TOP_RIGHT);
+    this->addDuplicateVertexIndices(LEFT_BOT, BOT_LEFT, BACK_LEFT);
+    this->addDuplicateVertexIndices(RIGHT_BOT, BOT_RIGHT, BACK_RIGHT);
+    //this->calculateDuplicateVertices();
+
     this->calculateNormalsAndTangents();
 
     return *this;
