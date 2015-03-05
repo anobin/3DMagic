@@ -158,6 +158,45 @@ public:
         return this->vertexArray;
     }
 
+    inline bool hasType(GpuProgram::AttributeType type)
+    {
+        return this->attributes.find(type) != this->attributes.end();
+    }
+
+    // TODO: stop mis-using the triangle mesh to store a lines mesh
+    std::shared_ptr<TriangleMesh> normalsMesh;
+    inline TriangleMesh& getNormalsMesh()
+    {
+        if (normalsMesh != 0)
+            return *normalsMesh;
+
+        std::set<GpuProgram::AttributeType> types;
+        types.insert(GpuProgram::AttributeType::VERTEX);
+        normalsMesh = std::make_shared<TriangleMesh>(this->vertexCount*2, 0, types);
+
+        for (unsigned int i = 0; i < this->vertexCount; i++)
+        {
+            Vector4 pos(this->getAttributeData(i, GpuProgram::AttributeType::VERTEX));
+            Vector3 normal(this->getAttributeData(i, GpuProgram::AttributeType::NORMAL));
+
+            Vector4 endPoint = pos + normal.normalize();
+            endPoint.w(1.0f);
+
+            normalsMesh->setAttributeData(
+                i*2, 
+                GpuProgram::AttributeType::VERTEX,
+                pos.getData()
+            );
+            normalsMesh->setAttributeData(
+                i*2+1, 
+                GpuProgram::AttributeType::VERTEX,
+                endPoint.getData()
+            );
+        }
+
+        return *normalsMesh;
+    }
+
 };
 
 

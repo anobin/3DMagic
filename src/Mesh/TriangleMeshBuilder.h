@@ -30,6 +30,8 @@ private:
 
     std::vector<TriangleMesh::Face> faces;
 
+    std::vector<std::vector<unsigned int>> duplicateVertexIndices;
+
 public:
     /** Standard Constructor
     */
@@ -45,6 +47,7 @@ public:
     {
         this->vertices.clear();
         this->faces.clear();
+        this->duplicateVertexIndices.clear();
 
         return *this;
     }
@@ -58,6 +61,8 @@ public:
             faceCount = vertexCount / 3;
         this->faces.clear();
         this->faces.reserve(faceCount);
+
+        this->duplicateVertexIndices.clear();
 
         return *this;
     }
@@ -88,6 +93,29 @@ public:
         this->faces.push_back(TriangleMesh::Face(a, b, c));
     }
 
+    inline void addDuplicateVertexIndices(const std::vector<unsigned int> duplicateList)
+    {
+        this->duplicateVertexIndices.push_back(duplicateList);
+    }
+
+    inline void addDuplicateVertexIndices(unsigned int index1, unsigned int index2)
+    {
+        std::vector<unsigned int> list;
+        list.push_back(index1);
+        list.push_back(index2);
+        this->duplicateVertexIndices.push_back(std::move(list));
+    }
+
+    inline void addDuplicateVertexIndices(unsigned int index1, unsigned int index2,
+        unsigned int index3)
+    {
+        std::vector<unsigned int> list;
+        list.push_back(index1);
+        list.push_back(index2);
+        list.push_back(index3);
+        this->duplicateVertexIndices.push_back(std::move(list));
+    }
+
     inline TriangleMeshBuilder<AttrTypes...>& positionTransform(const Matrix4& matrix)
     {
         for (Vertex<AttrTypes...>& vertex : this->vertices)
@@ -100,29 +128,38 @@ public:
 
     inline void calaculateNormalsFromFaces()
     {
-        std::unordered_map<unsigned int, Vector3> map;
-
         // calculate normals for unique positions
         for (TriangleMesh::Face& face : this->faces)
         {
-            Vector4 points[] = {
-                this->vertices[face.indices[0]].position(),
-                this->vertices[face.indices[1]].position(),
-                this->vertices[face.indices[2]].position()
-            };
-            Vector3 faceNormal = Triangle(points[0], points[1], points[2]).normal;
+            auto& a = this->vertices[face.indices[0]];
+            auto& b = this->vertices[face.indices[1]];
+            auto& c = this->vertices[face.indices[2]];
 
-            map[face.indices[0]] = map[face.indices[0]] + faceNormal;
-            map[face.indices[1]] = map[face.indices[1]] + faceNormal;
-            map[face.indices[2]] = map[face.indices[2]] + faceNormal;
+            Vector3 faceNormal = Triangle(a.position(), b.position(), c.position()).normal;
+
+            a.normal(a.normal() + faceNormal);
+            b.normal(b.normal() + faceNormal);
+            c.normal(c.normal() + faceNormal);
         }
 
-        // TODO: merge normals for different points that are at the same location
+        // merge normals for different points that are at the same location
+        for (auto& list : this->duplicateVertexIndices)
+        {
+            Vector3 joinedNormal;
+            for (unsigned int index : list)
+            {
+                joinedNormal += this->vertices[index].normal();
+            }
+            for (unsigned int index : list)
+            {
+                this->vertices[index].normal(joinedNormal);
+            }
+        }
 
         // set calculated normals on vertices
         for (unsigned int i = 0; i < this->vertices.size(); i++)
         {
-            vertices[i].normal(map[i].normalize());
+            vertices[i].normal(vertices[i].normal().normalize());
         }
     }
 

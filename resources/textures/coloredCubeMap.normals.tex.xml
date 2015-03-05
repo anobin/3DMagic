@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Texture>
+	<image ref="images/coloredCubeMap.normals.tga" />
+	<wrapMode>CLAMP_TO_EDGE</wrapMode>
+	<fallback>
+		<Color name="WHITE" />
+	</fallback>
+</Texture>

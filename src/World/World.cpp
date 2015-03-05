@@ -465,8 +465,13 @@ void World::renderObjects()
         for (auto mesh : ob->getModel()->getMeshes())
         {
             renderMesh(*mesh);
-            /*if (showNormals)
-                renderMesh(mesh->getVisibleNormals());*/
+            if (showNormals)
+            {
+                mesh->getNormalsMesh().getVertexArray().draw(
+                    VertexArray::LINES,
+                    mesh->getNormalsMesh().getVertexCount()
+                );
+            }
         }
     }
     if (material != nullptr)
@@ -494,8 +499,13 @@ void World::renderObjects()
 		for(const auto mesh : meshes)
 		{   
             renderMesh(*mesh);
-            /*if (showNormals)
-                renderMesh(mesh->getVisibleNormals());*/
+            if (showNormals && mesh->hasType(GpuProgram::AttributeType::NORMAL))
+            {
+                mesh->getNormalsMesh().getVertexArray().draw(
+                    VertexArray::LINES,
+                    mesh->getNormalsMesh().getVertexCount()
+                    );
+            }
 		}
         tearDownMaterial(*material, this->wireframeEnabled);
 	} // end of all objects
