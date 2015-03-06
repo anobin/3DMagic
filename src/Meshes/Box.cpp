@@ -42,9 +42,7 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
 	height = height/2;
 	depth = depth/2;
 
-    // 8 points is minimum for positions, but need 6 more for proper texture mapping
-    this->vertices.reserve(14);
-    this->faces.reserve(12);
+    this->vertices.reserve(36);
 
     enum {
         BACK_LEFT = 0,
@@ -66,6 +64,7 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     Scalar third = 1.0f / 3.0f;
     Scalar twoThirds = 2.0f / 3.0f;
 
+    // unique points
     VertexPTNT points[14];
 
     points[BACK_LEFT].position(-width, -height, -depth);
@@ -110,42 +109,61 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     points[BOT_RIGHT].position(width, -height, -depth);
     points[BOT_RIGHT].texCoord(twoThirds, 0);
 
-    for (VertexPTNT vertex : points)
-        this->vertices.push_back(vertex);
-
     
 	// 6 sides, 2 triangles per each
+    // duplicate all points as we want unmerged normals for proper shading
 
 	// top
-    this->addFace(TOP_LEFT, MID_TOP_LEFT, TOP_RIGHT);
-    this->addFace(MID_TOP_LEFT, MID_TOP_RIGHT, TOP_RIGHT);
+    this->addVertex(points[TOP_LEFT]);
+    this->addVertex(points[MID_TOP_LEFT]);
+    this->addVertex(points[TOP_RIGHT]);
+    this->addVertex(points[MID_TOP_LEFT]);
+    this->addVertex(points[MID_TOP_RIGHT]);
+    this->addVertex(points[TOP_RIGHT]);
     
     // bottom
-    this->addFace(BOT_LEFT, BOT_RIGHT, MID_BOT_LEFT);
-    this->addFace(MID_BOT_LEFT, BOT_RIGHT, MID_BOT_RIGHT);
+    this->addVertex(points[BOT_LEFT]);
+    this->addVertex(points[BOT_RIGHT]);
+    this->addVertex(points[MID_BOT_LEFT]);
+    this->addVertex(points[MID_BOT_LEFT]);
+    this->addVertex(points[BOT_RIGHT]);
+    this->addVertex(points[MID_BOT_RIGHT]);
 
     // left side
-    this->addFace(LEFT_TOP, LEFT_BOT, MID_TOP_LEFT);
-    this->addFace(LEFT_BOT, MID_BOT_LEFT, MID_TOP_LEFT);
+    this->addVertex(points[LEFT_TOP]);
+    this->addVertex(points[LEFT_BOT]);
+    this->addVertex(points[MID_TOP_LEFT]);
+    this->addVertex(points[LEFT_BOT]);
+    this->addVertex(points[MID_BOT_LEFT]);
+    this->addVertex(points[MID_TOP_LEFT]);
     
     // right side
-    this->addFace(RIGHT_TOP, MID_TOP_RIGHT, RIGHT_BOT);
-    this->addFace(RIGHT_BOT, MID_TOP_RIGHT, MID_BOT_RIGHT);
+    this->addVertex(points[RIGHT_TOP]);
+    this->addVertex(points[MID_TOP_RIGHT]);
+    this->addVertex(points[RIGHT_BOT]);
+    this->addVertex(points[RIGHT_BOT]);
+    this->addVertex(points[MID_TOP_RIGHT]);
+    this->addVertex(points[MID_BOT_RIGHT]);
 	
     // front
-    this->addFace(MID_TOP_LEFT, MID_BOT_LEFT, MID_TOP_RIGHT);
-    this->addFace(MID_TOP_RIGHT, MID_BOT_LEFT, MID_BOT_RIGHT);
+    this->addVertex(points[MID_TOP_LEFT]);
+    this->addVertex(points[MID_BOT_LEFT]);
+    this->addVertex(points[MID_TOP_RIGHT]);
+    this->addVertex(points[MID_TOP_RIGHT]);
+    this->addVertex(points[MID_BOT_LEFT]);
+    this->addVertex(points[MID_BOT_RIGHT]);
 
 	// back
-    this->addFace(TOP_LEFT, TOP_RIGHT, BACK_LEFT);
-    this->addFace(BACK_LEFT, TOP_RIGHT, BACK_RIGHT);
-	
-    // register vertices that have the same position, but different tex coords
-    this->addDuplicateVertexIndices(LEFT_TOP, TOP_LEFT);
-    this->addDuplicateVertexIndices(RIGHT_TOP, TOP_RIGHT);
-    this->addDuplicateVertexIndices(LEFT_BOT, BOT_LEFT, BACK_LEFT);
-    this->addDuplicateVertexIndices(RIGHT_BOT, BOT_RIGHT, BACK_RIGHT);
-    //this->calculateDuplicateVertices();
+    this->addVertex(points[TOP_LEFT]);
+    this->addVertex(points[TOP_RIGHT]);
+    this->addVertex(points[BACK_LEFT]);
+    this->addVertex(points[BACK_LEFT]);
+    this->addVertex(points[TOP_RIGHT]);
+    this->addVertex(points[BACK_RIGHT]);
+
+    //generate faces to match with vertices
+    for (int i = 0; i < 36; i += 3)
+        this->faces.push_back(TriangleMesh::Face(i, i + 1, i + 2));
 
     this->calculateNormalsAndTangents();
 

@@ -213,7 +213,7 @@ public:
 
         // merge normals for different points that are at the same location,
         // if the angle between them is smaller than the threshold angle
-        Scalar thresholdAngleRads = thresholdAngle * (M_PI / 180);
+        Scalar thresholdAngleRads = thresholdAngle * Scalar(M_PI / 180);
         for (auto& list : this->duplicateVertexIndices)
         {
             std::map<unsigned int, Vector3> joinedNormal;
