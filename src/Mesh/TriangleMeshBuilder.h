@@ -170,9 +170,11 @@ public:
         }
     }
 
-    inline void calculateNormalsAndTangents()
+    inline void calculateNormalsAndTangents(Scalar thresholdAngle = 60.0f)
     {
         // calculate normals for unique positions
+        // TODO: split vertex into multiple vertices if shared surface 
+        //       normals exceed threshold angle? could be slow
         for (TriangleMesh::Face& face : this->faces)
         {
             auto& a = this->vertices[face.indices[0]];
@@ -209,20 +211,38 @@ public:
             c.tangent(c.tangent() + faceTangent);
         }
 
-        // merge normals for different points that are at the same location
+        // merge normals for different points that are at the same location,
+        // if the angle between them is smaller than the threshold angle
+        Scalar thresholdAngleRads = thresholdAngle * (M_PI / 180);
         for (auto& list : this->duplicateVertexIndices)
         {
-            Vector3 joinedNormal;
-            Vector3 joinedTangent;
-            for (unsigned int index : list)
+            std::map<unsigned int, Vector3> joinedNormal;
+            std::map<unsigned int, Vector3> joinedTangent;
+            for (unsigned int i : list)
             {
-                joinedNormal += this->vertices[index].normal();
-                joinedTangent += this->vertices[index].tangent();
+                auto& vert1 = this->vertices[i];
+                joinedNormal[i] += vert1.normal();
+                joinedTangent[i] += vert1.tangent();
+
+                for (unsigned int j : list)
+                {
+                    if (i == j)
+                        continue; // skip comparing vertex with self
+
+                    auto& vert2 = this->vertices[j];
+
+                    Scalar angle = vert1.normal().angleBetween(vert2.normal());
+                    if (angle <= thresholdAngleRads)
+                    {
+                        joinedNormal[i] += vert2.normal();
+                        joinedTangent[i] += vert2.tangent();
+                    }
+                }
             }
             for (unsigned int index : list)
             {
-                this->vertices[index].normal(joinedNormal);
-                this->vertices[index].tangent(joinedTangent);
+                this->vertices[index].normal(joinedNormal[index]);
+                this->vertices[index].tangent(joinedTangent[index]);
             }
         }
 

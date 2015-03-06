@@ -139,7 +139,10 @@ public:
     /// find the angle between this vector and another
     inline Scalar angleBetween(const T& v) const
     {
-        return acos(this->dotProduct(v));
+        return acos(
+            this->dotProduct(v) /
+            (this->getLength() * v.getLength())
+        );
     }
 
     /// get the length of this vector

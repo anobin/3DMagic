@@ -55,7 +55,7 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
 
         // TODO: add options on how these are done and thresholds
         bb.calculateDuplicateVertices();
-        bb.calculateNormalsAndTangents();
+        bb.calculateNormalsAndTangents(85.0f);
         
         // end current mesh
 		meshes.push_back(bb.build());
