@@ -85,6 +85,10 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "CollisionShapes/TriangleMeshCollisionShape.h"
 
 
+// General Geometry API
+#include <Geometry\Box.h>
+#include <Geometry\Plane.h>
+#include <Geometry\Sphere.h>
 
 
 

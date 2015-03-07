@@ -8,15 +8,15 @@
 namespace Magic3D
 { 
 
-class Plane
+class _Plane
 {
     Vector3 normal;
     float d;
 
 public:
-    inline Plane() {}
+    inline _Plane() {}
 
-    inline Plane(Vector3& topRight, Vector3& topLeft, Vector3& bottomLeft)
+    inline _Plane(Vector3& topRight, Vector3& topLeft, Vector3& bottomLeft)
     {
         this->update(topRight, topLeft, bottomLeft);
     }
@@ -75,7 +75,7 @@ public:
 
 class ViewFrustum
 {
-    Plane pl[6];
+    _Plane pl[6];
 
     Rectangle nearRec;
     Rectangle farRec;

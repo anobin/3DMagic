@@ -467,5 +467,8 @@
     <ClInclude Include="..\..\src\Geometry\Box.h">
       <Filter>Source Files\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\Plane.h">
+      <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

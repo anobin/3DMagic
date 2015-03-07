@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\src\Exceptions\ShaderVertexInterfaceException.h" />
     <ClInclude Include="..\..\src\Geometry\Box.h" />
     <ClInclude Include="..\..\src\Geometry\Geometry.h" />
+    <ClInclude Include="..\..\src\Geometry\Plane.h" />
     <ClInclude Include="..\..\src\Geometry\Sphere.h" />
     <ClInclude Include="..\..\src\Graphics\Buffer.h" />
     <ClInclude Include="..\..\src\Graphics\GraphicsSystem.h" />

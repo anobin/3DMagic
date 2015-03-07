@@ -31,11 +31,11 @@ CollisionShape::~CollisionShape()
 }   
     
     
-std::shared_ptr<SphereCollisionShape> CollisionShape::getBoundingSphere()
+std::shared_ptr<SphereCollisionShape> CollisionShape::getBoundingSphere() const
 {
     btVector3 bt_center;
     btScalar bt_radius;
-    this->getShape()->getBoundingSphere(bt_center, bt_radius);
+    const_cast<CollisionShape*>(this)->getShape()->getBoundingSphere(bt_center, bt_radius);
     
     return std::make_shared<SphereCollisionShape>((Scalar)bt_radius,
         Vector3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));

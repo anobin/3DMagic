@@ -14,7 +14,7 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
 	if (!file)
 		throw_MagicException("Could not load model file");
 
-    std::vector<std::shared_ptr<TriangleMesh>> meshes;
+    std::vector<std::shared_ptr<Geometry>> meshes;
 
     std::set<GpuProgram::AttributeType> attrs;
     attrs.insert(GpuProgram::AttributeType::VERTEX);

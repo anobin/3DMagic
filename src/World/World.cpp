@@ -257,7 +257,7 @@ void World::tearDownMaterial(Material& material, bool wireframe)
     }
 }
 
-void World::renderMesh(TriangleMesh& mesh)
+void World::renderMesh(const TriangleMesh& mesh)
 {
     // draw mesh
     mesh.getVertexArray().drawIndexed(
@@ -403,7 +403,7 @@ void World::renderObjects()
             {
                 for (auto mesh : ob->getModel()->getMeshes())
                 {
-                    renderMesh(*mesh);
+                    renderMesh(mesh->getTriangleMesh());
                 }
             }
         }
@@ -419,9 +419,9 @@ void World::renderObjects()
             ob->getPosition().getTransformMatrix(model);
 
             setupMaterial(*material, model, lightViewMatrix, lightProjectionMatrix, false);
-            for (const std::shared_ptr<TriangleMesh> mesh : meshes)
+            for (auto mesh : meshes)
             {
-                renderMesh(*mesh);
+                renderMesh(mesh->getTriangleMesh());
             }
             tearDownMaterial(*material, false);
         }
@@ -464,12 +464,12 @@ void World::renderObjects()
 
         for (auto mesh : ob->getModel()->getMeshes())
         {
-            renderMesh(*mesh);
+            renderMesh(mesh->getTriangleMesh());
             if (showNormals)
             {
-                mesh->getNormalsMesh(this->normalsLength).getVertexArray().draw(
+                mesh->getTriangleMesh().getNormalsMesh(this->normalsLength).getVertexArray().draw(
                     VertexArray::LINES,
-                    mesh->getNormalsMesh(this->normalsLength).getVertexCount()
+                    mesh->getTriangleMesh().getNormalsMesh(this->normalsLength).getVertexCount()
                 );
             }
         }
@@ -498,12 +498,12 @@ void World::renderObjects()
             &shadowMatrix, shadowTex);
 		for(const auto mesh : meshes)
 		{   
-            renderMesh(*mesh);
-            if (showNormals && mesh->hasType(GpuProgram::AttributeType::NORMAL))
+            renderMesh(mesh->getTriangleMesh());
+            if (showNormals && mesh->getTriangleMesh().hasType(GpuProgram::AttributeType::NORMAL))
             {
-                mesh->getNormalsMesh(this->normalsLength).getVertexArray().draw(
+                mesh->getTriangleMesh().getNormalsMesh(this->normalsLength).getVertexArray().draw(
                     VertexArray::LINES,
-                    mesh->getNormalsMesh(this->normalsLength).getVertexCount()
+                    mesh->getTriangleMesh().getNormalsMesh(this->normalsLength).getVertexCount()
                     );
             }
 		}

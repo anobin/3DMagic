@@ -101,7 +101,7 @@ private:
     GLuint shadowFBO;
     std::shared_ptr<Texture> shadowTex;
 
-    void renderMesh(TriangleMesh& mesh);
+    void renderMesh(const TriangleMesh& mesh);
 
     void setupMaterial(Material& material, const Matrix4& modelMatrix,
         const Matrix4& viewMatrix, const Matrix4& projectionMatrix, bool wireframe,

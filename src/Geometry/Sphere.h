@@ -36,7 +36,8 @@ public:
     {
         if (triangleMesh == nullptr)
         {
-            triangleMesh = TriangleMeshBuilder::buildSphere(radius, fidelity, fidelity * 0.6f);
+            triangleMesh = TriangleMeshBuilder::buildSphere(radius, int(fidelity), 
+                int(fidelity * 0.6f));
             if (!center.isAtOrigin())
             {
                 Matrix4 matrix;

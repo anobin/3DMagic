@@ -20,7 +20,7 @@ class Box : public Geometry
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
 
 public:
-    inline Box(Scalar width, Scalar Height, Scalar depth,
+    inline Box(Scalar width, Scalar height, Scalar depth,
         const Vector3& center = Vector3(0, 0, 0)) :
         width(width), height(height), depth(depth), center(center) {}
 

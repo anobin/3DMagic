@@ -25,6 +25,9 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <CollisionShapes\TriangleMeshCollisionShape.h>
 #include <Graphics\Material.h>
 
+#include <Geometry\Geometry.h>
+#include <Geometry\Sphere.h>
+
 #include <set>
 #include <vector>
 
@@ -35,8 +38,8 @@ namespace Magic3D
 class Model : public Resource
 {
 protected:
-	std::vector<std::shared_ptr<TriangleMesh>> meshes;
-	std::shared_ptr<CollisionShape> collisionShape;
+	std::vector<std::shared_ptr<Geometry>> meshes;
+	std::shared_ptr<Geometry> collisionShape;
 	std::shared_ptr<Material> material;
 
     std::shared_ptr<SphereCollisionShape> graphicalBoundingSphere;
@@ -45,52 +48,54 @@ public:
 	inline Model() {}
 
 	inline Model(
-        std::vector<std::shared_ptr<TriangleMesh>> meshes,
+        std::vector<std::shared_ptr<Geometry>>& meshes,
 		std::shared_ptr<Material> material,
-		std::shared_ptr<CollisionShape> collisionShape = nullptr
+        std::shared_ptr<Geometry> collisionShape = nullptr
 		): meshes(meshes), collisionShape(collisionShape), material(material) 
     {
-        TriangleMeshCollisionShape realShape(meshes);
+        // TODO: fix this to build bounding sphere from all meshes
+        TriangleMeshCollisionShape realShape(meshes[0]->getTriangleMesh());
         this->graphicalBoundingSphere = realShape.getBoundingSphere();
     }
 
     inline Model(
-        std::shared_ptr<TriangleMesh> mesh,
+        std::shared_ptr<Geometry> mesh,
         std::shared_ptr<Material> material,
-        std::shared_ptr<CollisionShape> collisionShape = nullptr
+        std::shared_ptr<Geometry> collisionShape = nullptr
         ) : collisionShape(collisionShape), material(material) 
     {
-        this->meshes.push_back(mesh);
+        meshes.push_back(mesh);
 
-        TriangleMeshCollisionShape realShape(meshes);
+        TriangleMeshCollisionShape realShape(mesh->getTriangleMesh());
         this->graphicalBoundingSphere = realShape.getBoundingSphere();
     }
 
-    inline std::vector<std::shared_ptr<TriangleMesh>>& getMeshes()
+    inline std::vector<std::shared_ptr<Geometry>>& getMeshes()
 	{
 		return this->meshes;
 	}
-    inline void setMeshes(const std::vector<std::shared_ptr<TriangleMesh>>& meshes)
+    inline void setMeshes(const std::vector<std::shared_ptr<Geometry>>& meshes)
 	{
 		this->meshes = meshes;
         
-        TriangleMeshCollisionShape realShape(meshes);
+        // TODO: fix this to build bounding sphere from all meshes
+        TriangleMeshCollisionShape realShape(meshes[0]->getTriangleMesh());
         this->graphicalBoundingSphere = realShape.getBoundingSphere();
 	}
-    inline void setMeshes(std::shared_ptr<TriangleMesh> mesh)
+    inline void setMeshes(std::shared_ptr<Geometry> mesh)
     {
         meshes.clear();
         meshes.push_back(mesh);
 
-        TriangleMeshCollisionShape realShape(meshes);
+        TriangleMeshCollisionShape realShape(mesh->getTriangleMesh());
         this->graphicalBoundingSphere = realShape.getBoundingSphere();
     }
 
-	inline std::shared_ptr<CollisionShape> getCollisionShape()
+    inline std::shared_ptr<Geometry> getCollisionShape()
 	{
 		return this->collisionShape;
 	}
-	inline void setCollisionShape(std::shared_ptr<CollisionShape> collisionShape)
+    inline void setCollisionShape(std::shared_ptr<Geometry> collisionShape)
 	{
 		this->collisionShape = collisionShape;
 	}

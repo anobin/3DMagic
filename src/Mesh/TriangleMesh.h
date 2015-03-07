@@ -225,9 +225,9 @@ public:
     }
 
     // TODO: stop mis-using the triangle mesh to store a lines mesh
-    std::shared_ptr<TriangleMesh> normalsMesh;
-    Scalar normalsLength;
-    inline TriangleMesh& getNormalsMesh(Scalar length)
+    mutable std::shared_ptr<TriangleMesh> normalsMesh;
+    mutable Scalar normalsLength;
+    inline TriangleMesh& getNormalsMesh(Scalar length) const
     {
         if (normalsMesh != nullptr && this->normalsLength == length)
             return *normalsMesh;

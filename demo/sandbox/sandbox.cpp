@@ -80,10 +80,10 @@ std::shared_ptr<Material> tinySphereMaterial;
 std::shared_ptr<Material> bigSphereMaterial;
 
 // collisions shapes
-auto floorShape = std::make_shared<PlaneCollisionShape>( Vector3(0,1,0) );
-auto sphereShape = std::make_shared<SphereCollisionShape>( 2*FOOT );
-auto tinySphereShape = std::make_shared<SphereCollisionShape>( 1*FOOT );
-auto bigSphereShape = std::make_shared<BoxCollisionShape>( 3.0f, 3.0f, 3.0f );
+auto floorShape = std::make_shared<Plane>( Vector3(0,1,0) );
+auto sphereShape = std::make_shared<Sphere>( 2*FOOT );
+auto tinySphereShape = std::make_shared<Sphere>( 1*FOOT );
+auto bigSphereShape = std::make_shared<Box>( 3.0f, 3.0f, 3.0f );
 
 // objects
 Object* bigBall;
@@ -608,7 +608,7 @@ public:
 			floorMaterial, floorShape)); // static object
 		world->addObject(floorObject);
 
-		auto brickShape = resourceManager.get<CollisionShape>("shapes/BrickShape.xml");
+        auto brickShape = std::make_shared<Box>(0.75f, 0.375f, 0.375f);
 
 		float wallWidth =40;
 		float wallHeight = 10;
@@ -678,10 +678,10 @@ public:
         materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
         materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/plastic.normals.tex.xml"));
 		materialBuilder.end();
-		auto chainShape = std::make_shared<TriangleMeshCollisionShape>(chainModel->getMeshes());
 
         chainModel->setMaterial(chainMaterial);
-        chainModel->setCollisionShape(chainShape);
+        // TODO: add composite shapes
+        chainModel->setCollisionShape(chainModel->getMeshes()[0]);
 		chainObject = std::make_shared<Object>(chainModel);
 		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
 		world->addStaticObject(chainObject);

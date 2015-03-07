@@ -48,8 +48,8 @@ protected:
 
 public:
     /// default constructor
-    inline PlaneCollisionShape(const Vector3& normal ): 
-        shape( btVector3(normal.x(), normal.y(), normal.z()), 0 ) {}
+    inline PlaneCollisionShape(const Vector3& normal, Scalar distance = 0.0f): 
+        shape(btVector3(normal.x(), normal.y(), normal.z()), distance) {}
     
     /// destructor
     virtual ~PlaneCollisionShape();

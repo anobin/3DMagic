@@ -65,13 +65,13 @@ public:
     /// destructor
     virtual ~CollisionShape();
 
-    inline const Vector3& getOffset()
+    inline const Vector3& getOffset() const
     {
         return this->offset;
     }
     
     /// Get bounding sphere of collision shape.
-    std::shared_ptr<SphereCollisionShape> getBoundingSphere();
+    std::shared_ptr<SphereCollisionShape> getBoundingSphere() const;
 
 };
 
