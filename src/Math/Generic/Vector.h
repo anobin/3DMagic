@@ -112,7 +112,7 @@ public:
     inline Scalar z() const { return data[2]; }
     inline void z(Scalar z) { data[2] = z; }
 
-    inline bool isAtOrigin()
+    inline bool isAtOrigin() const
     {
         return (x() == 0) && (y() == 0) && (z() == 0);
     }

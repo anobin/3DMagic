@@ -35,6 +35,7 @@ void addVertex(std::shared_ptr<TriangleMesh> mesh, int i, Vector3& pos, Vector2&
     auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(i);
     vert.position(pos);
     vert.texCoord(coords);
+    mesh->setVertex(i, vert);
 }
 	
 /** Build a box batch
@@ -179,7 +180,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildBox(float width, float h
 
     //generate faces to match with vertices
     for (int i = 0; i < 36; i += 3)
-        mesh->getFace(i / 3).set(i, i + 1, i + 2);
+        mesh->setFace(i / 3, TriangleMesh::Face(i, i + 1, i + 2));
 
     mesh->calculateNormalsAndTangents();
 

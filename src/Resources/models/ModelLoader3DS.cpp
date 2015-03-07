@@ -46,6 +46,7 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
                 mesh->texelL[i][0],
                 mesh->texelL[i][1]
             );
+            batch->setVertex(i, vert);
         }
 
         // Loop through every face, setting the three vertices
@@ -53,7 +54,8 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
         {
             Lib3dsFace* face = &mesh->faceL[cur_face];
             
-            batch->getFace(cur_face).set(face->points[0], face->points[1], face->points[2]);
+            batch->setFace(cur_face, 
+                TriangleMesh::Face(face->points[0], face->points[1], face->points[2]));
         }
 
         // TODO: add options on how these are done and thresholds

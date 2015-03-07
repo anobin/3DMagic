@@ -71,36 +71,42 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildFlatSurface(float width,
         auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x, 0.0f, z);
         vert.texCoord(texX*i, texY*j);
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 		
 		// bottom left
         vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x, 0.0f, z + zStep);
         vert.texCoord(texX*i, texY*(j + 1));
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 	
 		// top right
         vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x + xStep, 0.0f, z);
         vert.texCoord(texX*(i + 1), texY*j);
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 		
 		// top right
         vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x + xStep, 0.0f, z);
         vert.texCoord(texX*(i + 1), texY*j);
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 
 		// bottom left
         vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x, 0.0f, z + zStep);
         vert.texCoord(texX*i, texY*(j + 1));
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 
 		// bottom right
         vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
         vert.position(x + xStep, 0.0f, z + zStep);
         vert.texCoord(texX*(i + 1), texY*(j + 1));
+        mesh->setVertex(currentVertex, vert);
         currentVertex++;
 		
 		i++;
@@ -119,7 +125,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildFlatSurface(float width,
 
     for (int i = 0; i < vertexCount; i += 3)
     {
-        mesh->getFace(i / 3).set(i, i + 1, i + 2);
+        mesh->setFace(i / 3, TriangleMesh::Face(i, i + 1, i + 2));
     }
 
     mesh->calculateNormalsAndTangents();

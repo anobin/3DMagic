@@ -53,6 +53,8 @@ protected:
 public:
     /// default constructor
     TriangleMeshCollisionShape(const std::vector<std::shared_ptr<TriangleMesh>>& meshes);
+
+    TriangleMeshCollisionShape(const TriangleMesh& mesh);
     
     /// destructor
     virtual ~TriangleMeshCollisionShape();

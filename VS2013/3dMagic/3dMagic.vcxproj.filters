@@ -76,6 +76,9 @@
     <Filter Include="Source Files\Mesh">
       <UniqueIdentifier>{2bfb2852-4ad3-48ac-93ee-6bd06912cfa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Geometry">
+      <UniqueIdentifier>{37a0031a-6351-4283-950b-b68695ddc63d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Cameras\Camera.cpp">
@@ -242,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\models\ModelLoader3DS.cpp">
       <Filter>Source Files\Resources\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Mesh\TriangleMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -451,6 +457,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Mesh\TriangleMeshBuilder.h">
       <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\Geometry.h">
+      <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\Sphere.h">
+      <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\Box.h">
+      <Filter>Source Files\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

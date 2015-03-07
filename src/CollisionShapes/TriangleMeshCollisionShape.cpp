@@ -56,6 +56,27 @@ shape(NULL)
     // build physics shape from mesh data
     this->shape = new btBvhTriangleMeshShape(&mesh, true);
 }
+
+TriangleMeshCollisionShape::TriangleMeshCollisionShape(const TriangleMesh& mesh)
+{
+    for (unsigned int i = 0; i < mesh.getFaceCount(); i++)
+    {
+        auto face = mesh.getFaceData(i);
+
+        // get three vertices for triangle
+        Vector3 a(mesh.getAttributeData(face->indices[0], GpuProgram::AttributeType::VERTEX));
+        Vector3 b(mesh.getAttributeData(face->indices[1], GpuProgram::AttributeType::VERTEX));
+        Vector3 c(mesh.getAttributeData(face->indices[2], GpuProgram::AttributeType::VERTEX));
+
+        // add triangle to mesh
+        this->mesh.addTriangle(btVector3(a.x(), a.y(), a.z()),
+            btVector3(b.x(), b.y(), b.z()),
+            btVector3(c.x(), c.y(), c.z()), true
+            );
+    }
+
+    this->shape = new btBvhTriangleMeshShape(&this->mesh, true);
+}
   
 /// destructor
 TriangleMeshCollisionShape::~TriangleMeshCollisionShape()

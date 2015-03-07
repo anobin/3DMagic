@@ -45,6 +45,7 @@
     <ClCompile Include="..\..\src\Meshes\FlatSurface.cpp" />
     <ClCompile Include="..\..\src\Meshes\Rectangle2D.cpp" />
     <ClCompile Include="..\..\src\Meshes\Sphere.cpp" />
+    <ClCompile Include="..\..\src\Mesh\TriangleMesh.cpp" />
     <ClCompile Include="..\..\src\Objects\Object.cpp" />
     <ClCompile Include="..\..\src\Physics\MotionState.cpp" />
     <ClCompile Include="..\..\src\Physics\PhysicsSystem.cpp" />
@@ -87,6 +88,9 @@
     <ClInclude Include="..\..\src\Exceptions\ResourceNotFoundException.h" />
     <ClInclude Include="..\..\src\Exceptions\ShaderCompileException.h" />
     <ClInclude Include="..\..\src\Exceptions\ShaderVertexInterfaceException.h" />
+    <ClInclude Include="..\..\src\Geometry\Box.h" />
+    <ClInclude Include="..\..\src\Geometry\Geometry.h" />
+    <ClInclude Include="..\..\src\Geometry\Sphere.h" />
     <ClInclude Include="..\..\src\Graphics\Buffer.h" />
     <ClInclude Include="..\..\src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="..\..\src\Graphics\Image.h" />

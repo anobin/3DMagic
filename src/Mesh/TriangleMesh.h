@@ -10,11 +10,13 @@
 #include "Shaders\GpuProgram.h"
 #include <Shapes\Vertex.h>
 #include <Shapes\Triangle.h>
+#include <Geometry\Geometry.h>
 
 namespace Magic3D
 {
 
-class TriangleMesh
+// TODO: fix the mutablility and out of sync flag to work correctly
+class TriangleMesh : public Geometry
 {
 public:
     struct Face
@@ -43,14 +45,22 @@ private:
     std::map<GpuProgram::AttributeType, std::vector<Scalar>> attributes;
 
     // attributes for vertices (on gpu memory)
-    std::map<GpuProgram::AttributeType, Buffer> gpuAttributes;
+    mutable std::map<GpuProgram::AttributeType, Buffer> gpuAttributes;
     // vertex array for vertices
     VertexArray vertexArray;
 
     std::vector<Face> faces;
 
     unsigned int vertexCount;
-    bool outOfSync;
+
+    mutable bool outOfSync;
+    mutable std::shared_ptr<CollisionShape> collisionShape;
+
+    inline void markDirty()
+    {
+        this->outOfSync = true;
+        this->collisionShape = nullptr;
+    }
 
 public:
     inline TriangleMesh(unsigned int vertexCount, unsigned int faceCount,
@@ -121,7 +131,7 @@ public:
         }
     }
 
-    inline unsigned int getVertexCount()
+    inline unsigned int getVertexCount() const
     {
         return this->vertexCount;
     }
@@ -137,11 +147,12 @@ public:
 
         memcpy(hereData, data, 
             GpuProgram::attributeTypeCompCount[(int)type] * sizeof(Scalar) * vertexCount);
-        this->outOfSync = true;
+
+        markDirty();
     }
 
-    inline Scalar* getAttributeData(unsigned int vertexIndex,
-        GpuProgram::AttributeType type)
+    inline const Scalar* getAttributeData(unsigned int vertexIndex,
+        GpuProgram::AttributeType type) const
     {
         if (vertexIndex >= this->vertexCount)
             throw_MagicException("out of bounds");
@@ -160,9 +171,11 @@ public:
             data,
             sizeof(Face) * count
         );
+
+        markDirty();
     }
 
-    inline Face* getFaceData(unsigned int faceIndex)
+    inline const Face* getFaceData(unsigned int faceIndex) const
     {
         if (faceIndex >= this->faces.size())
             throw_MagicException("out of bounds");
@@ -170,17 +183,22 @@ public:
         return &this->faces[faceIndex];
     }
 
-    inline Face& getFace(unsigned int index)
+    inline const Face& getFace(unsigned int index) const
     {
         return *this->getFaceData(index);
     }
 
-    inline unsigned int getFaceCount()
+    inline void setFace(unsigned int index, const Face& face)
+    {
+        this->setFaceData(index, &face, 1);
+    }
+
+    inline unsigned int getFaceCount() const
     {
         return this->faces.size();
     }
 
-    inline const VertexArray& getVertexArray()
+    inline const VertexArray& getVertexArray() const
     {
         // copy new data to gpu memory if needed
         if (outOfSync)
@@ -201,7 +219,7 @@ public:
         return this->vertexArray;
     }
 
-    inline bool hasType(GpuProgram::AttributeType type)
+    inline bool hasType(GpuProgram::AttributeType type) const
     {
         return this->attributes.find(type) != this->attributes.end();
     }
@@ -243,9 +261,20 @@ public:
     }
 
     template<typename... AttrTypes>
-    Vertex<AttrTypes...> getVertex(unsigned int index)
+    Vertex<AttrTypes...> getVertex(unsigned int index) const
     {
         return Vertex<AttrTypes...>(this->getAttributeData(index, AttrTypes::type)...);
+    }
+
+    template<typename... AttrTypes>
+    void setVertex(unsigned int index, const Vertex<AttrTypes...>& vertex)
+    {
+        int _[] = { 0, (
+
+            this->setAttributeData(index, AttrTypes::type, ((AttrTypes&)vertex).getData())
+
+        , 0)... };
+        (void)_;
     }
 
     inline void positionTransform(const Matrix4& matrix)
@@ -254,6 +283,7 @@ public:
         {
             auto vert = this->getVertex<PositionAttr>(i);
             vert.position(Vector3(vert.position()).transform(matrix));
+            this->setVertex(i, vert);
         }
     }
 
@@ -294,6 +324,10 @@ public:
             a.tangent(a.tangent() + faceTangent);
             b.tangent(b.tangent() + faceTangent);
             c.tangent(c.tangent() + faceTangent);
+
+            this->setVertex(face.indices[0], a);
+            this->setVertex(face.indices[1], b);
+            this->setVertex(face.indices[2], c);
         }
 
         // set calculated normals on vertices
@@ -302,8 +336,13 @@ public:
             auto vert = this->getVertex<NormalAttr, TangentAttr>(i);
             vert.normal(vert.normal().normalize());
             vert.tangent(vert.tangent().normalize());
+            this->setVertex(i, vert);
         }
     }
+
+    virtual const CollisionShape& getCollisionShape() const;
+
+    virtual const TriangleMesh& getTriangleMesh() const;
 
 };
 

@@ -139,6 +139,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildSphere(
                 auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
                 vert.position(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
                 vert.texCoord(vTexture[k][0], vTexture[k][1]);
+                mesh->setVertex(currentVertex, vert);
                 currentVertex++;
 			}
 			
@@ -156,6 +157,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildSphere(
                 auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
                 vert.position(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
                 vert.texCoord(vTexture[k][0], vTexture[k][1]);
+                mesh->setVertex(currentVertex, vert);
                 currentVertex++;
 			}			
 		}
@@ -164,7 +166,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildSphere(
 
     for (int i = 0; i < vertexCount; i += 3)
     {
-        mesh->getFace(i / 3).set(i, i + 1, i + 2);
+        mesh->setFace(i / 3, TriangleMesh::Face(i, i + 1, i + 2));
     }
 
     mesh->calculateNormalsAndTangents();

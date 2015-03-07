@@ -49,34 +49,40 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::build2DRectangle(int x, int y
     auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(0);
     vert.position((float)x + width, (float)y, 0.0f);
     vert.texCoord(1.0f, 1.0f);
+    mesh->setVertex(0, vert);
 
 	// top right
     vert = mesh->getVertex<PositionAttr, TexCoordAttr>(1);
     vert.position((float)x + width, (float)y + height, 0.0f);
     vert.texCoord(1.0f, 0.0f);
+    mesh->setVertex(1, vert);
 
 	// top left
     vert = mesh->getVertex<PositionAttr, TexCoordAttr>(2);
     vert.position((float)x, (float)y + height, 0.0f);
     vert.texCoord(0.0f, 0.0f);
+    mesh->setVertex(2, vert);
 	
 	// bottom right
     vert = mesh->getVertex<PositionAttr, TexCoordAttr>(3);
     vert.position((float)x + width, (float)y, 0.0f);
     vert.texCoord(1.0f, 1.0f);
+    mesh->setVertex(3, vert);
 
 	// top left
     vert = mesh->getVertex<PositionAttr, TexCoordAttr>(4);
     vert.position((float)x, (float)y + height, 0.0f);
     vert.texCoord(0.0f, 0.0f);
+    mesh->setVertex(4, vert);
 
 	// bottom left
     vert = mesh->getVertex<PositionAttr, TexCoordAttr>(5);
     vert.position((float)x, (float)y, 0.0f);
     vert.texCoord(0.0f, 1.0f);
+    mesh->setVertex(5, vert);
 	
-    mesh->getFace(0).set(0, 1, 2);
-    mesh->getFace(1).set(3, 4, 5);
+    mesh->setFace(0, TriangleMesh::Face(0, 1, 2));
+    mesh->setFace(1, TriangleMesh::Face(3, 4, 5));
 
     return mesh;
 }
