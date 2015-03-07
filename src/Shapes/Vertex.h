@@ -11,24 +11,12 @@ namespace Magic3D
 
 class PositionAttr
 {
-    Vector4 data;
+    Scalar* data;
 public:
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::VERTEX;
 
-    inline PositionAttr() {}
-
-    inline PositionAttr(const Scalar* data) : data(data) {}
-
-    inline PositionAttr(const Vector3& vec) : data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z, 1.0f) {}
-
-    inline PositionAttr(const Vector4& vec) : data(vec) {}
-
-    inline PositionAttr(Scalar x, Scalar y, Scalar z, Scalar w) : data(x, y, z, w) {}
-
-    inline PositionAttr(const PositionAttr& attr) : data(attr.data) {}
+    inline PositionAttr(Scalar* data) : data(data) {}
 
     inline void position(Scalar x, Scalar y, Scalar z)
     {
@@ -37,12 +25,15 @@ public:
 
     inline void position(Scalar x, Scalar y, Scalar z, Scalar w)
     {
-        this->data = Vector4(x, y, z, w);
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
+        data[3] = w;
     }
 
     inline void position(const Vector4& vec)
     {
-        this->position(vec.x(), vec.y(), vec.z());
+        this->position(vec.x(), vec.y(), vec.z(), vec.z());
     }
 
     inline void position(const Vector3& vec)
@@ -50,142 +41,114 @@ public:
         this->position(vec.x(), vec.y(), vec.z());
     }
 
-    inline Vector4& position()
-    {
-        return this->data;
-    }
-
-    inline const Vector4& position() const
+    inline Vector4 position() const
     {
         return this->data;
     }
 
     inline const Scalar* getData() const
     {
-        return this->data.getData();
+        return this->data;
     }
 };
 
 
 class TexCoordAttr
 {
-    Vector2 data;
+    Scalar* data;
 
 public:
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::TEX_COORD_0;
 
-    inline TexCoordAttr() {}
-
-    inline TexCoordAttr(const Vector2& vec) : data(vec) {}
-
-    inline TexCoordAttr(Scalar x, Scalar y) : data(x, y) {}
+    inline TexCoordAttr(Scalar* data): data(data) {}
 
     inline void texCoord(Scalar x, Scalar y)
     {
-        data = Vector2(x, y);
+        data[0] = x;
+        data[1] = y;
     }
 
     inline void texCoord(const Vector2& vec)
     {
-        data = vec;
+        this->texCoord(vec.x(), vec.y());
     }
 
-    inline Vector2& texCoord()
+    inline Vector2 texCoord() const
     {
-        return data;
-    }
-
-    inline const Vector2& texCoord() const
-    {
-        return data;
+        return Vector2(data);
     }
 
     inline const Scalar* getData() const
     {
-        return this->data.getData();
+        return this->data;
     }
 };
 
 
 class NormalAttr
 {
-    Vector3 data;
+    Scalar* data;
 public:
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::NORMAL;
 
-    inline NormalAttr() {}
-
-    inline NormalAttr(const Vector3& vec) : data(vec) {}
-
-    inline NormalAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z) {}
+    inline NormalAttr(Scalar* data): data(data) {}
 
     inline void normal(Scalar x, Scalar y, Scalar z)
     {
-        data = Vector3(x, y, z);
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
     }
 
     inline void normal(const Vector3& vec)
     {
-        data = vec;
+        this->normal(vec.x(), vec.y(), vec.z());
     }
 
-    inline Vector3& normal()
+    inline Vector3 normal() const
     {
-        return data;
-    }
-
-    inline const Vector3& normal() const
-    {
-        return data;
+        return Vector3(data);
     }
 
     inline const Scalar* getData() const
     {
-        return this->data.getData();
+        return this->data;
     }
 };
 
 
 class TangentAttr
 {
-    Vector3 data;
+    Scalar* data;
 public:
 
     static const GpuProgram::AttributeType type = GpuProgram::AttributeType::TANGENT;
 
-    inline TangentAttr() {}
-
-    inline TangentAttr(const Vector3& vec) : data(vec) {}
-
-    inline TangentAttr(Scalar x, Scalar y, Scalar z) : data(x, y, z) {}
+    inline TangentAttr(Scalar* data): data(data) {}
 
     inline void tangent(Scalar x, Scalar y, Scalar z)
     {
-        data = Vector3(x, y, z);
+        data[0] = x;
+        data[1] = y;
+        data[2] = z;
     }
 
     inline void tangent(const Vector3& vec)
     {
-        data = vec;
+        this->tangent(vec.x(), vec.y(), vec.z());
     }
 
-    inline Vector3& tangent()
+    inline Vector3 tangent() const
     {
-        return data;
-    }
-
-    inline const Vector3& tangent() const
-    {
-        return data;
+        return Vector3(data);
     }
 
     inline const Scalar* getData() const
     {
-        return this->data.getData();
+        return this->data;
     }
 };
-
 
 
 template<typename... AttributeTypes> class Vertex {};
@@ -203,21 +166,13 @@ public:
     {}
 
     template<typename VectorType, typename... VectorTypes>
-    inline Vertex(const VectorType& vector, const VectorTypes&... vectors) :
+    inline Vertex(VectorType vector, VectorTypes... vectors) :
         AttrType(vector), Vertex<AttributeTypes...>(vectors...)
     {}
 
     static const int attributeCount = sizeof...(AttributeTypes) + 1;
 };
 
-template<typename... AttributeTypes>
-Vertex<AttributeTypes...> makeVertex(AttributeTypes... types)
-{
-    return Vertex<AttributeTypes...>(types...);
-}
-
-typedef Vertex<PositionAttr, TexCoordAttr, NormalAttr> VertexPTN;
-typedef Vertex<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr> VertexPTNT;
 
 };
 

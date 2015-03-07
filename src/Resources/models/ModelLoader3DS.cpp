@@ -2,7 +2,7 @@
 #include "ModelLoader3DS.h"
 #include <string.h>
 #include <lib3ds/mesh.h>
-#include <Mesh/TriangleMeshBuilder.h>
+#include <Mesh/TriangleMesh.h>
 
 namespace Magic3D
 {
@@ -16,8 +16,13 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
 
     std::vector<std::shared_ptr<TriangleMesh>> meshes;
 
+    std::set<GpuProgram::AttributeType> attrs;
+    attrs.insert(GpuProgram::AttributeType::VERTEX);
+    attrs.insert(GpuProgram::AttributeType::TEX_COORD_0);
+    attrs.insert(GpuProgram::AttributeType::NORMAL);
+    attrs.insert(GpuProgram::AttributeType::TANGENT);
+
 	// Loop through all the meshes
-    TriangleMeshBuilderPTNT bb(10);
 	int i;
 	Lib3dsMesh * mesh;
 	Vector3 p;
@@ -26,22 +31,20 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
         MAGIC_THROW(mesh->points != mesh->texels,
             "Can only load meshes that have the same number of points and texels");
 
-	    // start the batch
-		bb.reset(mesh->points, mesh->faces);
+	    // allocate the batch
+        auto batch = std::make_shared<TriangleMesh>(mesh->points, mesh->faces, attrs);
     
         for (unsigned int i = 0; i < mesh->points; i++)
         {
-
-            bb.addVertex(
-                Vector3(
-                    mesh->pointL[i].pos[0],
-                    mesh->pointL[i].pos[1],
-                    mesh->pointL[i].pos[2]
-                ),
-                Vector2(
-                    mesh->texelL[i][0],
-                    mesh->texelL[i][1]
-                )
+            auto vert = batch->getVertex<PositionAttr, TexCoordAttr>(i);
+            vert.position(
+                mesh->pointL[i].pos[0],
+                mesh->pointL[i].pos[1],
+                mesh->pointL[i].pos[2]
+            );
+            vert.texCoord(
+                mesh->texelL[i][0],
+                mesh->texelL[i][1]
             );
         }
 
@@ -50,15 +53,13 @@ std::shared_ptr<Model> ModelLoader3DS::getModel(const std::string& path) const
         {
             Lib3dsFace* face = &mesh->faceL[cur_face];
             
-            bb.addFace(face->points[0], face->points[1], face->points[2]);
+            batch->getFace(cur_face).set(face->points[0], face->points[1], face->points[2]);
         }
 
         // TODO: add options on how these are done and thresholds
-        bb.calculateDuplicateVertices();
-        bb.calculateNormalsAndTangents(85.0f);
+        batch->calculateNormalsAndTangents();
         
-        // end current mesh
-		meshes.push_back(bb.build());
+		meshes.push_back(batch);
 	}
 
 	lib3ds_file_free(file);

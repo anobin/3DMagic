@@ -29,20 +29,33 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Magic3D
 {
+
+void addVertex(std::shared_ptr<TriangleMesh> mesh, int i, Vector3& pos, Vector2& coords)
+{
+    auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(i);
+    vert.position(pos);
+    vert.texCoord(coords);
+}
 	
 /** Build a box batch
  * @param width the width of the box
  * @param height the height of the box
  * @param depth the depth of the box
  */
-TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float height, float depth)
+std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildBox(float width, float height, float depth)
 {
 	// we always work with half lengths
 	width = width/2;
 	height = height/2;
 	depth = depth/2;
 
-    this->vertices.reserve(36);
+    std::set<GpuProgram::AttributeType> attrs;
+    attrs.insert(GpuProgram::AttributeType::VERTEX);
+    attrs.insert(GpuProgram::AttributeType::TEX_COORD_0);
+    attrs.insert(GpuProgram::AttributeType::NORMAL);
+    attrs.insert(GpuProgram::AttributeType::TANGENT);
+
+    auto mesh = std::make_shared<TriangleMesh>(36, 12, attrs);
 
     enum {
         BACK_LEFT = 0,
@@ -65,109 +78,112 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildBox(float width, float he
     Scalar twoThirds = 2.0f / 3.0f;
 
     // unique points
-    VertexPTNT points[14];
+    Vector3 points[14];
+    Vector2 texCoords[14];
 
-    points[BACK_LEFT].position(-width, -height, -depth);
-    points[BACK_LEFT].texCoord(third, 1);
+    points[BACK_LEFT].set(-width, -height, -depth);
+    texCoords[BACK_LEFT].set(third, 1);
 
-    points[BACK_RIGHT].position(width, -height, -depth);
-    points[BACK_RIGHT].texCoord(twoThirds, 1);
+    points[BACK_RIGHT].set(width, -height, -depth);
+    texCoords[BACK_RIGHT].set(twoThirds, 1);
 
-    points[TOP_LEFT].position(-width, height, -depth);
-    points[TOP_LEFT].texCoord(third, 0.75f);
+    points[TOP_LEFT].set(-width, height, -depth);
+    texCoords[TOP_LEFT].set(third, 0.75f);
 
-    points[TOP_RIGHT].position(width, height, -depth);
-    points[TOP_RIGHT].texCoord(twoThirds, 0.75f);
+    points[TOP_RIGHT].set(width, height, -depth);
+    texCoords[TOP_RIGHT].set(twoThirds, 0.75f);
 
-    points[LEFT_TOP].position(-width, height, -depth);
-    points[LEFT_TOP].texCoord(0, 0.5f);
+    points[LEFT_TOP].set(-width, height, -depth);
+    texCoords[LEFT_TOP].set(0, 0.5f);
 
-    points[MID_TOP_LEFT].position(-width, height, depth);
-    points[MID_TOP_LEFT].texCoord(third, 0.5f);
+    points[MID_TOP_LEFT].set(-width, height, depth);
+    texCoords[MID_TOP_LEFT].set(third, 0.5f);
 
-    points[MID_TOP_RIGHT].position(width, height, depth);
-    points[MID_TOP_RIGHT].texCoord(twoThirds, 0.5f);
+    points[MID_TOP_RIGHT].set(width, height, depth);
+    texCoords[MID_TOP_RIGHT].set(twoThirds, 0.5f);
 
-    points[RIGHT_TOP].position(width, height, -depth);
-    points[RIGHT_TOP].texCoord(1, 0.5f);
+    points[RIGHT_TOP].set(width, height, -depth);
+    texCoords[RIGHT_TOP].set(1, 0.5f);
 
-    points[LEFT_BOT].position(-width, -height, -depth);
-    points[LEFT_BOT].texCoord(0, 0.25f);
+    points[LEFT_BOT].set(-width, -height, -depth);
+    texCoords[LEFT_BOT].set(0, 0.25f);
 
-    points[MID_BOT_LEFT].position(-width, -height, depth);
-    points[MID_BOT_LEFT].texCoord(third, 0.25f);
+    points[MID_BOT_LEFT].set(-width, -height, depth);
+    texCoords[MID_BOT_LEFT].set(third, 0.25f);
 
-    points[MID_BOT_RIGHT].position(width, -height, depth);
-    points[MID_BOT_RIGHT].texCoord(twoThirds, 0.25f);
+    points[MID_BOT_RIGHT].set(width, -height, depth);
+    texCoords[MID_BOT_RIGHT].set(twoThirds, 0.25f);
 
-    points[RIGHT_BOT].position(width, -height, -depth);
-    points[RIGHT_BOT].texCoord(1, 0.25f);
+    points[RIGHT_BOT].set(width, -height, -depth);
+    texCoords[RIGHT_BOT].set(1, 0.25f);
 
-    points[BOT_LEFT].position(-width, -height, -depth);
-    points[BOT_LEFT].texCoord(third, 0);
+    points[BOT_LEFT].set(-width, -height, -depth);
+    texCoords[BOT_LEFT].set(third, 0);
 
-    points[BOT_RIGHT].position(width, -height, -depth);
-    points[BOT_RIGHT].texCoord(twoThirds, 0);
+    points[BOT_RIGHT].set(width, -height, -depth);
+    texCoords[BOT_RIGHT].set(twoThirds, 0);
 
     
 	// 6 sides, 2 triangles per each
     // duplicate all points as we want unmerged normals for proper shading
 
+    int i = 0;
+
 	// top
-    this->addVertex(points[TOP_LEFT]);
-    this->addVertex(points[MID_TOP_LEFT]);
-    this->addVertex(points[TOP_RIGHT]);
-    this->addVertex(points[MID_TOP_LEFT]);
-    this->addVertex(points[MID_TOP_RIGHT]);
-    this->addVertex(points[TOP_RIGHT]);
+    addVertex(mesh, i++, points[TOP_LEFT], texCoords[TOP_LEFT]);
+    addVertex(mesh, i++, points[MID_TOP_LEFT], texCoords[MID_TOP_LEFT]);
+    addVertex(mesh, i++, points[TOP_RIGHT], texCoords[TOP_RIGHT]);
+    addVertex(mesh, i++, points[MID_TOP_LEFT], texCoords[MID_TOP_LEFT]);
+    addVertex(mesh, i++, points[MID_TOP_RIGHT], texCoords[MID_TOP_RIGHT]);
+    addVertex(mesh, i++, points[TOP_RIGHT], texCoords[TOP_RIGHT]);
     
     // bottom
-    this->addVertex(points[BOT_LEFT]);
-    this->addVertex(points[BOT_RIGHT]);
-    this->addVertex(points[MID_BOT_LEFT]);
-    this->addVertex(points[MID_BOT_LEFT]);
-    this->addVertex(points[BOT_RIGHT]);
-    this->addVertex(points[MID_BOT_RIGHT]);
+    addVertex(mesh, i++, points[BOT_LEFT], texCoords[BOT_LEFT]);
+    addVertex(mesh, i++, points[BOT_RIGHT], texCoords[BOT_RIGHT]);
+    addVertex(mesh, i++, points[MID_BOT_LEFT], texCoords[MID_BOT_LEFT]);
+    addVertex(mesh, i++, points[MID_BOT_LEFT], texCoords[MID_BOT_LEFT]);
+    addVertex(mesh, i++, points[BOT_RIGHT], texCoords[BOT_RIGHT]);
+    addVertex(mesh, i++, points[MID_BOT_RIGHT], texCoords[MID_BOT_RIGHT]);
 
     // left side
-    this->addVertex(points[LEFT_TOP]);
-    this->addVertex(points[LEFT_BOT]);
-    this->addVertex(points[MID_TOP_LEFT]);
-    this->addVertex(points[LEFT_BOT]);
-    this->addVertex(points[MID_BOT_LEFT]);
-    this->addVertex(points[MID_TOP_LEFT]);
+    addVertex(mesh, i++, points[LEFT_TOP], texCoords[LEFT_TOP]);
+    addVertex(mesh, i++, points[LEFT_BOT], texCoords[LEFT_BOT]);
+    addVertex(mesh, i++, points[MID_TOP_LEFT], texCoords[MID_TOP_LEFT]);
+    addVertex(mesh, i++, points[LEFT_BOT], texCoords[LEFT_BOT]);
+    addVertex(mesh, i++, points[MID_BOT_LEFT], texCoords[MID_BOT_LEFT]);
+    addVertex(mesh, i++, points[MID_TOP_LEFT], texCoords[MID_TOP_LEFT]);
     
     // right side
-    this->addVertex(points[RIGHT_TOP]);
-    this->addVertex(points[MID_TOP_RIGHT]);
-    this->addVertex(points[RIGHT_BOT]);
-    this->addVertex(points[RIGHT_BOT]);
-    this->addVertex(points[MID_TOP_RIGHT]);
-    this->addVertex(points[MID_BOT_RIGHT]);
+    addVertex(mesh, i++, points[RIGHT_TOP], texCoords[RIGHT_TOP]);
+    addVertex(mesh, i++, points[MID_TOP_RIGHT], texCoords[MID_TOP_RIGHT]);
+    addVertex(mesh, i++, points[RIGHT_BOT], texCoords[RIGHT_BOT]);
+    addVertex(mesh, i++, points[RIGHT_BOT], texCoords[RIGHT_BOT]);
+    addVertex(mesh, i++, points[MID_TOP_RIGHT], texCoords[MID_TOP_RIGHT]);
+    addVertex(mesh, i++, points[MID_BOT_RIGHT], texCoords[MID_BOT_RIGHT]);
 	
     // front
-    this->addVertex(points[MID_TOP_LEFT]);
-    this->addVertex(points[MID_BOT_LEFT]);
-    this->addVertex(points[MID_TOP_RIGHT]);
-    this->addVertex(points[MID_TOP_RIGHT]);
-    this->addVertex(points[MID_BOT_LEFT]);
-    this->addVertex(points[MID_BOT_RIGHT]);
+    addVertex(mesh, i++, points[MID_TOP_LEFT], texCoords[MID_TOP_LEFT]);
+    addVertex(mesh, i++, points[MID_BOT_LEFT], texCoords[MID_BOT_LEFT]);
+    addVertex(mesh, i++, points[MID_TOP_RIGHT], texCoords[MID_TOP_RIGHT]);
+    addVertex(mesh, i++, points[MID_TOP_RIGHT], texCoords[MID_TOP_RIGHT]);
+    addVertex(mesh, i++, points[MID_BOT_LEFT], texCoords[MID_BOT_LEFT]);
+    addVertex(mesh, i++, points[MID_BOT_RIGHT], texCoords[MID_BOT_RIGHT]);
 
 	// back
-    this->addVertex(points[TOP_LEFT]);
-    this->addVertex(points[TOP_RIGHT]);
-    this->addVertex(points[BACK_LEFT]);
-    this->addVertex(points[BACK_LEFT]);
-    this->addVertex(points[TOP_RIGHT]);
-    this->addVertex(points[BACK_RIGHT]);
+    addVertex(mesh, i++, points[TOP_LEFT], texCoords[TOP_LEFT]);
+    addVertex(mesh, i++, points[TOP_RIGHT], texCoords[TOP_RIGHT]);
+    addVertex(mesh, i++, points[BACK_LEFT], texCoords[BACK_LEFT]);
+    addVertex(mesh, i++, points[BACK_LEFT], texCoords[BACK_LEFT]);
+    addVertex(mesh, i++, points[TOP_RIGHT], texCoords[TOP_RIGHT]);
+    addVertex(mesh, i++, points[BACK_RIGHT], texCoords[BACK_RIGHT]);
 
     //generate faces to match with vertices
     for (int i = 0; i < 36; i += 3)
-        this->faces.push_back(TriangleMesh::Face(i, i + 1, i + 2));
+        mesh->getFace(i / 3).set(i, i + 1, i + 2);
 
-    this->calculateNormalsAndTangents();
+    mesh->calculateNormalsAndTangents();
 
-    return *this;
+    return mesh;
 }
 	
 	

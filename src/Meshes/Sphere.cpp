@@ -35,7 +35,7 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildSphere(
+std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildSphere(
     float radius, int slices, int stacks)
 {   
 	GLfloat drho = (GLfloat)(M_PI) / (GLfloat) stacks;
@@ -46,8 +46,17 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildSphere(
 	GLfloat s = 0.0f;
     GLint i, j;     // Looping variables
     
-    this->vertices.reserve(slices * stacks * 6);
+    std::set<GpuProgram::AttributeType> attrs;
+    attrs.insert(GpuProgram::AttributeType::VERTEX);
+    attrs.insert(GpuProgram::AttributeType::TEX_COORD_0);
+    attrs.insert(GpuProgram::AttributeType::NORMAL);
+    attrs.insert(GpuProgram::AttributeType::TANGENT);
+
+    int vertexCount = slices * stacks * 6;
+    auto mesh = std::make_shared<TriangleMesh>(vertexCount, vertexCount / 3, attrs);
     
+    int currentVertex = 0;
+
 	for (i = 0; i < stacks; i++) 
 	{
 		GLfloat rho = (GLfloat)i * drho;
@@ -127,11 +136,10 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildSphere(
 		
 			for (int k=0; k < 3; k++)
 			{
-                this->addVertex(
-                    PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
-                    TexCoordAttr(vTexture[k][0], vTexture[k][1]),
-                    NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
-                );
+                auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+                vert.position(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+                vert.texCoord(vTexture[k][0], vTexture[k][1]);
+                currentVertex++;
 			}
 			
 			// Rearrange for next triangle
@@ -145,19 +153,23 @@ TriangleMeshBuilderPTNT& TriangleMeshBuilderPTNT::buildSphere(
 					
 			for (int k=0; k < 3; k++)
 			{
-                this->addVertex(
-                    PositionAttr(vVertex[k][0], vVertex[k][1], vVertex[k][2]),
-                    TexCoordAttr(vTexture[k][0], vTexture[k][1]),
-                    NormalAttr(vNormal[k][0], vNormal[k][1], vNormal[k][2])
-                );
+                auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+                vert.position(vVertex[k][0], vVertex[k][1], vVertex[k][2]);
+                vert.texCoord(vTexture[k][0], vTexture[k][1]);
+                currentVertex++;
 			}			
 		}
         t -= dt;
 	}
 
-    this->calculateTangents();
+    for (int i = 0; i < vertexCount; i += 3)
+    {
+        mesh->getFace(i / 3).set(i, i + 1, i + 2);
+    }
 
-    return *this;
+    mesh->calculateNormalsAndTangents();
+
+    return mesh;
 }	
 	
 	

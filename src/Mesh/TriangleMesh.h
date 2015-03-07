@@ -8,6 +8,8 @@
 #include <set>
 #include "Math\Math.h"
 #include "Shaders\GpuProgram.h"
+#include <Shapes\Vertex.h>
+#include <Shapes\Triangle.h>
 
 namespace Magic3D
 {
@@ -22,6 +24,13 @@ public:
         inline Face() : Face(0, 0, 0) {}
 
         inline Face(unsigned int a, unsigned int b, unsigned int c)
+        {
+            indices[0] = a;
+            indices[1] = b;
+            indices[2] = c;
+        }
+
+        inline void set(unsigned int a, unsigned int b, unsigned int c)
         {
             indices[0] = a;
             indices[1] = b;
@@ -102,7 +111,7 @@ public:
         this->outOfSync = true;
     }
 
-    inline const Scalar* getAttributeData(unsigned int vertexIndex,
+    inline Scalar* getAttributeData(unsigned int vertexIndex,
         GpuProgram::AttributeType type)
     {
         if (vertexIndex >= this->vertexCount)
@@ -124,12 +133,17 @@ public:
         );
     }
 
-    inline const Face* getFaceData(unsigned int faceIndex)
+    inline Face* getFaceData(unsigned int faceIndex)
     {
         if (faceIndex >= this->faces.size())
             throw_MagicException("out of bounds");
 
         return &this->faces[faceIndex];
+    }
+
+    inline Face& getFace(unsigned int index)
+    {
+        return *this->getFaceData(index);
     }
 
     inline unsigned int getFaceCount()
@@ -197,6 +211,69 @@ public:
 
         this->normalsLength = length;
         return *normalsMesh;
+    }
+
+    template<typename... AttrTypes>
+    Vertex<AttrTypes...> getVertex(unsigned int index)
+    {
+        return Vertex<AttrTypes...>(this->getAttributeData(index, AttrTypes::type)...);
+    }
+
+    inline void positionTransform(const Matrix4& matrix)
+    {
+        for (unsigned int i = 0; i < this->vertexCount; i++)
+        {
+            auto vert = this->getVertex<PositionAttr>(i);
+            vert.position(vert.position().transform(matrix));
+        }
+    }
+
+    inline void calculateNormalsAndTangents()
+    {
+        // calculate normals for unique positions
+        for (TriangleMesh::Face& face : this->faces)
+        {
+            auto a = this->getVertex<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr>(face.indices[0]);
+            auto b = this->getVertex<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr>(face.indices[1]);
+            auto c = this->getVertex<PositionAttr, TexCoordAttr, NormalAttr, TangentAttr>(face.indices[2]);
+
+            Vector3 faceNormal = Triangle(a.position(), b.position(), c.position()).normal;
+
+            a.normal(a.normal() + faceNormal);
+            b.normal(b.normal() + faceNormal);
+            c.normal(c.normal() + faceNormal);
+
+            Vector4 BA = b.position() - a.position();
+            Vector4 CA = c.position() - a.position();
+
+            Vector2 tBA = b.texCoord() - a.texCoord();
+            Vector2 tCA = c.texCoord() - a.texCoord();
+            Scalar area = (tBA.x() * tCA.y()) - (tBA.y() * tCA.x());
+
+            Vector3 faceTangent;
+
+            if (area != 0.0f)
+            {
+                Scalar delta = 1.0f / area;
+                faceTangent = Vector3(
+                    delta * ((BA.x() * tCA.y()) + (CA.x() * -tBA.y())),
+                    delta * ((BA.y() * tCA.y()) + (CA.y() * -tBA.y())),
+                    delta * ((BA.z() * tCA.y()) + (CA.z() * -tBA.y()))
+                    );
+            }
+
+            a.tangent(a.tangent() + faceTangent);
+            b.tangent(b.tangent() + faceTangent);
+            c.tangent(c.tangent() + faceTangent);
+        }
+
+        // set calculated normals on vertices
+        for (unsigned int i = 0; i < this->vertexCount; i++)
+        {
+            auto vert = this->getVertex<NormalAttr, TangentAttr>(i);
+            vert.normal(vert.normal().normalize());
+            vert.tangent(vert.tangent().normalize());
+        }
     }
 
 };

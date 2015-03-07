@@ -517,14 +517,13 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        TriangleMeshBuilderPTNT mb(300);
-        sphereBatch = mb.buildSphere(2 * FOOT, 55, 32).build();
-		tinySphereBatch = mb.reset().buildSphere(1*FOOT, 4, 4).build();
-        bigSphereBatch = mb.reset().buildBox(3, 3, 3).build();
-		floorBatch = TriangleMeshBuilderPTNT::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
+        sphereBatch = TriangleMeshBuilder::buildSphere(2 * FOOT, 55, 32);
+        tinySphereBatch = TriangleMeshBuilder::buildSphere(1 * FOOT, 4, 4);
+        bigSphereBatch = TriangleMeshBuilder::buildBox(3, 3, 3);
+		floorBatch = TriangleMeshBuilder::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-        boxBatch = mb.reset().buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale).build();
+        boxBatch = TriangleMeshBuilder::buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -565,7 +564,7 @@ public:
 
 		// circle in middle of screen
 		//batchBuilder.build2DCircle(circle2D, 150, 150, 300, 5);
-		auto circle2D = TriangleMeshBuilderPT::build2DRectangle(0, 0, 300, 300);
+		auto circle2D = TriangleMeshBuilder::build2DRectangle(0, 0, 300, 300);
 
 		Image screenImage( 300, 300, 4, Color(31, 97, 240, 255) );
 		screenImage.drawAsciiText(*font, "Hola!", 50, 50, Color(255, 255, 255, 255));
@@ -589,7 +588,7 @@ public:
 		materialBuilder.setTexture(logoTex);
 		materialBuilder.end();
 
-		auto logoBatch = TriangleMeshBuilderPT::build2DRectangle(200, 0, 173, 50);
+		auto logoBatch = TriangleMeshBuilder::build2DRectangle(200, 0, 173, 50);
 
 		Object* logoObject = new Object(std::make_shared<Model>(logoBatch, 
 			logo2DMaterial));
@@ -641,7 +640,7 @@ public:
         );
 
         // arrange some trees as static scenery
-        mb.reset().buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
+        /*mb.reset().buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 4000; i++)
         {
@@ -661,7 +660,7 @@ public:
 
             auto ob = std::make_shared<Object>(treeModel);
             world->addStaticObject(ob);
-        }
+        }*/
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);

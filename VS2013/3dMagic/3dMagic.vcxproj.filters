@@ -237,9 +237,6 @@
     <ClCompile Include="..\..\src\Shaders\Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Mesh\TriangleMeshBuilder.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Resources\ModelLoader.cpp">
       <Filter>Source Files\Resources</Filter>
     </ClCompile>
@@ -446,14 +443,14 @@
     <ClInclude Include="..\..\src\Mesh\TriangleMesh.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Mesh\TriangleMeshBuilder.h">
-      <Filter>Source Files\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Resources\ModelLoader.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Resources\models\ModelLoader3DS.h">
       <Filter>Source Files\Resources\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Mesh\TriangleMeshBuilder.h">
+      <Filter>Source Files\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

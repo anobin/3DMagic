@@ -34,10 +34,18 @@ namespace Magic3D
  * @param slices the number of squares on width
  * @param stacks the number of squares on height
  */
-std::shared_ptr<TriangleMesh> TriangleMeshBuilderPTNT::buildFlatSurface(float width, float height, int slices, 
+std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildFlatSurface(float width, float height, int slices, 
     int stacks, bool texRepeat, float texPerX, float texPerY)
 {
-    TriangleMeshBuilderPTNT mb(slices*stacks*6);
+    std::set<GpuProgram::AttributeType> attrs;
+    attrs.insert(GpuProgram::AttributeType::VERTEX);
+    attrs.insert(GpuProgram::AttributeType::TEX_COORD_0);
+    attrs.insert(GpuProgram::AttributeType::NORMAL);
+    attrs.insert(GpuProgram::AttributeType::TANGENT);
+
+    int vertexCount = slices*stacks * 6;
+    auto mesh = std::make_shared<TriangleMesh>(vertexCount, vertexCount / 3, attrs);
+    int currentVertex = 0;
 	
 	float x = -width/2;
 	float z = -height/2;
@@ -60,46 +68,40 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilderPTNT::buildFlatSurface(float wi
 	for (int i=0,j=0;;)
 	{
 		// top left
-        mb.addVertex(
-            PositionAttr(x, 0.0f, z),
-            TexCoordAttr(texX*i, texY*j),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x, 0.0f, z);
+        vert.texCoord(texX*i, texY*j);
+        currentVertex++;
 		
 		// bottom left
-        mb.addVertex(
-            PositionAttr(x, 0.0f, z + zStep),
-            TexCoordAttr(texX*i, texY*(j + 1)),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x, 0.0f, z + zStep);
+        vert.texCoord(texX*i, texY*(j + 1));
+        currentVertex++;
 	
 		// top right
-        mb.addVertex(
-            PositionAttr(x + xStep, 0.0f, z),
-            TexCoordAttr(texX*(i + 1), texY*j),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x + xStep, 0.0f, z);
+        vert.texCoord(texX*(i + 1), texY*j);
+        currentVertex++;
 		
 		// top right
-        mb.addVertex(
-            PositionAttr(x + xStep, 0.0f, z),
-            TexCoordAttr(texX*(i + 1), texY*j),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x + xStep, 0.0f, z);
+        vert.texCoord(texX*(i + 1), texY*j);
+        currentVertex++;
 
 		// bottom left
-        mb.addVertex(
-            PositionAttr(x, 0.0f, z + zStep),
-            TexCoordAttr(texX*i, texY*(j + 1)),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x, 0.0f, z + zStep);
+        vert.texCoord(texX*i, texY*(j + 1));
+        currentVertex++;
 
 		// bottom right
-        mb.addVertex(
-            PositionAttr(x + xStep, 0.0f, z + zStep),
-            TexCoordAttr(texX*(i + 1), texY*(j + 1)),
-            NormalAttr(0.0f, 1.0f, 0.0f)
-        );
+        vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
+        vert.position(x + xStep, 0.0f, z + zStep);
+        vert.texCoord(texX*(i + 1), texY*(j + 1));
+        currentVertex++;
 		
 		i++;
 		if (i < slices)
@@ -115,10 +117,14 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilderPTNT::buildFlatSurface(float wi
 		}	
 	}
 
-    mb.calculateNormals();
-    mb.calculateTangents();
+    for (int i = 0; i < vertexCount; i += 3)
+    {
+        mesh->getFace(i / 3).set(i, i + 1, i + 2);
+    }
+
+    mesh->calculateNormalsAndTangents();
 	
-    return mb.build();
+    return mesh;
 }
 	
 	
