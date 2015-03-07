@@ -640,9 +640,9 @@ public:
         );
 
         // arrange some trees as static scenery
-        /*mb.reset().buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
+        auto mesh = TriangleMeshBuilder::buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
-        for (int i = 0; i < 4000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             Matrix4 matrix;
             matrix.createTranslationMatrix(
@@ -651,8 +651,8 @@ public:
                 (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2
             );
 
-            auto treeMesh = mb.positionTransform(matrix).build();
-            mb.positionTransform(matrix.inverse());
+            auto treeMesh = std::make_shared<TriangleMesh>(*mesh);
+            treeMesh->positionTransform(matrix);
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(treeMesh);
@@ -660,7 +660,7 @@ public:
 
             auto ob = std::make_shared<Object>(treeModel);
             world->addStaticObject(ob);
-        }*/
+        }
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);

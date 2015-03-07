@@ -43,7 +43,7 @@ public:
 
     inline Vector4 position() const
     {
-        return this->data;
+        return Vector4(this->data);
     }
 
     inline const Scalar* getData() const

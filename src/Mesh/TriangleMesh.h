@@ -53,7 +53,7 @@ private:
     bool outOfSync;
 
 public:
-    TriangleMesh(unsigned int vertexCount, unsigned int faceCount,
+    inline TriangleMesh(unsigned int vertexCount, unsigned int faceCount,
         const std::set<GpuProgram::AttributeType>& attributeTypes):
         vertexCount(vertexCount), faces(faceCount), outOfSync(true)
     {
@@ -89,6 +89,35 @@ public:
             this->gpuAttributes.insert(std::make_pair(
                 type, std::move(buffer)
             ));
+        }
+    }
+
+    inline TriangleMesh(const TriangleMesh& mesh) :
+        attributes(mesh.attributes), faces(mesh.faces), vertexCount(mesh.vertexCount),
+        outOfSync(true) 
+    {
+        for (auto it : this->attributes)
+        {
+            unsigned int componentCount = GpuProgram::attributeTypeCompCount[(int)it.first];
+            unsigned int scalarCount = componentCount * vertexCount;
+            unsigned int dataSize = scalarCount * sizeof(Scalar);
+
+            // gpu memory
+            Buffer buffer;
+            buffer.allocate(
+                dataSize,
+                nullptr, // no data to start with
+                Buffer::STATIC_DRAW
+                );
+            this->vertexArray.setAttributeArray(
+                (int)it.first,
+                componentCount,
+                VertexArray::FLOAT, // TODO: make this dynamic with the type of Scalar
+                buffer
+                );
+            this->gpuAttributes.insert(std::make_pair(
+                it.first, std::move(buffer)
+                ));
         }
     }
 
@@ -224,7 +253,7 @@ public:
         for (unsigned int i = 0; i < this->vertexCount; i++)
         {
             auto vert = this->getVertex<PositionAttr>(i);
-            vert.position(vert.position().transform(matrix));
+            vert.position(Vector3(vert.position()).transform(matrix));
         }
     }
 
