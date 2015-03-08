@@ -6,6 +6,8 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <cmath>
+
 #include "Math\Math.h"
 #include "Shaders\GpuProgram.h"
 #include <Shapes\Vertex.h>
@@ -337,6 +339,97 @@ public:
             vert.normal(vert.normal().normalize());
             vert.tangent(vert.tangent().normalize());
             this->setVertex(i, vert);
+        }
+    }
+
+    inline std::vector<std::vector<unsigned int>> calculateDuplicateVertices(unsigned int precision = 3)
+    {
+        Scalar threshold = Scalar(std::pow(10, -int(precision)));
+        Scalar inverseThreshold = Scalar(std::pow(10, precision));
+
+        std::unordered_map<
+            Vector4,
+            std::vector<unsigned int>,
+            std::function<int(const Vector4&)>,
+            std::function<bool(const Vector4&, const Vector4&)>
+        > map(
+        this->vertexCount,
+        [&](const Vector4& vec) -> int
+        {
+            return
+                std::hash<int>()(int(vec.x() * inverseThreshold)) ^
+                std::hash<int>()(int(vec.y() * inverseThreshold)) ^
+                std::hash<int>()(int(vec.z() * inverseThreshold)) ^
+                std::hash<int>()(int(vec.w() * inverseThreshold));
+        },
+        [&](const Vector4& a, const Vector4& b) -> bool
+        {
+            bool equal = 
+                std::abs(a.x() - b.x()) < threshold &&
+                std::abs(a.y() - b.y()) < threshold &&
+                std::abs(a.z() - b.z()) < threshold &&
+                std::abs(a.w() - b.w()) < threshold;
+            return equal;
+        }
+        );
+
+        for (unsigned int i = 0; i < this->vertexCount; i++)
+        {
+            auto vert = this->getVertex<PositionAttr>(i);
+            map[vert.position()].push_back(i);
+        }
+
+        std::vector<std::vector<unsigned int>> duplicateVertexIndices;
+        for (auto it : map)
+        {
+            if (it.second.size() > 1)
+            {
+                duplicateVertexIndices.push_back(std::move(it.second));
+            }
+        }
+
+        return std::move(duplicateVertexIndices);
+    }
+
+    inline void mergeNormalsAndTangents(Scalar thresholdAngle = 60.0f, unsigned int precision = 3)
+    {
+        // merge normals for different points that are at the same location,
+        // if the angle between them is smaller than the threshold angle
+        Scalar thresholdAngleRads = thresholdAngle * Scalar(M_PI / 180);
+        std::vector<std::vector<unsigned int>> duplicateVertexIndices =
+            calculateDuplicateVertices(precision);
+        for (auto& list : duplicateVertexIndices)
+        {
+            std::map<unsigned int, Vector3> joinedNormal;
+            std::map<unsigned int, Vector3> joinedTangent;
+            for (unsigned int i : list)
+            {
+                auto vert1 = this->getVertex<NormalAttr, TangentAttr>(i);
+                joinedNormal[i] += vert1.normal();
+                joinedTangent[i] += vert1.tangent();
+
+                for (unsigned int j : list)
+                {
+                    if (i == j)
+                        continue; // skip comparing vertex with self
+
+                    auto& vert2 = this->getVertex<NormalAttr, TangentAttr>(j);
+
+                    Scalar angle = vert1.normal().angleBetween(vert2.normal());
+                    if (angle <= thresholdAngleRads)
+                    {
+                        joinedNormal[i] += vert2.normal();
+                        joinedTangent[i] += vert2.tangent();
+                    }
+                }
+            }
+            for (unsigned int index : list)
+            {
+                auto vert = this->getVertex<NormalAttr, TangentAttr>(index);
+                vert.normal(joinedNormal[index].normalize());
+                vert.tangent(joinedTangent[index].normalize());
+                this->setVertex(index, vert);
+            }
         }
     }
 

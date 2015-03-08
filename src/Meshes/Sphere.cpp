@@ -170,6 +170,7 @@ std::shared_ptr<TriangleMesh> TriangleMeshBuilder::buildSphere(
     }
 
     mesh->calculateNormalsAndTangents();
+    mesh->mergeNormalsAndTangents();
 
     return mesh;
 }	

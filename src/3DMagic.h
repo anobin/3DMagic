@@ -77,14 +77,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "Cameras/FPCamera.h"
 #include "Cameras/Camera2D.h"
 
-// physical collision shapes
-#include "CollisionShapes/CollisionShape.h"
-#include "CollisionShapes/BoxCollisionShape.h"
-#include "CollisionShapes/SphereCollisionShape.h"
-#include "CollisionShapes/PlaneCollisionShape.h"
-#include "CollisionShapes/TriangleMeshCollisionShape.h"
-
-
 // General Geometry API
 #include <Geometry\Box.h>
 #include <Geometry\Plane.h>

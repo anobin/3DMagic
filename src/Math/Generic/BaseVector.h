@@ -24,7 +24,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include "MathTypes.h"
 
 // for cos, sin, and tan
-#include <math.h>
+#include <cmath>
+#include <algorithm>
 
 template<int size, typename T>
 class BaseVector
@@ -139,10 +140,10 @@ public:
     /// find the angle between this vector and another
     inline Scalar angleBetween(const T& v) const
     {
-        return acos(
-            this->dotProduct(v) /
-            (this->getLength() * v.getLength())
-        );
+        Scalar value = this->dotProduct(v) / (this->getLength() * v.getLength());
+        // have to clamp value because of floating-point errors
+        value = std::max(-1.0f, std::min(1.0f, value));
+        return acos(value);
     }
 
     /// get the length of this vector
