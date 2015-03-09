@@ -153,9 +153,6 @@
     <ClCompile Include="..\..\src\Meshes\Rectangle2D.cpp">
       <Filter>Source Files\Meshes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Meshes\Sphere.cpp">
-      <Filter>Source Files\Meshes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Objects\Object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>

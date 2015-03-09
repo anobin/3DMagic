@@ -517,8 +517,16 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        sphereBatch = TriangleMeshBuilder::buildSphere(2 * FOOT, 55, 32);
-        tinySphereBatch = TriangleMeshBuilder::buildSphere(1 * FOOT, 4, 4);
+        sphereBatch = std::static_pointer_cast<TriangleMesh>(
+            resourceManager.get<Model>("models/sphere.3ds")->getMeshes()[0]);
+        Matrix4 scaleMatrix;
+        scaleMatrix.createScaleMatrix(2 * FOOT, 2 * FOOT, 2 * FOOT);
+        sphereBatch->positionTransform(scaleMatrix);
+
+        tinySphereBatch = std::make_shared<TriangleMesh>(*sphereBatch);
+        scaleMatrix.createScaleMatrix(0.5f, 0.5f, 0.5f);
+        tinySphereBatch->positionTransform(scaleMatrix);
+
         bigSphereBatch = TriangleMeshBuilder::buildBox(3, 3, 3);
 		floorBatch = TriangleMeshBuilder::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
@@ -670,9 +678,13 @@ public:
 
 		// 3ds model
 		std::shared_ptr<Model> chainModel = resourceManager.get<Model>("models/chainLink.3ds");
-		/*Matrix4 scaleMatrix;
-		scaleMatrix.createScaleMatrix(0.1f, 0.1f, 0.1f);
-        chainBatches = chainBatches->applyTransform(scaleMatrix);*/
+        /*scaleMatrix.createScaleMatrix()
+        for (auto mesh : chainModel->getMeshes())
+        {
+            ((TriangleMesh*)mesh.get())->positionTransform(scaleMatrix);
+            /*((TriangleMesh*)mesh.get())->calculateNormalsAndTangents();
+            ((TriangleMesh*)mesh.get())->mergeNormalsAndTangents(40.0f);
+        }*/
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
         materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
@@ -681,10 +693,10 @@ public:
 
         chainModel->setMaterial(chainMaterial);
         // TODO: add composite shapes
-        chainModel->setCollisionShape(chainModel->getMeshes()[0]);
-		chainObject = std::make_shared<Object>(chainModel);
+        //chainModel->setCollisionShape(chainModel->getMeshes()[0]);
+		Object* chainObject = new Object(chainModel);
 		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
-		world->addStaticObject(chainObject);
+		world->addObject(chainObject);
 
 
 

@@ -44,7 +44,6 @@
     <ClCompile Include="..\..\src\Meshes\Circle2D.cpp" />
     <ClCompile Include="..\..\src\Meshes\FlatSurface.cpp" />
     <ClCompile Include="..\..\src\Meshes\Rectangle2D.cpp" />
-    <ClCompile Include="..\..\src\Meshes\Sphere.cpp" />
     <ClCompile Include="..\..\src\Mesh\TriangleMesh.cpp" />
     <ClCompile Include="..\..\src\Objects\Object.cpp" />
     <ClCompile Include="..\..\src\Physics\MotionState.cpp" />

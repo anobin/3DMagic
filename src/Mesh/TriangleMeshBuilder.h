@@ -57,14 +57,6 @@ public:
     * @param height the height of the rectangle
     */
     static std::shared_ptr<TriangleMesh> build2DRectangle(int x, int y, int width, int height);
-
-    /** Build sphere
-    * @param radius the radius of the sphere
-    * @param slices the number of squares on width
-    * @param stacks the number of squares on height
-    */
-    static std::shared_ptr<TriangleMesh> buildSphere(float radius, int slices, int stacks);
-
 };
 
 

@@ -291,6 +291,15 @@ public:
 
     inline void calculateNormalsAndTangents()
     {
+        // clear any existing normal and tangent data
+        for (unsigned int i = 0; i < this->vertexCount; i++)
+        {
+            auto vert = this->getVertex<NormalAttr, TangentAttr>(i);
+            vert.normal(0,0,0);
+            vert.tangent(0,0,0);
+            this->setVertex(i, vert);
+        }
+
         // calculate normals for unique positions
         for (TriangleMesh::Face& face : this->faces)
         {

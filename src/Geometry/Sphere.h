@@ -34,19 +34,7 @@ public:
 
     virtual const TriangleMesh& getTriangleMesh() const
     {
-        if (triangleMesh == nullptr)
-        {
-            triangleMesh = TriangleMeshBuilder::buildSphere(radius, int(fidelity), 
-                int(fidelity * 0.6f));
-            if (!center.isAtOrigin())
-            {
-                Matrix4 matrix;
-                matrix.createTranslationMatrix(center.x(), center.y(), center.z());
-                triangleMesh->positionTransform(matrix);
-            }
-        }
-
-        return *this->triangleMesh;
+        throw_MagicException("Triangle mesh generation from sphere is not currently supported");
     }
 
 };
