@@ -68,22 +68,21 @@ ResourceManager resourceManager;
 
 // batches
 std::shared_ptr<TriangleMesh> floorBatch;
-std::shared_ptr<TriangleMesh> sphereBatch;
 std::shared_ptr<TriangleMesh> tinySphereBatch;
 std::shared_ptr<Box> bigBox = std::make_shared<Box>(3, 3, 3);
 std::shared_ptr<Box> box = std::make_shared<Box>(6 * INCH * 5, 3 * INCH * 5, 3 * INCH * 5);
 
 // materials
 std::shared_ptr<Material> floorMaterial;
-std::shared_ptr<Material> sphereMaterial;
 std::shared_ptr<Material> tinySphereMaterial;
 std::shared_ptr<Material> bigSphereMaterial;
 
 // collisions shapes
 auto floorShape = std::make_shared<Plane>( Vector3(0,1,0) );
-auto sphereShape = std::make_shared<Sphere>( 2*FOOT );
 auto tinySphereShape = std::make_shared<Sphere>( 1*FOOT );
 auto bigSphereShape = std::make_shared<Box>( 3.0f, 3.0f, 3.0f );
+
+std::shared_ptr<Model> sphereModel;
 
 // objects
 Object* bigBall;
@@ -417,8 +416,7 @@ void mouseClicked(Event::MouseButtons button, int x, int y, FPCamera& camera, Wo
 			p.translateLocal(0.0f, -1.5f*FOOT, -2.0f*FOOT);
 			
 			prop.mass = 100;
-			t = new Object(std::make_shared<Model>(sphereBatch, 
-                floorMaterial, sphereShape), prop);
+			t = new Object(sphereModel, prop);
 			t->setPosition(p);
 			world.addObject(t);
 			t->applyForce(Vector3(p.getForwardVector().x()*speed, 
@@ -517,7 +515,7 @@ public:
         shader = resourceManager.get<GpuProgram>("shaders/Full/Full.gpu.xml");
 
 		// init batches
-        sphereBatch = std::static_pointer_cast<TriangleMesh>(
+        auto sphereBatch = std::static_pointer_cast<TriangleMesh>(
             resourceManager.get<Model>("models/sphere.3ds")->getMeshes()[0]);
         Matrix4 scaleMatrix;
         scaleMatrix.createScaleMatrix(2 * FOOT, 2 * FOOT, 2 * FOOT);
@@ -532,7 +530,7 @@ public:
 		float scale = 5.0f;
 
 		// init materials
-		sphereMaterial = std::make_shared<Material>();
+		auto sphereMaterial = std::make_shared<Material>();
 		materialBuilder.begin(sphereMaterial.get());
 		materialBuilder.setGpuProgram(shader);
 		materialBuilder.setTexture(charTex);
@@ -616,7 +614,7 @@ public:
 
         auto brickShape = std::make_shared<Box>(0.75f, 0.375f, 0.375f);
 
-		float wallWidth =40;
+		/*float wallWidth =40;
 		float wallHeight = 10;
 		float brickHeight = 0.375;
 		float brickWidth = 0.75;
@@ -638,7 +636,7 @@ public:
 				btBox->setLocation( Vector3(w, h, zOffset) );
 				world->addObject(btBox);
 			}
-		}
+		}*/
 
 
         std::minstd_rand0 randGen(
@@ -688,12 +686,13 @@ public:
 
         chainModel->setMaterial(chainMaterial);
         // TODO: add composite shapes
-        //chainModel->setCollisionShape(chainModel->getMeshes()[0]);
+        chainModel->setCollisionShape(chainModel->getMeshes()[0]);
 		Object* chainObject = new Object(chainModel);
 		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
 		world->addObject(chainObject);
 
 
+        sphereModel = std::make_shared<Model>(sphereBatch, floorMaterial, std::make_shared<Sphere>(2 * FOOT));
 
 		// set eye level
 		camera.setLocation(Vector3(0.0f, 6 * FOOT, ROOM_SIZE));
