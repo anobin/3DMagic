@@ -673,6 +673,12 @@ public:
 
 		// 3ds model
 		std::shared_ptr<Model> chainModel = resourceManager.get<Model>("models/chainLink.3ds");
+        for (auto mesh : chainModel->getMeshes())
+        {
+            mesh->scale(0.1f);
+            mesh->translate(Vector3(0, 15 * FOOT, 0));
+        }
+
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
         materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
