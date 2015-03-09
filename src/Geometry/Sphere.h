@@ -13,7 +13,6 @@ namespace Magic3D
 
 class Sphere : public Geometry
 {
-    Vector3 center;
     Scalar radius;
 
     unsigned int fidelity;
@@ -22,13 +21,18 @@ class Sphere : public Geometry
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
 
 public:
-    inline Sphere(Scalar radius, const Vector3& center = Vector3(0,0,0), unsigned int fidelity = 55) :
-        center(center), radius(radius), fidelity(fidelity) {}
+    inline Sphere(Scalar radius,unsigned int fidelity = 55) :
+        radius(radius), fidelity(fidelity) {}
+
+    virtual void positionTransform(const Matrix4& matrix)
+    {
+        throw_MagicException("Applying a transform to a sphere is not currently supported");
+    }
 
     virtual const CollisionShape& getCollisionShape() const
     {
         if (collisionShape == nullptr)
-            collisionShape = std::make_shared<SphereCollisionShape>(radius, center);
+            collisionShape = std::make_shared<SphereCollisionShape>(radius);
         return *this->collisionShape;
     }
 

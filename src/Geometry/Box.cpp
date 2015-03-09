@@ -155,14 +155,7 @@ const TriangleMesh& Box::getTriangleMesh() const
     for (int i = 0; i < 36; i += 3)
         triangleMesh->setFace(i / 3, TriangleMesh::Face(i, i + 1, i + 2));
 
-    // translate vertices if needed
-    if (!center.isAtOrigin())
-    {
-        Matrix4 matrix;
-        matrix.createTranslationMatrix(this->center.x(), this->center.y(), this->center.z());
-        triangleMesh->positionTransform(matrix);
-    }
-
+    triangleMesh->positionTransform(this->transform);
     triangleMesh->calculateNormalsAndTangents();
 
     return *triangleMesh;

@@ -17,9 +17,16 @@ class BoundedPlane : public Geometry
     Scalar width, height;
     unsigned int slices, stacks;
     Scalar texPerX, texPerY;
+    Matrix4 transform;
 
     mutable std::shared_ptr<CollisionShape> collisionShape;
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
+
+    inline void markDirty()
+    {
+        this->collisionShape = nullptr;
+        this->triangleMesh = nullptr;
+    }
 
 public:
     inline BoundedPlane(
@@ -32,6 +39,12 @@ public:
     ) : width(width), height(height), slices(slices), stacks(stacks), 
     texPerX(texPerX), texPerY(texPerY)
     {}
+
+    virtual void positionTransform(const Matrix4& matrix)
+    {
+        this->transform.multiply(matrix);
+        this->markDirty();
+    }
 
     virtual const CollisionShape& getCollisionShape() const
     {

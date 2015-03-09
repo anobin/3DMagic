@@ -279,16 +279,6 @@ public:
         (void)_;
     }
 
-    inline void positionTransform(const Matrix4& matrix)
-    {
-        for (unsigned int i = 0; i < this->vertexCount; i++)
-        {
-            auto vert = this->getVertex<PositionAttr>(i);
-            vert.position(Vector3(vert.position()).transform(matrix));
-            this->setVertex(i, vert);
-        }
-    }
-
     inline void calculateNormalsAndTangents()
     {
         // clear any existing normal and tangent data
@@ -441,6 +431,8 @@ public:
             }
         }
     }
+
+    virtual void positionTransform(const Matrix4& matrix);
 
     virtual const CollisionShape& getCollisionShape() const;
 

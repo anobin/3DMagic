@@ -13,19 +13,37 @@ namespace Magic3D
 
 class Box : public Geometry
 {
-    Vector3 center;
     Scalar width, height, depth;
+    Matrix4 transform;
+    bool transformApplied;
 
     mutable std::shared_ptr<CollisionShape> collisionShape;
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
 
+    inline void markDirty()
+    {
+        this->collisionShape = nullptr;
+        this->triangleMesh = nullptr;
+    }
+
 public:
-    inline Box(Scalar width, Scalar height, Scalar depth,
-        const Vector3& center = Vector3(0, 0, 0)) :
-        width(width), height(height), depth(depth), center(center) {}
+    inline Box(Scalar width, Scalar height, Scalar depth) :
+        width(width), height(height), depth(depth), transformApplied(false){}
+
+    virtual void positionTransform(const Matrix4& matrix)
+    {
+        this->transform.multiply(matrix);
+        this->transformApplied = true;
+        this->markDirty();
+    }
 
     virtual const CollisionShape& getCollisionShape() const
     {
+        // TODO: apply transform to collision shape; can try to use Bullet's project() for rotation and translation
+        //       and fall back to full shape regeneration for scaling
+        if (this->transformApplied)
+            throw_MagicException("Arbitary transforms on box geometry that is used as a collision shape is not currently supported");
+
         if (collisionShape == nullptr)
             collisionShape = std::make_shared<BoxCollisionShape>(width, height, depth);
         return *this->collisionShape;

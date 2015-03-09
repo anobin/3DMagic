@@ -650,13 +650,12 @@ public:
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 1000; i++)
         {
-            auto box = std::make_shared<Box>(2 * FOOT, 9 * FOOT, 2 * FOOT,
-                Vector3(
-                    (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2, 
-                    4.5*FOOT, 
-                    (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2
-                )
-            );
+            auto box = std::make_shared<Box>(2 * FOOT, 9 * FOOT, 2 * FOOT);
+            box->translate(Vector3(
+                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize / 2,
+                4.5*FOOT,
+                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize / 2
+            ));
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(box);

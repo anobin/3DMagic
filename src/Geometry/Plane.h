@@ -24,6 +24,11 @@ public:
     inline Plane(const Vector3& normal, Scalar distance = 0.0f) :
         normal(normal), distance(distance) {}
 
+    virtual void positionTransform(const Matrix4& matrix)
+    {
+        throw_MagicException("Arbitary position transforms on infinite plane geometry are not currently supported");
+    }
+
     virtual const CollisionShape& getCollisionShape() const
     {
         if (collisionShape == nullptr)

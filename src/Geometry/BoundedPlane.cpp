@@ -26,7 +26,7 @@ const TriangleMesh& BoundedPlane::getTriangleMesh() const
     float texX = (width / slices) / texPerX;
     float texY = (height / stacks) / texPerY;
 
-    for (int i = 0, j = 0;;)
+    for (unsigned int i = 0, j = 0;;)
     {
         // top left
         auto vert = mesh->getVertex<PositionAttr, TexCoordAttr>(currentVertex);
@@ -89,6 +89,7 @@ const TriangleMesh& BoundedPlane::getTriangleMesh() const
         mesh->setFace(i / 3, TriangleMesh::Face(i, i + 1, i + 2));
     }
 
+    mesh->positionTransform(this->transform);
     mesh->calculateNormalsAndTangents();
 
     return *mesh;
