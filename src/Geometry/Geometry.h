@@ -39,7 +39,7 @@ public:
 
     inline void rotate(Scalar angle, Vector3 axis)
     {
-        Matrix4 matrix; matrix.createRotationMatrix(angle, axis.x(), axis.y(), axis.z());
+        Matrix4 matrix; matrix.createRotationMatrix(angle * Scalar(M_PI / 180), axis.x(), axis.y(), axis.z());
         this->positionTransform(matrix);
     }
 };
