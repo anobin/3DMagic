@@ -25,12 +25,6 @@ namespace Magic3D
 class TriangleMeshBuilder
 {
 public:
-    /** Build a box mesh
-    * @param width the width of the box
-    * @param height the height of the box
-    * @param depth the depth of the box
-    */
-    static std::shared_ptr<TriangleMesh> buildBox(float width, float height, float depth);
 
     /** Build a 2D circle mesh
     * @param x the x coordinate of the center

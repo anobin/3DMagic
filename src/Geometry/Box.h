@@ -31,21 +31,7 @@ public:
         return *this->collisionShape;
     }
 
-    virtual const TriangleMesh& getTriangleMesh() const
-    {
-        if (triangleMesh == nullptr)
-        {
-            triangleMesh = TriangleMeshBuilder::buildBox(width, height, depth);
-            if (!center.isAtOrigin())
-            {
-                Matrix4 matrix;
-                matrix.createTranslationMatrix(center.x(), center.y(), center.z());
-                triangleMesh->positionTransform(matrix);
-            }
-        }
-
-        return *this->triangleMesh;
-    }
+    virtual const TriangleMesh& getTriangleMesh() const;
 
 };
 

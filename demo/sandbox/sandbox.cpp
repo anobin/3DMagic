@@ -70,8 +70,8 @@ ResourceManager resourceManager;
 std::shared_ptr<TriangleMesh> floorBatch;
 std::shared_ptr<TriangleMesh> sphereBatch;
 std::shared_ptr<TriangleMesh> tinySphereBatch;
-std::shared_ptr<TriangleMesh> bigSphereBatch;
-std::shared_ptr<TriangleMesh> boxBatch;
+std::shared_ptr<Box> bigBox = std::make_shared<Box>(3, 3, 3);
+std::shared_ptr<Box> box = std::make_shared<Box>(6 * INCH * 5, 3 * INCH * 5, 3 * INCH * 5);
 
 // materials
 std::shared_ptr<Material> floorMaterial;
@@ -229,7 +229,7 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
 			
 		case 'g':
 		    prop.mass = 1;
-			t = new Object(std::make_shared<Model>(bigSphereBatch, 
+			t = new Object(std::make_shared<Model>(bigBox, 
 				bigSphereMaterial, bigSphereShape), prop );
             t->setPosition(
                 Position(
@@ -527,11 +527,9 @@ public:
         scaleMatrix.createScaleMatrix(0.5f, 0.5f, 0.5f);
         tinySphereBatch->positionTransform(scaleMatrix);
 
-        bigSphereBatch = TriangleMeshBuilder::buildBox(3, 3, 3);
 		floorBatch = TriangleMeshBuilder::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
 			true, 15*FOOT, 12*FOOT );
 		float scale = 5.0f;
-        boxBatch = TriangleMeshBuilder::buildBox(6 * INCH*scale, 3 * INCH*scale, 3 * INCH*scale);
 
 		// init materials
 		sphereMaterial = std::make_shared<Material>();
@@ -635,7 +633,7 @@ public:
 			{
 				if (i == wallHeight-1 && j == wallWidth-1)
 					continue;
-				auto btBox = new Object(std::make_shared<Model>(boxBatch, 
+				auto btBox = new Object(std::make_shared<Model>(box, 
 					brickMaterial, brickShape), prop );
 				btBox->setLocation( Vector3(w, h, zOffset) );
 				world->addObject(btBox);
@@ -648,22 +646,19 @@ public:
         );
 
         // arrange some trees as static scenery
-        auto mesh = TriangleMeshBuilder::buildBox(2 * FOOT, 9 * FOOT, 2 * FOOT);
         Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 1000; i++)
         {
-            Matrix4 matrix;
-            matrix.createTranslationMatrix(
-                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2, 
-                4.5*FOOT, 
-                (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2
+            auto box = std::make_shared<Box>(2 * FOOT, 9 * FOOT, 2 * FOOT,
+                Vector3(
+                    (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2, 
+                    4.5*FOOT, 
+                    (Scalar(randGen()) / randGen.max()) * maxSize - maxSize/2
+                )
             );
 
-            auto treeMesh = std::make_shared<TriangleMesh>(*mesh);
-            treeMesh->positionTransform(matrix);
-
             auto treeModel = std::make_shared<Model>();
-            treeModel->setMeshes(treeMesh);
+            treeModel->setMeshes(box);
             treeModel->setMaterial(tinySphereMaterial);
 
             auto ob = std::make_shared<Object>(treeModel);
