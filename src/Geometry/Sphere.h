@@ -14,32 +14,38 @@ namespace Magic3D
 class Sphere : public Geometry
 {
     Scalar radius;
+    Matrix4 transform;
 
     unsigned int fidelity;
 
     mutable std::shared_ptr<CollisionShape> collisionShape;
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
 
+    inline void markDirty()
+    {
+        this->collisionShape = nullptr;
+        this->triangleMesh = nullptr;
+    }
+
 public:
-    inline Sphere(Scalar radius,unsigned int fidelity = 55) :
+    inline Sphere(Scalar radius,unsigned int fidelity = 3) :
         radius(radius), fidelity(fidelity) {}
 
     virtual void positionTransform(const Matrix4& matrix)
     {
-        throw_MagicException("Applying a transform to a sphere is not currently supported");
+        this->transform.multiply(matrix);
+        this->markDirty();
     }
 
     virtual const CollisionShape& getCollisionShape() const
     {
+        // TODO: apply arbitary transform to collision shape
         if (collisionShape == nullptr)
             collisionShape = std::make_shared<SphereCollisionShape>(radius);
         return *this->collisionShape;
     }
 
-    virtual const TriangleMesh& getTriangleMesh() const
-    {
-        throw_MagicException("Triangle mesh generation from sphere is not currently supported");
-    }
+    virtual const TriangleMesh& getTriangleMesh() const;
 
 };
 

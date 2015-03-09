@@ -690,8 +690,8 @@ public:
         chainModel->setCollisionShape(chainModel->getMeshes()[0]);
         world->addStaticObject(std::make_shared<Object>(chainModel));
 
-
-        sphereModel = std::make_shared<Model>(sphereBatch, floorMaterial, std::make_shared<Sphere>(2 * FOOT));
+        auto sphere = std::make_shared<Sphere>(2 * FOOT);
+        sphereModel = std::make_shared<Model>(sphere, floorMaterial, sphere);
 
 		// set eye level
 		camera.setLocation(Vector3(0.0f, 6 * FOOT, ROOM_SIZE));
@@ -858,3 +858,5 @@ int main(int argc, char* argv[])
     
 	return 0;
 }
+
+

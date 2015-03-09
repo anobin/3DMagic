@@ -28,6 +28,7 @@
     <ClCompile Include="..\..\src\Exceptions\ShaderVertexInterfaceException.cpp" />
     <ClCompile Include="..\..\src\Geometry\BoundedPlane.cpp" />
     <ClCompile Include="..\..\src\Geometry\Box.cpp" />
+    <ClCompile Include="..\..\src\Geometry\Sphere.cpp" />
     <ClCompile Include="..\..\src\Graphics\Buffer.cpp" />
     <ClCompile Include="..\..\src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="..\..\src\Graphics\Image.cpp" />

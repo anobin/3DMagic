@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\src\Geometry\BoundedPlane.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\Sphere.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cameras\Camera.h">
