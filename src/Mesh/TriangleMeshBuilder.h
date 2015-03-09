@@ -25,25 +25,6 @@ namespace Magic3D
 class TriangleMeshBuilder
 {
 public:
-
-    /** Build a 2D circle mesh
-    * @param x the x coordinate of the center
-    * @param y the y coordinate of the center
-    * @param radius the radius of the circle
-    * @param precisionAngle the angle between any two points on the edge of the
-    circle, the lower angle, the better looking
-    */
-    static std::shared_ptr<TriangleMesh> build2DCircle(int x, int y, int radius, float precisionAngle);
-
-    /** Build a flat surface
-    * @param width the width of the surface
-    * @param height the height of the surface
-    * @param slices the number of squares on width
-    * @param stacks the number of squares on height
-    */
-    static std::shared_ptr<TriangleMesh> buildFlatSurface(float width, float height, int slices,
-        int stacks, bool texRepeat, float texPerX, float texPerY);
-
     /** Build 2D rectangle
     * @param x the upper-left x coordinate of the rectangle
     * @param y the upper-left y coordinate of the rectangle

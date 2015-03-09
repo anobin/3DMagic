@@ -141,12 +141,6 @@
     <ClCompile Include="..\..\src\Graphics\VertexArray.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Meshes\Circle2D.cpp">
-      <Filter>Source Files\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Meshes\FlatSurface.cpp">
-      <Filter>Source Files\Meshes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Meshes\Rectangle2D.cpp">
       <Filter>Source Files\Meshes</Filter>
     </ClCompile>
@@ -244,6 +238,9 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Geometry\Box.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\BoundedPlane.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
@@ -465,6 +462,9 @@
       <Filter>Source Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Geometry\Plane.h">
+      <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\BoundedPlane.h">
       <Filter>Source Files\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

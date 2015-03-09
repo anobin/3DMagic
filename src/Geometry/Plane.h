@@ -33,21 +33,7 @@ public:
 
     virtual const TriangleMesh& getTriangleMesh() const
     {
-        if (triangleMesh == nullptr)
-        {
-            // can't really render a infinite plane, so just do a really big, low poly one
-            triangleMesh = TriangleMeshBuilder::buildFlatSurface(
-                10000 * METER, 10000 * METER, 1, 1, false, 0, 0);
-            if (distance != 0.0f)
-            {
-                Matrix4 matrix;
-                matrix.createTranslationMatrix(normal.x()*distance, normal.y()*distance, 
-                    normal.z()*distance);
-                triangleMesh->positionTransform(matrix);
-            }
-        }
-
-        return *this->triangleMesh;
+        throw_MagicException("Using a infinite plane as a graphical mesh is not currently supported");
     }
 
 };

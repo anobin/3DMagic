@@ -67,18 +67,15 @@ Matrix4 projectionMatrix;
 ResourceManager resourceManager;
 
 // batches
-std::shared_ptr<TriangleMesh> floorBatch;
 std::shared_ptr<TriangleMesh> tinySphereBatch;
 std::shared_ptr<Box> bigBox = std::make_shared<Box>(3, 3, 3);
 std::shared_ptr<Box> box = std::make_shared<Box>(6 * INCH * 5, 3 * INCH * 5, 3 * INCH * 5);
 
 // materials
-std::shared_ptr<Material> floorMaterial;
 std::shared_ptr<Material> tinySphereMaterial;
 std::shared_ptr<Material> bigSphereMaterial;
 
 // collisions shapes
-auto floorShape = std::make_shared<Plane>( Vector3(0,1,0) );
 auto tinySphereShape = std::make_shared<Sphere>( 1*FOOT );
 auto bigSphereShape = std::make_shared<Box>( 3.0f, 3.0f, 3.0f );
 
@@ -525,9 +522,10 @@ public:
         scaleMatrix.createScaleMatrix(0.5f, 0.5f, 0.5f);
         tinySphereBatch->positionTransform(scaleMatrix);
 
-		floorBatch = TriangleMeshBuilder::buildFlatSurface(ROOM_SIZE*50, ROOM_SIZE*50, 20, 20, 
-			true, 15*FOOT, 12*FOOT );
-		float scale = 5.0f;
+		auto floor = std::make_shared<BoundedPlane>(
+            ROOM_SIZE*50, ROOM_SIZE*50, 
+            20, 20, 
+			15*FOOT, 12*FOOT);
 
 		// init materials
 		auto sphereMaterial = std::make_shared<Material>();
@@ -554,7 +552,7 @@ public:
         materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/bricks.normals.tex.xml"));
 		materialBuilder.end();
 
-		floorMaterial = std::make_shared<Material>();
+		auto floorMaterial = std::make_shared<Material>();
 		materialBuilder.expand(floorMaterial.get(), *sphereMaterial);
 		materialBuilder.setTexture(stoneTex);
 		materialBuilder.setTransparentFlag(false);
@@ -608,8 +606,13 @@ public:
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);*/
 
-		floorObject = new Object(std::make_shared<Model>(floorBatch, 
-			floorMaterial, floorShape)); // static object
+        floorObject = new Object(
+            std::make_shared<Model>(
+                floor,
+                floorMaterial,
+                std::make_shared<Plane>(Vector3(0, 1, 0))
+            )
+        ); // static object
 		world->addObject(floorObject);
 
         auto brickShape = std::make_shared<Box>(0.75f, 0.375f, 0.375f);
