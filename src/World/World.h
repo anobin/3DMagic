@@ -159,6 +159,8 @@ public:
         else
             it->second->push_back(object);
         staticObjectCount++;
+
+        physics.addBody(*object);
     }
    
 	inline void removeObject(Object* object)

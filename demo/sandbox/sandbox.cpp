@@ -673,13 +673,6 @@ public:
 
 		// 3ds model
 		std::shared_ptr<Model> chainModel = resourceManager.get<Model>("models/chainLink.3ds");
-        /*scaleMatrix.createScaleMatrix()
-        for (auto mesh : chainModel->getMeshes())
-        {
-            ((TriangleMesh*)mesh.get())->positionTransform(scaleMatrix);
-            /*((TriangleMesh*)mesh.get())->calculateNormalsAndTangents();
-            ((TriangleMesh*)mesh.get())->mergeNormalsAndTangents(40.0f);
-        }*/
 		auto chainMaterial = std::make_shared<Material>();
 		materialBuilder.expand(chainMaterial.get(), *sphereMaterial);
         materialBuilder.setTexture(resourceManager.get<Texture>("textures/plastic.tex.xml"));
@@ -687,11 +680,9 @@ public:
 		materialBuilder.end();
 
         chainModel->setMaterial(chainMaterial);
-        // TODO: add composite shapes
+        // TODO: add composite shape
         chainModel->setCollisionShape(chainModel->getMeshes()[0]);
-		Object* chainObject = new Object(chainModel);
-		chainObject->setLocation(Vector3(0.0f, 5.0f, 0.0f));
-		world->addObject(chainObject);
+        world->addStaticObject(std::make_shared<Object>(chainModel));
 
 
         sphereModel = std::make_shared<Model>(sphereBatch, floorMaterial, std::make_shared<Sphere>(2 * FOOT));
