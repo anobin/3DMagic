@@ -63,6 +63,15 @@ public:
     {
         memcpy(this->data, copy.data, sizeof(Scalar)*4*4);
     }
+
+    inline Matrix4(const Matrix3& matrix)
+    {
+        memcpy(this->data, Matrix4::identity, sizeof(Scalar) * 4 * 4);
+
+        memcpy(data, matrix.data, sizeof(Scalar) * 3);
+        memcpy(data + 4, matrix.data + 3, sizeof(Scalar) * 3);
+        memcpy(data + 8, matrix.data + 6, sizeof(Scalar) * 3);
+    }
     
     /// copy setter
     inline void set(const Matrix4 &copy)
