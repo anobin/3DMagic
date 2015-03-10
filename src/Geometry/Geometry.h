@@ -8,6 +8,7 @@ namespace Magic3D
     
 class TriangleMesh;
 class CollisionShape;
+class Sphere;
 
 class Geometry
 {
@@ -18,6 +19,8 @@ public:
 
     virtual const TriangleMesh& getTriangleMesh() const = 0;
 
+    // just gets the bounding sphere from the collision shape if not overrided by sub-class
+    virtual const Sphere& getBoundingSphere() const;
 
 
     void scale(Vector3 factors)

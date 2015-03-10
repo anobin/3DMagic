@@ -109,20 +109,18 @@ public:
 	{
 		if (model->getCollisionShape() != nullptr)
 		{
-            CollisionShape& shape = const_cast<CollisionShape&>(
-                model->getCollisionShape()->getCollisionShape()
-            );
+            const CollisionShape& shape = model->getCollisionShape()->getCollisionShape();
 
 			// calc inertia
 			btVector3 fallInertia(0,0,0);
 			if (prop.mass != 0.0f)
-                shape.getShape()->calculateLocalInertia(prop.mass, fallInertia);
+                shape._getShape().calculateLocalInertia(prop.mass, fallInertia);
 		
 			// construct rigid body
 			btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(
 				prop.mass, 
 				&motionState, 
-                shape.getShape(),
+                &shape._getShape(),
 				fallInertia);
 			fallRigidBodyCI.m_friction = prop.friction;
 			fallRigidBodyCI.m_restitution = prop.bouncyness;

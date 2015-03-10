@@ -25,7 +25,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Shaders\GpuProgram.h>
 #include <Util\Units.h>
 #include <Mesh\TriangleMesh.h>
-#include <CollisionShapes\SphereCollisionShape.h>
 
 namespace Magic3D
 {

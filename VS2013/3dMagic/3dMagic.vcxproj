@@ -14,11 +14,7 @@
     <ClCompile Include="..\..\src\Cameras\Camera.cpp" />
     <ClCompile Include="..\..\src\Cameras\Camera2D.cpp" />
     <ClCompile Include="..\..\src\Cameras\FPCamera.cpp" />
-    <ClCompile Include="..\..\src\CollisionShapes\BoxCollisionShape.cpp" />
     <ClCompile Include="..\..\src\CollisionShapes\CollisionShape.cpp" />
-    <ClCompile Include="..\..\src\CollisionShapes\PlaneCollisionShape.cpp" />
-    <ClCompile Include="..\..\src\CollisionShapes\SphereCollisionShape.cpp" />
-    <ClCompile Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.cpp" />
     <ClCompile Include="..\..\src\Event\Event.cpp" />
     <ClCompile Include="..\..\src\Event\EventSystem.cpp" />
     <ClCompile Include="..\..\src\Exceptions\MagicAssertException.cpp" />
@@ -28,6 +24,7 @@
     <ClCompile Include="..\..\src\Exceptions\ShaderVertexInterfaceException.cpp" />
     <ClCompile Include="..\..\src\Geometry\BoundedPlane.cpp" />
     <ClCompile Include="..\..\src\Geometry\Box.cpp" />
+    <ClCompile Include="..\..\src\Geometry\Geometry.cpp" />
     <ClCompile Include="..\..\src\Geometry\Sphere.cpp" />
     <ClCompile Include="..\..\src\Graphics\Buffer.cpp" />
     <ClCompile Include="..\..\src\Graphics\GraphicsSystem.cpp" />
@@ -75,11 +72,7 @@
     <ClInclude Include="..\..\src\Cameras\FlyCamera.h" />
     <ClInclude Include="..\..\src\Cameras\FPCamera.h" />
     <ClInclude Include="..\..\src\Cameras\ViewFrustum.h" />
-    <ClInclude Include="..\..\src\CollisionShapes\BoxCollisionShape.h" />
     <ClInclude Include="..\..\src\CollisionShapes\CollisionShape.h" />
-    <ClInclude Include="..\..\src\CollisionShapes\PlaneCollisionShape.h" />
-    <ClInclude Include="..\..\src\CollisionShapes\SphereCollisionShape.h" />
-    <ClInclude Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.h" />
     <ClInclude Include="..\..\src\Event\Event.h" />
     <ClInclude Include="..\..\src\Event\EventSystem.h" />
     <ClInclude Include="..\..\src\Exceptions\MagicAssertException.h" />

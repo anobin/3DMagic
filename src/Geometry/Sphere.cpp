@@ -139,4 +139,17 @@ const TriangleMesh& Sphere::getTriangleMesh() const
 }
 
 
+const CollisionShape& Sphere::getCollisionShape() const
+{
+    // TODO: apply arbitary transform to collision shape
+    if (collisionShape != nullptr)
+        return *this->collisionShape;
+
+    collisionShape = std::make_shared<CollisionShape>(
+        std::make_shared<btSphereShape>(radius)
+    );
+    return *this->collisionShape;
+}
+
+
 };

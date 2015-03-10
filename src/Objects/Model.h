@@ -21,8 +21,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #define MAGIC3D_MODEL_H
 
 #include <Mesh\TriangleMesh.h>
-#include <CollisionShapes\BoxCollisionShape.h>
-#include <CollisionShapes\TriangleMeshCollisionShape.h>
 #include <Graphics\Material.h>
 
 #include <Geometry\Geometry.h>
@@ -52,11 +50,7 @@ public:
 		std::shared_ptr<Material> material,
         std::shared_ptr<Geometry> collisionShape = nullptr
 		): meshes(meshes), collisionShape(collisionShape), material(material) 
-    {
-        // TODO: fix this to build bounding sphere from all meshes
-        TriangleMeshCollisionShape realShape(meshes[0]->getTriangleMesh());
-        this->graphicalBoundingSphere = realShape.getBoundingSphere();
-    }
+    {}
 
     inline Model(
         std::shared_ptr<Geometry> mesh,
@@ -65,9 +59,6 @@ public:
         ) : collisionShape(collisionShape), material(material) 
     {
         meshes.push_back(mesh);
-
-        TriangleMeshCollisionShape realShape(mesh->getTriangleMesh());
-        this->graphicalBoundingSphere = realShape.getBoundingSphere();
     }
 
     inline std::vector<std::shared_ptr<Geometry>>& getMeshes()
@@ -77,18 +68,11 @@ public:
     inline void setMeshes(const std::vector<std::shared_ptr<Geometry>>& meshes)
 	{
 		this->meshes = meshes;
-        
-        // TODO: fix this to build bounding sphere from all meshes
-        TriangleMeshCollisionShape realShape(meshes[0]->getTriangleMesh());
-        this->graphicalBoundingSphere = realShape.getBoundingSphere();
 	}
     inline void setMeshes(std::shared_ptr<Geometry> mesh)
     {
         meshes.clear();
         meshes.push_back(mesh);
-
-        TriangleMeshCollisionShape realShape(mesh->getTriangleMesh());
-        this->graphicalBoundingSphere = realShape.getBoundingSphere();
     }
 
     inline std::shared_ptr<Geometry> getCollisionShape()
@@ -110,7 +94,8 @@ public:
 
     inline const Sphere& getGraphicalBoundingSphere()
     {
-        return *this->graphicalBoundingSphere;
+        // TODO: add support for getting sphere for all meshes
+        return this->meshes[0]->getBoundingSphere();
     }
 
 };

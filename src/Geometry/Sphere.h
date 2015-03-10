@@ -3,7 +3,6 @@
 
 #include <Mesh/TriangleMesh.h>
 #include <CollisionShapes\CollisionShape.h>
-#include <CollisionShapes\SphereCollisionShape.h>
 #include <Mesh\TriangleMeshBuilder.h>
 #include <Geometry\Geometry.h>
 
@@ -52,13 +51,7 @@ public:
         this->markDirty();
     }
 
-    virtual const CollisionShape& getCollisionShape() const
-    {
-        // TODO: apply arbitary transform to collision shape
-        if (collisionShape == nullptr)
-            collisionShape = std::make_shared<SphereCollisionShape>(radius);
-        return *this->collisionShape;
-    }
+    virtual const CollisionShape& getCollisionShape() const;
 
     virtual const TriangleMesh& getTriangleMesh() const;
 

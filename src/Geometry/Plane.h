@@ -3,7 +3,6 @@
 
 #include <Mesh/TriangleMesh.h>
 #include <CollisionShapes\CollisionShape.h>
-#include <CollisionShapes\PlaneCollisionShape.h>
 #include <Mesh\TriangleMeshBuilder.h>
 #include <Geometry\Geometry.h>
 #include <Util\Units.h>
@@ -31,8 +30,12 @@ public:
 
     virtual const CollisionShape& getCollisionShape() const
     {
-        if (collisionShape == nullptr)
-            collisionShape = std::make_shared<PlaneCollisionShape>(normal, distance);
+        if (collisionShape != nullptr)
+            return *this->collisionShape;
+
+        collisionShape = std::make_shared<CollisionShape>(
+            std::make_shared<btStaticPlaneShape>(btVector3(normal.x(), normal.y(), normal.z()), distance)
+        );
         return *this->collisionShape;
     }
 

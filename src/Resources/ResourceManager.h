@@ -42,7 +42,6 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Graphics\Material.h>
 #include <Graphics\MaterialBuilder.h>
 #include <CollisionShapes\CollisionShape.h>
-#include <CollisionShapes\BoxCollisionShape.h>
 #include "ModelLoader.h"
 
 
@@ -444,31 +443,6 @@ inline std::shared_ptr<Material> ResourceManager::_get<Material>(const std::stri
 
 	return material;
 }
-
-
-template<>
-inline std::shared_ptr<CollisionShape> ResourceManager::_get<CollisionShape>(const std::string& fullPath)
-{
-	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError error = doc.LoadFile(fullPath.c_str());
-	// TODO: check doc load error and throw exception
-
-	// TODO: check nodes for null and throw exception
-	tinyxml2::XMLElement* shapeNode = doc.FirstChildElement("CollisionShape");
-	auto type = std::string(shapeNode->Attribute("type"));
-
-	if (type == "BOX")
-	{
-		auto width = shapeNode->FirstChildElement("width")->GetText();
-		auto height = shapeNode->FirstChildElement("height")->GetText();
-		auto depth = shapeNode->FirstChildElement("depth")->GetText();
-
-		return std::make_shared<BoxCollisionShape>(std::stof(width), std::stof(height), std::stof(depth));
-	}
-
-	return nullptr;
-}
-
 
 };
 

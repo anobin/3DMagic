@@ -90,19 +90,7 @@
     <ClCompile Include="..\..\src\Cameras\FPCamera.cpp">
       <Filter>Source Files\Cameras</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\CollisionShapes\BoxCollisionShape.cpp">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\CollisionShapes\CollisionShape.cpp">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\CollisionShapes\PlaneCollisionShape.cpp">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\CollisionShapes\SphereCollisionShape.cpp">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.cpp">
       <Filter>Source Files\CollisionShapes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Event\Event.cpp">
@@ -246,6 +234,9 @@
     <ClCompile Include="..\..\src\Geometry\Sphere.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\Geometry.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cameras\Camera.h">
@@ -263,19 +254,7 @@
     <ClInclude Include="..\..\src\Cameras\FPCamera.h">
       <Filter>Source Files\Cameras</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\CollisionShapes\BoxCollisionShape.h">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\CollisionShapes\CollisionShape.h">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\CollisionShapes\PlaneCollisionShape.h">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\CollisionShapes\SphereCollisionShape.h">
-      <Filter>Source Files\CollisionShapes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\CollisionShapes\TriangleMeshCollisionShape.h">
       <Filter>Source Files\CollisionShapes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Event\Event.h">

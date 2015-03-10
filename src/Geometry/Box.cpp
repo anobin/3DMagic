@@ -1,5 +1,5 @@
 #include <Geometry\Box.h>
-
+#include <CollisionShapes\CollisionShape.h>
 
 namespace Magic3D
 {
@@ -161,7 +161,21 @@ const TriangleMesh& Box::getTriangleMesh() const
     return *triangleMesh;
 }
 
+const CollisionShape& Box::getCollisionShape() const
+{
+    // TODO: apply transform to collision shape; can try to use Bullet's project() for rotation and translation
+    //       and fall back to full shape regeneration for scaling
+    if (this->transformApplied)
+        throw_MagicException("Arbitary transforms on box geometry that is used as a collision shape is not currently supported");
 
+    if (collisionShape != nullptr)
+        return *this->collisionShape;
+
+    collisionShape = std::make_shared<CollisionShape>(
+        std::make_shared<btBoxShape>(btVector3(width / 2, height / 2, depth / 2))
+    );
+    return *this->collisionShape;
+}
 
 
 };

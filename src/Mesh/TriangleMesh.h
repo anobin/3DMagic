@@ -13,6 +13,7 @@
 #include <Shapes\Vertex.h>
 #include <Shapes\Triangle.h>
 #include <Geometry\Geometry.h>
+#include <CollisionShapes\CollisionShape.h>
 
 namespace Magic3D
 {
@@ -56,11 +57,15 @@ private:
     unsigned int vertexCount;
 
     mutable bool outOfSync;
+
+    // TODO: replace with indexed version to share memory
+    mutable std::shared_ptr<btTriangleMesh> collisionMesh;
     mutable std::shared_ptr<CollisionShape> collisionShape;
 
     inline void markDirty()
     {
         this->outOfSync = true;
+        this->collisionMesh = nullptr;
         this->collisionShape = nullptr;
     }
 

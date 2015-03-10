@@ -3,7 +3,6 @@
 
 #include <Mesh/TriangleMesh.h>
 #include <CollisionShapes\CollisionShape.h>
-#include <CollisionShapes\BoxCollisionShape.h>
 #include <Mesh\TriangleMeshBuilder.h>
 #include <Geometry\Geometry.h>
 
@@ -37,19 +36,15 @@ public:
         this->markDirty();
     }
 
-    virtual const CollisionShape& getCollisionShape() const
-    {
-        // TODO: apply transform to collision shape; can try to use Bullet's project() for rotation and translation
-        //       and fall back to full shape regeneration for scaling
-        if (this->transformApplied)
-            throw_MagicException("Arbitary transforms on box geometry that is used as a collision shape is not currently supported");
-
-        if (collisionShape == nullptr)
-            collisionShape = std::make_shared<BoxCollisionShape>(width, height, depth);
-        return *this->collisionShape;
-    }
+    virtual const CollisionShape& getCollisionShape() const;
 
     virtual const TriangleMesh& getTriangleMesh() const;
+
+    virtual const Sphere& getBoundingSphere() const
+    {
+        // TODO: stop using triangle mesh for bounding sphere
+        return this->getTriangleMesh().getBoundingSphere();
+    }
 
 };
 

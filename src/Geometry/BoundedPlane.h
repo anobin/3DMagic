@@ -3,7 +3,6 @@
 
 #include <Mesh/TriangleMesh.h>
 #include <CollisionShapes\CollisionShape.h>
-#include <CollisionShapes\PlaneCollisionShape.h>
 #include <Mesh\TriangleMeshBuilder.h>
 #include <Geometry\Geometry.h>
 #include <Util\Units.h>
@@ -53,6 +52,11 @@ public:
 
     virtual const TriangleMesh& getTriangleMesh() const;
 
+    virtual const Sphere& getBoundingSphere() const
+    {
+        // TODO: stop using triangle mesh for bounding sphere
+        return this->getTriangleMesh().getBoundingSphere();
+    }
 };
 
 };
