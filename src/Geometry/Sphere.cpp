@@ -92,7 +92,7 @@ const TriangleMesh& Sphere::getTriangleMesh() const
 
     // refine triangles
     std::unordered_map<unsigned long long, unsigned int> pointCache;
-    for (int i = 0; i < this->fidelity-1; i++)
+    for (unsigned int i = 0; i < this->fidelity-1; i++)
     {
         std::vector<TriangleMesh::Face> newFaces;
         for (auto face : faces)

@@ -2,7 +2,7 @@
 #define MAGIC3D_COLLISION_SHAPE_H
 
 
-#include <Math/Vector.h>
+#include <Math/Math.h>
 
 // include bullet physics
 #include <btBulletDynamicsCommon.h>
@@ -28,12 +28,27 @@ protected:
     std::shared_ptr<btCollisionShape> shape;
     mutable std::shared_ptr<Sphere> boundingSphere;
 
+    Matrix3 rotation;
+    Vector3 translation;
+
 public:
-    inline CollisionShape(std::shared_ptr<btCollisionShape> shape) : shape(shape) {}
+    inline CollisionShape(std::shared_ptr<btCollisionShape> shape, 
+        Matrix3 rotation = Matrix3(), Vector3 translation = Vector3()) 
+    : shape(shape), rotation(rotation), translation(translation) {}
     
     inline btCollisionShape& _getShape() const
     {
         return *this->shape;
+    }
+
+    inline const Matrix3& _getRotation()
+    {
+        return this->rotation;
+    }
+
+    inline const Vector3& _getTranslation()
+    {
+        return this->translation;
     }
 
     /// Get bounding sphere of collision shape.

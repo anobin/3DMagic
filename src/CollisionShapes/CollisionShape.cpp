@@ -16,7 +16,14 @@ const Sphere& CollisionShape::getBoundingSphere() const
     shape->getBoundingSphere(bt_center, bt_radius);
     
     this->boundingSphere = std::make_shared<Sphere>((Scalar)bt_radius);
+
+    // translate to local offset of sphere
     boundingSphere->translate(Vector3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
+    // translate to global offset of sphere
+    boundingSphere->translate(this->translation);
+    // rotation don't matter to a perfect sphere
+    //boundingSphere->rotate(this->rotation);
+
     return *boundingSphere;
 }
     
