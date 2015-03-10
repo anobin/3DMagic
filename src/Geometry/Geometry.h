@@ -13,7 +13,30 @@ class Sphere;
 class Geometry
 {
 public:
-    virtual void positionTransform(const Matrix4& matrix) = 0;
+    struct Transform
+    {
+        Matrix3 rotation;
+        Vector3 translation;
+        Vector3 scale;
+
+        inline Transform() : scale(1, 1, 1) {}
+
+        void getCombinedMatrix(Matrix4& matrix) const
+        {
+            Matrix4 tmp;
+
+            matrix.set(Matrix4(rotation));
+
+            tmp.createTranslationMatrix(translation.x(), translation.y(), translation.z());
+            matrix.multiply(tmp);
+
+            tmp.createScaleMatrix(scale.x(), scale.y(), scale.z());
+            matrix.multiply(tmp);
+        }
+    };
+
+public:
+    virtual void positionTransform(const Transform& transform) = 0;
 
     virtual const CollisionShape& getCollisionShape() const = 0;
 
@@ -25,25 +48,33 @@ public:
 
     void scale(Vector3 factors)
     {
-        Matrix4 matrix; matrix.createScaleMatrix(factors.x(), factors.y(), factors.z());
-        this->positionTransform(matrix);
+        Transform transform;
+        transform.scale = factors;
+        this->positionTransform(transform);
     }
     inline void scale(Scalar factor)
     {
-        Matrix4 matrix; matrix.createScaleMatrix(factor, factor, factor);
-        this->positionTransform(matrix);
+        this->scale(Vector3(factor, factor, factor));
     }
 
     inline void translate(Vector3 distances)
     {
-        Matrix4 matrix; matrix.createTranslationMatrix(distances.x(), distances.y(), distances.z());
-        this->positionTransform(matrix);
+        Transform transform;
+        transform.translation = distances;
+        this->positionTransform(transform);
     }
 
     inline void rotate(Scalar angle, Vector3 axis)
     {
-        Matrix4 matrix; matrix.createRotationMatrix(angle * Scalar(M_PI / 180), axis.x(), axis.y(), axis.z());
-        this->positionTransform(matrix);
+        Transform transform;
+        transform.rotation.createRotationMatrix(angle * Scalar(M_PI / 180), axis.x(), axis.y(), axis.z());
+        this->positionTransform(transform);
+    }
+    inline void rotate(const Matrix3& matrix)
+    {
+        Transform transform;
+        transform.rotation = matrix;
+        this->positionTransform(transform);
     }
 };
 

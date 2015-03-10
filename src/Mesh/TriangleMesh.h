@@ -439,6 +439,12 @@ public:
 
     virtual void positionTransform(const Matrix4& matrix);
 
+    virtual void positionTransform(const Transform& transform)
+    {
+        Matrix4 tmp; transform.getCombinedMatrix(tmp);
+        this->positionTransform(tmp);
+    }
+
     virtual const CollisionShape& getCollisionShape() const;
 
     virtual const TriangleMesh& getTriangleMesh() const;

@@ -29,9 +29,12 @@ public:
     inline Box(Scalar width, Scalar height, Scalar depth) :
         width(width), height(height), depth(depth), transformApplied(false){}
 
-    virtual void positionTransform(const Matrix4& matrix)
+    virtual void positionTransform(const Geometry::Transform& transform)
     {
-        this->transform.multiply(matrix);
+        Matrix4 tmp;
+        transform.getCombinedMatrix(tmp);
+
+        this->transform.multiply(tmp);
         this->transformApplied = true;
         this->markDirty();
     }

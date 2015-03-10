@@ -39,9 +39,11 @@ public:
     texPerX(texPerX), texPerY(texPerY)
     {}
 
-    virtual void positionTransform(const Matrix4& matrix)
+    virtual void positionTransform(const Transform& transform)
     {
-        this->transform.multiply(matrix);
+        Matrix4 tmp; transform.getCombinedMatrix(tmp);
+
+        this->transform.multiply(tmp);
         this->markDirty();
     }
 
