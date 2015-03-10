@@ -293,7 +293,7 @@ void World::renderObjects()
     {
         auto& sphere = o->getModel()->getGraphicalBoundingSphere();
         // TODO: add in bounding sphere offset for this to work correctly
-        auto loc = o->getPosition().getLocation();
+        auto loc = o->getPosition().getLocation() + sphere.getTranslation();
         if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
             sortedObjects.push_back(o);
         else
@@ -309,7 +309,7 @@ void World::renderObjects()
         for (std::shared_ptr<Object> o : *it.second)
         {
             auto sphere = o->getModel()->getGraphicalBoundingSphere();
-            auto loc = sphere.getOffset();
+            auto loc = sphere.getTranslation();
             if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
                 sortedStaticObjects.push_back(o);
             else
@@ -511,7 +511,7 @@ void World::renderObjects()
 	} // end of all objects
 
     // render bounding spheres, if requested
-    /*if (this->showBoundingSpheres)
+    if (this->showBoundingSpheres)
     {
         for (auto it : this->staticObjects)
         {
@@ -519,7 +519,7 @@ void World::renderObjects()
             setupMaterial(*material, identityMatrix, view, projection, true);
             for (unsigned int i = 0; i < it.second->size(); i++)
             {
-                renderMesh(it.second.at(i)->getModel()->getBoundingSphereMesh());
+                renderMesh(it.second->at(i)->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
             }
             tearDownMaterial(*material, true);
         }
@@ -530,10 +530,6 @@ void World::renderObjects()
             // get object and entity
             ob = (*it2);
 
-            const std::shared_ptr<Meshes> meshes = ob->getModel()->getMeshes();
-            if (meshes == nullptr)
-                break;
-
             // get mesh and material data
             auto material = ob->getModel()->getMaterial();
 
@@ -543,10 +539,10 @@ void World::renderObjects()
 
             // render bounding sphere
             setupMaterial(*material, model, view, projection, true);
-            renderMesh(meshes->getBoundingSphereMesh());
+            renderMesh(ob->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
             tearDownMaterial(*material, true);
         } // end of all objects
-    }*/
+    }
 
 	// Do the buffer Swap
     graphics.swapBuffers();

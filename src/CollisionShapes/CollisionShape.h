@@ -38,8 +38,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 namespace Magic3D
 {
     
-class SphereCollisionShape;
 class Object;
+class Sphere;
 
 /** Base class for all collision shapes used in physics collison calculations.
  * Note that the physical shape of an object can (and probably should) not match
@@ -71,7 +71,7 @@ public:
     }
     
     /// Get bounding sphere of collision shape.
-    std::shared_ptr<SphereCollisionShape> getBoundingSphere() const;
+    std::shared_ptr<Sphere> getBoundingSphere() const;
 
 };
 

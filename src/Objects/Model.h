@@ -42,7 +42,7 @@ protected:
 	std::shared_ptr<Geometry> collisionShape;
 	std::shared_ptr<Material> material;
 
-    std::shared_ptr<SphereCollisionShape> graphicalBoundingSphere;
+    std::shared_ptr<Sphere> graphicalBoundingSphere;
 	
 public:
 	inline Model() {}
@@ -108,7 +108,7 @@ public:
 		this->material = material;
 	}
 
-    inline const SphereCollisionShape& getGraphicalBoundingSphere()
+    inline const Sphere& getGraphicalBoundingSphere()
     {
         return *this->graphicalBoundingSphere;
     }

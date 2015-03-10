@@ -647,15 +647,16 @@ public:
         );
 
         // arrange some trees as static scenery
-        Scalar maxSize = ROOM_SIZE * 50;
+       /* Scalar maxSize = ROOM_SIZE * 50;
         for (int i = 0; i < 1000; i++)
-        {
+        {*/
             auto box = std::make_shared<Box>(2 * FOOT, 9 * FOOT, 2 * FOOT);
-            box->translate(Vector3(
+            /*box->translate(Vector3(
                 (Scalar(randGen()) / randGen.max()) * maxSize - maxSize / 2,
                 4.5*FOOT,
                 (Scalar(randGen()) / randGen.max()) * maxSize - maxSize / 2
-            ));
+            ));*/
+            box->translate(Vector3(15, 0, 0));
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(box);
@@ -663,7 +664,7 @@ public:
 
             auto ob = std::make_shared<Object>(treeModel);
             world->addStaticObject(ob);
-        }
+        //}
 
         /*FPCamera testCamera;
         testCamera.setPerspectiveProjection(60.0f, 4.0f / 3.0f, INCH, 10 * FOOT);

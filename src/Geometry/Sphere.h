@@ -31,6 +31,21 @@ public:
     inline Sphere(Scalar radius,unsigned int fidelity = 3) :
         radius(radius), fidelity(fidelity) {}
 
+    inline Scalar getRadius() const
+    {
+        return radius;
+    }
+
+    inline Vector3 getTranslation() const
+    {
+        auto data = transform.getArray();
+        return Vector3(
+            data[12],
+            data[13],
+            data[14]
+        );
+    }
+
     virtual void positionTransform(const Matrix4& matrix)
     {
         this->transform.multiply(matrix);

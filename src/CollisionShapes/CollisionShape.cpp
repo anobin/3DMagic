@@ -21,6 +21,8 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <CollisionShapes/CollisionShape.h>
 #include <CollisionShapes\SphereCollisionShape.h>
 
+#include <Geometry\Sphere.h>
+
 namespace Magic3D
 {
     
@@ -31,14 +33,15 @@ CollisionShape::~CollisionShape()
 }   
     
     
-std::shared_ptr<SphereCollisionShape> CollisionShape::getBoundingSphere() const
+std::shared_ptr<Sphere> CollisionShape::getBoundingSphere() const
 {
     btVector3 bt_center;
     btScalar bt_radius;
     const_cast<CollisionShape*>(this)->getShape()->getBoundingSphere(bt_center, bt_radius);
     
-    return std::make_shared<SphereCollisionShape>((Scalar)bt_radius,
-        Vector3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
+    auto sphere = std::make_shared<Sphere>((Scalar)bt_radius);
+    sphere->translate(Vector3(bt_center.getX(), bt_center.getY(), bt_center.getZ()));
+    return sphere;
 }
     
     
