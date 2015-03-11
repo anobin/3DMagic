@@ -19,9 +19,9 @@ const TriangleMesh& Box::getTriangleMesh() const
         return *triangleMesh;
 
     // we always work with half lengths
-    Scalar width = this->width / 2;
-    Scalar height = this->height / 2;
-    Scalar depth = this->depth / 2;
+    Scalar width = this->dimensions.x() / 2;
+    Scalar height = this->dimensions.y() / 2;
+    Scalar depth = this->dimensions.z() / 2;
 
     std::set<GpuProgram::AttributeType> attrs;
     attrs.insert(GpuProgram::AttributeType::VERTEX);
@@ -172,7 +172,7 @@ const CollisionShape& Box::getCollisionShape() const
         return *this->collisionShape;
 
     collisionShape = std::make_shared<CollisionShape>(
-        std::make_shared<btBoxShape>(btVector3(width / 2, height / 2, depth / 2))
+        std::make_shared<btBoxShape>(btVector3(dimensions.x() / 2, dimensions.y() / 2, dimensions.z() / 2))
     );
     return *this->collisionShape;
 }

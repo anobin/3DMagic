@@ -12,7 +12,7 @@ namespace Magic3D
 
 class Box : public Geometry
 {
-    Scalar width, height, depth;
+    Vector3 dimensions;
     Matrix4 transform;
     bool transformApplied;
 
@@ -27,7 +27,7 @@ class Box : public Geometry
 
 public:
     inline Box(Scalar width, Scalar height, Scalar depth) :
-        width(width), height(height), depth(depth), transformApplied(false){}
+        dimensions(width, height, depth), transformApplied(false){}
 
     virtual void positionTransform(const Geometry::Transform& transform)
     {
