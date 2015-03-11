@@ -13,8 +13,7 @@ namespace Magic3D
 class Box : public Geometry
 {
     Vector3 dimensions;
-    Matrix4 transform;
-    bool transformApplied;
+    Geometry::Transform transform;
 
     mutable std::shared_ptr<CollisionShape> collisionShape;
     mutable std::shared_ptr<TriangleMesh> triangleMesh;
@@ -27,27 +26,31 @@ class Box : public Geometry
 
 public:
     inline Box(Scalar width, Scalar height, Scalar depth) :
-        dimensions(width, height, depth), transformApplied(false){}
+        dimensions(width, height, depth) {}
+
+    inline const Vector3& getDimensions()
+    {
+        return this->dimensions;
+    }
 
     virtual void positionTransform(const Geometry::Transform& transform)
     {
-        Matrix4 tmp;
-        transform.getCombinedMatrix(tmp);
+        // copy over rotatation and translation to use later when 
+        // generating mesh and shape
+        this->transform.rotation.multiply(transform.rotation);
+        this->transform.translation += transform.translation;
 
-        this->transform.multiply(tmp);
-        this->transformApplied = true;
+        // apply scale directly to dimensions, shape and mesh will be rebuilt from these
+        this->dimensions[0] *= transform.scale[0];
+        this->dimensions[1] *= transform.scale[1];
+        this->dimensions[2] *= transform.scale[2];
+
         this->markDirty();
     }
 
     virtual const CollisionShape& getCollisionShape() const;
 
     virtual const TriangleMesh& getTriangleMesh() const;
-
-    virtual const Sphere& getBoundingSphere() const
-    {
-        // TODO: stop using triangle mesh for bounding sphere
-        return this->getTriangleMesh().getBoundingSphere();
-    }
 
 };
 

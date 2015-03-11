@@ -163,16 +163,13 @@ const TriangleMesh& Box::getTriangleMesh() const
 
 const CollisionShape& Box::getCollisionShape() const
 {
-    // TODO: apply transform to collision shape; can try to use Bullet's project() for rotation and translation
-    //       and fall back to full shape regeneration for scaling
-    if (this->transformApplied)
-        throw_MagicException("Arbitary transforms on box geometry that is used as a collision shape is not currently supported");
-
     if (collisionShape != nullptr)
         return *this->collisionShape;
 
     collisionShape = std::make_shared<CollisionShape>(
-        std::make_shared<btBoxShape>(btVector3(dimensions.x() / 2, dimensions.y() / 2, dimensions.z() / 2))
+        std::make_shared<btBoxShape>(btVector3(dimensions.x() / 2, dimensions.y() / 2, dimensions.z() / 2)),
+        this->transform.rotation,
+        this->transform.translation
     );
     return *this->collisionShape;
 }

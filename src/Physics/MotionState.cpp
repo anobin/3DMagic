@@ -42,37 +42,45 @@ MotionState::~MotionState()
 void MotionState::getWorldTransform(btTransform &worldTrans) const
 {
 	// set the location/origin
-	const Vector3& l = this->position->getLocation();
+	Vector3 l = this->shape._getTranslation();
+    if (this->position != nullptr)
+        l += this->position->getLocation();
 	worldTrans.setOrigin (btVector3(l.x(), l.y(), l.z()));
 	
 	// set the basis/rotational matrix
 	// since openGL matrix is column major and Bullet is row
 	// major, we have to do some converting
-    
-	btMatrix3x3 matrix;
-    Vector3 xAxis = this->position->getLocalXAxis();
-    const Vector3& up = this->position->getUpVector();
-    const Vector3& forward = this->position->getForwardVector();
 
-    matrix.setValue (
-    
+    Matrix3 matrix;
+    if (this->position != nullptr)
+    {
+        matrix.setColumn(0, this->position->getLocalXAxis());
+        matrix.setColumn(1, this->position->getUpVector());
+        matrix.setColumn(2, this->position->getForwardVector());
+    }
+    matrix.multiply(this->shape._getRotation());
+
+
+    btMatrix3x3 rot;
+    rot.setValue(
+
         // fill in x axis, first column
-        xAxis.x(),
-        xAxis.y(),
-        xAxis.z(),
-        
+        matrix.getColumn(0).x(),
+        matrix.getColumn(0).y(),
+        matrix.getColumn(0).z(),
+
         // fill in y axis, second column
-        up.x(),
-        up.y(),
-        up.z(),
+        matrix.getColumn(1).x(),
+        matrix.getColumn(1).y(),
+        matrix.getColumn(1).z(),
                                 
         // fill in z axis, thrid column
-        forward.x(),
-        forward.y(),
-        forward.z()
+        matrix.getColumn(2).x(),
+        matrix.getColumn(2).y(),
+        matrix.getColumn(2).z()
     
     );
-	worldTrans.setBasis(matrix);
+	worldTrans.setBasis(rot);
 }
 	
 /** set the world transform of the linked position
@@ -82,6 +90,10 @@ void MotionState::getWorldTransform(btTransform &worldTrans) const
  */
 void MotionState::setWorldTransform (const btTransform &worldTrans)
 {
+    // static objects don't move
+    if (this->position == nullptr)
+        return;
+
 	const btVector3& location = worldTrans.getOrigin();
 	const btMatrix3x3& matrix = worldTrans.getBasis();
 	btVector3 upV = matrix.getColumn(1);

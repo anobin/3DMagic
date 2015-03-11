@@ -127,7 +127,7 @@ public:
             x()*v.y() - v.x()*y()
         );
     }
-    inline Vector<3> operator*=(const Vector<3>& v)
+    inline void operator*=(const Vector<3>& v)
     {
         this->set(
             y()*v.z() - v.y()*z(),

@@ -656,13 +656,16 @@ public:
                 4.5*FOOT,
                 (Scalar(randGen()) / randGen.max()) * maxSize - maxSize / 2
             ));*/
-            box->translate(Vector3(15, 0, 0));
+            box->scale(3);
+            box->translate(Vector3(15, box->getDimensions().y()/2, 0));
+            //box->rotate(45.0f, Vector3(1, 0, 0));
 
             auto treeModel = std::make_shared<Model>();
             treeModel->setMeshes(box);
             treeModel->setMaterial(tinySphereMaterial);
+            treeModel->setCollisionShape(box);
 
-            auto ob = std::make_shared<Object>(treeModel);
+            auto ob = std::make_shared<Object>(treeModel, Object::Properties(), true);
             world->addStaticObject(ob);
         //}
 

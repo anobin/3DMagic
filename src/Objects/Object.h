@@ -71,7 +71,7 @@ protected:
 	
 	std::shared_ptr<Model> model;
 
-	MotionState motionState;
+	std::shared_ptr<MotionState> motionState;
 	btRigidBody* body;
 
 
@@ -94,7 +94,7 @@ protected:
 		
 		// sync out position and the rigid body center of mass
 		btTransform transform;
-		motionState.getWorldTransform(transform);
+		motionState->getWorldTransform(transform);
 		body->setCenterOfMassTransform(transform);
 		
 		// tell bullet that the rigid body needs some attention
@@ -104,8 +104,8 @@ protected:
 public:
 	inline Object(
 		std::shared_ptr<Model> model, 
-		const Properties& prop = Properties() 
-		): model(model), motionState(position), body(nullptr)
+		const Properties& prop = Properties(), bool staticObject = false 
+		): model(model), body(nullptr)
 	{
 		if (model->getCollisionShape() != nullptr)
 		{
@@ -117,9 +117,19 @@ public:
                 shape._getShape().calculateLocalInertia(prop.mass, fallInertia);
 		
 			// construct rigid body
+            if (staticObject)
+            {
+                this->motionState = std::make_shared<MotionState>(nullptr,
+                    model->getCollisionShape()->getCollisionShape());
+            }
+            else
+            {
+                this->motionState = std::make_shared<MotionState>(&this->position,
+                    model->getCollisionShape()->getCollisionShape());
+            }
 			btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(
 				prop.mass, 
-				&motionState, 
+				motionState.get(), 
                 &shape._getShape(),
 				fallInertia);
 			fallRigidBodyCI.m_friction = prop.friction;

@@ -29,6 +29,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <btBulletCollisionCommon.h>
 
 #include "../Math/Position.h"
+#include <CollisionShapes\CollisionShape.h>
 
 namespace Magic3D
 {
@@ -44,15 +45,14 @@ class MotionState : public ::btMotionState
 private:
 	/// reference to position to sync with
 	Position* position;
-	
-	/// default constructor
-	inline MotionState(): position(NULL) {}
+    const CollisionShape& shape;
 	
 public:
 	/** Standard constructor
 	 * @param position the position to keep in sync
 	 */
-	inline MotionState(Position& position): position(&position) {}
+	inline MotionState(Position* position, const CollisionShape& shape): 
+        position(position), shape(shape) {}
 	
 	/// destructor
 	virtual ~MotionState();

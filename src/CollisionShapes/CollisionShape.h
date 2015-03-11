@@ -41,12 +41,12 @@ public:
         return *this->shape;
     }
 
-    inline const Matrix3& _getRotation()
+    inline const Matrix3& _getRotation() const
     {
         return this->rotation;
     }
 
-    inline const Vector3& _getTranslation()
+    inline const Vector3& _getTranslation() const
     {
         return this->translation;
     }
