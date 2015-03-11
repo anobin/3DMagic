@@ -128,9 +128,9 @@ const TriangleMesh& Sphere::getTriangleMesh() const
     for (unsigned int i = 0; i < faces.size(); i++)
         this->triangleMesh->setFace(i, faces[i]);
 
-    Matrix4 matrix;
-    matrix.createScaleMatrix(this->radius, this->radius, this->radius);
-    matrix.multiply(this->transform);
+    Matrix4 tmp, matrix;
+    tmp.createScaleMatrix(this->radius, this->radius, this->radius);
+    matrix.multiply(this->transform, tmp);
     triangleMesh->positionTransform(matrix);
 
     triangleMesh->calculateNormalsAndTangents();
