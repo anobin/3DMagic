@@ -43,4 +43,49 @@ ConvexHull::ConvexHull(const Geometry& exactGeometry, Scalar margin)
 }
 
 
+const TriangleMesh& ConvexHull::getTriangleMesh() const
+{
+    if (this->mesh != nullptr)
+        return *this->mesh;
+
+    std::set<GpuProgram::AttributeType> attrs;
+    attrs.insert(GpuProgram::AttributeType::VERTEX);
+    attrs.insert(GpuProgram::AttributeType::TEX_COORD_0);
+    attrs.insert(GpuProgram::AttributeType::NORMAL);
+    attrs.insert(GpuProgram::AttributeType::TANGENT);
+    this->mesh = std::make_shared<TriangleMesh>(
+        this->hull->numVertices(),
+        this->hull->numTriangles(),
+        attrs
+    );
+
+    // copy vertices
+    for (int i = 0; i < this->hull->numVertices(); i++)
+    {
+        const btVector3& point = this->hull->getVertexPointer()[i];
+        this->mesh->setVertex(i, makeVertex(PositionAttr(
+            point.getX(), point.getY(), point.getZ()
+        )));
+    }
+
+    // copy faces
+    for (int i = 0; i < this->hull->numTriangles(); i++)
+    {
+        TriangleMesh::Face face(
+            this->hull->getIndexPointer()[i * 3], 
+            this->hull->getIndexPointer()[i * 3 + 1],
+            this->hull->getIndexPointer()[i * 3 + 2]
+        );
+        this->mesh->setFace(i, face);
+    }
+
+    // won't necessarily be good tex coords, but should be alright for debugging
+    this->mesh->generateTexCoords(TriangleMesh::TexCoordGenMode::SPHERE_FROM_POSITION);
+
+    this->mesh->calculateNormalsAndTangents();
+
+    return *this->mesh;
+}
+
+
 };

@@ -689,11 +689,11 @@ public:
         materialBuilder.setNormalMap(resourceManager.get<Texture>("textures/plastic.normals.tex.xml"));
 		materialBuilder.end();
 
+        auto hull = std::make_shared<ConvexHull>(*chainModel->getMeshes()[0]);
+        //chainModel->setMeshes(hull);
         chainModel->setMaterial(chainMaterial);
         // TODO: add composite shape
-        chainModel->setCollisionShape(
-            std::make_shared<ConvexHull>(*chainModel->getMeshes()[0])
-        );
+        chainModel->setCollisionShape(hull);
         
         prop.mass = 5;
         world->addObject(new Object(chainModel, prop));

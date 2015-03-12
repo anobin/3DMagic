@@ -16,6 +16,7 @@ class ConvexHull : public Geometry
     std::shared_ptr<btConvexHullShape> internalShape;
 
     mutable std::shared_ptr<CollisionShape> shape;
+    mutable std::shared_ptr<TriangleMesh> mesh;
 
 public:
     ConvexHull(const Geometry& exactGeometry, Scalar margin = 0.04f);
@@ -34,10 +35,7 @@ public:
         return *this->shape;
     }
 
-    virtual const TriangleMesh& getTriangleMesh() const
-    {
-        throw_MagicException("Generating a triangle mesh from a convex hull is not currently supported");
-    }
+    virtual const TriangleMesh& getTriangleMesh() const;
 
 };
 
