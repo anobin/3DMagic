@@ -82,6 +82,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <Geometry\Plane.h>
 #include <Geometry\Sphere.h>
 #include <Geometry\BoundedPlane.h>
+#include <Geometry\ConvexHull.h>
 
 
 

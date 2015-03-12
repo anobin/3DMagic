@@ -68,7 +68,7 @@ ResourceManager resourceManager;
 
 // batches
 std::shared_ptr<TriangleMesh> tinySphereBatch;
-std::shared_ptr<Box> bigBox = std::make_shared<Box>(3, 3, 3);
+std::shared_ptr<Box> bigBox = std::make_shared<Box>(3.0f, 3.0f, 3.0f);
 std::shared_ptr<Box> box = std::make_shared<Box>(6 * INCH * 5, 3 * INCH * 5, 3 * INCH * 5);
 
 // materials
@@ -680,7 +680,7 @@ public:
         for (auto mesh : chainModel->getMeshes())
         {
             mesh->scale(0.1f);
-            mesh->translate(Vector3(-15 * FOOT, 15 * FOOT, 0));
+            //mesh->translate(Vector3(-15 * FOOT, 15 * FOOT, 0));
         }
 
 		auto chainMaterial = std::make_shared<Material>();
@@ -691,8 +691,12 @@ public:
 
         chainModel->setMaterial(chainMaterial);
         // TODO: add composite shape
-        chainModel->setCollisionShape(chainModel->getMeshes()[0]);
-        world->addStaticObject(std::make_shared<Object>(chainModel, Object::Properties(), true));
+        chainModel->setCollisionShape(
+            std::make_shared<ConvexHull>(*chainModel->getMeshes()[0])
+        );
+        
+        prop.mass = 5;
+        world->addObject(new Object(chainModel, prop));
 
         auto sphere = std::make_shared<Sphere>(2 * FOOT);
         sphereModel = std::make_shared<Model>(sphere, floorMaterial, sphere);
@@ -753,7 +757,7 @@ public:
             Light& light = world->getLight();
             light.locationLess = true;
             light.direction = Vector3(0, 1, 1.5).normalize();
-            light.ambientFactor = 0.2;
+            light.ambientFactor = 0.2f;
             light.canCastShadows = true;
         }
         else if (flashlightMode)
@@ -766,7 +770,7 @@ public:
             // move location down and to right and forward
             Vector3 loc = pos.getLocation();
             loc = loc
-                - pos.getRightVector() * (0.5*FOOT)
+                - pos.getRightVector() * (0.5f*FOOT)
                 - pos.getUpVector() * (1 * FOOT)
                 + pos.getForwardVector() * (1 * FOOT);
             light.location = loc;
