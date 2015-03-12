@@ -680,7 +680,7 @@ public:
         for (auto mesh : chainModel->getMeshes())
         {
             mesh->scale(0.1f);
-            mesh->translate(Vector3(0, 15 * FOOT, 0));
+            mesh->translate(Vector3(-15 * FOOT, 15 * FOOT, 0));
         }
 
 		auto chainMaterial = std::make_shared<Material>();
@@ -692,7 +692,7 @@ public:
         chainModel->setMaterial(chainMaterial);
         // TODO: add composite shape
         chainModel->setCollisionShape(chainModel->getMeshes()[0]);
-        world->addStaticObject(std::make_shared<Object>(chainModel));
+        world->addStaticObject(std::make_shared<Object>(chainModel, Object::Properties(), true));
 
         auto sphere = std::make_shared<Sphere>(2 * FOOT);
         sphereModel = std::make_shared<Model>(sphere, floorMaterial, sphere);
