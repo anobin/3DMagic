@@ -318,6 +318,10 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             world.setShowSpecularHighlight(!world.getShowSpecularHighlight());
             break;
 
+        case 'c':
+            world.setShowCollisionShape(!world.getShowCollisionShape());
+            break;
+
         case 'f':
             flashlightMode = !flashlightMode;
             break;
@@ -606,14 +610,14 @@ public:
 		btBall->setLocation(Point3(0.0f, 150*FOOT, 0.0f));
 		world->addObject(btBall);*/
 
-        floorObject = new Object(
+        auto floorObject = std::make_shared<Object>(
             std::make_shared<Model>(
                 floor,
                 floorMaterial,
                 std::make_shared<Plane>(Vector3(0, 1, 0))
             )
         ); // static object
-		world->addObject(floorObject);
+		world->addStaticObject(floorObject);
 
         auto brickShape = std::make_shared<Box>(0.75f, 0.375f, 0.375f);
 

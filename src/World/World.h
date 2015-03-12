@@ -91,6 +91,8 @@ private:
 
     bool showSpecularHighlight;
 
+    bool showCollisionShape;
+
 	float renderTimeElapsed;
 
     std::shared_ptr<Texture> fallbackTexture;
@@ -115,7 +117,7 @@ public:
         alignPStep2FPS(true), physicsStepsPerFrame(1), actualFPS(0), vertexCount(0), camera(NULL),
         wireframeEnabled(false), showBoundingSpheres(false), staticObjectCount(0),
         showNormals(false), useNormalMaps(true), useTextures(true), castShadows(true),
-        showSpecularHighlight(true), normalsLength(1.0f)
+        showSpecularHighlight(true), showCollisionShape(false), normalsLength(1.0f)
     {
         Image fallbackImage(1, 1, 4, Color::WHITE);
         fallbackTexture = std::make_shared<Texture>(fallbackImage);
@@ -315,6 +317,15 @@ public:
     inline void setShowSpecularHighlight(bool show)
     {
         this->showSpecularHighlight = show;
+    }
+
+    inline bool getShowCollisionShape()
+    {
+        return this->showCollisionShape;
+    }
+    inline void setShowCollisionShape(bool show)
+    {
+        this->showCollisionShape = show;
     }
 
     inline void setNormalsLength(Scalar length)

@@ -543,6 +543,32 @@ void World::renderObjects()
         } // end of all objects
     }
 
+    if (this->showCollisionShape)
+    {
+        // TODO: add rendering for static object collision shapes
+
+        std::set<Object*>::iterator it2 = this->objects.begin();
+        for (; it2 != this->objects.end(); it2++)
+        {
+            // get object and entity
+            ob = (*it2);
+            if (ob->getModel()->getCollisionShape() == nullptr)
+                continue;
+
+            // get mesh and material data
+            auto material = ob->getModel()->getMaterial();
+
+            // get model/world matrix for object (same for all meshes in object)
+            Matrix4 model;
+            ob->getPosition().getTransformMatrix(model);
+
+            // render bounding sphere
+            setupMaterial(*material, model, view, projection, true);
+            renderMesh(ob->getModel()->getCollisionShape()->getTriangleMesh());
+            tearDownMaterial(*material, true);
+        } // end of all objects
+    }
+
 	// Do the buffer Swap
     graphics.swapBuffers();
 
