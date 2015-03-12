@@ -128,6 +128,8 @@ const TriangleMesh& Sphere::getTriangleMesh() const
     for (unsigned int i = 0; i < faces.size(); i++)
         this->triangleMesh->setFace(i, faces[i]);
 
+    this->triangleMesh->generateTexCoords(TriangleMesh::TexCoordGenMode::SPHERE_FROM_POSITION);
+
     Matrix4 tmp, matrix;
     tmp.createScaleMatrix(this->radius, this->radius, this->radius);
     matrix.multiply(this->transform, tmp);

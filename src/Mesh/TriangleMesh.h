@@ -437,6 +437,42 @@ public:
         }
     }
 
+    enum class TexCoordGenMode
+    {
+        SPHERE_FROM_NORMALS,
+        SPHERE_FROM_POSITION
+    };
+
+    inline void generateTexCoords(TexCoordGenMode mode = TexCoordGenMode::SPHERE_FROM_POSITION)
+    {
+        if (mode == TexCoordGenMode::SPHERE_FROM_NORMALS)
+        {
+            for (unsigned int i = 0; i < this->vertexCount; i++)
+            {
+                auto vert = this->getVertex<NormalAttr, TexCoordAttr>(i);
+                vert.texCoord(
+                    std::asin(vert.normal().x()) / Scalar(M_PI) + 0.5f,
+                    std::asin(vert.normal().y()) / Scalar(M_PI) + 0.5f
+                    );
+                this->setVertex(i, vert);
+            }
+        }
+        else //if (mode == TexCoordGenMode::SPHERE_FROM_POSITION)
+        {
+            Vector3 center; // TODO: actually calculate center
+            for (unsigned int i = 0; i < this->vertexCount; i++)
+            {
+                auto vert = this->getVertex<PositionAttr, TexCoordAttr>(i);
+                Vector3 vector = (Vector3(vert.position()) - center).normalize();
+                vert.texCoord(
+                    std::asin(vector.x()) / Scalar(M_PI) + 0.5f,
+                    std::asin(vector.y()) / Scalar(M_PI) + 0.5f
+                );
+                this->setVertex(i, vert);
+            }
+        }
+    }
+
     virtual void positionTransform(const Matrix4& matrix);
 
     virtual void positionTransform(const Transform& transform)
