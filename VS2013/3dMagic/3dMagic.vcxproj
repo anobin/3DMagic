@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\src\Exceptions\ShaderVertexInterfaceException.cpp" />
     <ClCompile Include="..\..\src\Geometry\BoundedPlane.cpp" />
     <ClCompile Include="..\..\src\Geometry\Box.cpp" />
+    <ClCompile Include="..\..\src\Geometry\CompoundGeometry.cpp" />
     <ClCompile Include="..\..\src\Geometry\ConvexHull.cpp" />
     <ClCompile Include="..\..\src\Geometry\Geometry.cpp" />
     <ClCompile Include="..\..\src\Geometry\Sphere.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="..\..\src\Exceptions\ShaderVertexInterfaceException.h" />
     <ClInclude Include="..\..\src\Geometry\BoundedPlane.h" />
     <ClInclude Include="..\..\src\Geometry\Box.h" />
+    <ClInclude Include="..\..\src\Geometry\CompoundGeometry.h" />
     <ClInclude Include="..\..\src\Geometry\ConvexHull.h" />
     <ClInclude Include="..\..\src\Geometry\Geometry.h" />
     <ClInclude Include="..\..\src\Geometry\Plane.h" />

@@ -240,6 +240,9 @@
     <ClCompile Include="..\..\src\Geometry\ConvexHull.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Geometry\CompoundGeometry.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Cameras\Camera.h">
@@ -453,6 +456,9 @@
       <Filter>Source Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Geometry\ConvexHull.h">
+      <Filter>Source Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Geometry\CompoundGeometry.h">
       <Filter>Source Files\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

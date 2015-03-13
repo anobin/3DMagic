@@ -25,6 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Geometry\Geometry.h>
 #include <Geometry\Sphere.h>
+#include <Geometry\CompoundGeometry.h>
 
 #include <set>
 #include <vector>
@@ -40,7 +41,7 @@ protected:
 	std::shared_ptr<Geometry> collisionShape;
 	std::shared_ptr<Material> material;
 
-    std::shared_ptr<Sphere> graphicalBoundingSphere;
+    mutable std::shared_ptr<CompoundGeometry> compound;
 	
 public:
 	inline Model() {}
@@ -68,11 +69,13 @@ public:
     inline void setMeshes(const std::vector<std::shared_ptr<Geometry>>& meshes)
 	{
 		this->meshes = meshes;
+        this->compound = nullptr;
 	}
     inline void setMeshes(std::shared_ptr<Geometry> mesh)
     {
         meshes.clear();
         meshes.push_back(mesh);
+        this->compound = nullptr;
     }
 
     inline std::shared_ptr<Geometry> getCollisionShape()
@@ -92,10 +95,16 @@ public:
 		this->material = material;
 	}
 
-    inline const Sphere& getGraphicalBoundingSphere()
+    inline const Sphere& getGraphicalBoundingSphere() const
     {
-        // TODO: add support for getting sphere for all meshes
-        return this->meshes[0]->getBoundingSphere();
+        if (this->meshes.size() == 1)
+            return this->meshes[0]->getBoundingSphere();
+
+        if (this->compound != nullptr)
+            return this->compound->getBoundingSphere();
+
+        this->compound = std::make_shared<CompoundGeometry>(this->meshes);
+        return this->compound->getBoundingSphere();
     }
 
 };

@@ -30,6 +30,9 @@ public:
     inline Sphere(Scalar radius,unsigned int fidelity = 3) :
         radius(radius), fidelity(fidelity) {}
 
+    inline Sphere(const Sphere& sphere) : radius(sphere.radius),
+        transform(sphere.transform), fidelity(sphere.fidelity) {}
+
     inline Scalar getRadius() const
     {
         return radius;
