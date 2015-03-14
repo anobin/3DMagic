@@ -18,22 +18,20 @@ const CollisionShape& TriangleMesh::getCollisionShape() const
     if (this->collisionShape != nullptr)
         return *this->collisionShape;
 
-    this->collisionMesh = std::make_shared<btTriangleMesh>();
-    for (unsigned int i = 0; i < this->getFaceCount(); i++)
-    {
-        auto face = this->getFaceData(i);
+    this->collisionMesh = std::make_shared<btTriangleIndexVertexArray>();
+    btIndexedMesh mesh;
 
-        // get three vertices for triangle
-        Vector3 a(this->getAttributeData(face->indices[0], GpuProgram::AttributeType::VERTEX));
-        Vector3 b(this->getAttributeData(face->indices[1], GpuProgram::AttributeType::VERTEX));
-        Vector3 c(this->getAttributeData(face->indices[2], GpuProgram::AttributeType::VERTEX));
+    mesh.m_numTriangles = this->faces.size();
+    mesh.m_triangleIndexBase = (const unsigned char*)&this->faces[0];
+    mesh.m_triangleIndexStride = 3 * sizeof(unsigned int);
+    mesh.m_indexType = PHY_ScalarType::PHY_INTEGER; // actually means unsigned int
 
-        // add triangle to mesh
-        this->collisionMesh->addTriangle(btVector3(a.x(), a.y(), a.z()),
-            btVector3(b.x(), b.y(), b.z()),
-            btVector3(c.x(), c.y(), c.z()), true
-            );
-    }
+    mesh.m_numVertices = this->vertexCount;
+    mesh.m_vertexBase = (const unsigned char*)this->getAttributeData(0, GpuProgram::AttributeType::VERTEX);
+    mesh.m_vertexStride = 4 * sizeof(Scalar);
+    mesh.m_vertexType = PHY_ScalarType::PHY_FLOAT;
+
+    this->collisionMesh->addIndexedMesh(mesh, PHY_ScalarType::PHY_INTEGER);
 
     this->collisionShape = std::make_shared<CollisionShape>(
         std::make_shared<btBvhTriangleMeshShape>(this->collisionMesh.get(), true)

@@ -59,7 +59,7 @@ private:
     mutable bool outOfSync;
 
     // TODO: replace with indexed version to share memory
-    mutable std::shared_ptr<btTriangleMesh> collisionMesh;
+    mutable std::shared_ptr<btTriangleIndexVertexArray> collisionMesh;
     mutable std::shared_ptr<CollisionShape> collisionShape;
 
     inline void markDirty()
