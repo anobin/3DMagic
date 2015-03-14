@@ -236,8 +236,6 @@ void keyPressed(int key, FPCamera& camera, GraphicsSystem& graphics, World& worl
             );
 			world.addObject(t);
 			
-			camera.lookat( Vector3(0, 30, 0) );
-			
 			break;
 		case 'h':
 		    releaseWater = true;
@@ -619,6 +617,35 @@ public:
         ); // static object
 		world->addStaticObject(floorObject);
 
+        world->addStaticObject(std::make_shared<Object>(
+            std::make_shared<Model>(
+                nullptr,
+                nullptr,
+                std::make_shared<Plane>(Vector3(1, 0, 0), -30*FOOT)
+            )
+        ));
+        world->addStaticObject(std::make_shared<Object>(
+            std::make_shared<Model>(
+                nullptr,
+                nullptr,
+                std::make_shared<Plane>(Vector3(-1, 0, 0), -30 * FOOT)
+            )
+        ));
+        world->addStaticObject(std::make_shared<Object>(
+            std::make_shared<Model>(
+                nullptr,
+                nullptr,
+                std::make_shared<Plane>(Vector3(0, 0, 1), -30 * FOOT)
+            )
+        ));
+        world->addStaticObject(std::make_shared<Object>(
+            std::make_shared<Model>(
+            nullptr,
+            nullptr,
+            std::make_shared<Plane>(Vector3(0, 0, -1), -30 * FOOT)
+            )
+        ));
+
         auto brickShape = std::make_shared<Box>(0.75f, 0.375f, 0.375f);
 
 		/*float wallWidth =40;
@@ -733,17 +760,19 @@ public:
 		// release water
 		if (releaseWater)
 		{
+            static auto sphere = std::make_shared<Sphere>(2*FOOT, 1);
+            static auto model = std::make_shared<Model>(
+                sphere,
+                tinySphereMaterial,
+                sphere
+            );
 			for (int i = 0; i < 20; i++)
 			{
 				Object::Properties prop;
 				prop.mass = 0.1f;
-				Object* t = new Object(std::make_shared<Model>(tinySphereBatch, 
-					tinySphereMaterial, tinySphereShape), prop);
+				Object* t = new Object(model, prop);
 				t->setLocation(Vector3(0, 10.0f, 0));
 				world->addObject(t);
-            
-				t->applyForce(Vector3(((float)(rand()%100))*0.01f, 0.0f, 
-					((float)(rand()%100))*0.01f) );
 			}
 		}
     

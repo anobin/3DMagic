@@ -59,7 +59,8 @@ public:
         std::shared_ptr<Geometry> collisionShape = nullptr
         ) : collisionShape(collisionShape), material(material) 
     {
-        meshes.push_back(mesh);
+        if (mesh != nullptr)
+            meshes.push_back(mesh);
     }
 
     inline std::vector<std::shared_ptr<Geometry>>& getMeshes()

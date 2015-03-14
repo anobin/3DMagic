@@ -290,6 +290,9 @@ void World::renderObjects()
     auto viewFrustum = camera->getViewFrustum();
     for (Object* o : this->objects)
     {
+        if (o->getModel()->getMeshes().size() == 0)
+            continue;
+
         auto& sphere = o->getModel()->getGraphicalBoundingSphere();
         // TODO: add in bounding sphere offset for this to work correctly
         auto loc = o->getPosition().getLocation() + sphere.getTranslation();
@@ -307,6 +310,9 @@ void World::renderObjects()
     {
         for (std::shared_ptr<Object> o : *it.second)
         {
+            if (o->getModel()->getMeshes().size() == 0)
+                continue;
+
             auto sphere = o->getModel()->getGraphicalBoundingSphere();
             auto loc = sphere.getTranslation();
             if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
