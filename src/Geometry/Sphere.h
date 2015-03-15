@@ -61,6 +61,11 @@ public:
 
     virtual const TriangleMesh& getTriangleMesh() const;
 
+    virtual const Sphere& getBoundingSphere() const
+    {
+        // bounding sphere for a sphere is itself
+        return *this;
+    }
 };
 
 };
