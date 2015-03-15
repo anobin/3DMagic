@@ -1,6 +1,7 @@
 #include <CollisionShapes/CollisionShape.h>
 
 #include <Geometry\Sphere.h>
+#include <Geometry\Box.h>
 
 namespace Magic3D
 {
@@ -28,9 +29,25 @@ const Sphere& CollisionShape::getBoundingSphere() const
 }
     
     
-    
-    
-    
+const Box& CollisionShape::getAABB() const
+{
+    if (this->aabb != nullptr)
+        return *this->aabb;
+
+    btTransform transform; // TODO: do we need to do anything with this transform?
+    transform.setIdentity();
+    btVector3 min, max;
+
+    this->shape->getAabb(transform, min, max);
+
+    Scalar length = Scalar((max - min).length());
+    btVector3 center = (min + max) * btScalar(0.5);
+
+    this->aabb = std::make_shared<Box>(length, length, length);
+    this->aabb->translate(Vector3(center.getX(), center.getY(), center.getZ()));
+
+    return *this->aabb;
+}
     
     
 };

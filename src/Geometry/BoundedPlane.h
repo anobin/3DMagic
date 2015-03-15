@@ -59,6 +59,11 @@ public:
         // TODO: stop using triangle mesh for bounding sphere
         return this->getTriangleMesh().getBoundingSphere();
     }
+
+    virtual const Box& getAABB() const
+    {
+        return this->getTriangleMesh().getAABB();
+    }
 };
 
 };

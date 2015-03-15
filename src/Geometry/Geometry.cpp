@@ -9,5 +9,9 @@ const Sphere& Geometry::getBoundingSphere() const
     return this->getCollisionShape().getBoundingSphere();
 }
 
+const Box& Geometry::getAABB() const
+{
+    return this->getCollisionShape().getAABB();
+}
 
 };

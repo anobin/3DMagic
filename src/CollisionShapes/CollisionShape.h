@@ -15,6 +15,7 @@ namespace Magic3D
 {
     
 class Sphere;
+class Box;
 
 /** Base class for all collision shapes used in physics collison calculations.
  * Note that the physical shape of an object can (and probably should) not match
@@ -27,6 +28,7 @@ class CollisionShape
 protected: 
     std::shared_ptr<btCollisionShape> shape;
     mutable std::shared_ptr<Sphere> boundingSphere;
+    mutable std::shared_ptr<Box> aabb; // axis-aligned bounding box
 
     Matrix3 rotation;
     Vector3 translation;
@@ -54,6 +56,7 @@ public:
     /// Get bounding sphere of collision shape.
     const Sphere& getBoundingSphere() const;
 
+    const Box& getAABB() const;
 };
 
 

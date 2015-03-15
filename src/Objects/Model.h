@@ -25,6 +25,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Geometry\Geometry.h>
 #include <Geometry\Sphere.h>
+#include <Geometry\Box.h>
 #include <Geometry\CompoundGeometry.h>
 
 #include <set>
@@ -106,6 +107,18 @@ public:
 
         this->compound = std::make_shared<CompoundGeometry>(this->meshes);
         return this->compound->getBoundingSphere();
+    }
+
+    inline const Box& getGraphicalAABB() const
+    {
+        if (this->meshes.size() == 1)
+            return this->meshes[0]->getAABB();
+
+        if (this->compound != nullptr)
+            return this->compound->getAABB();
+
+        this->compound = std::make_shared<CompoundGeometry>(this->meshes);
+        return this->compound->getAABB();
     }
 
 };

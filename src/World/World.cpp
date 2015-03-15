@@ -528,7 +528,8 @@ void World::renderObjects()
             {
                 if (it.second->at(i)->getModel()->getMeshes().size() == 0)
                     continue;
-                renderMesh(it.second->at(i)->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
+                //renderMesh(it.second->at(i)->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
+                renderMesh(it.second->at(i)->getModel()->getGraphicalAABB().getTriangleMesh());
             }
             tearDownMaterial(*material, true);
         }
@@ -550,7 +551,8 @@ void World::renderObjects()
 
             // render bounding sphere
             setupMaterial(*material, model, view, projection, true);
-            renderMesh(ob->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
+            //renderMesh(ob->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
+            renderMesh(ob->getModel()->getGraphicalAABB().getTriangleMesh());
             tearDownMaterial(*material, true);
         } // end of all objects
     }
