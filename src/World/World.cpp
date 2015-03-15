@@ -521,9 +521,13 @@ void World::renderObjects()
         for (auto it : this->staticObjects)
         {
             auto material = it.first;
+            if (material == nullptr)
+                continue;
             setupMaterial(*material, identityMatrix, view, projection, true);
             for (unsigned int i = 0; i < it.second->size(); i++)
             {
+                if (it.second->at(i)->getModel()->getMeshes().size() == 0)
+                    continue;
                 renderMesh(it.second->at(i)->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
             }
             tearDownMaterial(*material, true);
@@ -534,6 +538,8 @@ void World::renderObjects()
         {
             // get object and entity
             ob = (*it2);
+            if (ob->getModel()->getMeshes().size() == 0)
+                continue;
 
             // get mesh and material data
             auto material = ob->getModel()->getMaterial();
