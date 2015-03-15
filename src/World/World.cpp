@@ -293,7 +293,7 @@ void World::renderObjects()
         if (o->getModel()->getMeshes().size() == 0)
             continue;
 
-        auto& sphere = o->getModel()->getGraphicalBoundingSphere();
+        auto& sphere = o->getModel()->getGraphicalCompoundMesh().getBoundingSphere();
         // TODO: add in bounding sphere offset for this to work correctly
         auto loc = o->getPosition().getLocation() + sphere.getTranslation();
         if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
@@ -313,7 +313,7 @@ void World::renderObjects()
             if (o->getModel()->getMeshes().size() == 0)
                 continue;
 
-            auto sphere = o->getModel()->getGraphicalBoundingSphere();
+            auto sphere = o->getModel()->getGraphicalCompoundMesh().getBoundingSphere();
             auto loc = sphere.getTranslation();
             if (viewFrustum.sphereInFrustum(Vector3(loc.x(), loc.y(), loc.z()), sphere.getRadius()))
                 sortedStaticObjects.push_back(o);
@@ -528,8 +528,8 @@ void World::renderObjects()
             {
                 if (it.second->at(i)->getModel()->getMeshes().size() == 0)
                     continue;
-                //renderMesh(it.second->at(i)->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
-                renderMesh(it.second->at(i)->getModel()->getGraphicalAABB().getTriangleMesh());
+                renderMesh(it.second->at(i)->getModel()->getGraphicalCompoundMesh().getBoundingSphere().getTriangleMesh());
+                //renderMesh(it.second->at(i)->getModel()->getGraphicalAABB().getTriangleMesh());
             }
             tearDownMaterial(*material, true);
         }
@@ -551,8 +551,8 @@ void World::renderObjects()
 
             // render bounding sphere
             setupMaterial(*material, model, view, projection, true);
-            //renderMesh(ob->getModel()->getGraphicalBoundingSphere().getTriangleMesh());
-            renderMesh(ob->getModel()->getGraphicalAABB().getTriangleMesh());
+            renderMesh(ob->getModel()->getGraphicalCompoundMesh().getBoundingSphere().getTriangleMesh());
+            //renderMesh(ob->getModel()->getGraphicalAABB().getTriangleMesh());
             tearDownMaterial(*material, true);
         } // end of all objects
     }

@@ -97,28 +97,16 @@ public:
 		this->material = material;
 	}
 
-    inline const Sphere& getGraphicalBoundingSphere() const
+    inline const Geometry& getGraphicalCompoundMesh()
     {
         if (this->meshes.size() == 1)
-            return this->meshes[0]->getBoundingSphere();
+            return *this->meshes[0];
 
         if (this->compound != nullptr)
-            return this->compound->getBoundingSphere();
+            return *this->compound;
 
         this->compound = std::make_shared<CompoundGeometry>(this->meshes);
-        return this->compound->getBoundingSphere();
-    }
-
-    inline const Box& getGraphicalAABB() const
-    {
-        if (this->meshes.size() == 1)
-            return this->meshes[0]->getAABB();
-
-        if (this->compound != nullptr)
-            return this->compound->getAABB();
-
-        this->compound = std::make_shared<CompoundGeometry>(this->meshes);
-        return this->compound->getAABB();
+        return *this->compound;
     }
 
 };
