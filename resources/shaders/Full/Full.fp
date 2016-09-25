@@ -7,6 +7,7 @@ uniform struct Transforms
     mat4   mvMatrix;        // transforms from model space to view space
     mat4   vMatrix;         // transforms from world space to view space
     mat4   mMatrix;         // transforms from model space to world space
+	mat4   mvpMatrix;   // transforms from model space to clip space
 } transforms;
 
 uniform sampler2D textureMap;
