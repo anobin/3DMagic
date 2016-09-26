@@ -24,6 +24,7 @@ along with 3DMagic.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 #include <vector>
 #include <memory>
+#include <sstream>
 
 // include opengl
 #ifdef _WIN32
@@ -227,8 +228,18 @@ public:
         glGetProgramiv(programId, GL_LINK_STATUS, &ret);
         if(ret == GL_FALSE)
         {
-            glDeleteProgram(programId);
-            throw_ShaderCompileException("Shader Program failed to link");
+			GLint logLength;
+			glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength);
+
+			GLchar* log = new GLchar[logLength];
+			glGetProgramInfoLog(programId, logLength, NULL, log);
+			glDeleteProgram(programId);
+
+			std::stringstream stream;
+			stream << "Shader Program failed to link:\n\n" << log;
+			delete[] log;
+
+            throw_ShaderCompileException(stream.str().c_str());
         }
 	}
 
